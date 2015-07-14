@@ -1,14 +1,14 @@
 Package: moveHMM
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Animal movement modelling using hidden Markov models
 Version: 0.1
 Date: 2015-07-14
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Théo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
+Maintainer: Théo Michelot <theo.michelot@gmail.com>
+Description: Animal movement modelling using hidden Markov models
+License: GPL3
 LazyData: TRUE
-Imports: 
+Imports:
     Rcpp (>= 0.11.6)
-LinkingTo: 
+LinkingTo:
     Rcpp
