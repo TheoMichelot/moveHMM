@@ -1,22 +1,14 @@
 
 #' Constructor of moveData objects
 #'
-#' @param ID Vector of the IDs of observed individuals
-#' @param stepLength Vector of step lengths
-#' @param turnAngle Vector of turning angles
-#' @param covs Matrix of covariates if any
+#' @param data A list containing the IDs (if any), step lengths, turning angles and covariates (if any).
 #'
-#' @return An object moveData, i.e. a list containing the IDs, the lengths, the angles and the covariates.
+#' @return An object moveData.
 #'
 #' @examples
-moveData <- function(ID,length,angle,covs=NULL)
+moveData <- function(data)
 {
-  obj <- list(
-    ID = ID,
-    stepLength = length,
-    turnAngle = angle,
-    covs = covs
-  )
+  obj <- data
 
   class(obj) <- append(class(obj),"moveData")
   return(obj)
