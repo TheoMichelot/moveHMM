@@ -52,7 +52,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     c <- NULL
     if(!is.null(covs)) c <- covs[i1:i2,]
 
-    data[[k]] <- list(ID=unique(ID)[k],step=step,angle=angle,covs=c)
+    data[[k]] <- list(ID=unique(ID)[k],step=step,angle=angle,covs=c,x=x[i1:i2],y=y[i1:i2])
   }
 
   return(moveData(data))
