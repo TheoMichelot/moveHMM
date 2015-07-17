@@ -13,8 +13,8 @@ plot.moveData <- function(data,compact=FALSE)
   if(!compact) {
     layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
     for(i in 1:length(data)) {
-      plot(data[[i]]$x,data[[i]]$y,type="b",lwd=1.3,
-           xlab="x",ylab="y",pch="+")
+      plot(data[[i]]$x,data[[i]]$y,type="o",lwd=1.3,
+           xlab="x",ylab="y",pch=20)
       legend("topleft",data[[i]]$ID,bty="n",text.col="red")
       plot(data[[i]]$step,type="l",xlab="t",ylab="step length",
            ylim=c(0,max(data[[i]]$step,na.rm=T)))
@@ -36,10 +36,10 @@ plot.moveData <- function(data,compact=FALSE)
       if(max(data[[i]]$step,na.rm=T)>stepmax) stepmax <- max(data[[i]]$step,na.rm=T)
       if(length(data[[i]]$x)>nbObs) nbObs <- length(data[[i]]$x)
     }
-    plot(data[[1]]$x,data[[1]]$y,type="b",pch="+",lwd=1.3,col=1,
+    plot(data[[1]]$x,data[[1]]$y,type="o",pch=20,lwd=1.3,col=1, cex=0.5,
          xlim=c(xmin,xmax),ylim=c(ymin,ymax),xlab="x",ylab="y")
     for(i in 2:length(data)) {
-      points(data[[i]]$x,data[[i]]$y,type="b",pch="+",lwd=1.3,col=i)
+      points(data[[i]]$x,data[[i]]$y,type="o",pch=20,lwd=1.3,col=i,cex=0.5)
     }
     par(mfrow=c(1,2))
     plot(data[[1]]$step,type="l",col=1,xlim=c(1,nbObs),ylim=c(0,stepmax),
@@ -55,5 +55,5 @@ plot.moveData <- function(data,compact=FALSE)
     abline(h=c(-pi,0,pi),lty=2)
   }
   par(mfrow=c(1,1))
-  par(mar=c(5,4,4,2)) # back to default
+  par(mar=c(5,4,4,2)) # back to default layout
 }
