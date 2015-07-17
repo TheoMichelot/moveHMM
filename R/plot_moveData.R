@@ -4,9 +4,6 @@
 #' @param data An object moveData
 #' @param compact TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
 #' individual at a time)
-#'
-#' @return
-#' @examples
 plot.moveData <- function(data,compact=FALSE)
 {
   par(mar=c(5,4,4,2)-c(0,0,3,1)) # bottom, left, top, right

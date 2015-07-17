@@ -6,8 +6,6 @@
 #' or longitude/latitude)
 #'
 #' @return An object moveData.
-#'
-#' @examples
 moveData <- function(data)
 {
   if(is.null(data$step) | is.null(data$angle) | is.null(data$x) | is.null(data$y))
