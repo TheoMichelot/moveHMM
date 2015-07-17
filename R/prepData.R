@@ -19,7 +19,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   type <- match.arg(type)
   x <- trackData$x
   y <- trackData$y
-  ID <- trackData$ID
+  ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
   covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
   if(length(covsCol)>0) covs <- trackData[,covsCol]
   else covs <- NULL
