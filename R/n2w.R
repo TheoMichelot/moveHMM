@@ -1,0 +1,49 @@
+
+#' Scaling function : natural to working parameters
+#'
+#' Scales each parameter from its natural interval to the set of real numbers, to allow for
+#' unconstrained optimization.
+#'
+#' @param par Vector of state-dependent distributions parameters.
+#' @param bounds Matrix with 2 columns and as many rows as there are elements in par. Each row
+#' contains the lower and upper bound for the correponding parameter.
+#' @param beta Matrix of regression parameters for the transition probability matrix.
+#' @param delta Stationary distribution
+#'
+#' @return A vector of unconstrained parameters
+#' @examples
+#' nbStates <- 3
+#' par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
+#' bounds <- matrix(c(0,1,0,1,0,1,
+#'                    0,Inf,0,Inf,0,Inf),
+#'                  byrow=T,ncol=2)
+#' beta <- matrix(rnorm(18),ncol=6,nrow=3)
+#' delta <- c(0.6,0.3,0.1)
+#' print(n2w(par,bounds,beta,delta,nbStates))
+n2w <- function(par,bounds,beta,delta,nbStates)
+{
+  nbPar <- length(par)/nbStates
+  wpar <- NULL
+  for(i in 1:nbPar) {
+    index <- (i-1)*nbStates+1
+    a <- bounds[index,1]
+    b <- bounds[index,2]
+    p <- par[index:(index+nbStates-1)]
+
+    if(is.finite(a) & is.finite(b)) { # [a,b] -> R
+      p <- logit((p-a)/(b-a))
+    }
+    else if(is.infinite(a) & is.finite(b)) { # ]-Inf,b] -> R
+      p <- -log(-p+b)
+    }
+    else if(is.finite(a) & is.infinite(b)) { # [a,Inf[ -> R
+      p <- log(p-a)
+    }
+
+    wpar <- c(wpar,p)
+  }
+
+  wbeta <- as.vector(beta)
+  wdelta <- log(delta[-1]/delta[1])
+  return(c(wpar,wbeta,wdelta))
+}
