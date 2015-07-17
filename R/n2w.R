@@ -1,5 +1,5 @@
 
-#' Scaling function : natural to working parameters
+#' Scaling function : natural to working parameters.
 #'
 #' Scales each parameter from its natural interval to the set of real numbers, to allow for
 #' unconstrained optimization.
@@ -8,9 +8,10 @@
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in par. Each row
 #' contains the lower and upper bound for the correponding parameter.
 #' @param beta Matrix of regression parameters for the transition probability matrix.
-#' @param delta Stationary distribution
+#' @param delta Stationary distribution.
+#' @param nbStates The number of states of the HMM.
 #'
-#' @return A vector of unconstrained parameters
+#' @return A vector of unconstrained parameters.
 #' @examples
 #' nbStates <- 3
 #' par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
