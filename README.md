@@ -1,4 +1,2 @@
 # moveHMM
-Animal movement modelling using hidden Markov models
-
-(work in progress)
+An R package for animal movement modelling using hidden Markov models.
