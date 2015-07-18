@@ -4,18 +4,30 @@
 \alias{simData}
 \title{Simulation tool}
 \usage{
-simData(nbAnimals, nbStates, stepPar, anglePar, nbCov = 0)
+simData(nbAnimals, nbStates, stepFun = c("rgamma", "rweibull", "rexp"),
+  angleFun = c("rvm", "rwrpcauchy"), stepPar, anglePar, zeroInflation = 0,
+  nbCov = 0)
 }
 \arguments{
 \item{nbAnimals}{Number of observed individuals to simulate.}
 
 \item{nbStates}{Number of behavioural states to simulate.}
 
-\item{stepPar}{Parameters of the step length gamma distribution. Must be provided in a
-matrix of dimensions 2*nbStates. First row : mean ; second row : standard deviation.}
+\item{stepFun}{Character string, among "rgamma", "rweibull", and "rexp".
+Name of the function from which to draw the step length values.}
 
-\item{anglePar}{Parameters of the turning angle von Mises distribution. Must be provided
-in a matrix of dimensions 2*nbStates. First row : mean ; second row : concentration power.}
+\item{angleFun}{Character string, among "rvm", and "rwrpcauchy".
+Name of the Function from which to draw the turning angle values.}
+
+\item{stepPar}{Parameters of the step length distribution. Must be provided in a
+matrix with one row for each parameter (in the order expected by the function stepFun),
+and one column for each state.}
+
+\item{anglePar}{Parameters of the turning angle distribution. Must be provided in a
+matrix with one row for each parameter (in the order expected by the function angleFun),
+and one column for each state.}
+
+\item{zeroInflation}{Probability of step length being zero (0 by default).}
 
 \item{nbCov}{Number of covariates to simulate (0 by default).}
 }
@@ -28,6 +40,14 @@ Simulation tool
 \examples{
 stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
-data <- simData(5,2,1,stepPar,anglePar)
+stepFun <- "rgamma"
+angleFun <- "rvm"
+data <- simData(5,2,stepFun,angleFun,stepPar,anglePar,0.2,2)
+
+stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
+anglePar <- matrix(c(0,0.5,pi,0.7),nrow=2) # mean1, k1, mean2, k2
+stepFun <- "rweibull"
+angleFun <- "rwrpcauchy"
+data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
 }
 

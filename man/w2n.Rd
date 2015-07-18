@@ -29,7 +29,7 @@ nbCovs <- 2
 par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
 bounds <- matrix(c(0,1,0,1,0,1,
                    0,Inf,0,Inf,0,Inf),
-                 byrow=T,ncol=2)
+                 byrow=TRUE,ncol=2)
 beta <- matrix(rnorm(18),ncol=6,nrow=3)
 delta <- c(0.6,0.3,0.1)
 wpar <- n2w(par,bounds,beta,delta,nbStates)
