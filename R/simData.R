@@ -3,20 +3,37 @@
 #'
 #' @param nbAnimals Number of observed individuals to simulate.
 #' @param nbStates Number of behavioural states to simulate.
-#' @param stepPar Parameters of the step length gamma distribution. Must be provided in a
-#' matrix of dimensions 2*nbStates. First row : mean ; second row : standard deviation.
-#' @param anglePar Parameters of the turning angle von Mises distribution. Must be provided
-#' in a matrix of dimensions 2*nbStates. First row : mean ; second row : concentration power.
+#' @param stepFun Character string.
+#' Name of the function from which to draw the step length values.
+#' @param angleFun Character string.
+#' Name of the Function from which to draw the turning angle values.
+#' @param stepPar Parameters of the step length distribution. Must be provided in a
+#' matrix with one row for each parameter (in the order expected by the function stepFun),
+#' and one column for each state.
+#' @param anglePar Parameters of the turning angle distribution. Must be provided in a
+#' matrix with one row for each parameter (in the order expected by the function angleFun),
+#' and one column for each state.
 #' @param nbCov Number of covariates to simulate (0 by default).
 #'
 #' @return An object moveData
 #' @examples
 #' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 #' anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
-#' data <- simData(5,2,1,stepPar,anglePar)
-simData <- function(nbAnimals,nbStates,stepPar,anglePar,nbCov=0)
+#' stepFun <- "rgamma"
+#' angleFun <- "rvm"
+#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
+#'
+#' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
+#' anglePar <- matrix(c(0,0.5,pi,0.7),nrow=2) # mean1, k1, mean2, k2
+#' stepFun <- "rweibull"
+#' angleFun <- "rwrpcauchy"
+#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
+simData <- function(nbAnimals,nbStates,stepFun=c("rgamma","rweibull","rexp"),
+                    angleFun=c("rvm","rwrpcauchy"),stepPar,anglePar,nbCov=0)
 {
   data <- list()
+  stepFun <- match.arg(stepFun)
+  angleFun <- match.arg(angleFun)
 
   # generate regression parameters for transition probabilities
   beta <- matrix(rnorm((nbCov+1)*nbStates*(nbStates-1)),nrow=nbCov+1,ncol=nbStates*(nbStates-1))
@@ -28,6 +45,7 @@ simData <- function(nbAnimals,nbStates,stepPar,anglePar,nbCov=0)
     delta <- rep(1,nbStates)/nbStates
 
     # generate covariate values
+    covs <- NULL
     if(nbCov==1) covs <- rnorm(nbObs)
     if(nbCov>1) {
       covs <- rnorm(nbObs)
@@ -59,14 +77,36 @@ simData <- function(nbAnimals,nbStates,stepPar,anglePar,nbCov=0)
     X[1,] <- c(0,0) # initial position of the animal
     phi <- 0
     for(k in 1:(nbObs-1)) {
-      angle[k] <- rvm(1,mean=anglePar[1,Z[k]],k=anglePar[2,Z[k]])
+
+      # Constitute the list of state-dependent parameters for the step and angle
+      stepArgs <- list(1); angleArgs <- list(1) # first argument = 1 (one random draw)
+      if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[Z[k]]
+      else {
+        for(j in 1:nrow(stepPar))
+          stepArgs[[j+1]] <- stepPar[j,Z[k]]
+      }
+      if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[Z[k]]
+      else {
+        for(j in 1:nrow(anglePar))
+          angleArgs[[j+1]] <- anglePar[j,Z[k]]
+      }
+      angle[k] <- do.call(angleFun,angleArgs)
       phi<-phi+angle[k]
-      step[k]<-rgamma(1,shape=stepPar[1,Z[k]]^2/stepPar[2,Z[k]]^2,scale=stepPar[2,Z[k]]^2/stepPar[1,Z[k]])
-      m<-step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
-      X[k+1,]<-X[k,]+m
+
+      # conversion between mean/sd and shape/scale if necessary
+      if(stepFun=="rweibull" | stepFun=="rgamma") {
+        shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
+        scale <- stepArgs[[3]]^2/stepArgs[[2]]
+        stepArgs[[2]] <- shape
+        stepArgs[[3]] <- scale
+      }
+      step[k] <- do.call(stepFun,stepArgs)
+
+      m <- step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
+      X[k+1,] <- X[k,] + m
       angle[k] <- angle[k]-pi # angle between -pi and pi
     }
-    angle[1] <- NA
+    angle[1] <- NA # the first angle value is arbitrary
 
     data[[i]] <- list(ID=as.character(i),x=X[,1],y=X[,2],step=step,angle=angle,covs=covs)
   }
