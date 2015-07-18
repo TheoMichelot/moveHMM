@@ -13,6 +13,7 @@
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the function angleFun),
 #' and one column for each state.
+#' @param zeroInflation Probability of step length being zero (0 by default).
 #' @param nbCov Number of covariates to simulate (0 by default).
 #'
 #' @return An object moveData
@@ -21,7 +22,7 @@
 #' anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
 #' stepFun <- "rgamma"
 #' angleFun <- "rvm"
-#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
+#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar,0.2,2)
 #'
 #' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 #' anglePar <- matrix(c(0,0.5,pi,0.7),nrow=2) # mean1, k1, mean2, k2
@@ -29,11 +30,12 @@
 #' angleFun <- "rwrpcauchy"
 #' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
 simData <- function(nbAnimals,nbStates,stepFun=c("rgamma","rweibull","rexp"),
-                    angleFun=c("rvm","rwrpcauchy"),stepPar,anglePar,nbCov=0)
+                    angleFun=c("rvm","rwrpcauchy"),stepPar,anglePar,zeroInflation=0,nbCov=0)
 {
-  data <- list()
   stepFun <- match.arg(stepFun)
   angleFun <- match.arg(angleFun)
+
+  data <- list()
 
   # generate regression parameters for transition probabilities
   beta <- matrix(rnorm((nbCov+1)*nbStates*(nbStates-1)),nrow=nbCov+1,ncol=nbStates*(nbStates-1))
@@ -100,7 +102,10 @@ simData <- function(nbAnimals,nbStates,stepFun=c("rgamma","rweibull","rexp"),
         stepArgs[[2]] <- shape
         stepArgs[[3]] <- scale
       }
-      step[k] <- do.call(stepFun,stepArgs)
+      if(runif(1)>zeroInflation)
+        step[k] <- do.call(stepFun,stepArgs)
+      else
+        step[k] <- 0
 
       m <- step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
       X[k+1,] <- X[k,] + m
