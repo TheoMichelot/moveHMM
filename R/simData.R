@@ -3,9 +3,9 @@
 #'
 #' @param nbAnimals Number of observed individuals to simulate.
 #' @param nbStates Number of behavioural states to simulate.
-#' @param stepFun Character string.
+#' @param stepFun Character string, among "rgamma", "rweibull", and "rexp".
 #' Name of the function from which to draw the step length values.
-#' @param angleFun Character string.
+#' @param angleFun Character string, among "rvm", and "rwrpcauchy".
 #' Name of the Function from which to draw the turning angle values.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the function stepFun),
