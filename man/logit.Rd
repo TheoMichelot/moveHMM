@@ -2,11 +2,13 @@
 % Please edit documentation in R/logit.R
 \name{logit}
 \alias{logit}
-\title{Logit function}
+\title{Logit function
+Used in n2w.}
 \usage{
 logit(p)
 }
 \description{
 Logit function
+Used in n2w.
 }
 

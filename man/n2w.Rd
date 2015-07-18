@@ -23,7 +23,7 @@ A vector of unconstrained parameters.
 }
 \description{
 Scales each parameter from its natural interval to the set of real numbers, to allow for
-unconstrained optimization.
+unconstrained optimization. Used during the optimization of the log-likelihood.
 }
 \examples{
 nbStates <- 3

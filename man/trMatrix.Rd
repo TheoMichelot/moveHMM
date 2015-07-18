@@ -22,6 +22,6 @@ A three-dimensional array gamma, such that gamma[,,t] is the transition probabil
 matrix at time t.
 }
 \description{
-Generate the transition probability matrix
+Used in the computation of the log-likelihood.
 }
 

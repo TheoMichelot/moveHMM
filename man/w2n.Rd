@@ -22,6 +22,7 @@ and beta.
 }
 \description{
 Scales each parameter from the set of real numbers, back to its natural interval.
+Used during the optimization of the log-likelihood.
 }
 \examples{
 nbStates <- 3

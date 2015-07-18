@@ -2,6 +2,7 @@
 #' Scaling function : working to natural parameters
 #'
 #' Scales each parameter from the set of real numbers, back to its natural interval.
+#' Used during the optimization of the log-likelihood.
 #'
 #' @param wpar Vector of state-dependent distributions  unconstrained parameters.
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in par. Each row

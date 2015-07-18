@@ -2,11 +2,13 @@
 % Please edit documentation in R/logit.R
 \name{inv.logit}
 \alias{inv.logit}
-\title{Inverse logit function}
+\title{Inverse logit function
+Used in w2n.}
 \usage{
 inv.logit(x)
 }
 \description{
 Inverse logit function
+Used in w2n.
 }
 

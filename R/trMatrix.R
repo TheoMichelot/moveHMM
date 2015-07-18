@@ -1,6 +1,8 @@
 
 #' Generate the transition probability matrix
 #'
+#' Used in the computation of the log-likelihood.
+#'
 #' @param nbStates Number of states of the HMM.
 #' @param nbObs Number of observations.
 #' @param beta Matrix of regression parameters. Number of rows : number of covariates + 1 ;
