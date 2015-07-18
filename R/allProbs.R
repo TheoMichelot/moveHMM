@@ -1,0 +1,71 @@
+
+#' Matrix of all probabilities
+#'
+#' Used in the computation of the log-likelihood.
+#'
+#' @param data Data relative to one observed individual, as a list. Required fields :
+#' step, angle.
+#' @param nbStates Number of states of the HMM.
+#' @param stepFun Character string, among "gamma", "weibull", and "exp".
+#' Name of the distribution of the step length values.
+#' @param angleFun Character string, among "vm", and "wrpcauchy".
+#' Name of the distribution of the turning angle values.
+#' @param stepPar Parameters of the step length distribution. Must be provided in a
+#' matrix with one row for each parameter (in the order expected by the function stepFun),
+#' and one column for each state.
+#' @param anglePar Parameters of the turning angle distribution. Must be provided in a
+#' matrix with one row for each parameter (in the order expected by the function angleFun),
+#' and one column for each state.
+#'
+#' @return Matrix of all probabilities.
+#'
+#' @examples
+#' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
+#' anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
+#' stepFun <- "gamma"
+#' angleFun <- "vm"
+#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar,0.2,2)
+#' P <- allProbs(data[[1]],2,stepFun,angleFun,stepPar,anglePar)
+allProbs <- function(data,nbStates,stepFun=c("gamma","weibull","exp"),
+                     angleFun=c("vm","wrpcauchy"),stepPar,anglePar)
+{
+  stepFun <- match.arg(stepFun)
+  stepFun <- paste("d",stepFun,sep="")
+  angleFun <- match.arg(angleFun)
+  angleFun <- paste("d",angleFun,sep="")
+
+  nbObs <- length(data$step)
+  allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)
+  stepInd <- which(!is.na(data$step))
+  angleInd <- which(!is.na(data$angle))
+
+  for(i in 1:nbStates) {
+    stepProb <- rep(1,nbObs)
+    angleProb <- rep(1,nbObs)
+
+    # Constitute the lists of state-dependent parameters for the step and angle
+    stepArgs <- list(data$step[stepInd]); angleArgs <- list(data$angle[angleInd])
+    if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[i]
+    else {
+      for(j in 1:nrow(stepPar))
+        stepArgs[[j+1]] <- stepPar[j,i]
+    }
+    if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[i]
+    else {
+      for(j in 1:nrow(anglePar))
+        angleArgs[[j+1]] <- anglePar[j,i]
+    }
+    # conversion between mean/sd and shape/scale if necessary
+    if(stepFun=="dweibull" | stepFun=="dgamma") {
+      shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
+      scale <- stepArgs[[3]]^2/stepArgs[[2]]
+      stepArgs[[2]] <- shape
+      stepArgs[[3]] <- scale
+    }
+
+    stepProb[stepInd] <- do.call(stepFun,stepArgs)
+    angleProb[angleInd] <- do.call(angleFun,angleArgs)
+    allProbs[,i] <- stepProb*angleProb
+  }
+  return(allProbs)
+}
