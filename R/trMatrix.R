@@ -1,0 +1,32 @@
+
+#' Generate the transition probability matrix
+#'
+#' @param nbStates Number of states of the HMM.
+#' @param nbObs Number of observations.
+#' @param beta Matrix of regression parameters. Number of rows : number of covariates + 1 ;
+#' number of columns : number of non-diagonal elements in the t.p.m. (i.e. nbStates*(nbStates-1)).
+#' @param covs Matrix of covariates (if any). Number of rows : number of observations ;
+#' number of columns : number of covariates.
+#'
+#' @return A three-dimensional array gamma, such that gamma[,,t] is the transition probability
+#' matrix at time t.
+trMatrix <- function(nbStates,nbObs,beta,covs=NULL)
+{
+  gamma <- array(0,c(nbStates,nbStates,nbObs))
+  for(i in 1:nbStates) gamma[i,i,] <- 1 # diagonals of one on each layer
+
+  if(is.null(covs)) {
+    gamma[!gamma] <- exp(beta)
+  }
+  else {
+    desMat <- matrix(1,nbObs,ncol(covs)+1) # design matrix
+    for(i in 2:nbStates) desMat[,i] <- covs[,(i-1)]
+    g <- exp(desMat%*%beta)
+    gamma[!gamma] <- t(g) # transpose because R picks elements column-wise
+  }
+  gamma <- aperm(gamma,c(2,1,3)) # transpose because R fills elements colum-wise
+  s <- array(NA,c(nbStates,nbStates,nbObs))
+  for(i in 1:nbStates) s[,i,] <- apply(gamma,c(1,3),sum) # row sums
+  gamma <- gamma/s
+  return(gamma)
+}
