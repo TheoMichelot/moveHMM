@@ -8,8 +8,9 @@
 #' @return An object moveData.
 moveData <- function(data)
 {
-  if(is.null(data$step) | is.null(data$angle) | is.null(data$x) | is.null(data$y))
-    stop("Can't construct moveData object : fields are missing")
+  for(i in 1:length(data))
+    if(is.null(data[[i]]$step) | is.null(data[[i]]$angle) | is.null(data[[i]]$x) | is.null(data[[i]]$y))
+      stop("Can't construct moveData object : fields are missing")
 
   obj <- data
 
