@@ -5,8 +5,10 @@
 #' Used during the optimization of the log-likelihood.
 #'
 #' @param wpar Vector of state-dependent distributions  unconstrained parameters.
-#' @param bounds Matrix with 2 columns and as many rows as there are elements in par. Each row
+#' @param bounds Matrix with 2 columns and as many rows as there are elements in wpar. Each row
 #' contains the lower and upper bound for the correponding parameter.
+#' @param parSize Vector of two values : c(number of parameters of the step length distribution,
+#' number of parameters of the turning angle distribution).
 #' @param nbStates The number of states of the HMM.
 #' @param nbCovs The number of covariates.
 #'
@@ -16,14 +18,15 @@
 #' nbStates <- 3
 #' nbCovs <- 2
 #' par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
+#' parSize <- c(1,1)
 #' bounds <- matrix(c(0,1,0,1,0,1,
 #'                    0,Inf,0,Inf,0,Inf),
 #'                  byrow=TRUE,ncol=2)
 #' beta <- matrix(rnorm(18),ncol=6,nrow=3)
 #' delta <- c(0.6,0.3,0.1)
 #' wpar <- n2w(par,bounds,beta,delta,nbStates)
-#' print(w2n(wpar,bounds,nbStates,nbCovs))
-w2n <- function(wpar,bounds,nbStates,nbCovs)
+#' print(w2n(wpar,bounds,parSize,nbStates,nbCovs))
+w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
 {
   foo <- length(wpar)-nbStates+2
   delta <- wpar[foo:length(wpar)]
@@ -57,5 +60,14 @@ w2n <- function(wpar,bounds,nbStates,nbCovs)
     par <- c(par,p)
   }
 
-  return(list(par=par,beta=beta,delta=delta))
+  # identify parameters related to angle dist
+  if(parSize[2]!=0) anglePar <- matrix(par[(length(par)-parSize[2]*nbStates+1):length(par)],
+                                       ncol=nbStates,byrow=T)
+  par <- par[-((length(par)-parSize[2]*nbStates+1):length(par))] # remove pars related to angle dist
+
+  # identify parameters related to step dist
+  stepPar <- matrix(par,ncol=nbStates,byrow=T)
+
+  return(list(stepPar=stepPar,anglePar=anglePar,beta=beta,delta=delta))
 }
+
