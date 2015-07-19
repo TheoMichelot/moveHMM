@@ -50,7 +50,10 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
 
     c <- NULL
-    if(!is.null(covs)) c <- covs[i1:i2,]
+    if(!is.null(covs)) {
+      if(length(covsCol)==1) c <- covs[i1:i2]
+      else c <- covs[i1:i2,]
+    }
 
     data[[k]] <- list(ID=unique(ID)[k],step=step,angle=angle,covs=c,x=x[i1:i2],y=y[i1:i2])
   }
