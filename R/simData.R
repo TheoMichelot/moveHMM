@@ -43,7 +43,7 @@ simData <- function(nbAnimals,nbStates,stepFun=c("gamma","weibull","exp"),
   beta <- matrix(rnorm((nbCov+1)*nbStates*(nbStates-1)),nrow=nbCov+1,ncol=nbStates*(nbStates-1))
 
   for(i in 1:nbAnimals) {
-    nbObs <- sample(100:150,1) # number of observation chosen in [100,150]
+    nbObs <- sample(100:1500,1) # number of observation chosen in [100,1500]
 
     # initial state distribution
     delta <- rep(1,nbStates)/nbStates
