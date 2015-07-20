@@ -70,17 +70,7 @@ nLogLike <- function(nbStates,wpar,bounds,parSize,data,stepFun,angleFun,angleMea
     trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
     allProbs <- allProbs(data[[zoo]],nbStates,stepFun,angleFun,par$stepPar,par$anglePar)
 
-    lscale <- 0
-    alpha <- par$delta*allProbs[1,]
-    for(k in 2:nbObs) {
-      gamma <- trMat[,,k]
-      alpha <- alpha%*%gamma*allProbs[k,]
-
-      # scaling
-      sumalpha <- sum(alpha)
-      lscale <- lscale+log(sumalpha)
-      alpha <- alpha/sumalpha
-    }
+    lscale <- nLogLike_rcpp(trMat,par$delta,allProbs) # call to C++ function
     llk <- llk + lscale
   }
 
