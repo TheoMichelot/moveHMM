@@ -1,8 +1,8 @@
 
 #' Negative log-likelihood function
 #'
-#' @param nbStates Number of states of the HMM.
 #' @param wpar Vector of working parameters.
+#' @param nbStates Number of states of the HMM.
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in wpar. Each row
 #' contains the lower and upper bound for the correponding parameter.
 #' @param parSize Vector of two values : c(number of parameters of the step length distribution,
@@ -54,7 +54,7 @@
 #'
 #' # does not seem to work on real data (NaN result)
 #' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
-nLogLike <- function(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean=NULL)
+nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean=NULL)
 {
   llk <- 0
   nbAnimals <- length(data)
