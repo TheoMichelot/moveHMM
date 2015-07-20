@@ -3,12 +3,14 @@ Type: Package
 Title: Animal movement modelling using hidden Markov models
 Version: 0.1
 Date: 2015-07-14
-Author: Théo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
-Maintainer: Théo Michelot <theo.michelot@gmail.com>
+Author: Theo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
+Maintainer: Theo Michelot <theo.michelot@gmail.com>
 Description: Animal movement modelling using hidden Markov models
-License: GPL3
+License: GNU GPL 3
 LazyData: TRUE
+Depends:
+    CircStats, sp
 Imports:
     Rcpp (>= 0.11.6)
 LinkingTo:
-    Rcpp
+    Rcpp, RcppArmadillo
