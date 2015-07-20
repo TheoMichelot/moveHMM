@@ -14,11 +14,11 @@
 parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauchy"),nbStates,
                    estAngleMean)
 {
-  stepFun <- match.arg(stepFun)
-  angleFun <- match.arg(angleFun)
+  stepDist <- match.arg(stepDist)
+  angleDist <- match.arg(angleDist)
 
   parSize <- c(NA,NA)
-  switch(stepFun,
+  switch(stepDist,
          "gamma"={
            parSize[1] <- 2
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
@@ -31,7 +31,7 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauc
            parSize[1] <- 1
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
          })
-  switch(angleFun,
+  switch(angleDist,
          "vm"={
            if(estAngleMean) {
              parSize[2] <- 2
