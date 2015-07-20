@@ -6,15 +6,13 @@
 #' @param data Data relative to one observed individual, as a list. Required fields :
 #' step, angle.
 #' @param nbStates Number of states of the HMM.
-#' @param stepFun Character string, among "gamma", "weibull", and "exp".
-#' Name of the distribution of the step length values.
-#' @param angleFun Character string, among "vm", and "wrpcauchy".
-#' Name of the distribution of the turning angle values.
+#' @param stepDist Name of the distribution of the step length values.
+#' @param angleDist Name of the distribution of the turning angle values.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
-#' matrix with one row for each parameter (in the order expected by the function stepFun),
+#' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
 #' and one column for each state.
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
-#' matrix with one row for each parameter (in the order expected by the function angleFun),
+#' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
 #' and one column for each state.
 #'
 #' @return Matrix of all probabilities.
@@ -22,17 +20,17 @@
 #' @examples
 #' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 #' anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
-#' stepFun <- "gamma"
-#' angleFun <- "vm"
-#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar,0.2,2)
-#' P <- allProbs(data[[1]],2,stepFun,angleFun,stepPar,anglePar)
-allProbs <- function(data,nbStates,stepFun=c("gamma","weibull","exp"),
-                     angleFun=c("vm","wrpcauchy"),stepPar,anglePar)
+#' stepDist <- "gamma"
+#' angleDist <- "vm"
+#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,0.2,2)
+#' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar)
+allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
+                     angleDist=c("vm","wrpcauchy"),stepPar,anglePar)
 {
-  stepFun <- match.arg(stepFun)
-  stepFun <- paste("d",stepFun,sep="")
-  angleFun <- match.arg(angleFun)
-  angleFun <- paste("d",angleFun,sep="")
+  stepDist <- match.arg(stepDist)
+  stepFun <- paste("d",stepDist,sep="")
+  angleDist <- match.arg(angleDist)
+  angleFun <- paste("d",angleDist,sep="")
 
   nbObs <- length(data$step)
   allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)

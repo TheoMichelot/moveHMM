@@ -3,15 +3,13 @@
 #'
 #' @param nbAnimals Number of observed individuals to simulate.
 #' @param nbStates Number of behavioural states to simulate.
-#' @param stepFun Character string, among "gamma", "weibull", and "exp".
-#' Name of the distribution from which to draw the step length values.
-#' @param angleFun Character string, among "vm", and "wrpcauchy".
-#' Name of the distribution from which to draw the turning angle values.
+#' @param stepDist Name of the distribution from which to draw the step length values.
+#' @param angleDist Name of the distribution from which to draw the turning angle values.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
-#' matrix with one row for each parameter (in the order expected by the function stepFun),
+#' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
 #' and one column for each state.
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
-#' matrix with one row for each parameter (in the order expected by the function angleFun),
+#' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
 #' and one column for each state.
 #' @param zeroInflation Probability of step length being zero (0 by default).
 #' @param nbCov Number of covariates to simulate (0 by default).
@@ -20,22 +18,22 @@
 #' @examples
 #' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 #' anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
-#' stepFun <- "gamma"
-#' angleFun <- "vm"
-#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar,0.2,2)
+#' stepDist <- "gamma"
+#' angleDist <- "vm"
+#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,0.2,2)
 #'
 #' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 #' anglePar <- matrix(c(0,0.5,pi,0.7),nrow=2) # mean1, k1, mean2, k2
-#' stepFun <- "weibull"
-#' angleFun <- "wrpcauchy"
-#' data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
-simData <- function(nbAnimals,nbStates,stepFun=c("gamma","weibull","exp"),
-                    angleFun=c("vm","wrpcauchy"),stepPar,anglePar,zeroInflation=0,nbCov=0)
+#' stepDist <- "weibull"
+#' angleDist <- "wrpcauchy"
+#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
+simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
+                    angleDist=c("vm","wrpcauchy"),stepPar,anglePar,zeroInflation=0,nbCov=0)
 {
-  stepFun <- match.arg(stepFun)
-  stepFun <- paste("r",stepFun,sep="")
-  angleFun <- match.arg(angleFun)
-  angleFun <- paste("r",angleFun,sep="")
+  stepDist <- match.arg(stepDist)
+  stepFun <- paste("r",stepDist,sep="")
+  angleDist <- match.arg(angleDist)
+  angleFun <- paste("r",angleDist,sep="")
 
   data <- list()
 

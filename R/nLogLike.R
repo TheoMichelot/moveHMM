@@ -8,6 +8,8 @@
 #' @param parSize Vector of two values : c(number of parameters of the step length distribution,
 #' number of parameters of the turning angle distribution).
 #' @param data An object moveData.
+#' @param stepDist Name of the distribution of the step length values.
+#' @param angleDist Name of the distribution of the turning angle values.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
 #' Defaults to NULL.
 #'
@@ -41,18 +43,18 @@
 #' wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 #' parSize <- c(2,1)
 #' angleMean <- c(pi,0)
-#' stepFun <- "gamma"
-#' angleFun <- "vm"
+#' stepDist <- "gamma"
+#' angleDist <- "vm"
 #'
 #' # seems to work with simulated data (non-NaN result)
-#' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepFun,angleFun,angleMean)
+#' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
 #'
 #' trackData <- read.csv("~/Dropbox/Theo/real_data/two_lions.txt",sep="\t")[,c(1,10,11,12,13)]
 #' data <- prepData(trackData,'euclidean')
 #'
 #' # does not seem to work on real data (NaN result)
-#' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepFun,angleFun,angleMean)
-nLogLike <- function(nbStates,wpar,bounds,parSize,data,stepFun,angleFun,angleMean=NULL)
+#' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
+nLogLike <- function(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean=NULL)
 {
   llk <- 0
   nbAnimals <- length(data)
@@ -68,7 +70,7 @@ nLogLike <- function(nbStates,wpar,bounds,parSize,data,stepFun,angleFun,angleMea
     covs <- data[[zoo]]$covs
 
     trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
-    allProbs <- allProbs(data[[zoo]],nbStates,stepFun,angleFun,par$stepPar,par$anglePar)
+    allProbs <- allProbs(data[[zoo]],nbStates,stepDist,angleDist,par$stepPar,par$anglePar)
 
     lscale <- nLogLike_rcpp(trMat,par$delta,allProbs) # call to C++ function
     llk <- llk + lscale
