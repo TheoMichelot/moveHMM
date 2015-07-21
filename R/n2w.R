@@ -21,6 +21,7 @@
 #' beta <- matrix(rnorm(18),ncol=6,nrow=3)
 #' delta <- c(0.6,0.3,0.1)
 #' print(n2w(par,bounds,beta,delta,nbStates))
+
 n2w <- function(par,bounds,beta,delta,nbStates)
 {
   nbPar <- length(par)/nbStates

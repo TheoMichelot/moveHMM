@@ -12,6 +12,7 @@
 #'
 #' @return A three-dimensional array gamma, such that gamma[,,t] is the transition probability
 #' matrix at time t.
+
 trMatrix <- function(nbStates,nbObs,beta,covs=NULL)
 {
   gamma <- array(0,c(nbStates,nbStates,nbObs))

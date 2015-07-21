@@ -54,6 +54,7 @@
 #'
 #' # does not seem to work on real data (NaN result)
 #' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
+
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean=NULL)
 {
   llk <- 0

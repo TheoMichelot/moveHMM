@@ -12,6 +12,7 @@
 #' y <- c(4,6)
 #' z <- c(10,7)
 #' turnAngle(x,y,z)
+
 turnAngle <- function(x,y,z)
 {
   v <- c(y[1]-x[1],y[2]-x[2])

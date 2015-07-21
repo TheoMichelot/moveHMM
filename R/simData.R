@@ -27,6 +27,7 @@
 #' stepDist <- "weibull"
 #' angleDist <- "wrpcauchy"
 #' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
+
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
                     angleDist=c("vm","wrpcauchy"),stepPar,anglePar,zeroInflation=0,nbCov=0)
 {

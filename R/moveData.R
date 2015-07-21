@@ -6,6 +6,7 @@
 #' or longitude/latitude)
 #'
 #' @return An object moveData.
+
 moveData <- function(data)
 {
   for(i in 1:length(data))

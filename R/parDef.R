@@ -11,6 +11,7 @@
 #' distribution,number of parameters of the turning angle distribution)) and bounds
 #' (matrix with 2 columns and sum(parSize) rows. Each row contains the lower and upper
 #' bound for the correponding parameter).
+
 parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauchy"),nbStates,
                    estAngleMean)
 {

@@ -1,5 +1,4 @@
 
-
 #' Fit an HMM to the data
 #'
 #' @param nbStates Number of states of the HMM.
@@ -35,6 +34,7 @@
 #' delta0 <- c(1,1)/2
 #'
 #' mod <- fitHMM(nbStates,data,par0,beta0,delta0,"gamma","vm",c(pi,0))
+
 fitHMM <- function(nbStates,data,par0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
                    angleDist=c("vm","wrpcauchy"),angleMean=NULL)
 {

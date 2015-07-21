@@ -26,6 +26,7 @@
 #' delta <- c(0.6,0.3,0.1)
 #' wpar <- n2w(par,bounds,beta,delta,nbStates)
 #' print(w2n(wpar,bounds,parSize,nbStates,nbCovs))
+
 w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
 {
   foo <- length(wpar)-nbStates+2

@@ -24,6 +24,7 @@
 #' angleDist <- "vm"
 #' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,0.2,2)
 #' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar)
+
 allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
                      angleDist=c("vm","wrpcauchy"),stepPar,anglePar)
 {
