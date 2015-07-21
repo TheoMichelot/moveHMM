@@ -46,13 +46,6 @@
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
 #'
-#' # seems to work with simulated data (non-NaN result)
-#' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
-#'
-#' trackData <- read.csv("~/Dropbox/Theo/real_data/two_lions.txt",sep="\t")[,c(1,10,11,12,13)]
-#' data <- prepData(trackData,'euclidean')
-#'
-#' # does not seem to work on real data (NaN result)
 #' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean=NULL)
