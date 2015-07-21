@@ -19,13 +19,3 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP moveHMM_rcpp_hello() {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(rcpp_hello());
-    return __result;
-END_RCPP
-}
