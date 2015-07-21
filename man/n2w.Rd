@@ -12,7 +12,7 @@ n2w(par, bounds, beta, delta, nbStates)
 \item{bounds}{Matrix with 2 columns and as many rows as there are elements in par. Each row
 contains the lower and upper bound for the correponding parameter.}
 
-\item{beta}{Matrix of regression parameters for the transition probability matrix.}
+\item{beta}{Matrix of regression coefficients for the transition probability matrix.}
 
 \item{delta}{Stationary distribution.}
 

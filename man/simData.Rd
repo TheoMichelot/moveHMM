@@ -4,8 +4,8 @@
 \alias{simData}
 \title{Simulation tool}
 \usage{
-simData(nbAnimals, nbStates, stepFun = c("gamma", "weibull", "exp"),
-  angleFun = c("vm", "wrpcauchy"), stepPar, anglePar, zeroInflation = 0,
+simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
+  angleDist = c("vm", "wrpcauchy"), stepPar, anglePar, zeroInflation = 0,
   nbCov = 0)
 }
 \arguments{
@@ -13,18 +13,16 @@ simData(nbAnimals, nbStates, stepFun = c("gamma", "weibull", "exp"),
 
 \item{nbStates}{Number of behavioural states to simulate.}
 
-\item{stepFun}{Character string, among "gamma", "weibull", and "exp".
-Name of the distribution from which to draw the step length values.}
+\item{stepDist}{Name of the distribution from which to draw the step length values.}
 
-\item{angleFun}{Character string, among "vm", and "wrpcauchy".
-Name of the distribution from which to draw the turning angle values.}
+\item{angleDist}{Name of the distribution from which to draw the turning angle values.}
 
 \item{stepPar}{Parameters of the step length distribution. Must be provided in a
-matrix with one row for each parameter (in the order expected by the function stepFun),
+matrix with one row for each parameter (in the order expected by the pdf of stepDist),
 and one column for each state.}
 
 \item{anglePar}{Parameters of the turning angle distribution. Must be provided in a
-matrix with one row for each parameter (in the order expected by the function angleFun),
+matrix with one row for each parameter (in the order expected by the pdf of angleDist),
 and one column for each state.}
 
 \item{zeroInflation}{Probability of step length being zero (0 by default).}
@@ -40,14 +38,14 @@ Simulation tool
 \examples{
 stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
-stepFun <- "gamma"
-angleFun <- "vm"
-data <- simData(5,2,stepFun,angleFun,stepPar,anglePar,0.2,2)
+stepDist <- "gamma"
+angleDist <- "vm"
+data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,0.2,2)
 
 stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
 anglePar <- matrix(c(0,0.5,pi,0.7),nrow=2) # mean1, k1, mean2, k2
-stepFun <- "weibull"
-angleFun <- "wrpcauchy"
-data <- simData(5,2,stepFun,angleFun,stepPar,anglePar)
+stepDist <- "weibull"
+angleDist <- "wrpcauchy"
+data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
 }
 

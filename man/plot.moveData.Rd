@@ -4,7 +4,7 @@
 \alias{plot.moveData}
 \title{Plot function for a moveData object}
 \usage{
-\method{plot}{moveData}(data, compact = FALSE)
+plot.moveData(data, compact = FALSE)
 }
 \arguments{
 \item{data}{An object moveData}

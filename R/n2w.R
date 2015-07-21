@@ -7,7 +7,7 @@
 #' @param par Vector of state-dependent distributions parameters.
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in par. Each row
 #' contains the lower and upper bound for the correponding parameter.
-#' @param beta Matrix of regression parameters for the transition probability matrix.
+#' @param beta Matrix of regression coefficients for the transition probability matrix.
 #' @param delta Stationary distribution.
 #' @param nbStates The number of states of the HMM.
 #'
