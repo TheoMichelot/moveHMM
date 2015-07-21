@@ -22,14 +22,17 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauc
          "gamma"={
            parSize[1] <- 2
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
+           parNames <- c("mean","sd")
          },
          "weibull"={
            parSize[1] <- 2
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
+           parNames <- c("mean","sd")
          },
          "exp"={
            parSize[1] <- 1
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
+           parNames <- c("rate")
          })
   switch(angleDist,
          "vm"={
@@ -37,10 +40,12 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauc
              parSize[2] <- 2
              angleBounds <- matrix(c(rep(c(-pi,pi),nbStates),rep(c(0,Inf),nbStates)),
                                    ncol=2,byrow=TRUE)
+             parNames <- c(parNames,"mean","concentration")
            }
            else {
              parSize[2] <- 1
              angleBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
+             parNames <- c(parNames,"concentration")
            }
          },
          "wrpcauchy"={
@@ -48,13 +53,15 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauc
              parSize[2] <- 2
              angleBounds <- matrix(c(rep(c(-pi,pi),nbStates),rep(c(0,1),nbStates)),
                                    ncol=2,byrow=TRUE)
+             parNames <- c(parNames,"location","concentration")
            }
            else {
              parSize[2] <- 1
              angleBounds <- matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE)
+             parNames <- c(parNames,"concentration")
            }
          })
 
   bounds <- rbind(stepBounds,angleBounds)
-  return(list(parSize=parSize,bounds=bounds))
+  return(list(parSize=parSize,bounds=bounds,parNames=parNames))
 }
