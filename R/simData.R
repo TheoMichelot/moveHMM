@@ -92,7 +92,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
         for(j in 1:nrow(anglePar))
           angleArgs[[j+1]] <- anglePar[j,Z[k]]
       }
-      angle[k] <- do.call(angleFun,angleArgs)
+      angle[k] <- do.call(angleFun,angleArgs)-pi # angle between -pi and pi
       phi<-phi+angle[k]
 
       # conversion between mean/sd and shape/scale if necessary
@@ -100,8 +100,10 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
         shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
         scale <- stepArgs[[3]]^2/stepArgs[[2]]
         stepArgs[[2]] <- shape
-        stepArgs[[3]] <- scale
+        if(stepFun=="rgamma") stepArgs[[3]] <- 1/scale # rgamma expects rate=1/scale
+        else stepArgs[[3]] <- scale # rweibull expects scale
       }
+
       if(runif(1)>zeroInflation)
         step[k] <- do.call(stepFun,stepArgs)
       else
@@ -109,7 +111,6 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
 
       m <- step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
       X[k+1,] <- X[k,] + m
-      angle[k] <- angle[k]-pi # angle between -pi and pi
     }
     angle[1] <- NA # the first angle value is arbitrary
 

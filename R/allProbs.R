@@ -53,12 +53,14 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
       for(j in 1:nrow(anglePar))
         angleArgs[[j+1]] <- anglePar[j,i]
     }
+
     # conversion between mean/sd and shape/scale if necessary
     if(stepFun=="dweibull" | stepFun=="dgamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
       scale <- stepArgs[[3]]^2/stepArgs[[2]]
       stepArgs[[2]] <- shape
-      stepArgs[[3]] <- scale
+      if(stepFun=="dgamma") stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
+      else stepArgs[[3]] <- scale # dweibull expects scale
     }
 
     stepProb[stepInd] <- do.call(stepFun,stepArgs)
