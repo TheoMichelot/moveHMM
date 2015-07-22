@@ -6,7 +6,7 @@
 \usage{
 nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
   "weibull", "exp"), angleDist = c("NULL", "vm", "wrpcauchy"),
-  angleMean = NULL)
+  angleMean = NULL, zeroInflation = FALSE)
 }
 \arguments{
 \item{wpar}{Vector of working parameters.}

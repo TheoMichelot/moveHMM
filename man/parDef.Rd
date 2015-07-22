@@ -5,7 +5,7 @@
 \title{Parameters definition}
 \usage{
 parDef(stepDist = c("gamma", "weibull", "exp"), angleDist = c("NULL", "vm",
-  "wrpcauchy"), nbStates, estAngleMean)
+  "wrpcauchy"), nbStates, estAngleMean, zeroInflation)
 }
 \arguments{
 \item{stepDist}{Name of the distribution of the step length values.}
@@ -17,12 +17,14 @@ if the turning angles distributions is not estimated.}
 
 \item{estAngleMean}{TRUE if the mean of the turning angles distribution is estimated,
 FALSE otherwise.}
+
+\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
 }
 \value{
-A list of two elements : parSize (= c(number of parameters of the step length
-distribution,number of parameters of the turning angle distribution)) and bounds
-(matrix with 2 columns and sum(parSize) rows. Each row contains the lower and upper
-bound for the correponding parameter).
+A list of three elements : parSize (= c(number of parameters of the step length
+distribution,number of parameters of the turning angle distribution)), bounds
+(matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
+bound for the correponding parameter), and parNames (names of parameters).
 }
 \description{
 Parameters definition

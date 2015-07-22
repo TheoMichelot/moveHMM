@@ -16,6 +16,7 @@
 #' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
 #' and one column for each state. Defaults to NULL if the turning angles distributions
 #' is not estimated.
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
 #'
 #' @return Matrix of all probabilities.
 #'
@@ -28,7 +29,8 @@
 #' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar)
 
 allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
-                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL)
+                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
+                     zeroInflation=FALSE)
 {
   stepDist <- match.arg(stepDist)
   stepFun <- paste("d",stepDist,sep="")
@@ -40,17 +42,25 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
   stepInd <- which(!is.na(data$step))
   if(angleDist!="NULL") angleInd <- which(!is.na(data$angle))
 
-  for(i in 1:nbStates) {
+  sp <- stepPar
+
+  for(state in 1:nbStates) {
+    stepPar <- sp
     stepProb <- rep(1,nbObs)
     angleProb <- rep(1,nbObs)
 
     # Constitute the lists of state-dependent parameters for the step and angle
     stepArgs <- list(data$step[stepInd])
     if(angleDist!="NULL") angleArgs <- list(data$angle[angleInd])
-    if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[i]
+
+    if(zeroInflation) {
+      zeromass <- stepPar[nrow(stepPar),state]
+      stepPar <- stepPar[-nrow(stepPar),]
+    }
+    if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[state]
     else {
       for(j in 1:nrow(stepPar))
-        stepArgs[[j+1]] <- stepPar[j,i]
+        stepArgs[[j+1]] <- stepPar[j,state]
     }
     # conversion between mean/sd and shape/scale if necessary
     if(stepFun=="dweibull" | stepFun=="dgamma") {
@@ -60,19 +70,24 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
       if(stepFun=="dgamma") stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
       else stepArgs[[3]] <- scale # dweibull expects scale
     }
-    stepProb[stepInd] <- do.call(stepFun,stepArgs)
+    if(zeroInflation) {
+      stepProb[stepInd] <- ifelse(data$step[stepInd]==0,
+                                  zeromass, # if step==0
+                                  (1-zeromass)*do.call(stepFun,stepArgs)) # if step != 0
+    }
+    else stepProb[stepInd] <- do.call(stepFun,stepArgs)
 
     if(angleDist!="NULL") {
-      if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[i]
+      if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[state]
       else {
         for(j in 1:nrow(anglePar))
-          angleArgs[[j+1]] <- anglePar[j,i]
+          angleArgs[[j+1]] <- anglePar[j,state]
       }
-
       angleProb[angleInd] <- do.call(angleFun,angleArgs)
-      allProbs[,i] <- stepProb*angleProb
+
+      allProbs[,state] <- stepProb*angleProb
     }
-    else allProbs[,i] <- stepProb # model step length only
+    else allProbs[,state] <- stepProb # model step length only
   }
   return(allProbs)
 }

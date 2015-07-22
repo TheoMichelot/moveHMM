@@ -50,7 +50,7 @@
 #' l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean)
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","exp"),
-                     angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL)
+                     angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL,zeroInflation=FALSE)
 {
   llk <- 0
   nbAnimals <- length(data)
@@ -66,7 +66,8 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     covs <- data[[zoo]]$covs
 
     trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
-    allProbs <- allProbs(data[[zoo]],nbStates,stepDist,angleDist,par$stepPar,par$anglePar)
+    allProbs <- allProbs(data[[zoo]],nbStates,stepDist,angleDist,par$stepPar,par$anglePar,
+                         zeroInflation)
 
     lscale <- nLogLike_rcpp(trMat,par$delta,allProbs) # call to C++ function
     llk <- llk + lscale

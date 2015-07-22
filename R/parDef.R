@@ -7,19 +7,20 @@
 #' @param nbStates Number of states of the HMM.
 #' @param estAngleMean TRUE if the mean of the turning angles distribution is estimated,
 #' FALSE otherwise.
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
 #'
-#' @return A list of two elements : parSize (= c(number of parameters of the step length
-#' distribution,number of parameters of the turning angle distribution)) and bounds
-#' (matrix with 2 columns and sum(parSize) rows. Each row contains the lower and upper
-#' bound for the correponding parameter).
+#' @return A list of three elements : parSize (= c(number of parameters of the step length
+#' distribution,number of parameters of the turning angle distribution)), bounds
+#' (matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
+#' bound for the correponding parameter), and parNames (names of parameters).
 
 parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","wrpcauchy"),
-                   nbStates,estAngleMean)
+                   nbStates,estAngleMean,zeroInflation)
 {
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
-
   parSize <- c(NA,NA)
+
   switch(stepDist,
          "gamma"={
            parSize[1] <- 2
@@ -36,6 +37,14 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
            parNames <- c("rate")
          })
+
+  # include zero-mass
+  if(zeroInflation) {
+    parSize[1] <- parSize[1]+1
+    stepBounds <- rbind(stepBounds,matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE))
+    parNames <- c(parNames,"zero-mass")
+  }
+
   switch(angleDist,
          "NULL"={
            parSize[2] <- 0

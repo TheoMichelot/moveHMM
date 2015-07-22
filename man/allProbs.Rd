@@ -5,7 +5,8 @@
 \title{Matrix of all probabilities}
 \usage{
 allProbs(data, nbStates, stepDist = c("gamma", "weibull", "exp"),
-  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL)
+  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
+  zeroInflation = FALSE)
 }
 \arguments{
 \item{data}{Data relative to one observed individual, as a list. Required fields :
@@ -26,6 +27,8 @@ and one column for each state.}
 matrix with one row for each parameter (in the order expected by the pdf of angleDist),
 and one column for each state. Defaults to NULL if the turning angles distributions
 is not estimated.}
+
+\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
 }
 \value{
 Matrix of all probabilities.
