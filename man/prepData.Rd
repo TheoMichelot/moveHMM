@@ -21,7 +21,9 @@ turning angles and covariates values corresponding to an individual.
 Preprocessing of the tracking data
 }
 \examples{
-trackData <- read.csv("my_tracking_data.csv",as.is = TRUE)
+x <- c(1,2,3,4,5,6,7,8,9,10)
+y <- c(1,1,1,2,2,2,1,1,1,2)
+trackData <- list(x=x,y=y)
 d <- prepData(trackData,'euclidean')
 d[[1]]$step # the vector of step lengths of the first individual
 }
