@@ -10,7 +10,9 @@
 #' turning angles and covariates values corresponding to an individual.
 #'
 #' @examples
-#' trackData <- read.csv("my_tracking_data.csv",as.is = TRUE)
+#' x <- c(1,2,3,4,5,6,7,8,9,10)
+#' y <- c(1,1,1,2,2,2,1,1,1,2)
+#' trackData <- list(x,y)
 #' d <- prepData(trackData,'euclidean')
 #' d[[1]]$step # the vector of step lengths of the first individual
 
@@ -19,7 +21,8 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   type <- match.arg(type)
   x <- trackData$x
   y <- trackData$y
-  ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
+  if(!is.null(trackData$ID)) ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
+  else ID <- NULL
   covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
   if(length(covsCol)>0) covs <- trackData[,covsCol]
   else covs <- NULL
@@ -36,7 +39,8 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     else nbObs <- length(which(ID==unique(ID)[k]))
     step <- rep(NA,nbObs)
     angle <- rep(NA,nbObs)
-    i1 <- which(ID==unique(ID)[k])[1]
+    if(!is.null(ID)) i1 <- which(ID==unique(ID)[k])[1]
+    else i1 <- 1
     i2 <- i1+nbObs-1
     for(i in (i1+1):(i2-1)) {
       step[i-i1+1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
