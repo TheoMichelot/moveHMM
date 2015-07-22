@@ -54,26 +54,3 @@ fitHMM <- function(nbStates,data,par0,beta0,delta0,stepDist=c("gamma","weibull",
   par <- w2n(mle$estimate,bounds,parSize,nbStates,nbCovs)
   return(par)
 }
-
-nbStates <- 2
-stepPar <- matrix(c(15,50,
-                    10,20),
-                  byrow=T,ncol=2)
-anglePar <- matrix(c(pi,0,
-                     0.7,2),
-                   byrow=T,ncol=2)
-data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCov=2)
-
-mu0 <- c(20,80)
-sigma0 <- c(20,40)
-# kappa0 <- c(1,1)
-# par0 <- c(mu0,sigma0,kappa0)
-par0 <- c(mu0,sigma0)
-
-nbCovs <- ncol(data[[1]]$covs)
-beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
-                nrow=nbCovs+1,byrow=T)
-delta0 <- c(1,1)/2
-
-mod <- fitHMM(nbStates,data,par0,beta0,delta0,"gamma","NULL",NULL)
-
