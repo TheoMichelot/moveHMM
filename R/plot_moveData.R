@@ -7,18 +7,25 @@
 
 plot.moveData <- function(data,compact=FALSE)
 {
-  par(mar=c(5,4,4,2)-c(0,0,3,1)) # bottom, left, top, right
+  par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
+  par(ask=T)
   if(!compact) {
-    layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
     for(i in 1:length(data)) {
-      plot(data[[i]]$x,data[[i]]$y,type="o",lwd=1.3,
-           xlab="x",ylab="y",pch=20)
-      legend("topleft",data[[i]]$ID,bty="n",text.col="red")
+      par(mfrow=c(1,1))
+      plot(data[[i]]$x,data[[i]]$y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20)
+      mtext(paste("Animal ID :",data[[i]]$ID),side=3,outer=TRUE,padj=2)
+
+      par(mfrow=c(2,2))
       plot(data[[i]]$step,type="l",xlab="t",ylab="step length",
            ylim=c(0,max(data[[i]]$step,na.rm=T)))
       plot(data[[i]]$angle,type="l",xlab="t",ylab="turning angle",
            ylim=c(-pi,pi))
       abline(h=c(-pi,0,pi),lty=2)
+
+      hist(data[[i]]$step,xlab="step length",main="")
+      hist(data[[i]]$angle,xlab="turning angle",main="")
+
+      mtext(paste("Animal ID :",data[[i]]$ID),side=3,outer=TRUE,padj=2)
     }
   }
   else {
@@ -39,18 +46,21 @@ plot.moveData <- function(data,compact=FALSE)
     for(i in 2:length(data)) {
       points(data[[i]]$x,data[[i]]$y,type="o",pch=20,lwd=1.3,col=i,cex=0.5)
     }
-    par(mfrow=c(1,2))
-    plot(data[[1]]$step,type="l",col=1,xlim=c(1,nbObs),ylim=c(0,stepmax),
-         xlab="t",ylab="step length")
-    for(i in 2:length(data)) {
-      lines(data[[i]]$step,col=i)
+
+    par(mfrow=c(2,2))
+    for(i in 1:length(data)) {
+      plot(data[[i]]$step,type="l",xlab="t",ylab="step length",
+           ylim=c(0,max(data[[i]]$step,na.rm=T)))
+      plot(data[[i]]$angle,type="l",xlab="t",ylab="turning angle",
+           ylim=c(-pi,pi))
+      abline(h=c(-pi,0,pi),lty=2)
+
+      hist(data[[i]]$step,xlab="step length",main="")
+      hist(data[[i]]$angle,xlab="turning angle",main="")
+
+      mtext(paste("Animal ID :",data[[i]]$ID),side=3,outer=TRUE,padj=2)
     }
-    plot(data[[1]]$angle,type="l",col=1,xlim=c(1,nbObs),ylim=c(-pi,pi),
-         xlab="t",ylab="turning angle")
-    for(i in 2:length(data)) {
-      lines(data[[i]]$angle,col=i)
-    }
-    abline(h=c(-pi,0,pi),lty=2)
+
   }
   par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)) # back to default layout
