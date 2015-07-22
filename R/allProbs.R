@@ -7,13 +7,15 @@
 #' step, angle.
 #' @param nbStates Number of states of the HMM.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values.
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to NULL
+#' if the turning angles distributions is not estimated.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
 #' and one column for each state.
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
-#' and one column for each state.
+#' and one column for each state. Defaults to NULL if the turning angles distributions
+#' is not estimated.
 #'
 #' @return Matrix of all probabilities.
 #'
@@ -26,35 +28,30 @@
 #' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar)
 
 allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
-                     angleDist=c("vm","wrpcauchy"),stepPar,anglePar)
+                     angleDist=c(NULL,"vm","wrpcauchy"),stepPar,anglePar=NULL)
 {
   stepDist <- match.arg(stepDist)
   stepFun <- paste("d",stepDist,sep="")
   angleDist <- match.arg(angleDist)
-  angleFun <- paste("d",angleDist,sep="")
+  if(!is.null(angleDist)) angleFun <- paste("d",angleDist,sep="")
 
   nbObs <- length(data$step)
   allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)
   stepInd <- which(!is.na(data$step))
-  angleInd <- which(!is.na(data$angle))
+  if(!is.null(angleDist)) angleInd <- which(!is.na(data$angle))
 
   for(i in 1:nbStates) {
     stepProb <- rep(1,nbObs)
     angleProb <- rep(1,nbObs)
 
     # Constitute the lists of state-dependent parameters for the step and angle
-    stepArgs <- list(data$step[stepInd]); angleArgs <- list(data$angle[angleInd])
+    stepArgs <- list(data$step[stepInd])
+    if(!is.null(angleDist)) angleArgs <- list(data$angle[angleInd])
     if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[i]
     else {
       for(j in 1:nrow(stepPar))
         stepArgs[[j+1]] <- stepPar[j,i]
     }
-    if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[i]
-    else {
-      for(j in 1:nrow(anglePar))
-        angleArgs[[j+1]] <- anglePar[j,i]
-    }
-
     # conversion between mean/sd and shape/scale if necessary
     if(stepFun=="dweibull" | stepFun=="dgamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
@@ -63,10 +60,19 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
       if(stepFun=="dgamma") stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
       else stepArgs[[3]] <- scale # dweibull expects scale
     }
-
     stepProb[stepInd] <- do.call(stepFun,stepArgs)
-    angleProb[angleInd] <- do.call(angleFun,angleArgs)
-    allProbs[,i] <- stepProb*angleProb
+
+    if(!is.null(angleDist)) {
+      if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[i]
+      else {
+        for(j in 1:nrow(anglePar))
+          angleArgs[[j+1]] <- anglePar[j,i]
+      }
+
+      angleProb[angleInd] <- do.call(angleFun,angleArgs)
+      allProbs[,i] <- stepProb*angleProb
+    }
+    else allProbs[,i] <- stepProb # model step length only
   }
   return(allProbs)
 }

@@ -5,7 +5,7 @@
 \title{Fit an HMM to the data}
 \usage{
 fitHMM(nbStates, data, par0, beta0, delta0, stepDist = c("gamma", "weibull",
-  "exp"), angleDist = c("vm", "wrpcauchy"), angleMean = NULL)
+  "exp"), angleDist = c(NULL, "vm", "wrpcauchy"), angleMean = NULL)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}
@@ -20,7 +20,8 @@ fitHMM(nbStates, data, par0, beta0, delta0, stepDist = c("gamma", "weibull",
 
 \item{stepDist}{Name of the distribution of the step length values.}
 
-\item{angleDist}{Name of the distribution of the turning angle values.}
+\item{angleDist}{Name of the distribution of the turning angle values. Defaults to NULL
+if the turning angles distributions is not estimated.}
 
 \item{angleMean}{If the mean of the turning angle distribution should not be estimated,
 angleMean is the vector of state-dependent means. It defaults to NULL, i.e. the means

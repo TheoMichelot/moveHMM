@@ -7,7 +7,7 @@
 w2n(wpar, bounds, parSize, nbStates, nbCovs)
 }
 \arguments{
-\item{wpar}{Vector of state-dependent distributions  unconstrained parameters.}
+\item{wpar}{Vector of state-dependent distributions unconstrained parameters.}
 
 \item{bounds}{Matrix with 2 columns and as many rows as there are elements in wpar. Each row
 contains the lower and upper bound for the correponding parameter.}

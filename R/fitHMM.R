@@ -7,7 +7,8 @@
 #' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
 #' @param delta0 Initial stationary distribution.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values.
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to NULL
+#' if the turning angles distributions is not estimated.
 #' @param angleMean If the mean of the turning angle distribution should not be estimated,
 #' angleMean is the vector of state-dependent means. It defaults to NULL, i.e. the means
 #' should be estimated.
@@ -36,7 +37,7 @@
 #' mod <- fitHMM(nbStates,data,par0,beta0,delta0,"gamma","vm",c(pi,0))
 
 fitHMM <- function(nbStates,data,par0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
-                   angleDist=c("vm","wrpcauchy"),angleMean=NULL)
+                   angleDist=c(NULL,"vm","wrpcauchy"),angleMean=NULL)
 {
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)

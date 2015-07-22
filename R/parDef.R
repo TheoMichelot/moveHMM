@@ -2,7 +2,8 @@
 #' Parameters definition
 #'
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values.
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to NULL
+#' if the turning angles distributions is not estimated.
 #' @param nbStates Number of states of the HMM.
 #' @param estAngleMean TRUE if the mean of the turning angles distribution is estimated,
 #' FALSE otherwise.
@@ -12,8 +13,8 @@
 #' (matrix with 2 columns and sum(parSize) rows. Each row contains the lower and upper
 #' bound for the correponding parameter).
 
-parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauchy"),nbStates,
-                   estAngleMean)
+parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c(NULL,"vm","wrpcauchy"),
+                   nbStates,estAngleMean)
 {
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
@@ -36,6 +37,10 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("vm","wrpcauc
            parNames <- c("rate")
          })
   switch(angleDist,
+         NULL={
+           parSize[2] <- 0
+           angleBounds <- NULL
+         },
          "vm"={
            if(estAngleMean) {
              parSize[2] <- 2

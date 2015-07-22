@@ -4,7 +4,7 @@
 #' Scales each parameter from the set of real numbers, back to its natural interval.
 #' Used during the optimization of the log-likelihood.
 #'
-#' @param wpar Vector of state-dependent distributions  unconstrained parameters.
+#' @param wpar Vector of state-dependent distributions unconstrained parameters.
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in wpar. Each row
 #' contains the lower and upper bound for the correponding parameter.
 #' @param parSize Vector of two values : c(number of parameters of the step length distribution,
@@ -62,9 +62,12 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
   }
 
   # identify parameters related to angle dist
-  if(parSize[2]!=0) anglePar <- matrix(par[(length(par)-parSize[2]*nbStates+1):length(par)],
+  if(parSize[2]!=0) {
+    anglePar <- matrix(par[(length(par)-parSize[2]*nbStates+1):length(par)],
                                        ncol=nbStates,byrow=T)
-  par <- par[-((length(par)-parSize[2]*nbStates+1):length(par))] # remove pars related to angle dist
+    par <- par[-((length(par)-parSize[2]*nbStates+1):length(par))] # remove pars related to angle dist
+  }
+  else anglePar <- NULL
 
   # identify parameters related to step dist
   stepPar <- matrix(par,ncol=nbStates,byrow=T)
