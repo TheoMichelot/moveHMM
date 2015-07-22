@@ -47,7 +47,7 @@
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
 #'
-#' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
+#' l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean)
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","exp"),
                      angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL)
