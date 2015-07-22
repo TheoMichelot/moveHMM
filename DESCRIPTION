@@ -6,7 +6,7 @@ Date: 2015-07-14
 Author: Theo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
 Maintainer: Theo Michelot <theo.michelot@gmail.com>
 Description: Animal movement modelling using hidden Markov models
-License: GNU GPL 3
+License: GPL-3
 LazyData: TRUE
 Depends:
     CircStats, sp
