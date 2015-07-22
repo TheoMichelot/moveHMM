@@ -7,7 +7,7 @@
 #' step, angle.
 #' @param nbStates Number of states of the HMM.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to NULL
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
 #' if the turning angles distributions is not estimated.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
@@ -28,17 +28,17 @@
 #' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar)
 
 allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
-                     angleDist=c(NULL,"vm","wrpcauchy"),stepPar,anglePar=NULL)
+                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL)
 {
   stepDist <- match.arg(stepDist)
   stepFun <- paste("d",stepDist,sep="")
   angleDist <- match.arg(angleDist)
-  if(!is.null(angleDist)) angleFun <- paste("d",angleDist,sep="")
+  if(angleDist!="NULL") angleFun <- paste("d",angleDist,sep="")
 
   nbObs <- length(data$step)
   allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)
   stepInd <- which(!is.na(data$step))
-  if(!is.null(angleDist)) angleInd <- which(!is.na(data$angle))
+  if(angleDist!="NULL") angleInd <- which(!is.na(data$angle))
 
   for(i in 1:nbStates) {
     stepProb <- rep(1,nbObs)
@@ -46,7 +46,7 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
 
     # Constitute the lists of state-dependent parameters for the step and angle
     stepArgs <- list(data$step[stepInd])
-    if(!is.null(angleDist)) angleArgs <- list(data$angle[angleInd])
+    if(angleDist!="NULL") angleArgs <- list(data$angle[angleInd])
     if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[i]
     else {
       for(j in 1:nrow(stepPar))
@@ -62,7 +62,7 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
     }
     stepProb[stepInd] <- do.call(stepFun,stepArgs)
 
-    if(!is.null(angleDist)) {
+    if(angleDist!="NULL") {
       if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[i]
       else {
         for(j in 1:nrow(anglePar))

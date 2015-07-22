@@ -9,7 +9,7 @@
 #' number of parameters of the turning angle distribution).
 #' @param data An object moveData.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to NULL
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
 #' if the turning angles distributions is not estimated.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
 #' Defaults to NULL.
@@ -50,7 +50,7 @@
 #' l <- nLogLike(nbStates,wpar,bounds,parSize,data,stepDist,angleDist,angleMean)
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","exp"),
-                     angleDist=c(NULL,"vm","wrpcauchy"),angleMean=NULL)
+                     angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL)
 {
   llk <- 0
   nbAnimals <- length(data)

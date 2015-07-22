@@ -4,13 +4,13 @@
 \alias{parDef}
 \title{Parameters definition}
 \usage{
-parDef(stepDist = c("gamma", "weibull", "exp"), angleDist = c(NULL, "vm",
+parDef(stepDist = c("gamma", "weibull", "exp"), angleDist = c("NULL", "vm",
   "wrpcauchy"), nbStates, estAngleMean)
 }
 \arguments{
 \item{stepDist}{Name of the distribution of the step length values.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to NULL
+\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "NULL"
 if the turning angles distributions is not estimated.}
 
 \item{nbStates}{Number of states of the HMM.}

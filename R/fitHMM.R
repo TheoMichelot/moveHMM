@@ -7,7 +7,7 @@
 #' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
 #' @param delta0 Initial stationary distribution.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to NULL
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
 #' if the turning angles distributions is not estimated.
 #' @param angleMean If the mean of the turning angle distribution should not be estimated,
 #' angleMean is the vector of state-dependent means. It defaults to NULL, i.e. the means
@@ -37,7 +37,7 @@
 #' mod <- fitHMM(nbStates,data,par0,beta0,delta0,"gamma","vm",c(pi,0))
 
 fitHMM <- function(nbStates,data,par0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
-                   angleDist=c(NULL,"vm","wrpcauchy"),angleMean=NULL)
+                   angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL)
 {
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
@@ -54,3 +54,26 @@ fitHMM <- function(nbStates,data,par0,beta0,delta0,stepDist=c("gamma","weibull",
   par <- w2n(mle$estimate,bounds,parSize,nbStates,nbCovs)
   return(par)
 }
+
+nbStates <- 2
+stepPar <- matrix(c(15,50,
+                    10,20),
+                  byrow=T,ncol=2)
+anglePar <- matrix(c(pi,0,
+                     0.7,2),
+                   byrow=T,ncol=2)
+data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCov=2)
+
+mu0 <- c(20,80)
+sigma0 <- c(20,40)
+# kappa0 <- c(1,1)
+# par0 <- c(mu0,sigma0,kappa0)
+par0 <- c(mu0,sigma0)
+
+nbCovs <- ncol(data[[1]]$covs)
+beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
+                nrow=nbCovs+1,byrow=T)
+delta0 <- c(1,1)/2
+
+mod <- fitHMM(nbStates,data,par0,beta0,delta0,"gamma","NULL",NULL)
+

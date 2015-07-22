@@ -20,7 +20,7 @@ fitHMM(nbStates, data, par0, beta0, delta0, stepDist = c("gamma", "weibull",
 
 \item{stepDist}{Name of the distribution of the step length values.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to NULL
+\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "NULL"
 if the turning angles distributions is not estimated.}
 
 \item{angleMean}{If the mean of the turning angle distribution should not be estimated,

@@ -5,7 +5,7 @@
 \title{Matrix of all probabilities}
 \usage{
 allProbs(data, nbStates, stepDist = c("gamma", "weibull", "exp"),
-  angleDist = c(NULL, "vm", "wrpcauchy"), stepPar, anglePar = NULL)
+  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL)
 }
 \arguments{
 \item{data}{Data relative to one observed individual, as a list. Required fields :
@@ -15,7 +15,7 @@ step, angle.}
 
 \item{stepDist}{Name of the distribution of the step length values.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to NULL
+\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "NULL"
 if the turning angles distributions is not estimated.}
 
 \item{stepPar}{Parameters of the step length distribution. Must be provided in a
