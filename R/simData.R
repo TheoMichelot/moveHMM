@@ -43,10 +43,6 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
   if(nbStates<1) stop("nbStates should be at least 1.")
   p <- parDef(stepDist,angleDist,nbStates,TRUE,zeroInflation)
 
-  print(stepPar)
-  print(anglePar)
-  print(p$parSize)
-
   if(length(stepPar)!=p$parSize[1]*nbStates | length(anglePar)!=p$parSize[2]*nbStates)
     stop("Wrong number of parameters")
   stepBounds <- p$bounds[1:(p$parSize[1]*nbStates),]
@@ -124,6 +120,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
         for(j in 1:nrow(stepPar))
           stepArgs[[j+1]] <- stepPar[j,Z[k]]
       }
+
       if(angleDist!="NULL") {
         if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[Z[k]]
         else {

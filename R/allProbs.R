@@ -93,5 +93,6 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
     }
     else allProbs[,state] <- stepProb # model step length only
   }
+
   return(allProbs)
 }

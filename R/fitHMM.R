@@ -17,7 +17,7 @@
 #' @return The MLE of the parameters of the model.
 #' @examples
 #' nbStates <- 2
-#' stepPar <- c(15,10,50,20,0.2,0.3)
+#' stepPar <- c(15,50,10,20,0.2,0.3)
 #' anglePar <- c(pi,0,0.7,2)
 #' data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
 #'
@@ -65,7 +65,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 
   mle <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
-             zeroInflation,print.level=2,iterlim=1000)
+             zeroInflation,print.level=0,iterlim=1000)
 
   par <- w2n(mle$estimate,bounds,parSize,nbStates,nbCovs)
   return(par)
