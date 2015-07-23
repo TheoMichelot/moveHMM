@@ -5,8 +5,8 @@
 \title{Simulation tool}
 \usage{
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
-  angleDist = c("vm", "wrpcauchy"), stepPar, anglePar, nbCovs = 0,
-  zeroInflation = FALSE)
+  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
+  nbCovs = 0, zeroInflation = FALSE)
 }
 \arguments{
 \item{nbAnimals}{Number of observed individuals to simulate.}
@@ -17,15 +17,13 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
 
 \item{angleDist}{Name of the distribution from which to draw the turning angle values.}
 
-\item{stepPar}{Parameters of the step length distribution. Must be provided in a
-matrix with one row for each parameter (in the order expected by the pdf of stepDist),
-and one column for each state.}
+\item{stepPar}{Parameters of the step length distribution.}
 
-\item{anglePar}{Parameters of the turning angle distribution. Must be provided in a
-matrix with one row for each parameter (in the order expected by the pdf of angleDist),
-and one column for each state.}
+\item{anglePar}{Parameters of the turning angle distribution.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default).}
+
+\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
 }
 \value{
 An object moveData
@@ -45,5 +43,10 @@ anglePar <- c(0,pi,0.5,0.7) # mean1, mean2, k1, k2
 stepDist <- "weibull"
 angleDist <- "wrpcauchy"
 data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
+
+# step length only :
+stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
+stepDist <- "gamma"
+data <- simData(5,2,stepDist,"NULL",stepPar,nbCovs=2,zeroInflation=TRUE)
 }
 
