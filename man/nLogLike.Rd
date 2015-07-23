@@ -39,13 +39,9 @@ Negative log-likelihood function
 }
 \examples{
 nbStates <- 2
-stepPar <- matrix(c(15,50,80,
-                    10,20,30),
-                  byrow=TRUE,ncol=3)
-anglePar <- matrix(c(pi,0,pi/3,
-                     0.7,2,1),
-                   byrow=TRUE,ncol=3)
-data <- simData(2,3,"gamma","vm",stepPar,anglePar,nbCov=2)
+stepPar <- c(15,10,50,20,0.2,0.3)
+anglePar <- c(pi,0,0.7,2)
+data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
 
 mu0 <- c(20,80)
 sigma0 <- c(20,40)

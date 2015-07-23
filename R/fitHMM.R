@@ -3,7 +3,8 @@
 #'
 #' @param nbStates Number of states of the HMM.
 #' @param data An object moveData.
-#' @param par0 Vector of initial state-dependent distributions parameters.
+#' @param stepPar0 Vector of initial state-dependent step length distribution parameters.
+#' @param anglePar0 Vector of initial state-dependent turning angle distribution parameters.
 #' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
 #' @param delta0 Initial stationary distribution.
 #' @param stepDist Name of the distribution of the step length values.
@@ -16,9 +17,9 @@
 #' @return The MLE of the parameters of the model.
 #' @examples
 #' nbStates <- 2
-#' stepPar <- c(15,10,50,20)
+#' stepPar <- c(15,10,50,20,0.2,0.3)
 #' anglePar <- c(pi,0,0.7,2)
-#' data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,zeroInflation=0.3,nbCov=2)
+#' data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
 #'
 #' mu0 <- c(20,80)
 #' sigma0 <- c(20,40)

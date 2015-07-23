@@ -21,12 +21,16 @@
 #' @return Matrix of all probabilities.
 #'
 #' @examples
-#' stepPar <- matrix(c(1,1,10,5),nrow=2) # mean1, sd1, mean2, sd2
-#' anglePar <- matrix(c(0,0.5,pi,2),nrow=2) # mean1, k1, mean2, k2
+#' stepPar <- matrix(c(1,10,
+#'                    1,5,
+#'                    0.2,0.3),nrow=3,byrow=TRUE)
+#' anglePar <- matrix(c(0,pi,0.5,2),nrow=2,byrow=TRUE)
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
-#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,0.2,2)
-#' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar)
+#' stepParVec <- as.vector(t(stepPar))
+#' angleParVec <- as.vector(t(anglePar))
+#' data <- simData(5,2,stepDist,angleDist,stepParVec,angleParVec,nbCovs=2,zeroInflation=TRUE)
+#' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar,TRUE)
 
 allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
                      angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,

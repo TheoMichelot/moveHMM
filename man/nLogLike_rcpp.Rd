@@ -6,9 +6,6 @@
 \description{
     Forward algorithm computation. This is the main loop of the likelihood computation, written in C++.
 }
-\usage{
-    nLogLike_rcpp(NumericVector trVec, arma::rowvec delta, arma::mat allProbs)
-}
 \arguments{
     \item{trVec}{Array of the transition probabilities. Passed as an array to C++, and then built back into a 3-dimensional array.}
     \item{delta}{Stationary distribution.}

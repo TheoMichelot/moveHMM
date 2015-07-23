@@ -11,8 +11,8 @@
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
 #' and one column for each state.
-#' @param zeroInflation Probability of step length being zero (0 by default).
 #' @param nbCovs Number of covariates to simulate (0 by default).
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
 #'
 #' @return An object moveData
 #' @examples
@@ -20,16 +20,17 @@
 #' anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
-#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,0.2,2)
+#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
 #'
 #' stepPar <- c(1,10,1,5) # mean1, mean2, sd1, sd2
-#' anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
+#' anglePar <- c(0,pi,0.5,0.7) # mean1, mean2, k1, k2
 #' stepDist <- "weibull"
 #' angleDist <- "wrpcauchy"
 #' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
-                    angleDist=c("vm","wrpcauchy"),stepPar,anglePar,nbCovs=0)
+                    angleDist=c("vm","wrpcauchy"),stepPar,anglePar,nbCovs=0,
+                    zeroInflation=FALSE)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -39,7 +40,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
 
   if(nbAnimals<1) stop("nbAnimals should be at least 1.")
   if(nbStates<1) stop("nbStates should be at least 1.")
-  p <- parDef(stepDist,angleDist,nbStates,TRUE,TRUE)
+  p <- parDef(stepDist,angleDist,nbStates,TRUE,zeroInflation)
   if(length(stepPar)!=p$parSize[1]*nbStates | length(anglePar)!=p$parSize[2]*nbStates)
     stop("Wrong number of parameters")
   stepBounds <- p$bounds[1:(p$parSize[1]*nbStates),]
@@ -56,8 +57,14 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
   # format the parameters
   wpar <- n2w(c(stepPar,anglePar),p$bounds,beta,delta,nbStates)
   par <- w2n(wpar,p$bounds,p$parSize,nbStates,nbCovs)
-  zeroInflation <- par$stepPar[nrow(par$stepPar),]
-  stepPar <- par$stepPar[-(nrow(par$stepPar)),]
+  if(zeroInflation) {
+    zeroMass <- par$stepPar[nrow(par$stepPar),]
+    stepPar <- par$stepPar[-(nrow(par$stepPar)),]
+  }
+  else {
+    zeroMass <- rep(0,nbStates)
+    stepPar <- par$stepPar
+  }
   anglePar <- par$anglePar
 
   data <- list()
@@ -100,6 +107,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
 
       # Constitute the lists of state-dependent parameters for the step and angle
       stepArgs <- list(1); angleArgs <- list(1) # first argument = 1 (one random draw)
+
       if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[Z[k]]
       else {
         for(j in 1:nrow(stepPar))
@@ -122,7 +130,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
         else stepArgs[[3]] <- scale # rweibull expects scale
       }
 
-      if(runif(1)>zeroInflation[Z[k]])
+      if(runif(1)>zeroMass[Z[k]])
         step[k] <- do.call(stepFun,stepArgs)
       else
         step[k] <- 0
