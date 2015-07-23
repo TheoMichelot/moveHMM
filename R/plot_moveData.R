@@ -7,6 +7,11 @@
 
 plot.moveData <- function(data,compact=FALSE)
 {
+  # check arguments
+  if(length(data)<1) stop("The data input is empty.")
+  if(is.null(data[[1]]$x) | is.null(data[[1]]$y) | is.null(data[[1]]$step))
+    stop("Missing field(s) in data.")
+
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=T)
   if(!compact) {

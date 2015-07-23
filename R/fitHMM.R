@@ -16,40 +16,50 @@
 #' @return The MLE of the parameters of the model.
 #' @examples
 #' nbStates <- 2
-#' stepPar <- matrix(c(15,50,
-#'                     10,20),
-#'                   byrow=TRUE,ncol=2)
-#' anglePar <- matrix(c(pi,0,
-#'                      0.7,2),
-#'                    byrow=TRUE,ncol=2)
+#' stepPar <- c(15,10,50,20)
+#' anglePar <- c(pi,0,0.7,2)
 #' data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,zeroInflation=0.3,nbCov=2)
 #'
 #' mu0 <- c(20,80)
 #' sigma0 <- c(20,40)
-#' kappa0 <- c(0.1,0.1)
 #' z0 <- c(0.5,0.5)
-#' par0 <- c(mu0,sigma0,z0,kappa0)
+#' kappa0 <- c(0.1,0.1)
+#' stepPar0 <- c(mu0,sigma0,z0)
+#' anglePar0 <- kappa0
 #'
 #' nbCovs <- ncol(data[[1]]$covs)
 #' beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
 #'                 nrow=nbCovs+1,byrow=TRUE)
 #' delta0 <- c(1,1)/2
 #'
-#' mod <- fitHMM(nbStates,data,par0,beta0,delta0,"gamma","vm",c(pi,0),TRUE)
+#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,"gamma","vm",c(pi,0),TRUE)
 
-fitHMM <- function(nbStates,data,par0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
+fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
                    angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL,
                    zeroInflation=FALSE)
 {
+  # check arguments
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
+  if(nbStates<0) stop("nbStates should be at least 1.")
+  if(length(data)<1) stop("The data input is empty.")
+  if(is.null(data[[1]]$step)) stop("Missing field(s) in data.")
 
-  parDef <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
-  parSize <- parDef$parSize
+  par0 <- c(stepPar0,anglePar0)
+
+  p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
+  bounds <- p$bounds
+  parSize <- p$parSize
   if(sum(parSize)*nbStates!=length(par0))
     stop("Wrong number of initial parameters.")
-  bounds <- parDef$bounds
-  nbCovs <- ncol(data[[1]]$covs)
+  stepBounds <- bounds[1:(parSize[1]*nbStates),]
+  angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
+  if(length(which(stepPar<stepBounds[,1] | stepPar>stepBounds[,2]))>0 |
+       length(which(anglePar<angleBounds[,1] | anglePar>angleBounds[,2]))>0)
+    stop("Check the parameters bounds.")
+
+  if(ncol(data[[1]]$covs)>0) nbCovs <- ncol(data[[1]]$covs)
+  else nbCovs <- 0
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 

@@ -18,6 +18,7 @@
 
 prepData <- function(trackData, type=c('GCD','euclidean'))
 {
+  # check arguments
   type <- match.arg(type)
   x <- trackData$x
   y <- trackData$y
@@ -27,19 +28,20 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   if(length(covsCol)>0) covs <- trackData[,covsCol]
   else covs <- NULL
 
-  if(is.null(x) | is.null(y)) stop("The data does not have the right structure.")
+  if(is.null(x) | is.null(y))
+    stop("The data does not have the right structure. x and y fields needed.")
 
   data <- list() # to be returned
 
   if(is.null(ID)) nbAnimals <-1
   else nbAnimals <- length(unique(ID))
 
-  for(k in 1:nbAnimals) {
+  for(zoo in 1:nbAnimals) {
     if(is.null(ID)) nbObs <- length(x)
-    else nbObs <- length(which(ID==unique(ID)[k]))
+    else nbObs <- length(which(ID==unique(ID)[zoo]))
     step <- rep(NA,nbObs)
     angle <- rep(NA,nbObs)
-    if(!is.null(ID)) i1 <- which(ID==unique(ID)[k])[1]
+    if(!is.null(ID)) i1 <- which(ID==unique(ID)[zoo])[1]
     else i1 <- 1
     i2 <- i1+nbObs-1
     for(i in (i1+1):(i2-1)) {
@@ -59,7 +61,21 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
       else c <- covs[i1:i2,]
     }
 
-    data[[k]] <- list(ID=unique(ID)[k],step=step,angle=angle,covs=c,x=x[i1:i2],y=y[i1:i2])
+    # check for possibly abnormal step lengths
+    sdInf <- mean(step)-4*sd(step)
+    sdSup <- mean(step)+4*sd(step)
+    offObs <- which(step<sdInf | step>sdSup)
+    if(length(offObs)==1)
+      warning("Step length at index ",offObs," seems off.")
+    if(length(offObs)>1) {
+       w <- "Step lengths at indices "
+       for(i in 1:length(offObs))
+          w <- paste(w,offObs[i],", ")
+       w <- paste(w," seem off.")
+       warning(w)
+    }
+
+    data[[zoo]] <- list(ID=unique(ID)[zoo],step=step,angle=angle,covs=c,x=x[i1:i2],y=y[i1:i2])
   }
 
   return(moveData(data))

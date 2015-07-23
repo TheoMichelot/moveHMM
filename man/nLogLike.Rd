@@ -28,6 +28,8 @@ if the turning angles distributions is not estimated.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
 Defaults to NULL.}
+
+\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
 }
 \value{
 The negative log-likelihood of wpar given data.
@@ -66,6 +68,6 @@ angleMean <- c(pi,0)
 stepDist <- "gamma"
 angleDist <- "vm"
 
-l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean)
+l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,FALSE)
 }
 

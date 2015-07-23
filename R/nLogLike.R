@@ -13,6 +13,7 @@
 #' if the turning angles distributions is not estimated.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
 #' Defaults to NULL.
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
 #'
 #' @return The negative log-likelihood of wpar given data.
 #'
@@ -47,11 +48,20 @@
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
 #'
-#' l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean)
+#' l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,FALSE)
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","exp"),
                      angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL,zeroInflation=FALSE)
 {
+  # check arguments
+  stepDist <- match.arg(stepDist)
+  angleDist <- match.arg(angleDist)
+  if(nbStates<1) stop("nbStates must be at least 1.")
+  if(length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)+nbStates-1)
+    stop("Wrong number of parameters in wpar.")
+  if(length(data)<1) stop("The data input is empty.")
+  if(is.null(data[[1]]$step)) stop("Missing field(s) in data.")
+
   llk <- 0
   nbAnimals <- length(data)
   if(!is.null(data[[1]]$covs)) nbCovs <- ncol(data[[1]]$covs)
