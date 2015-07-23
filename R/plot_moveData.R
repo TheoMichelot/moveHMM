@@ -15,7 +15,7 @@ plot.moveData <- function(data,compact=FALSE)
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=T)
 
-  if(is.null(data[[1]]$angle))
+  if(is.null(data[[1]]$angle)) # only step length is provided
   {
     par(mfrow=c(1,2))
     for(i in 1:length(data)) {
@@ -25,7 +25,7 @@ plot.moveData <- function(data,compact=FALSE)
       mtext(paste("Animal ID :",data[[i]]$ID),side=3,outer=TRUE,padj=2)
     }
   }
-  else
+  else # step length and turning angle are provided
   {
     if(!compact) {
       for(i in 1:length(data)) {

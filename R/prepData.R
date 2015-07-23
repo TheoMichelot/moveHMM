@@ -22,23 +22,21 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   type <- match.arg(type)
   x <- trackData$x
   y <- trackData$y
+  if(is.null(x) | is.null(y))
+    stop("The data does not have the right structure. x and y fields needed.")
+
   if(!is.null(trackData$ID)) ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
-  else ID <- NULL
+  else ID <- rep("Animal1",length(x)) # default ID if none provided
   covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
   if(length(covsCol)>0) covs <- trackData[,covsCol]
   else covs <- NULL
 
-  if(is.null(x) | is.null(y))
-    stop("The data does not have the right structure. x and y fields needed.")
-
   data <- list() # to be returned
 
-  if(is.null(ID)) nbAnimals <-1
-  else nbAnimals <- length(unique(ID))
+  nbAnimals <- length(unique(ID))
 
   for(zoo in 1:nbAnimals) {
-    if(is.null(ID)) nbObs <- length(x)
-    else nbObs <- length(which(ID==unique(ID)[zoo]))
+    nbObs <- length(which(ID==unique(ID)[zoo]))
     step <- rep(NA,nbObs)
     angle <- rep(NA,nbObs)
     if(!is.null(ID)) i1 <- which(ID==unique(ID)[zoo])[1]
