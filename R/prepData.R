@@ -27,11 +27,10 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
 
   if(!is.null(trackData$ID)) ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
   else ID <- rep("Animal1",length(x)) # default ID if none provided
-  covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
-  if(length(covsCol)>0) covs <- trackData[,covsCol]
-  else covs <- NULL
 
-  data <- list() # to be returned
+  data <- data.frame(ID=character(),
+                     step=numeric(),
+                     angle=numeric())
 
   nbAnimals <- length(unique(ID))
 
@@ -39,8 +38,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     nbObs <- length(which(ID==unique(ID)[zoo]))
     step <- rep(NA,nbObs)
     angle <- rep(NA,nbObs)
-    if(!is.null(ID)) i1 <- which(ID==unique(ID)[zoo])[1]
-    else i1 <- 1
+    i1 <- which(ID==unique(ID)[zoo])[1]
     i2 <- i1+nbObs-1
     for(i in (i1+1):(i2-1)) {
       step[i-i1+1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
@@ -52,12 +50,6 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
                                  c(x[i+1],y[i+1]))
     }
     step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
-
-    c <- NULL
-    if(!is.null(covs)) {
-      if(length(covsCol)==1) c <- covs[i1:i2]
-      else c <- covs[i1:i2,]
-    }
 
     # check for possibly abnormal step lengths
     sdInf <- mean(step)-4*sd(step)
@@ -73,8 +65,15 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
        warning(w)
     }
 
-    data[[zoo]] <- list(ID=unique(ID)[zoo],step=step,angle=angle,covs=c,x=x[i1:i2],y=y[i1:i2])
+    d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
+                    step=step,
+                    angle=angle)
+    data <- rbind(data,d)
   }
 
+  covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
+  if(length(covsCol)>0) covs <- trackData[,covsCol]
+  else covs <- NULL
+  data <- cbind(data,x=trackData$x,y=trackData$y,covs)
   return(moveData(data))
 }
