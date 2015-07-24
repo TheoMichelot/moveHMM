@@ -55,8 +55,8 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
     stop("Wrong number of initial parameters.")
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
   angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
-  if(length(which(stepPar<stepBounds[,1] | stepPar>stepBounds[,2]))>0 |
-       length(which(anglePar<angleBounds[,1] | anglePar>angleBounds[,2]))>0)
+  if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0 |
+       length(which(anglePar0<angleBounds[,1] | anglePar0>angleBounds[,2]))>0)
     stop("Check the parameters bounds.")
 
   if(ncol(data[[1]]$covs)>0) nbCovs <- ncol(data[[1]]$covs)
@@ -65,7 +65,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 
   mle <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
-             zeroInflation,print.level=0,iterlim=1000)
+             zeroInflation,print.level=2,iterlim=1000)
 
   par <- w2n(mle$estimate,bounds,parSize,nbStates,nbCovs)
   return(par)
