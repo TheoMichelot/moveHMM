@@ -73,16 +73,19 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
   }
   anglePar <- par$anglePar # i.e. NULL if angleDist=="NULL"
 
-  data <- list()
-  for(i in 1:nbAnimals) {
-    nbObs <- sample(1000:1500,1) # number of observations chosen in [1000,1500]
+  for(zoo in 1:nbAnimals) {
+    nbObs <- sample(1000:1500,1) # number of observations per animal chosen in [1000,1500]
 
     # generate covariate values
     covs <- NULL
-    if(nbCovs==1) covs <- rnorm(nbObs)
+    if(nbCovs==1) covs <- data.frame(cov1=rnorm(nbObs))
     if(nbCovs>1) {
-      covs <- rnorm(nbObs)
-      for(j in 2:nbCovs) covs <- cbind(covs,rnorm(nbObs))
+      covs <- data.frame(cov1=rnorm(nbObs))
+      for(j in 2:nbCovs) {
+        c <- data.frame(rnorm(nbObs))
+        colnames(c) <- paste("cov",j,sep="")
+        covs <- cbind(covs,c)
+      }
     }
 
     # generate states sequence Z
@@ -141,16 +144,22 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
       }
 
       if(runif(1)>zeroMass[Z[k]])
-        step[k] <- do.call(stepFun,stepArgs)
+        step[k+1] <- do.call(stepFun,stepArgs)
       else
-        step[k] <- 0
+        step[k+1] <- 0
 
-      m <- step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
+      m <- step[k+1]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
       X[k+1,] <- X[k,] + m
     }
     if(angleDist!="NULL") angle[1] <- NA # the first angle value is arbitrary
 
-    data[[i]] <- list(ID=as.character(i),x=X[,1],y=X[,2],step=step,angle=angle,covs=covs)
+    if(angleDist!="NULL")
+      d <- data.frame(ID=rep(as.character(zoo),nbObs),step=step,angle=angle,x=X[,1],y=X[,2])
+    else
+      d <- data.frame(ID=rep(as.character(zoo),nbObs),step=step,x=X[,1],y=X[,2])
+    if(!is.null(covs)) d <- cbind(d,covs)
+    if(zoo==1) data <- d # initialize data
+    else data <- rbind(data,d) # add observations of each animal
   }
 
   return(moveData(data))
