@@ -7,11 +7,10 @@
 #' @param nbObs Number of observations.
 #' @param beta Matrix of regression parameters. Number of rows : number of covariates + 1 ;
 #' number of columns : number of non-diagonal elements in the t.p.m. (i.e. nbStates*(nbStates-1)).
-#' @param covs Matrix of covariates (if any). Number of rows : number of observations ;
-#' number of columns : number of covariates.
+#' @param covs Matrix of covariates (if any).
 #'
 #' @return A three-dimensional array gamma, such that gamma[,,t] is the transition probability
-#' matrix at time t.
+#' matrix corresponding to observation t.
 
 trMatrix <- function(nbStates,nbObs,beta,covs=NULL)
 {

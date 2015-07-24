@@ -19,9 +19,11 @@
 #'
 #' @examples
 #' nbStates <- 2
+#' nbCovs <- 2
+#' nbAnimals <- 3
 #' stepPar <- c(15,10,50,20,0.2,0.3)
 #' anglePar <- c(pi,0,0.7,2)
-#' data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
+#' data <- simData(nbAnimals,nbStates,"gamma","vm",stepPar,anglePar,nbCovs,zeroInflation=TRUE)
 #'
 #' mu0 <- c(20,80)
 #' sigma0 <- c(20,40)
@@ -33,7 +35,6 @@
 #'                    0,Inf,
 #'                    0,Inf),
 #'                  ncol=2,byrow=TRUE)
-#' nbCovs <- ncol(data[[1]]$covs)
 #' beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
 #'                 nrow=nbCovs+1,byrow=TRUE)
 #' delta0 <- c(1,1)/2
@@ -56,28 +57,23 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   if(length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)+nbStates-1)
     stop("Wrong number of parameters in wpar.")
   if(length(data)<1) stop("The data input is empty.")
-  if(is.null(data[[1]]$step)) stop("Missing field(s) in data.")
+  if(is.null(data$step)) stop("Missing field(s) in data.")
 
   llk <- 0
-  nbAnimals <- length(data)
-  if(!is.null(data[[1]]$covs)) nbCovs <- ncol(data[[1]]$covs)
-  else nbCovs <- 0
+  nbAnimals <- length(unique(data$ID))
+  covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
+                     names(data)!="step" & names(data)!="angle")
+  nbCovs <- length(covsCol)
 
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)
   if(!is.null(angleMean)) # if the turning angles' mean is not estimated
     par$anglePar <- rbind(angleMean,par$anglePar)
 
-  for(zoo in 1:nbAnimals) {
-    nbObs <- length(data[[zoo]]$step)
-    covs <- data[[zoo]]$covs
+  nbObs <- length(data$step)
+  covs <- data[,covsCol]
+  trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
+  allProbs <- allProbs(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,zeroInflation)
 
-    trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
-    allProbs <- allProbs(data[[zoo]],nbStates,stepDist,angleDist,par$stepPar,par$anglePar,
-                         zeroInflation)
-
-    lscale <- nLogLike_rcpp(trMat,par$delta,allProbs) # call to C++ function
-    llk <- llk + lscale
-  }
-
-  return(-llk)
+  lscale <- nLogLike_rcpp(trMat,par$delta,allProbs) # call to C++ function
+  return(-lscale)
 }
