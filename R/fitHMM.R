@@ -47,7 +47,6 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
   if(is.null(data[[1]]$step)) stop("Missing field(s) in data.")
 
   par0 <- c(stepPar0,anglePar0)
-
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
@@ -58,6 +57,8 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
   if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0 |
        length(which(anglePar0<angleBounds[,1] | anglePar0>angleBounds[,2]))>0)
     stop("Check the parameters bounds.")
+  if(!is.null(angleBounds) & length(angleMean)!=nbStates)
+    stop("The angleMean argument should be of length nbStates.")
 
   if(ncol(data[[1]]$covs)>0) nbCovs <- ncol(data[[1]]$covs)
   else nbCovs <- 0
