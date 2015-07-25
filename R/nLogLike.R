@@ -59,13 +59,13 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  llk <- 0
   nbAnimals <- length(unique(data$ID))
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
   nbCovs <- length(covsCol)
 
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)
+
   if(!is.null(angleMean)) # if the turning angles' mean is not estimated
     par$anglePar <- rbind(angleMean,par$anglePar)
 
@@ -74,6 +74,23 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
   allProbs <- allProbs(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,zeroInflation)
 
-  lscale <- nLogLike_rcpp(trMat,par$delta,allProbs) # call to C++ function
-  return(-lscale)
+  aInd <- NULL
+  for(i in 1:nbAnimals)
+    aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
+
+  llk <- 0
+  for(i in 1:nbAnimals)
+  {
+    if(i!=nbAnimals) {
+      p <- allProbs[aInd[i]:(aInd[i+1]-1),]
+      tm <- trMat[,,aInd[i]:(aInd[i+1]-1)]
+    }
+    else {
+      p <- allProbs[aInd[i]:nrow(allProbs),]
+      tm <- trMat[,,aInd[i]:nrow(allProbs)]
+    }
+    lscale <- nLogLike_rcpp(tm,par$delta,p) # call to C++ function
+    llk <- llk+lscale
+  }
+  return(-llk)
 }

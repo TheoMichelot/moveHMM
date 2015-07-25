@@ -22,7 +22,7 @@ trMatrix <- function(nbStates,nbObs,beta,covs=NULL)
   }
   else {
     desMat <- matrix(1,nbObs,ncol(covs)+1) # design matrix
-    for(i in 2:nbStates) desMat[,i] <- covs[,(i-1)]
+    for(i in 2:(ncol(covs)+1)) desMat[,i] <- covs[,(i-1)]
     g <- exp(desMat%*%beta)
     gamma[!gamma] <- t(g) # transpose because R picks elements column-wise
   }

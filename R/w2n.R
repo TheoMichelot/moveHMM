@@ -41,6 +41,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
   wpar <- wpar[-(foo:length(wpar))]
 
   nbPar <- length(wpar)/nbStates
+  if(nbPar!=sum(parSize)) stop("Wrong number of parameters.")
   par <- NULL
   for(i in 1:nbPar) {
     index <- (i-1)*nbStates+1

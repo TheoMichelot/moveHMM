@@ -144,11 +144,11 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
       }
 
       if(runif(1)>zeroMass[Z[k]])
-        step[k+1] <- do.call(stepFun,stepArgs)
+        step[k] <- do.call(stepFun,stepArgs)
       else
-        step[k+1] <- 0
+        step[k] <- 0
 
-      m <- step[k+1]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
+      m <- step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
       X[k+1,] <- X[k,] + m
     }
     if(angleDist!="NULL") angle[1] <- NA # the first angle value is arbitrary
