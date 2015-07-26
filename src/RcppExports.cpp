@@ -19,3 +19,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// trMatrix_rcpp
+arma::cube trMatrix_rcpp(int nbStates, arma::mat beta, arma::mat covs);
+RcppExport SEXP moveHMM_trMatrix_rcpp(SEXP nbStatesSEXP, SEXP betaSEXP, SEXP covsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type nbStates(nbStatesSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type covs(covsSEXP);
+    __result = Rcpp::wrap(trMatrix_rcpp(nbStates, beta, covs));
+    return __result;
+END_RCPP
+}

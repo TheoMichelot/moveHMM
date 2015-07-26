@@ -5,3 +5,7 @@ nLogLike_rcpp <- function(trVec, delta, allProbs) {
     .Call('moveHMM_nLogLike_rcpp', PACKAGE = 'moveHMM', trVec, delta, allProbs)
 }
 
+trMatrix_rcpp <- function(nbStates, beta, covs) {
+    .Call('moveHMM_trMatrix_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs)
+}
+
