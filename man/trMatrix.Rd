@@ -4,12 +4,10 @@
 \alias{trMatrix}
 \title{Generate the transition probability matrix}
 \usage{
-trMatrix(nbStates, nbObs, beta, covs)
+trMatrix(nbStates, beta, covs)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}
-
-\item{nbObs}{Number of observations.}
 
 \item{beta}{Matrix of regression parameters. Number of rows : number of covariates + 1 ;
 number of columns : number of non-diagonal elements in the t.p.m. (i.e. nbStates*(nbStates-1)).}
