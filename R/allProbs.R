@@ -3,8 +3,7 @@
 #'
 #' Used in the computation of the log-likelihood.
 #'
-#' @param data Data relative to one observed individual, as a list. Required fields :
-#' step, angle.
+#' @param data Object moveData.
 #' @param nbStates Number of states of the HMM.
 #' @param stepDist Name of the distribution of the step length values.
 #' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
@@ -30,7 +29,7 @@
 #' stepParVec <- as.vector(t(stepPar))
 #' angleParVec <- as.vector(t(anglePar))
 #' data <- simData(5,2,stepDist,angleDist,stepParVec,angleParVec,nbCovs=2,zeroInflation=TRUE)
-#' P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar,TRUE)
+#' P <- allProbs(data,2,stepDist,angleDist,stepPar,anglePar,TRUE)
 
 allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
                      angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,

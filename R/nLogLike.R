@@ -59,10 +59,16 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  nbAnimals <- length(unique(data$ID))
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
   nbCovs <- length(covsCol)-1 # substract intercept column
+
+  if(length(which(names(data)=="(Intercept)"))==0) { # no intercept column, if not called from fitHMM
+    data <- cbind(data[,-covsCol],Intercept=rep(1,nrow(data)),data[,covsCol])
+    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
+                       names(data)!="step" & names(data)!="angle")
+    nbCovs <- length(covsCol)-1 # substract intercept column
+  }
 
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)
 
@@ -74,6 +80,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   trMat <- trMatrix(nbStates,nbObs,par$beta,covs)
   allProbs <- allProbs(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,zeroInflation)
 
+  nbAnimals <- length(unique(data$ID))
   aInd <- NULL
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])

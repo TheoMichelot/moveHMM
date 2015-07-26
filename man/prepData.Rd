@@ -8,14 +8,14 @@ prepData(trackData, type = c("GCD", "euclidean"))
 }
 \arguments{
 \item{trackData}{A dataframe of the tracking data, including at least the fields "x" and "y"
-(either longitude/latitude values or euclidean coordinates), and optionnaly a field "ID" (identifiers
-for the observed individuals). Additionnal fields are considered as covariates.}
+(either longitude/latitude values or cartesian coordinates), and optionnaly a field "ID"
+(identifiers for the observed individuals). Additionnal fields are considered as covariates.}
 
 \item{type}{'GCD' if longitude/latitude provided (default), 'euclidean' otherwise.}
 }
 \value{
-An object moveData, i.e. a list in which each element is a list of ID, step lengths,
-turning angles and covariates values corresponding to an individual.
+An object moveData, i.e. a dataframe of ID, step lengths,
+turning angles and covariates values (if any).
 }
 \description{
 Preprocessing of the tracking data
@@ -25,6 +25,5 @@ x <- c(1,2,3,4,5,6,7,8,9,10)
 y <- c(1,1,1,2,2,2,1,1,1,2)
 trackData <- list(x=x,y=y)
 d <- prepData(trackData,'euclidean')
-d[[1]]$step # the vector of step lengths of the first individual
 }
 

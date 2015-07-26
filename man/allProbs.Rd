@@ -9,8 +9,7 @@ allProbs(data, nbStates, stepDist = c("gamma", "weibull", "exp"),
   zeroInflation = FALSE)
 }
 \arguments{
-\item{data}{Data relative to one observed individual, as a list. Required fields :
-step, angle.}
+\item{data}{Object moveData.}
 
 \item{nbStates}{Number of states of the HMM.}
 
@@ -46,6 +45,6 @@ angleDist <- "vm"
 stepParVec <- as.vector(t(stepPar))
 angleParVec <- as.vector(t(anglePar))
 data <- simData(5,2,stepDist,angleDist,stepParVec,angleParVec,nbCovs=2,zeroInflation=TRUE)
-P <- allProbs(data[[1]],2,stepDist,angleDist,stepPar,anglePar,TRUE)
+P <- allProbs(data,2,stepDist,angleDist,stepPar,anglePar,TRUE)
 }
 

@@ -7,6 +7,7 @@
 #' @param anglePar0 Vector of initial state-dependent turning angle distribution parameters.
 #' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
 #' @param delta0 Initial stationary distribution.
+#' @param formula Regression formula for the covariates. Default : ~1 (no covariate).
 #' @param stepDist Name of the distribution of the step length values.
 #' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
 #' if the turning angles distributions is not estimated.
@@ -78,7 +79,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
   covs <- model.matrix(formula,data)
-  data <- cbind(data[-covsCol],model.matrix(formula,data))
+  data <- cbind(data[-covsCol],covs)
   nbCovs <- ncol(covs)-1 # substract intercept column
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)

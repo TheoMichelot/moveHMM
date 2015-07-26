@@ -39,9 +39,11 @@ Negative log-likelihood function
 }
 \examples{
 nbStates <- 2
+nbCovs <- 2
+nbAnimals <- 3
 stepPar <- c(15,10,50,20,0.2,0.3)
 anglePar <- c(pi,0,0.7,2)
-data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
+data <- simData(nbAnimals,nbStates,"gamma","vm",stepPar,anglePar,nbCovs,zeroInflation=TRUE)
 
 mu0 <- c(20,80)
 sigma0 <- c(20,40)
@@ -53,7 +55,6 @@ bounds <- matrix(c(0,Inf,
                    0,Inf,
                    0,Inf),
                  ncol=2,byrow=TRUE)
-nbCovs <- ncol(data[[1]]$covs)
 beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
                 nrow=nbCovs+1,byrow=TRUE)
 delta0 <- c(1,1)/2

@@ -7,8 +7,8 @@
 moveData(data)
 }
 \arguments{
-\item{data}{A list containing the IDs (if any), step lengths, turning angles (if any),
-and covariates (if any), as well as the x/y values (either euclidean coordinates
+\item{data}{A dataframe containing the IDs, step lengths, turning angles (if any),
+and covariates (if any), as well as the x/y values (either cartesian coordinates
 or longitude/latitude)}
 }
 \value{

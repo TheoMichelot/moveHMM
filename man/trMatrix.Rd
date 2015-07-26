@@ -4,7 +4,7 @@
 \alias{trMatrix}
 \title{Generate the transition probability matrix}
 \usage{
-trMatrix(nbStates, nbObs, beta, covs = NULL)
+trMatrix(nbStates, nbObs, beta, covs)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}
@@ -14,12 +14,11 @@ trMatrix(nbStates, nbObs, beta, covs = NULL)
 \item{beta}{Matrix of regression parameters. Number of rows : number of covariates + 1 ;
 number of columns : number of non-diagonal elements in the t.p.m. (i.e. nbStates*(nbStates-1)).}
 
-\item{covs}{Matrix of covariates (if any). Number of rows : number of observations ;
-number of columns : number of covariates.}
+\item{covs}{Design matrix of covariates.}
 }
 \value{
 A three-dimensional array gamma, such that gamma[,,t] is the transition probability
-matrix at time t.
+matrix corresponding to observation t.
 }
 \description{
 Used in the computation of the log-likelihood.

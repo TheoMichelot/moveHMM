@@ -44,7 +44,7 @@ stepDist <- "weibull"
 angleDist <- "wrpcauchy"
 data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
 
-# step length only :
+# step length only and zero-inflation
 stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 stepDist <- "gamma"
 data <- simData(5,2,stepDist,"NULL",stepPar,nbCovs=2,zeroInflation=TRUE)

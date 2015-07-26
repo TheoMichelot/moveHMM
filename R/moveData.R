@@ -1,7 +1,7 @@
 
 #' Constructor of moveData objects
 #'
-#' @param data A data.frame containing the IDs, step lengths, turning angles (if any),
+#' @param data A dataframe containing the IDs, step lengths, turning angles (if any),
 #' and covariates (if any), as well as the x/y values (either cartesian coordinates
 #' or longitude/latitude)
 #'

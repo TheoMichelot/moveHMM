@@ -2,19 +2,18 @@
 #' Preprocessing of the tracking data
 #'
 #' @param trackData A dataframe of the tracking data, including at least the fields "x" and "y"
-#' (either longitude/latitude values or euclidean coordinates), and optionnaly a field "ID" (identifiers
-#' for the observed individuals). Additionnal fields are considered as covariates.
+#' (either longitude/latitude values or cartesian coordinates), and optionnaly a field "ID"
+#' (identifiers for the observed individuals). Additionnal fields are considered as covariates.
 #' @param type 'GCD' if longitude/latitude provided (default), 'euclidean' otherwise.
 #'
-#' @return An object moveData, i.e. a list in which each element is a list of ID, step lengths,
-#' turning angles and covariates values corresponding to an individual.
+#' @return An object moveData, i.e. a dataframe of ID, step lengths,
+#' turning angles and covariates values (if any).
 #'
 #' @examples
 #' x <- c(1,2,3,4,5,6,7,8,9,10)
 #' y <- c(1,1,1,2,2,2,1,1,1,2)
 #' trackData <- list(x=x,y=y)
 #' d <- prepData(trackData,'euclidean')
-#' d[[1]]$step # the vector of step lengths of the first individual
 
 prepData <- function(trackData, type=c('GCD','euclidean'))
 {
@@ -74,6 +73,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
   if(length(covsCol)>0) covs <- trackData[,covsCol]
   else covs <- NULL
-  data <- cbind(data,x=trackData$x,y=trackData$y,covs)
+  data <- cbind(data,x=trackData$x,y=trackData$y)
+  if(!is.null(covs)) data <- cbind(data,covs)
   return(moveData(data))
 }
