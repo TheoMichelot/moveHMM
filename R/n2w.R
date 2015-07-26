@@ -24,6 +24,9 @@
 
 n2w <- function(par,bounds,beta,delta,nbStates)
 {
+  if(length(which(par<bounds[,1] | par>bounds[,2]))>0)
+    stop("Check the parameters bounds.")
+
   nbPar <- length(par)/nbStates
   wpar <- NULL
   for(i in 1:nbPar) {

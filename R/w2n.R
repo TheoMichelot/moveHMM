@@ -29,6 +29,8 @@
 
 w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
 {
+  if(nbStates<1) stop("Number of states must be 1 at least.")
+
   foo <- length(wpar)-nbStates+2
   delta <- wpar[foo:length(wpar)]
   delta <- exp(c(0,delta))
@@ -61,6 +63,9 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
 
     par <- c(par,p)
   }
+
+  if(length(which(par<bounds[,1] | par>bounds[,2]))>0)
+    stop("Scaling error.")
 
   # identify parameters related to angle dist
   if(parSize[2]!=0) {
