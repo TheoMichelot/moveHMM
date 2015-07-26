@@ -62,7 +62,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   nbAnimals <- length(unique(data$ID))
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
-  nbCovs <- length(covsCol)
+  nbCovs <- length(covsCol)-1 # substract intercept column
 
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)
 

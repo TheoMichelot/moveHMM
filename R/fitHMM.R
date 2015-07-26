@@ -17,13 +17,13 @@
 #' @return The MLE of the parameters of the model.
 #' @examples
 #' # simulate data
-#' nbAnimals <- 4
+#' nbAnimals <- 5
 #' nbStates <- 2
 #' nbCovs <- 3
-#' mu<-c(20,70)
-#' sigma<-c(8,20)
+#' mu<-c(15,50)
+#' sigma<-c(10,20)
 #' angleMean <- c(pi,0)
-#' kappa <- c(0.8,1.3)
+#' kappa <- c(0.7,1.5)
 #' stepPar <- c(mu,sigma)
 #' anglePar <- c(angleMean,kappa)
 #' stepDist <- "gamma"
@@ -39,16 +39,19 @@
 #' angleMean <- c(pi,0)
 #' stepPar0 <- c(mu0,sigma0)
 #' anglePar0 <- kappa0
+#' formula <- ~cov1+cos(cov2)+sin(cov3)
+#' nbCovs <- length(attr(terms(formula), "term.labels"))
 #'
 #' beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
 #'                 nrow=nbCovs+1,byrow=TRUE)
 #' delta0 <- rep(1,nbStates)/nbStates
 #'
-#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,"gamma","vm",angleMean,zeroInflation)
+#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
+#'               "gamma","vm",angleMean,zeroInflation)
 
-fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
-                   angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL,
-                   zeroInflation=FALSE)
+fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
+                   stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","wrpcauchy"),
+                   angleMean=NULL,zeroInflation=FALSE)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -71,9 +74,12 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
   if(!is.null(angleBounds) & length(angleMean)!=nbStates)
     stop("The angleMean argument should be of length nbStates.")
 
+  # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
-  nbCovs <- length(covsCol)
+  covs <- model.matrix(formula,data)
+  data <- cbind(data[-covsCol],model.matrix(formula,data))
+  nbCovs <- ncol(covs)-1 # substract intercept column
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 
