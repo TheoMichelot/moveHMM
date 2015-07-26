@@ -24,14 +24,14 @@
 #' angleDist <- "wrpcauchy"
 #' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
 #'
-#' # step length only :
+#' # step length only and zero-inflation
 #' stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 #' stepDist <- "gamma"
 #' data <- simData(5,2,stepDist,"NULL",stepPar,nbCovs=2,zeroInflation=TRUE)
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
-                    angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,nbCovs=0,
-                    zeroInflation=FALSE)
+                    angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
+                    nbCovs=0,zeroInflation=FALSE)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -56,11 +56,11 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
   }
 
   # generate regression parameters for transition probabilities
-  beta <- matrix(rnorm((nbCovs+1)*nbStates*(nbStates-1)),nrow=nbCovs+1,ncol=nbStates*(nbStates-1))
+  beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
   # initial state distribution
   delta <- rep(1,nbStates)/nbStates
 
-  # format the parameters
+  # format parameters
   wpar <- n2w(c(stepPar,anglePar),p$bounds,beta,delta,nbStates)
   par <- w2n(wpar,p$bounds,p$parSize,nbStates,nbCovs)
   if(zeroInflation) {
@@ -73,8 +73,11 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
   }
   anglePar <- par$anglePar # i.e. NULL if angleDist=="NULL"
 
-  for(zoo in 1:nbAnimals) {
-    nbObs <- sample(1000:1500,1) # number of observations per animal chosen in [1000,1500]
+  trackData <- NULL
+  allCovs <- NULL
+
+  for (zoo in 1:nbAnimals) {
+    nbObs <- sample(500:1500,1) # number of observations per animal chosen in [500,1500]
 
     # generate covariate values
     covs <- NULL
@@ -87,80 +90,105 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
         covs <- cbind(covs,c)
       }
     }
+    allCovs <- rbind(allCovs,covs)
 
-    # generate states sequence Z
-    Z<-rep(NA,nbObs)
-    Z[1]<-sample(1:nbStates,size=1,prob=delta)
-    for (k in 2:nbObs){
+    # generate state sequence Z
+    Z <- rep(NA,nbObs)
+    Z[1] <- sample(1:nbStates,size=1,prob=delta)
+    for (k in 2:nbObs) {
       gamma <- diag(nbStates)
+
       g <- beta[1,]
       if(nbCovs==1) g <- g + beta[2,]*covs[k]
       if(nbCovs>1) {
-        for(j in 2:(nbCovs+1))
-          g <- g + beta[j,]*covs[k,j-1]
+        for(j in 1:nbCovs)
+          g <- g + beta[j+1,]*covs[k,j]
       }
-      gamma[!gamma]<-exp(g)
-      gamma <- t(gamma)
-      gamma<-gamma/apply(gamma,1,sum)
 
-      Z[k]<-sample(1:nbStates,size=1,prob=gamma[Z[k-1],])
+      gamma[!gamma] <- exp(g)
+      gamma <- t(gamma)
+      gamma <- gamma/apply(gamma,1,sum)
+      Z[k] <- sample(1:nbStates,size=1,prob=gamma[Z[k-1],])
     }
 
-    # simulate movement path X
-    X <- matrix(NA,nrow=nbObs,ncol=2)
-    step <- rep(NA,nbObs)
-    if(angleDist!="NULL") angle <- rep(NA,nbObs)
-    else angle <- NULL
-    X[1,] <- c(0,0) # initial position of the animal
+    X <- matrix(nbObs,nrow=nbObs,ncol=2)
+    X[1,] <- c(0,0) # initial position of animal
+
     phi <- 0
-    for(k in 1:(nbObs-1)) {
-
-      # Constitute the lists of state-dependent parameters for the step and angle
-      stepArgs <- list(1); angleArgs <- list(1) # first argument = 1 (one random draw)
-
+    # simulate movement path
+    for (k in 1:(nbObs-1)){
+      # prepare lists of arguments for step and angle distributions
+      stepArgs <- list(1) ; angleArgs <- list(1) # first argument = 1 (one random draw)
       if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[Z[k]]
       else {
         for(j in 1:nrow(stepPar))
           stepArgs[[j+1]] <- stepPar[j,Z[k]]
       }
-
       if(angleDist!="NULL") {
         if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[Z[k]]
         else {
           for(j in 1:nrow(anglePar))
             angleArgs[[j+1]] <- anglePar[j,Z[k]]
         }
-        angle[k] <- do.call(angleFun,angleArgs)-pi # angle between -pi and pi
-        phi<-phi+angle[k]
       }
 
-      # conversion between mean/sd and shape/scale if necessary
-      if(stepFun=="rweibull" | stepFun=="rgamma") {
+      if(stepDist=="gamma" | stepDist=="weibull")
+      {
         shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
         scale <- stepArgs[[3]]^2/stepArgs[[2]]
         stepArgs[[2]] <- shape
-        if(stepFun=="rgamma") stepArgs[[3]] <- 1/scale # rgamma expects rate=1/scale
-        else stepArgs[[3]] <- scale # rweibull expects scale
+        if(stepDist=="gamma") stepArgs[[3]] <- 1/scale # rgamma expects rate=1/scale
+        if(stepDist=="weibull") stepArgs[[3]] <- scale # rweibull expects scale
       }
 
-      if(runif(1)>zeroMass[Z[k]])
-        step[k] <- do.call(stepFun,stepArgs)
-      else
-        step[k] <- 0
+      if(runif(1)>zeroMass[Z[k]]) len <- do.call(stepFun,stepArgs)
+      else len <- 0
 
-      m <- step[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
+      if(angleDist!="NULL")
+        phi <- phi + do.call(angleFun,angleArgs)
+
+      m <- len*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
       X[k+1,] <- X[k,] + m
     }
-    if(angleDist!="NULL") angle[1] <- NA # the first angle value is arbitrary
 
-    if(angleDist!="NULL")
-      d <- data.frame(ID=rep(as.character(zoo),nbObs),step=step,angle=angle,x=X[,1],y=X[,2])
-    else
-      d <- data.frame(ID=rep(as.character(zoo),nbObs),step=step,x=X[,1],y=X[,2])
-    if(!is.null(covs)) d <- cbind(d,covs)
-    if(zoo==1) data <- d # initialize data
-    else data <- rbind(data,d) # add observations of each animal
+    d <- data.frame(ID=rep(zoo,nbObs),x=X[,1],y=X[,2])
+    trackData <- rbind(trackData,d)
   }
 
+  # build the data frame to be returned
+  data <- data.frame(ID=character(),
+                     step=numeric(),
+                     angle=numeric(),
+                     x=numeric(),
+                     y=numeric())
+
+  for (zoo in 1:nbAnimals) {
+    ind <- which(trackData$ID==unique(trackData$ID)[zoo])
+    nbObs <- length(ind)
+
+    s <- rep(NA,nbObs)
+    a <- rep(NA,nbObs)
+    compDir <- rep(NA,nbObs)
+
+    for(k in 1:(nbObs-1)) {
+      x <- trackData$x[ind]
+      y <- trackData$y[ind]
+      s[k] <- sqrt((x[k+1]-x[k])^2+(y[k+1]-y[k])^2) # euclidean distance
+      coo <- c(x[k+1],y[k+1])-c(x[k],y[k])
+      compDir[k] <- Arg(coo[1]+1i*coo[2]) # compass direction
+      if (k!=1){
+        a[k] <- compDir[k]-compDir[k-1]
+        # angles between -pi and pi
+        if(a[k] >  pi) a[k] <- a[k]-2*pi
+        if(a[k] < -pi) a[k] <- a[k]+2*pi
+      }
+    }
+
+    if(angleDist=="NULL") a <- rep(NA,nbObs)
+    d <- data.frame(ID=trackData$ID[ind],step=s,angle=a,x=x,y=y)
+    data <- rbind(data,d)
+  }
+
+  if(nbCovs>0) data <- cbind(data,allCovs)
   return(moveData(data))
 }

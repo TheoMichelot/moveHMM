@@ -16,24 +16,35 @@
 #'
 #' @return The MLE of the parameters of the model.
 #' @examples
+#' # simulate data
+#' nbAnimals <- 4
 #' nbStates <- 2
-#' stepPar <- c(15,50,10,20,0.2,0.3)
-#' anglePar <- c(pi,0,0.7,2)
-#' data <- simData(2,nbStates,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
+#' nbCovs <- 3
+#' mu<-c(20,70)
+#' sigma<-c(8,20)
+#' angleMean <- c(pi,0)
+#' kappa <- c(0.8,1.3)
+#' stepPar <- c(mu,sigma)
+#' anglePar <- c(angleMean,kappa)
+#' stepDist <- "gamma"
+#' angleDist <- "vm"
+#' zeroInflation <- FALSE
 #'
-#' mu0 <- c(20,80)
-#' sigma0 <- c(20,40)
-#' z0 <- c(0.5,0.5)
-#' kappa0 <- c(0.1,0.1)
-#' stepPar0 <- c(mu0,sigma0,z0)
+#' data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,nbCovs,zeroInflation)
+#'
+#' # estimation
+#' mu0 <- c(20,70)
+#' sigma0 <- c(10,30)
+#' kappa0 <- c(1,1)
+#' angleMean <- c(pi,0)
+#' stepPar0 <- c(mu0,sigma0)
 #' anglePar0 <- kappa0
 #'
-#' nbCovs <- ncol(data[[1]]$covs)
 #' beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
 #'                 nrow=nbCovs+1,byrow=TRUE)
-#' delta0 <- c(1,1)/2
+#' delta0 <- rep(1,nbStates)/nbStates
 #'
-#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,"gamma","vm",c(pi,0),TRUE)
+#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,"gamma","vm",angleMean,zeroInflation)
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gamma","weibull","exp"),
                    angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL,
@@ -72,4 +83,3 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,stepDist=c("gam
   par <- w2n(mle$estimate,bounds,parSize,nbStates,nbCovs)
   return(par)
 }
-
