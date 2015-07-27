@@ -12,7 +12,7 @@
 #' @examples
 #' x <- c(1,2,3,4,5,6,7,8,9,10)
 #' y <- c(1,1,1,2,2,2,1,1,1,2)
-#' trackData <- list(x=x,y=y)
+#' trackData <- data.frame(x=x,y=y)
 #' d <- prepData(trackData,'euclidean')
 
 prepData <- function(trackData, type=c('GCD','euclidean'))
@@ -51,8 +51,8 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
 
     # check for possibly abnormal step lengths
-    sdInf <- mean(step)-4*sd(step)
-    sdSup <- mean(step)+4*sd(step)
+    sdInf <- mean(step,na.rm=T)-4*sd(step,na.rm=T)
+    sdSup <- mean(step,na.rm=T)+4*sd(step,na.rm=T)
     offObs <- which(step<sdInf | step>sdSup)
     if(length(offObs)==1)
       warning("Step length at index ",offObs," seems off.")
