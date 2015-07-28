@@ -18,7 +18,7 @@
 #' @return The MLE of the parameters of the model.
 #' @examples
 #' # simulate data
-#' nbAnimals <- 5
+#' nbAnimals <- 1
 #' nbStates <- 2
 #' nbCovs <- 3
 #' mu<-c(15,50)
@@ -84,9 +84,16 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 
-  mle <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
+  # call to optimizer
+  mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
              zeroInflation,print.level=2,iterlim=1000)
 
-  par <- w2n(mle$estimate,bounds,parSize,nbStates,nbCovs)
-  return(par)
+  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
+
+  states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
+                 angleMean)
+
+  mh <- list(data=data,mle=mle,states=states,stepDist=stepDist,angleDist=angleDist,
+             angleMean=angleMean)
+  return(moveHMM(mh))
 }
