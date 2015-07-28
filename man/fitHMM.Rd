@@ -41,7 +41,7 @@ Fit an HMM to the data
 }
 \examples{
 # simulate data
-nbAnimals <- 5
+nbAnimals <- 1
 nbStates <- 2
 nbCovs <- 3
 mu<-c(15,50)

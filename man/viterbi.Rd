@@ -39,7 +39,7 @@ Reconstructs the most probable states sequence.
 }
 \examples{
 # simulate data
-nbAnimals <- 5
+nbAnimals <- 1
 nbStates <- 2
 nbCovs <- 3
 mu<-c(15,50)
@@ -70,7 +70,7 @@ mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
               "gamma","vm",angleMean,zeroInflation)
 
 # reconstruction of states sequence
-vit <- viterbi(data,nbStates,mod$beta,mod$delta,stepDist,angleDist,mod$stepPar,mod$anglePar,
+states <- viterbi(data,nbStates,mod$beta,mod$delta,stepDist,angleDist,mod$stepPar,mod$anglePar,
                angleMean)
 }
 
