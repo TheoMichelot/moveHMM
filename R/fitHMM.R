@@ -72,7 +72,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
   if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0 |
        length(which(anglePar0<angleBounds[,1] | anglePar0>angleBounds[,2]))>0)
     stop("Check the parameters bounds.")
-  if(!is.null(angleBounds) & length(angleMean)!=nbStates)
+  if(!is.null(angleMean) & length(angleMean)!=nbStates)
     stop("The angleMean argument should be of length nbStates.")
 
   # build design matrix
