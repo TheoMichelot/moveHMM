@@ -97,7 +97,7 @@ viterbi <- function(data,nbStates,beta,delta,stepDist=c("gamma","weibull","exp")
   if(!is.null(angleMean))
     anglePar <- rbind(angleMean,anglePar)
 
-  allProbs <- allProbs(data,nbStates,stepDist,angleDist,stepPar,anglePar)
+  allProbs <- allProbs(data,nbStates,stepDist,angleDist,stepPar,anglePar,zeroInflation)
   trMat <- trMatrix_rcpp(nbStates,beta,as.matrix(covs))
 
   nbAnimals <- length(unique(data$ID))
