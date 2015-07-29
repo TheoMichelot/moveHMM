@@ -1,4 +1,6 @@
 
+context("allProbs")
+
 test_that("Exceptions are thrown",{
   step <- rgamma(100,5,0.25)
   angle <- rvm(100,0,2)

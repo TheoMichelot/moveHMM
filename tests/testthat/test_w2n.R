@@ -1,4 +1,6 @@
 
+context("w2n")
+
 test_that("The output is in the right format",{
   nbStates <- 2
   nbCovs <- 2

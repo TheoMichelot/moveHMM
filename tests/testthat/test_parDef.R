@@ -1,4 +1,6 @@
 
+context("parDef")
+
 test_that("Exceptions are thrown",{
   nbStates <- 2
   expect_that(parDef("gamma","vm",nbStates,FALSE,FALSE),not(throws_error()))

@@ -1,4 +1,6 @@
 
+context("n2w")
+
 test_that("Exception is thrown",{
   nbStates <- 2
   par <- c(0.5,1.5,10,100)

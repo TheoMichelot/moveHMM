@@ -1,4 +1,6 @@
 
+context("turnAngle")
+
 test_that("expected values", {
   a <- c(0,0)
   b <- c(0,1)

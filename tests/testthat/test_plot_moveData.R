@@ -1,4 +1,6 @@
 
+context("plot.moveData")
+
 test_that("Exceptions are thrown",{
 #   ID <- rep("Animal1",100)
 #   x <- seq(-5,5,length=100)+rnorm(100)

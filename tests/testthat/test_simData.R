@@ -1,4 +1,6 @@
 
+context("simData")
+
 test_that("Exceptions are thrown",{
   stepPar <- c(1,10,1,5,0.2,0.3)
   anglePar <- c(0,pi,0.5,2)

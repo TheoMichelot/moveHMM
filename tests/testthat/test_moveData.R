@@ -1,4 +1,6 @@
 
+context("moveData")
+
 test_that("Exceptions are thrown",{
   ID <- rep("Animal1",10)
   x <- rep(1,10)

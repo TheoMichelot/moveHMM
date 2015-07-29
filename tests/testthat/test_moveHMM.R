@@ -1,4 +1,6 @@
 
+context("moveHMM")
+
 test_that("Exceptions are thrown",{
   data <- data.frame(1,2,3)
   states <- rep(1,10)
