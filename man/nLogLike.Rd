@@ -38,32 +38,24 @@ The negative log-likelihood of wpar given data.
 Negative log-likelihood function
 }
 \examples{
+data <- example$data
+
 nbStates <- 2
 nbCovs <- 2
-nbAnimals <- 3
-stepPar <- c(15,10,50,20,0.2,0.3)
-anglePar <- c(pi,0,0.7,2)
-data <- simData(nbAnimals,nbStates,"gamma","vm",stepPar,anglePar,nbCovs,zeroInflation=TRUE)
-
+stepDist <- "gamma"
+angleDist <- "vm"
 mu0 <- c(20,80)
 sigma0 <- c(20,40)
 kappa0 <- c(1,1)
-bounds <- matrix(c(0,Inf,
-                   0,Inf,
-                   0,Inf,
-                   0,Inf,
-                   0,Inf,
-                   0,Inf),
-                 ncol=2,byrow=TRUE)
 beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
                 nrow=nbCovs+1,byrow=TRUE)
 delta0 <- c(1,1)/2
 par0 <- c(mu0,sigma0,kappa0)
 wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
-parSize <- c(2,1)
 angleMean <- c(pi,0)
-stepDist <- "gamma"
-angleDist <- "vm"
+
+bounds <- parDef(stepDist,angleDist,nbStates,FALSE,FALSE)$bounds
+parSize <- parDef(stepDist,angleDist,nbStates,FALSE,FALSE)$parSize
 
 l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,FALSE)
 }

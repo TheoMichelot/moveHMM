@@ -40,21 +40,14 @@ The MLE of the parameters of the model.
 Fit an HMM to the data
 }
 \examples{
-# simulate data
-nbAnimals <- 1
+data <- example$data
+
 nbStates <- 2
 nbCovs <- 3
-mu<-c(15,50)
-sigma<-c(10,20)
-angleMean <- c(pi,0)
-kappa <- c(0.7,1.5)
-stepPar <- c(mu,sigma)
-anglePar <- c(angleMean,kappa)
 stepDist <- "gamma"
 angleDist <- "vm"
 zeroInflation <- FALSE
-
-data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,nbCovs,zeroInflation)
+angleMean <- c(pi,0)
 
 # estimation
 mu0 <- c(20,70)
