@@ -3,7 +3,7 @@
 #'
 #' Simulates the file data/example.RData, used in other functions examples.
 
-example <- function()
+exampleGen <- function()
 {
   # simulate data
   nbAnimals <- 1
