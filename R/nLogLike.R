@@ -24,6 +24,10 @@
 #' nbCovs <- 2
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
+#'
+#' bounds <- parDef(stepDist,angleDist,nbStates,FALSE,FALSE)$bounds
+#' parSize <- parDef(stepDist,angleDist,nbStates,FALSE,FALSE)$parSize
+#'
 #' mu0 <- c(20,80)
 #' sigma0 <- c(20,40)
 #' kappa0 <- c(1,1)
@@ -33,9 +37,6 @@
 #' par0 <- c(mu0,sigma0,kappa0)
 #' wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 #' angleMean <- c(pi,0)
-#'
-#' bounds <- parDef(stepDist,angleDist,nbStates,FALSE,FALSE)$bounds
-#' parSize <- parDef(stepDist,angleDist,nbStates,FALSE,FALSE)$parSize
 #'
 #' l <- nLogLike(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,FALSE)
 

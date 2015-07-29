@@ -43,7 +43,7 @@ Fit an HMM to the data
 data <- example$data
 
 nbStates <- 2
-nbCovs <- 3
+nbCovs <- 2
 stepDist <- "gamma"
 angleDist <- "vm"
 zeroInflation <- FALSE
@@ -56,7 +56,7 @@ kappa0 <- c(1,1)
 angleMean <- c(pi,0)
 stepPar0 <- c(mu0,sigma0)
 anglePar0 <- kappa0
-formula <- ~cov1+cos(cov2)+sin(cov3)
+formula <- ~cov1+cos(cov2)
 nbCovs <- length(attr(terms(formula), "term.labels"))
 
 beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),

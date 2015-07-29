@@ -40,6 +40,10 @@ Reconstructs the most probable states sequence.
 \examples{
 data <- example$data
 mod <- example$mod
+nbStates <- 2
+stepDist <- "gamma"
+angleDist <- "vm"
+angleMean <- c(pi,0)
 
 # reconstruction of states sequence
 states <- viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,

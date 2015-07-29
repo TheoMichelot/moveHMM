@@ -20,6 +20,10 @@
 #' @examples
 #' data <- example$data
 #' mod <- example$mod
+#' nbStates <- 2
+#' stepDist <- "gamma"
+#' angleDist <- "vm"
+#' angleMean <- c(pi,0)
 #'
 #' # reconstruction of states sequence
 #' states <- viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,
@@ -37,8 +41,10 @@ viterbi <- function(data,nbStates,beta,delta,stepDist=c("gamma","weibull","exp")
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  vStepPar <- c(t(stepPar))
-  vAnglePar <- c(t(anglePar))
+  if(is.matrix(stepPar)) vStepPar <- c(t(stepPar))
+  else vStepPar <- stepPar
+  if(is.matrix(anglePar)) vAnglePar <- c(t(anglePar))
+  else vAnglePar <- anglePar
   par <- c(stepPar,anglePar)
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds

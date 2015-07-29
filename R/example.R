@@ -8,7 +8,7 @@ example <- function()
   # simulate data
   nbAnimals <- 1
   nbStates <- 2
-  nbCovs <- 3
+  nbCovs <- 2
   mu<-c(15,50)
   sigma<-c(10,20)
   angleMean <- c(pi,0)
@@ -26,7 +26,7 @@ example <- function()
   kappa0 <- c(1,1)
   stepPar0 <- c(mu0,sigma0)
   anglePar0 <- kappa0
-  formula <- ~cov1+cos(cov2)+sin(cov3)
+  formula <- ~cov1+cos(cov2)
   nbCovs <- length(attr(terms(formula), "term.labels"))
 
   beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
