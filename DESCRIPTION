@@ -8,10 +8,11 @@ Maintainer: Theo Michelot <theo.michelot@gmail.com>
 Description: Animal movement modelling using hidden Markov models
 License: GPL-3
 LazyData: TRUE
-Depends: 
+Depends:
     CircStats, sp
-Imports: 
+Imports:
     Rcpp (>= 0.11.6)
-LinkingTo: 
+LinkingTo:
     Rcpp, RcppArmadillo
 Suggests: testthat
+LazyData: true
