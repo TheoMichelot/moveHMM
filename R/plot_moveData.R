@@ -9,7 +9,7 @@ plot.moveData <- function(data,compact=FALSE)
 {
   # check arguments
   if(length(data)<1) stop("The data input is empty.")
-  if(is.null(data$x) | is.null(data$y) | is.null(data$step))
+  if(is.null(data$ID) | is.null(data$x) | is.null(data$y) | is.null(data$step))
     stop("Missing field(s) in data.")
 
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
