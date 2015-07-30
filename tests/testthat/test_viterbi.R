@@ -4,30 +4,39 @@ context("viterbi")
 test_that("Exceptions are thrown",{
   data <- example$data
   mod <- example$mod
-  nbStates <- 2
-  stepDist <- "gamma"
-  angleDist <- "vm"
-  angleMean <- c(pi,0)
+  simPar <- example$simPar
 
-  # reconstruction of states sequence
-  expect_that(viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,
-                    mod$mle$anglePar,angleMean),not(throws_error()))
+  expect_that(viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+                      simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean),
+              not(throws_error()))
 
-  expect_that(viterbi(data.frame(),nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,
-                      mod$mle$anglePar,angleMean),throws_error())
+  # if data is empty
+  expect_that(viterbi(data.frame(),simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+                      simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean),
+              throws_error())
 
-  expect_that(viterbi(data,0,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,
-                      mod$mle$anglePar,angleMean),throws_error())
+  # if nbStates < 1
+  expect_that(viterbi(data,0,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+                      simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean),
+              throws_error())
 
-  expect_that(viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,"unif",angleDist,mod$mle$stepPar,
-                      mod$mle$anglePar,angleMean),throws_error())
+  # if stepDist not in list
+  expect_that(viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,"unif",
+                      simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean),
+              throws_error())
 
-  expect_that(viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,"norm",mod$mle$stepPar,
-                      mod$mle$anglePar,angleMean),throws_error())
+  # if angleDist not in list
+  expect_that(viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+                      "norm",mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean),
+              throws_error())
 
-  expect_that(viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar[-1],
-                      mod$mle$anglePar,angleMean),throws_error())
+  # if not enough parameters
+  expect_that(viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+                      simPar$angleDist,mod$mle$stepPar[-1],mod$mle$anglePar,simPar$angleMean),
+              throws_error())
 
-  expect_that(viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,
-                      mod$mle$anglePar,c(angleMean,1)),throws_error())
+  # if angleMean has the wrong size
+  expect_that(viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+                      simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,c(simPar$angleMean,1)),
+              throws_error())
 })

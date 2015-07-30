@@ -20,14 +20,11 @@
 #' @examples
 #' data <- example$data
 #' mod <- example$mod
-#' nbStates <- 2
-#' stepDist <- "gamma"
-#' angleDist <- "vm"
-#' angleMean <- c(pi,0)
+#' simPar <- example$simPar
 #'
 #' # reconstruction of states sequence
-#' states <- viterbi(data,nbStates,mod$mle$beta,mod$mle$delta,stepDist,angleDist,mod$mle$stepPar,
-#'                   mod$mle$anglePar,angleMean)
+#' states <- viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
+#'                   simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean)
 
 viterbi <- function(data,nbStates,beta,delta,stepDist=c("gamma","weibull","exp"),
                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,angleMean=NULL,

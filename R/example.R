@@ -1,10 +1,12 @@
 
 #' Example data simulation
 #'
-#' Simulates the file data/example.RData, used in other functions examples.
+#' Simulates the file data/example.RData, used in other functions' examples.
 
 exampleGen <- function()
 {
+  set.seed(1)
+
   # simulate data
   nbAnimals <- 1
   nbStates <- 2
@@ -18,6 +20,10 @@ exampleGen <- function()
   stepDist <- "gamma"
   angleDist <- "vm"
   zeroInflation <- FALSE
+
+  simPar <- list(nbAnimals=nbAnimals,nbStates=nbStates,angleMean=angleMean,stepDist=stepDist,
+                 angleDist=angleDist,zeroInflation=zeroInflation)
+
   data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,nbCovs,zeroInflation)
 
   # estimation
@@ -33,9 +39,12 @@ exampleGen <- function()
                   nrow=nbCovs+1,byrow=TRUE)
   delta0 <- rep(1,nbStates)/nbStates
 
+  par0 <- list(stepPar0=stepPar0,anglePar0=anglePar0,formula=formula,nbCovs=nbCovs,beta0=beta0,
+               delta0=delta0)
+
   mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
                 "gamma","vm",angleMean,zeroInflation)
 
-  example <- list(data=data,mod=mod)
+  example <- list(data=data,mod=mod,simPar=simPar,par0=par0)
   save(example,file="data/example.RData")
 }

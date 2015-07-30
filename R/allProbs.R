@@ -60,6 +60,7 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
       zeromass <- stepPar[nrow(stepPar),state]
       stepPar <- stepPar[-nrow(stepPar),]
     }
+
     if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[state]
     else {
       for(j in 1:nrow(stepPar))
