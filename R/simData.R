@@ -9,6 +9,7 @@
 #' @param anglePar Parameters of the turning angle distribution.
 #' @param nbCovs Number of covariates to simulate (0 by default).
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param obsPerAnimal Bounds of the number of observations per animal. Default : (500,1500).
 #'
 #' @return An object moveData
 #' @examples
@@ -31,7 +32,7 @@
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
-                    nbCovs=0,zeroInflation=FALSE)
+                    nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -55,6 +56,9 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
       stop("Check the turning angle parameters bounds.")
   }
 
+  if(length(which(obsPerAnimal<0))>0)
+    stop("obsPerAnimal should have positive values.")
+
   # generate regression parameters for transition probabilities
   beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
   # initial state distribution
@@ -77,7 +81,10 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
   allCovs <- NULL
 
   for (zoo in 1:nbAnimals) {
-    nbObs <- sample(500:1500,1) # number of observations per animal chosen in [500,1500]
+    if(obsPerAnimal[1]!=obsPerAnimal[2])
+      nbObs <- sample(obsPerAnimal[1]:obsPerAnimal[2],1)
+    else
+      nbObs <- obsPerAnimal[1]
 
     # generate covariate values
     covs <- NULL
