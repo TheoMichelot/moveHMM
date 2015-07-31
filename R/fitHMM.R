@@ -69,6 +69,6 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
                  angleMean)
 
   mh <- list(data=data,mle=mle,states=states,stepDist=stepDist,angleDist=angleDist,
-             angleMean=angleMean)
+             angleMean=angleMean,mod=mod)
   return(moveHMM(mh))
 }
