@@ -6,6 +6,23 @@
 
 using namespace Rcpp;
 
+// allProbs_rcpp
+arma::mat allProbs_rcpp(DataFrame data, int nbStates, std::string stepDist, std::string angleDist, arma::mat stepPar, arma::mat anglePar, bool zeroInflation);
+RcppExport SEXP moveHMM_allProbs_rcpp(SEXP dataSEXP, SEXP nbStatesSEXP, SEXP stepDistSEXP, SEXP angleDistSEXP, SEXP stepParSEXP, SEXP angleParSEXP, SEXP zeroInflationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< DataFrame >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type nbStates(nbStatesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type stepDist(stepDistSEXP);
+    Rcpp::traits::input_parameter< std::string >::type angleDist(angleDistSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type stepPar(stepParSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type anglePar(angleParSEXP);
+    Rcpp::traits::input_parameter< bool >::type zeroInflation(zeroInflationSEXP);
+    __result = Rcpp::wrap(allProbs_rcpp(data, nbStates, stepDist, angleDist, stepPar, anglePar, zeroInflation));
+    return __result;
+END_RCPP
+}
 // nLogLike_rcpp
 double nLogLike_rcpp(NumericVector trVec, arma::rowvec delta, arma::mat allProbs);
 RcppExport SEXP moveHMM_nLogLike_rcpp(SEXP trVecSEXP, SEXP deltaSEXP, SEXP allProbsSEXP) {

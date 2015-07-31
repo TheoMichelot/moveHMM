@@ -67,7 +67,8 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   covs <- data[,covsCol]
   trMat <- trMatrix_rcpp(nbStates,par$beta,as.matrix(covs))
 
-  allProbs <- allProbs(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,zeroInflation)
+#   allProbs <- allProbs(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,zeroInflation)
+  allProbs <- allProbs_rcpp(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,FALSE)
 
   nbAnimals <- length(unique(data$ID))
   aInd <- NULL
