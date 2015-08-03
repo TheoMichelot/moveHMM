@@ -65,29 +65,14 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
 
   nbObs <- length(data$step)
   covs <- data[,covsCol]
-  trMat <- trMatrix_rcpp(nbStates,par$beta,as.matrix(covs))
-
-#   allProbs <- allProbs(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,zeroInflation)
-  allProbs <- allProbs_rcpp(data,nbStates,stepDist,angleDist,par$stepPar,par$anglePar,FALSE)
 
   nbAnimals <- length(unique(data$ID))
   aInd <- NULL
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
-  llk <- 0
-  for(i in 1:nbAnimals)
-  {
-    if(i!=nbAnimals) {
-      p <- allProbs[aInd[i]:(aInd[i+1]-1),]
-      tm <- trMat[,,aInd[i]:(aInd[i+1]-1)]
-    }
-    else {
-      p <- allProbs[aInd[i]:nrow(allProbs),]
-      tm <- trMat[,,aInd[i]:nrow(allProbs)]
-    }
-    lscale <- nLogLike_rcpp(tm,par$delta,p) # call to C++ function
-    llk <- llk+lscale
-  }
+  llk <- nLogLike2_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
+                        par$anglePar,par$delta,aInd,FALSE)
+
   return(-llk)
 }
