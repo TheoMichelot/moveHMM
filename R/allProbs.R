@@ -1,7 +1,7 @@
 
 #' Matrix of all probabilities
 #'
-#' Used in the computation of the log-likelihood.
+#' Used in the function viterbi.
 #'
 #' @param data Object moveData.
 #' @param nbStates Number of states of the HMM.

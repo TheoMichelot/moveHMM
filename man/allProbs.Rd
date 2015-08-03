@@ -33,7 +33,7 @@ is not estimated.}
 Matrix of all probabilities.
 }
 \description{
-Used in the computation of the log-likelihood.
+Used in the function viterbi.
 }
 \examples{
 stepPar <- matrix(c(1,10,

@@ -6,7 +6,7 @@
 \usage{
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
   angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
-  nbCovs = 0, zeroInflation = FALSE)
+  nbCovs = 0, zeroInflation = FALSE, obsPerAnimal = c(500, 1500))
 }
 \arguments{
 \item{nbAnimals}{Number of observed individuals to simulate.}
@@ -24,6 +24,8 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
 \item{nbCovs}{Number of covariates to simulate (0 by default).}
 
 \item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+
+\item{obsPerAnimal}{Bounds of the number of observations per animal. Default : (500,1500).}
 }
 \value{
 An object moveData
