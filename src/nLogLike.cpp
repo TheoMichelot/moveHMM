@@ -86,7 +86,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	else allProbs.col(state) = stepProb;
     
     }
-    
+
     // Forward algorithm
     arma::mat gamma(nbStates,nbStates);
     double lscale = 0;

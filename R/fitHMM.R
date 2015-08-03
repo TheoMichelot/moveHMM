@@ -54,7 +54,9 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
   covs <- model.matrix(formula,data)
-  data <- cbind(data[-covsCol],covs)
+
+  if(length(covsCol)>0) data <- cbind(data[-covsCol],covs)
+  else data <- cbind(data,covs)
   nbCovs <- ncol(covs)-1 # substract intercept column
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)

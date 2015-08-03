@@ -56,6 +56,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   if(length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)+nbStates-1)
     stop("Wrong number of parameters in wpar.")
   if(length(data)<1) stop("The data input is empty.")
+
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)

@@ -41,7 +41,7 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
      arma::colvec res(x.size());
 
     for(int i=0;i<x.size();i++) {
-	res(i) = R::dexp(x(i),rate,0);
+	res(i) = R::dexp(x(i),1/rate,0);
 	if(R_IsNA(res(i))) res(i) = 1;
     }
 
@@ -71,6 +71,7 @@ arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
     for(int i=0;i<x.size();i++) {
 	den = (2*M_PI)*(1+rho*rho-2*rho*cos(x(i)-mu));
 	res(i) = num/den;
+	if(R_IsNA(res(i))) res(i) = 1;
     }
 
     return res;
