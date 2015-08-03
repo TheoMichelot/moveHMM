@@ -1,7 +1,7 @@
 #include "densities.hpp"
 
 // [[Rcpp::export]]
-double nLogLike2_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist, 
+double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist, 
                         std::string angleDist, arma::mat stepPar, arma::mat anglePar, 
                         arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false)
 {
@@ -38,7 +38,10 @@ double nLogLike2_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame da
     // Computation of matrix of joint probabilities allProbs
     map<std::string,FunPtr> funMap;
     funMap["gamma"]=dgamma_rcpp;
+    funMap["weibull"]=dweibull_rcpp;
+    funMap["exp"]=dexp_rcpp;
     funMap["vm"]=dvm_rcpp;
+    funMap["wrpcauchy"]=dwrpcauchy_rcpp;
 	
     arma::mat allProbs(nbObs,nbStates);
     allProbs.ones();
