@@ -47,13 +47,16 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     allProbs.ones();
     
     arma::colvec stepProb(nbObs);
-    arma::colvec angleProb(nbObs);
     NumericVector stepArgs(2);
-    NumericVector angleArgs(2);
-    
     NumericVector step = data["step"];
-    NumericVector angle = data["angle"];
    
+    arma::colvec angleProb(nbObs);
+    NumericVector angleArgs(2);
+    NumericVector angle(nbObs);
+
+    if(angleDist!="NULL")
+	angle = data["angle"];
+
     arma::rowvec zeromass(nbStates);
 
     if(zeroInflation) {
@@ -65,8 +68,6 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     {
         for(int i=0;i<stepPar.n_rows;i++)
             stepArgs(i) = stepPar(i,state);
-        for(int i=0;i<anglePar.n_rows;i++)
-            angleArgs(i) = anglePar(i,state);
 	
 	stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
 	if(zeroInflation) {
@@ -75,9 +76,15 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	    }
 	}
 
-	angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
+	if(angleDist!="NULL") {
+	    for(int i=0;i<anglePar.n_rows;i++)
+		angleArgs(i) = anglePar(i,state);
+
+	    angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
+	    allProbs.col(state) = stepProb%angleProb;
+	}
+	else allProbs.col(state) = stepProb;
     
-        allProbs.col(state) = stepProb%angleProb;
     }
     
     // Forward algorithm
