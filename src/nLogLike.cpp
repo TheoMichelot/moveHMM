@@ -53,16 +53,29 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     
     NumericVector step = data["step"];
     NumericVector angle = data["angle"];
-    
+   
+    arma::rowvec zeromass(nbStates);
+
+    if(zeroInflation) {
+	zeromass = stepPar.row(stepPar.n_rows-1);
+	arma::mat stepPar = stepPar(arma::span(0,stepPar.n_rows-2),arma::span());
+    }
+
     for(int state=0;state<nbStates;state++) 
     {
         for(int i=0;i<stepPar.n_rows;i++)
             stepArgs(i) = stepPar(i,state);
         for(int i=0;i<anglePar.n_rows;i++)
             angleArgs(i) = anglePar(i,state);
-    
-        stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
-        angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
+	
+	stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
+	if(zeroInflation) {
+	    for(int i=0;i<nbObs;i++) {
+		if(step(i)==0) stepProb(i)=zeromass(state);
+	    }
+	}
+
+	angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
     
         allProbs.col(state) = stepProb%angleProb;
     }
