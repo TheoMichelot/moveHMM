@@ -105,6 +105,6 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
         alpha = alpha/sum(alpha);
     }
 
-    return lscale;
+    return -lscale;
 }
 
