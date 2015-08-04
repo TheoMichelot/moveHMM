@@ -73,7 +73,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
   nllk <- nLogLike_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
-                        par$anglePar,par$delta,aInd,FALSE)
+                        par$anglePar,par$delta,aInd,zeroInflation)
 
   return(nllk)
 }

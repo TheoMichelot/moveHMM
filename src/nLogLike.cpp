@@ -61,7 +61,8 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 
     if(zeroInflation) {
 	zeromass = stepPar.row(stepPar.n_rows-1);
-	arma::mat stepPar = stepPar(arma::span(0,stepPar.n_rows-2),arma::span());
+	arma::mat stepPar2 = stepPar.submat(0,0,stepPar.n_rows-2,stepPar.n_cols-1);
+	stepPar = stepPar2;
     }
 
     for(int state=0;state<nbStates;state++) 
@@ -84,7 +85,6 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	    allProbs.col(state) = stepProb%angleProb;
 	}
 	else allProbs.col(state) = stepProb;
-    
     }
 
     // Forward algorithm
