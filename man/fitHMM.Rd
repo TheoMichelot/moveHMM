@@ -4,9 +4,10 @@
 \alias{fitHMM}
 \title{Fit an HMM to the data}
 \usage{
-fitHMM(nbStates, data, stepPar0, anglePar0, beta0, delta0, formula = ~1,
-  stepDist = c("gamma", "weibull", "exp"), angleDist = c("NULL", "vm",
-  "wrpcauchy"), angleMean = NULL, zeroInflation = FALSE)
+fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
+  formula = ~1, stepDist = c("gamma", "weibull", "exp"),
+  angleDist = c("NULL", "vm", "wrpcauchy"), angleMean = NULL,
+  zeroInflation = FALSE)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}

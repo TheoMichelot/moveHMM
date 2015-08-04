@@ -6,7 +6,8 @@
 \usage{
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
   angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
-  nbCovs = 0, zeroInflation = FALSE, obsPerAnimal = c(500, 1500))
+  beta = NULL, nbCovs = 0, zeroInflation = FALSE, obsPerAnimal = c(500,
+  1500))
 }
 \arguments{
 \item{nbAnimals}{Number of observed individuals to simulate.}
@@ -20,6 +21,8 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "exp"),
 \item{stepPar}{Parameters of the step length distribution.}
 
 \item{anglePar}{Parameters of the turning angle distribution.}
+
+\item{beta}{Matrix of regression parameters for the transition probability matrix.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default).}
 
