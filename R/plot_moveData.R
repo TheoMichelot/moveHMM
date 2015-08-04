@@ -78,14 +78,14 @@ plot.moveData <- function(data,compact=FALSE)
       ID <- unique(data$ID)[1]
       x <- data$x[which(data$ID==ID)]
       y <- data$y[which(data$ID==ID)]
-      plot(x,y,type="o",pch=20,lwd=1.3,col=1, cex=0.5,
+      plot(x,y,type="o",pch=20,lwd=1.3,col=2, cex=0.5,
            xlim=c(xmin,xmax),ylim=c(ymin,ymax),xlab="x",ylab="y")
 
       for(zoo in 2:length(data)) {
         ID <- unique(data$ID)[zoo]
         x <- data$x[which(data$ID==ID)]
         y <- data$y[which(data$ID==ID)]
-        points(x,y,type="o",pch=20,lwd=1.3,col=zoo,cex=0.5)
+        points(x,y,type="o",pch=20,lwd=1.3,col=zoo+1,cex=0.5)
       }
 
       par(mfrow=c(2,2))

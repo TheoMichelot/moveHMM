@@ -31,7 +31,9 @@ plot_moveHMM <- function(m)
     mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
 
     # Histogram of step lengths
-    hist(m$data$step[ind],prob=T,main="",ylim=c(0,0.05))
+    h <- hist(m$data$step[ind],plot=F) # to choose ylim
+    ymax <- 1.5*max(h$density)
+    hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length")
     mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
     grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
     for(state in 1:nbStates) {
@@ -56,7 +58,9 @@ plot_moveHMM <- function(m)
 
     # Histogram of turning angles
     if(m$angleDist!="NULL") {
-      hist(m$data$angle[ind],prob=T,main="",ylim=c(0,0.3))
+      h <- hist(m$data$angle[ind],plot=F) # to choose ylim
+      ymax <- 1.5*max(h$density)
+      hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle")
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(-pi,pi,length=1000)
 
