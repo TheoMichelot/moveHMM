@@ -25,7 +25,7 @@
 #'               par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
 #'               simPar$zeroInflation)
 
-fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
+fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","wrpcauchy"),
                    angleMean=NULL,zeroInflation=FALSE)
 {
@@ -58,6 +58,13 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula=~1,
   if(length(covsCol)>0) data <- cbind(data[-covsCol],covs)
   else data <- cbind(data,covs)
   nbCovs <- ncol(covs)-1 # substract intercept column
+
+  # generate initial values for beta and delta
+  if(is.null(beta0))
+    beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
+                             nrow=nbCovs+1,byrow=TRUE)
+
+  if(is.null(delta0)) delta0 <- rep(1,nbStates)/nbStates
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 
