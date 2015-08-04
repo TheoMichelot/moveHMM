@@ -7,6 +7,7 @@
 #' @param angleDist Name of the distribution from which to draw the turning angle values.
 #' @param stepPar Parameters of the step length distribution.
 #' @param anglePar Parameters of the turning angle distribution.
+#' @param beta Matrix of regression parameters for the transition probability matrix.
 #' @param nbCovs Number of covariates to simulate (0 by default).
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
 #' @param obsPerAnimal Bounds of the number of observations per animal. Default : (500,1500).
@@ -32,7 +33,7 @@
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
-                    nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
+                    beta=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -60,7 +61,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
     stop("obsPerAnimal should have positive values.")
 
   # generate regression parameters for transition probabilities
-  beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
+  if(is.null(beta)) beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
   # initial state distribution
   delta <- rep(1,nbStates)/nbStates
 
