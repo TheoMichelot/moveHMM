@@ -22,11 +22,9 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
     return res;
 }
 
-arma::colvec dweibull_rcpp(NumericVector x, double mu, double sigma)
+arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 {
     arma::colvec res(x.size());
-    double shape = pow(mu,2)/pow(sigma,2);
-    double scale = pow(sigma,2)/mu;
 
     for(int i=0;i<x.size();i++) {
 	res(i) = R::dweibull(x(i),shape,scale,0);

@@ -30,7 +30,7 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","
          "weibull"={
            parSize[1] <- 2
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
-           parNames <- c("mean","sd")
+           parNames <- c("shape","scale")
          },
          "exp"={
            parSize[1] <- 1

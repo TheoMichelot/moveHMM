@@ -139,13 +139,11 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
         }
       }
 
-      if(stepDist=="gamma" | stepDist=="weibull")
-      {
+      if(stepDist=="gamma") {
         shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
         scale <- stepArgs[[3]]^2/stepArgs[[2]]
         stepArgs[[2]] <- shape
-        if(stepDist=="gamma") stepArgs[[3]] <- 1/scale # rgamma expects rate=1/scale
-        if(stepDist=="weibull") stepArgs[[3]] <- scale # rweibull expects scale
+        stepArgs[[3]] <- 1/scale # rgamma expects rate=1/scale
       }
 
       if(runif(1)>zeroMass[Z[k]]) len <- do.call(stepFun,stepArgs)
