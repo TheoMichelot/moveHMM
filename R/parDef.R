@@ -14,11 +14,8 @@
 #' (matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
 #' bound for the correponding parameter), and parNames (names of parameters).
 
-parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","wrpcauchy"),
-                   nbStates,estAngleMean,zeroInflation)
+parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
 {
-  stepDist <- match.arg(stepDist)
-  angleDist <- match.arg(angleDist)
   parSize <- c(NA,NA)
 
   switch(stepDist,
@@ -31,6 +28,12 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","
            parSize[1] <- 2
            stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
            parNames <- c("shape","scale")
+         },
+         "lnorm"={
+           parSize[1] <- 2
+           stepBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(0,Inf),nbStates)),
+                                ncol=2,byrow=TRUE)
+           parNames <- c("location","scale")
          },
          "exp"={
            parSize[1] <- 1
@@ -51,34 +54,20 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","
            angleBounds <- NULL
          },
          "vm"={
-#            if(estAngleMean) {
-             parSize[2] <- 2
-             # bounds are chosen such that the parameters are not scaled
-             # (already in the right intervals for computing x and y)
-             angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,Inf),nbStates)),
-                                   ncol=2,byrow=TRUE)
-             parNames <- c(parNames,"mean","concentration")
-#            }
-#            else {
-#              parSize[2] <- 1
-#              angleBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
-#              parNames <- c(parNames,"concentration")
-#            }
+           parSize[2] <- 2
+           # bounds are chosen such that the parameters are not scaled
+           # (already in the right intervals for computing x and y)
+           angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,Inf),nbStates)),
+                                 ncol=2,byrow=TRUE)
+           parNames <- c(parNames,"mean","concentration")
          },
          "wrpcauchy"={
-#            if(estAngleMean) {
-             parSize[2] <- 2
-             # bounds are chosen such that the mean is not scaled, but the concentration is
-             # scaled from ]0,1[ to ]0,Inf[ (for computing c and y)
-             angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,1),nbStates)),
-                                   ncol=2,byrow=TRUE)
-             parNames <- c(parNames,"location","concentration")
-#            }
-#            else {
-#              parSize[2] <- 1
-#              angleBounds <- matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE)
-#              parNames <- c(parNames,"concentration")
-#            }
+           parSize[2] <- 2
+           # bounds are chosen such that the mean is not scaled, but the concentration is
+           # scaled from ]0,1[ to ]0,Inf[ (for computing c and y)
+           angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,1),nbStates)),
+                                 ncol=2,byrow=TRUE)
+           parNames <- c(parNames,"location","concentration")
          })
 
   bounds <- rbind(stepBounds,angleBounds)

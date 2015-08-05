@@ -26,14 +26,10 @@
 #' states <- viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
 #'                   simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean)
 
-viterbi <- function(data,nbStates,beta,delta,stepDist=c("gamma","weibull","exp"),
-                    angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,angleMean=NULL,
-                    zeroInflation=FALSE)
+viterbi <- function(data,nbStates,beta,delta,stepDist,angleDist,stepPar,
+                    anglePar=NULL,angleMean=NULL,zeroInflation=FALSE)
 {
   # check arguments
-  stepDist <- match.arg(stepDist)
-  angleDist <- match.arg(angleDist)
-
   if(nbStates<0) stop("nbStates should be at least 1.")
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$step)) stop("Missing field(s) in data.")

@@ -31,13 +31,9 @@
 #' data <- simData(5,2,stepDist,angleDist,stepParVec,angleParVec,nbCovs=2,zeroInflation=TRUE)
 #' P <- allProbs(data,2,stepDist,angleDist,stepPar,anglePar,TRUE)
 
-allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
-                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
-                     zeroInflation=FALSE)
+allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE)
 {
-  stepDist <- match.arg(stepDist)
   stepFun <- paste("d",stepDist,sep="")
-  angleDist <- match.arg(angleDist)
   if(angleDist!="NULL") angleFun <- paste("d",angleDist,sep="")
 
   nbObs <- length(data$step)
@@ -67,12 +63,11 @@ allProbs <- function(data,nbStates,stepDist=c("gamma","weibull","exp"),
         stepArgs[[j+1]] <- stepPar[j,state]
     }
     # conversion between mean/sd and shape/scale if necessary
-    if(stepFun=="dweibull" | stepFun=="dgamma") {
+    if(stepDist=="gamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
       scale <- stepArgs[[3]]^2/stepArgs[[2]]
       stepArgs[[2]] <- shape
-      if(stepFun=="dgamma") stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
-      else stepArgs[[3]] <- scale # dweibull expects scale
+      stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
     }
     if(zeroInflation) {
       stepProb[stepInd] <- ifelse(data$step[stepInd]==0,

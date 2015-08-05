@@ -26,7 +26,7 @@
 #'               simPar$zeroInflation)
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
-                   stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","wrpcauchy"),
+                   stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("NULL","vm","wrpcauchy"),
                    angleMean=NULL,zeroInflation=FALSE)
 {
   # check arguments

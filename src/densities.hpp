@@ -34,6 +34,18 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
     return res;
 }
 
+arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
+{
+    arma::colvec res(x.size());
+
+    for(int i=0;i<x.size();i++) {
+	res(i) = R::dlnorm(x(i),meanlog,sdlog,0);
+	if(R_IsNA(res(i))) res(i) = 1;
+    }
+
+    return res;
+}
+
 arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 {
      arma::colvec res(x.size());

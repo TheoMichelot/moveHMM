@@ -5,7 +5,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                         std::string angleDist, arma::mat stepPar, arma::mat anglePar, 
                         arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false)
 {
-    // Computation of transition probability matrix trMat
+    // 1. Computation of transition probability matrix trMat
     int nbObs = data.nrows();
     arma::cube trMat(nbStates,nbStates,nbObs);
     trMat.zeros();
@@ -35,10 +35,13 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
             for(int j=0;j<nbStates;j++)
                 trMat(i,j,k) = trMat(i,j,k)/rowSums(i,k);
     
-    // Computation of matrix of joint probabilities allProbs
+    // 2. Computation of matrix of joint probabilities allProbs
+    
+    // map the functions names with the actual functions
     map<std::string,FunPtr> funMap;
     funMap["gamma"]=dgamma_rcpp;
     funMap["weibull"]=dweibull_rcpp;
+    funMap["lnorm"]=dlnorm_rcpp;
     funMap["exp"]=dexp_rcpp;
     funMap["vm"]=dvm_rcpp;
     funMap["wrpcauchy"]=dwrpcauchy_rcpp;
@@ -87,7 +90,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	else allProbs.col(state) = stepProb;
     }
 
-    // Forward algorithm
+    // 3. Forward algorithm
     arma::mat gamma(nbStates,nbStates);
     double lscale = 0;
     int k=1;

@@ -31,7 +31,7 @@
 #' stepDist <- "gamma"
 #' data <- simData(5,2,stepDist,"NULL",stepPar,nbCovs=2,zeroInflation=TRUE)
 
-simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","exp"),
+simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
                     angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
                     beta=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
 {
