@@ -62,7 +62,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)
 
   if(!is.null(angleMean)) # if the turning angles' mean is not estimated
-    par$anglePar <- rbind(angleMean,par$anglePar)
+    par$anglePar[1,] <- angleMean
 
   nbObs <- length(data$step)
   covs <- data[,covsCol]

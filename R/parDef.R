@@ -51,30 +51,34 @@ parDef <- function(stepDist=c("gamma","weibull","exp"),angleDist=c("NULL","vm","
            angleBounds <- NULL
          },
          "vm"={
-           if(estAngleMean) {
+#            if(estAngleMean) {
              parSize[2] <- 2
-             angleBounds <- matrix(c(rep(c(-pi,pi),nbStates),rep(c(0,Inf),nbStates)),
+             # bounds are chosen such that the parameters are not scaled
+             # (already in the right intervals for computing x and y)
+             angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,Inf),nbStates)),
                                    ncol=2,byrow=TRUE)
              parNames <- c(parNames,"mean","concentration")
-           }
-           else {
-             parSize[2] <- 1
-             angleBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
-             parNames <- c(parNames,"concentration")
-           }
+#            }
+#            else {
+#              parSize[2] <- 1
+#              angleBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
+#              parNames <- c(parNames,"concentration")
+#            }
          },
          "wrpcauchy"={
-           if(estAngleMean) {
+#            if(estAngleMean) {
              parSize[2] <- 2
-             angleBounds <- matrix(c(rep(c(-pi,pi),nbStates),rep(c(0,1),nbStates)),
+             # bounds are chosen such that the mean is not scaled, but the concentration is
+             # scaled from ]0,1[ to ]0,Inf[ (for computing c and y)
+             angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,1),nbStates)),
                                    ncol=2,byrow=TRUE)
              parNames <- c(parNames,"location","concentration")
-           }
-           else {
-             parSize[2] <- 1
-             angleBounds <- matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE)
-             parNames <- c(parNames,"concentration")
-           }
+#            }
+#            else {
+#              parSize[2] <- 1
+#              angleBounds <- matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE)
+#              parNames <- c(parNames,"concentration")
+#            }
          })
 
   bounds <- rbind(stepBounds,angleBounds)

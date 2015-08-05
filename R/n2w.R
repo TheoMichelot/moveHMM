@@ -48,6 +48,18 @@ n2w <- function(par,bounds,beta,delta,nbStates)
     wpar <- c(wpar,p)
   }
 
+  # identify angle distribution parameters
+  foo <- length(wpar)-nbStates+1
+  angleMean <- wpar[(foo-nbStates):(foo-1)]
+  con <- wpar[foo:length(wpar)]
+
+  # compute the working parameters for the angle distribution
+  x <- con*cos(angleMean)
+  y <- con*sin(angleMean)
+
+  wpar[(foo-nbStates):(foo-1)] <- x
+  wpar[foo:length(wpar)] <- y
+
   wbeta <- as.vector(beta)
   wdelta <- log(delta[-1]/delta[1])
   return(c(wpar,wbeta,wdelta))

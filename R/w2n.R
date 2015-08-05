@@ -42,6 +42,18 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
   beta <- matrix(beta,nrow=nbCovs+1)
   wpar <- wpar[-(foo:length(wpar))]
 
+  # identify working parameters for the angle distribution (x and y)
+  foo <- length(wpar)-nbStates+1
+  x <- wpar[(foo-nbStates):(foo-1)]
+  y <- wpar[foo:length(wpar)]
+
+  # compute natural parameters for the angle distribution
+  angleMean <- Arg(x+1i*y)
+  con <- sqrt(x^2+y^2)
+  # to scale them if necessary (see parDef)
+  wpar[(foo-nbStates):(foo-1)] <- angleMean
+  wpar[foo:length(wpar)] <- con
+
   nbPar <- length(wpar)/nbStates
   if(nbPar!=sum(parSize)) stop("Wrong number of parameters.")
   par <- NULL
@@ -55,7 +67,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
       p <- (b-a)*inv.logit(p)+a
     }
     else if(is.infinite(a) & is.finite(b)) { # R -> ]-Inf,b]
-      p <- exp(-p)-b
+      p <- -(exp(-p)-b)
     }
     else if(is.finite(a) & is.infinite(b)) { # R -> [a,Inf[
       p <- exp(p)+a

@@ -36,7 +36,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  par0 <- c(stepPar0,anglePar0)
+  par0 <- c(stepPar0,angleMean,anglePar0)
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
