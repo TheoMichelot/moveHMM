@@ -34,13 +34,6 @@ test_that("Exceptions are thrown",{
   stepPar <- c(1,10,1,5,4,0.3)
   expect_that(simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE),
               throws_error("Check the step length parameters bounds."))
-  stepPar <- c(1,10,1,5,0.2,0.3)
-  anglePar <- c(0,5,0.5,2)
-  expect_that(simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE),
-              throws_error("Check the turning angle parameters bounds."))
-  anglePar <- c(0,pi,-1,2)
-  expect_that(simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE),
-              throws_error("Check the turning angle parameters bounds."))
 })
 
 test_that("The right slots are defined",{
@@ -63,5 +56,5 @@ test_that("The returned object is of the correct class",{
   anglePar <- c(0,pi,0.5,2)
   data <- simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
 
-  expect_equal(class(data),c("data.frame","moveData"))
+  expect_equal(class(data),c("moveData","data.frame"))
 })

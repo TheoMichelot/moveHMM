@@ -1,4 +1,6 @@
 
+context("fitHMM")
+
 test_that("Exceptions are thrown",{
   data <- example$data
   simPar <- example$simPar

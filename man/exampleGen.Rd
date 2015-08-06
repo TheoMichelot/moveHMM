@@ -7,6 +7,6 @@
 exampleGen()
 }
 \description{
-Simulates the file data/example.RData, used in other functions' examples.
+Generate the file data/example.RData, used in other functions' examples.
 }
 

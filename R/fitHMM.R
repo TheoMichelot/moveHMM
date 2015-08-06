@@ -20,13 +20,36 @@
 #'
 #' @return The MLE of the parameters of the model.
 #' @examples
-#' data <- example$data
-#' simPar <- example$simPar
-#' par0 <- example$par0
+#' ### 1. simulate data
+#' # define all the arguments of simData
+#' nbAnimals <- 2
+#' nbStates <- 2
+#' nbCovs <- 2
+#' mu<-c(15,50)
+#' sigma<-c(10,20)
+#' angleMean <- c(pi,0)
+#' kappa <- c(0.7,1.5)
+#' stepPar <- c(mu,sigma)
+#' anglePar <- c(angleMean,kappa)
+#' stepDist <- "gamma"
+#' angleDist <- "vm"
+#' zeroInflation <- FALSE
+#' obsPerAnimal <- c(50,100)
 #'
-#' mod <- fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-#'               par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-#'               simPar$zeroInflation)
+#' data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,NULL,nbCovs,zeroInflation,
+#'                 obsPerAnimal)
+#'
+#' ### 2. fit the model to the simulated data
+#' # define initial values for the parameters
+#' mu0 <- c(20,70)
+#' sigma0 <- c(10,30)
+#' kappa0 <- c(1,1)
+#' stepPar0 <- c(mu0,sigma0)
+#' anglePar0 <- kappa0
+#' formula <- ~cov1+cos(cov2)
+#'
+#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,NULL,NULL,formula,
+#'               "gamma","vm",angleMean,zeroInflation,verbose=2)
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("NULL","vm","wrpcauchy"),

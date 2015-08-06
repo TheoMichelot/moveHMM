@@ -16,13 +16,6 @@ test_that("Exception is thrown",{
   expect_that(prepData(trackData),not(throws_error()))
 })
 
-test_that("Warning is given",{
-  x <- c(seq(1,3,length=100)+rnorm(100),200,seq(3,5,length=100)+rnorm(100))
-  y <- seq(-4,-8,length=201)+rnorm(200)
-  trackData <- data.frame(x,y)
-  expect_that(prepData(trackData),gives_warning())
-})
-
 test_that("The right slots are defined",{
   x <- c(1,2,3,4,5,6,7,8,9,10)
   y <- c(1,1,1,2,2,2,1,1,1,2)
@@ -42,5 +35,5 @@ test_that("The returned object is of the correct class",{
   trackData <- data.frame(x,y)
   data <- prepData(trackData)
 
-  expect_equal(class(data),c("data.frame","moveData"))
+  expect_equal(class(data),c("moveData","data.frame"))
 })

@@ -34,10 +34,12 @@
 #' l <- nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,simPar$angleDist,
 #'               simPar$angleMean,simPar$zeroInflation)
 
-nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist,angleDist,
-                     angleMean=NULL,zeroInflation=FALSE)
+nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","lnorm","exp"),
+                     angleDist=c("NULL","vm","wrpcauchy"),angleMean=NULL,zeroInflation=FALSE)
 {
   # check arguments
+  stepDist <- match.arg(stepDist)
+  angleDist <- match.arg(angleDist)
   if(nbStates<1) stop("nbStates must be at least 1.")
 
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &

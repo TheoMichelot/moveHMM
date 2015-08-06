@@ -1,14 +1,14 @@
 
 #' Example data simulation
 #'
-#' Simulates the file data/example.RData, used in other functions' examples.
+#' Generate the file data/example.RData, used in other functions' examples.
 
 exampleGen <- function()
 {
   set.seed(1)
 
   # simulate data
-  nbAnimals <- 1
+  nbAnimals <- 2
   nbStates <- 2
   nbCovs <- 2
   mu<-c(15,50)
@@ -20,11 +20,13 @@ exampleGen <- function()
   stepDist <- "gamma"
   angleDist <- "vm"
   zeroInflation <- FALSE
+  obsPerAnimal <- c(50,100)
 
   simPar <- list(nbAnimals=nbAnimals,nbStates=nbStates,angleMean=angleMean,stepDist=stepDist,
                  angleDist=angleDist,zeroInflation=zeroInflation)
 
-  data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,nbCovs,zeroInflation)
+  data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,NULL,nbCovs,zeroInflation,
+                  obsPerAnimal)
 
   # estimation
   mu0 <- c(20,70)

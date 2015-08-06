@@ -1,20 +1,6 @@
 
 context("allProbs")
 
-test_that("Exceptions are thrown",{
-  step <- rgamma(100,5,0.25)
-  angle <- rvm(100,0,2)
-  data <- list(step=step,angle=angle)
-  stepPar <- matrix(c(8,20,5,10),ncol=2,byrow=T)
-  anglePar <- matrix(c(0,0,1.5,0.7),ncol=2,byrow=T)
-  nbStates <- 2
-
-  expect_that(allProbs(data,nbStates,"gamma","vm",stepPar,anglePar),not(throws_error()))
-
-  expect_that(allProbs(data,nbStates,"unif","vm",stepPar,anglePar),throws_error())
-  expect_that(allProbs(data,nbStates,"gamma","norm",stepPar,anglePar),throws_error())
-})
-
 test_that("The output has the right format",{
   step <- rgamma(100,5,0.25)
   angle <- rvm(100,0,2)
