@@ -77,6 +77,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
       invokeRestart("muffleWarning")
   }
 
+  # call to optimizer nlm
   withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
                                  angleDist,angleMean,zeroInflation,print.level=verbose,
                                  iterlim=1000,hessian=TRUE),
