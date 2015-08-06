@@ -57,7 +57,10 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   }
 
   covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
-  if(length(covsCol)>0) covs <- trackData[,covsCol]
+  if(length(covsCol)>0) {
+    covs <- data.frame(trackData[,covsCol]) # to prevent error if nbCovs==1
+    colnames(covs) <- names(trackData)[covsCol]
+  }
   else covs <- NULL
   data <- cbind(data,x=trackData$x,y=trackData$y)
   if(!is.null(covs)) data <- cbind(data,covs)
