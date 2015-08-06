@@ -5,9 +5,9 @@
 \title{Fit an HMM to the data}
 \usage{
 fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
-  formula = ~1, stepDist = c("gamma", "weibull", "exp"),
+  formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("NULL", "vm", "wrpcauchy"), angleMean = NULL,
-  zeroInflation = FALSE)
+  zeroInflation = FALSE, verbose = 0)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}
@@ -33,6 +33,10 @@ if the turning angles distributions is not estimated.}
 i.e. the means should be estimated.}
 
 \item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+
+\item{verbose}{Determines the print level of the optimizer. The default value of 0 means that no
+printing occurs, a value of 1 means that the first and last iterations of the optimization are
+detailed, and a value of 2 means that each iteration of the optimization is detailed.}
 }
 \value{
 The MLE of the parameters of the model.

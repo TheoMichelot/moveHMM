@@ -14,6 +14,9 @@
 #' @param angleMean Vector of state-dependent turning angles means. It defaults to NULL,
 #' i.e. the means should be estimated.
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param verbose Determines the print level of the optimizer. The default value of 0 means that no
+#' printing occurs, a value of 1 means that the first and last iterations of the optimization are
+#' detailed, and a value of 2 means that each iteration of the optimization is detailed.
 #'
 #' @return The MLE of the parameters of the model.
 #' @examples
@@ -27,7 +30,7 @@
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("NULL","vm","wrpcauchy"),
-                   angleMean=NULL,zeroInflation=FALSE)
+                   angleMean=NULL,zeroInflation=FALSE,verbose=0)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -70,7 +73,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   # call to optimizer
   mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
-             zeroInflation,print.level=2,iterlim=1000)
+             zeroInflation,print.level=verbose,iterlim=1000)
 
   mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
 
