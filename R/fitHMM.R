@@ -71,9 +71,16 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
 
-  # call to optimizer
-  mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
-             zeroInflation,print.level=verbose,iterlim=1000,hessian=TRUE)
+  # this function is used to muffle the warning "NA/Inf replaced by maximum positive value"
+  h <- function(w) {
+    if(any(grepl("NA/Inf replaced by maximum positive value",w)))
+      invokeRestart("muffleWarning")
+  }
+
+  withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
+                                 angleDist,angleMean,zeroInflation,print.level=verbose,
+                                 iterlim=1000,hessian=TRUE),
+                      warning=h)
 
   mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
 
