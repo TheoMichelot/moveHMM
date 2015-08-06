@@ -15,6 +15,6 @@ moveHMM <- function(m)
 
   obj <- m
 
-  class(obj) <- append(class(obj),"moveHMM")
+  class(obj) <- append("moveHMM",class(obj))
   return(obj)
 }

@@ -2,7 +2,7 @@
 #' Plot moveHMM
 #'
 #' @param m Object moveHMM
-plot_moveHMM <- function(m)
+plot.moveHMM <- function(m)
 {
   nbAnimals <- length(unique(m$data$ID))
 

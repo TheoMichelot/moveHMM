@@ -14,6 +14,6 @@ moveData <- function(data)
 
   obj <- data
 
-  class(obj) <- append(class(obj),"moveData")
+  class(obj) <- append("moveData",class(obj))
   return(obj)
 }
