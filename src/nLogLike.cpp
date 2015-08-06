@@ -57,7 +57,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     NumericVector angleArgs(2);
     NumericVector angle(nbObs);
 
-    if(angleDist!="NULL")
+    if(angleDist!="none")
 	angle = data["angle"];
 
     arma::rowvec zeromass(nbStates);
@@ -80,7 +80,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	    }
 	}
 
-	if(angleDist!="NULL") {
+	if(angleDist!="none") {
 	    for(int i=0;i<anglePar.n_rows;i++)
 		angleArgs(i) = anglePar(i,state);
 

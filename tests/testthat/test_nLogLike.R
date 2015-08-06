@@ -51,6 +51,6 @@ test_that("angleMean=NULL, angleDist=NULL, and zeroInflation=TRUE work",{
   par <- c(par0$stepPar0,par0$anglePar0)
   wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates)
 
-  expect_that(nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,"NULL",
+  expect_that(nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,"none",
                        NULL,TRUE),not(throws_error()))
 })

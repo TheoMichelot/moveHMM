@@ -20,7 +20,7 @@ test_that("It works without turning angles",{
   stepPar <- matrix(c(8,20,5,10),ncol=2,byrow=T)
   nbStates <- 2
 
-  expect_that(allProbs(data,nbStates,"gamma","NULL",stepPar),not(throws_error()))
+  expect_that(allProbs(data,nbStates,"gamma","none",stepPar),not(throws_error()))
 })
 
 test_that("Zero-inflation works",{
