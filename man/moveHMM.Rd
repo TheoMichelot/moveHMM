@@ -8,7 +8,7 @@ moveHMM(m)
 }
 \arguments{
 \item{mod}{A list of attributes of the fitted model. Mandatory slots : data, states, mle,
-stepDist, angleDist, mod (result of call to optimizer),
+stepDist, angleDist, mod (result of call to optimizer).
 Optional slots : angleMean (if not estimated)}
 }
 \value{
