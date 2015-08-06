@@ -56,7 +56,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   # check that observations are within expected bounds
   if(length(which(data$step<0))>0)
     stop("The step lengths should be positive.")
-  if(length(which(data$angle<-pi | data$angle>pi))>0)
+  if(length(which(data$angle < -pi | data$angle > pi))>0)
     stop("The turning angles should be between -pi and pi.")
 
   # build design matrix

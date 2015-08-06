@@ -2,19 +2,23 @@
 #' Plot moveHMM
 #'
 #' @param m Object moveHMM
+
 plot.moveHMM <- function(m)
 {
   nbAnimals <- length(unique(m$data$ID))
+  nbStates <- ncol(m$mle$stepPar)
 
   stepFun <- paste("d",m$stepDist,sep="")
   angleFun <- paste("d",m$angleDist,sep="")
 
-  if(!is.null(m$angleMean))
-    m$mle$anglePar <- rbind(m$angleMean,m$mle$anglePar)
+  w <- rep(NA,nbStates)
+  for(state in 1:nbStates)
+    w[state] <- length(which(m$states==state))/length(m$states)
 
+  par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=TRUE)
-  for(zoo in 1:1) {
+  for(zoo in 1:nbAnimals) {
     ID <- unique(m$data$ID)[zoo]
     ind <- which(m$data$ID==ID)
     x <- m$data$x[ind]
@@ -46,14 +50,13 @@ plot.moveHMM <- function(m)
           stepArgs[[j+1]] <- m$mle$stepPar[j,state]
       }
       # conversion between mean/sd and shape/scale if necessary
-      if(m$stepDist=="weibull" | m$stepDist=="gamma") {
+      if(m$stepDist=="gamma") {
         shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
         scale <- stepArgs[[3]]^2/stepArgs[[2]]
         stepArgs[[2]] <- shape
-        if(m$stepDist=="gamma") stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
-        else stepArgs[[3]] <- scale # dweibull expects scale
+        stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
       }
-      lines(grid,m$mle$delta[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
+      lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
     }
 
     # Histogram of turning angles
@@ -72,7 +75,34 @@ plot.moveHMM <- function(m)
           for(j in 1:nrow(m$mle$anglePar))
             angleArgs[[j+1]] <- m$mle$anglePar[j,state]
         }
-        lines(grid,m$mle$delta[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
+
+        lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
+      }
+    }
+
+    # plot the transition probabilities as functions of the covariates
+    par(mfrow=c(nbStates,nbStates))
+
+    covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
+                       names(m$data)!="step" & names(m$data)!="angle")
+    allCovs <- m$data[,covsCol]
+
+    if(nrow(m$mle$beta)>1) {
+      for(cov in 2:nrow(m$mle$beta)) {
+        inf <- min(allCovs[,cov],na.rm=T)
+        sup <- max(allCovs[,cov],na.rm=T)
+
+        meanCovs <- colSums(allCovs)/nrow(allCovs)
+        desMat <- matrix(rep(meanCovs,100),ncol=length(meanCovs),byrow=TRUE)
+
+        desMat[,cov] <- seq(inf,sup,length=100)
+
+        trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
+
+        for(i in 1:nbStates)
+          for(j in 1:nbStates)
+            plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
+                 ylab=paste(i,"->",j))
       }
     }
   }
