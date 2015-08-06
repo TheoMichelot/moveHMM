@@ -6,7 +6,7 @@
 #' @param data Object moveData.
 #' @param nbStates Number of states of the HMM.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to "none"
 #' if the turning angles distributions is not estimated.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
@@ -34,12 +34,12 @@
 allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE)
 {
   stepFun <- paste("d",stepDist,sep="")
-  if(angleDist!="NULL") angleFun <- paste("d",angleDist,sep="")
+  if(angleDist!="none") angleFun <- paste("d",angleDist,sep="")
 
   nbObs <- length(data$step)
   allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)
   stepInd <- which(!is.na(data$step))
-  if(angleDist!="NULL") angleInd <- which(!is.na(data$angle))
+  if(angleDist!="none") angleInd <- which(!is.na(data$angle))
 
   sp <- stepPar
 
@@ -50,7 +50,7 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
 
     # Constitute the lists of state-dependent parameters for the step and angle
     stepArgs <- list(data$step[stepInd])
-    if(angleDist!="NULL") angleArgs <- list(data$angle[angleInd])
+    if(angleDist!="none") angleArgs <- list(data$angle[angleInd])
 
     if(zeroInflation) {
       zeromass <- stepPar[nrow(stepPar),state]
@@ -76,7 +76,7 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
     }
     else stepProb[stepInd] <- do.call(stepFun,stepArgs)
 
-    if(angleDist!="NULL") {
+    if(angleDist!="none") {
       if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[state]
       else {
         for(j in 1:nrow(anglePar))

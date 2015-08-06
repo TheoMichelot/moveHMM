@@ -8,7 +8,7 @@
 #' @param beta Matrix of regression coefficients for the transition probability matrix.
 #' @param delta Stationary distribution.
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to "none"
 #' if the turning angles distributions is not estimated.
 #' @param stepPar Vector of state-dependent step length distribution parameters.
 #' @param anglePar Vector of state-dependent turning angle distribution parameters.

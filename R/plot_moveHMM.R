@@ -60,7 +60,7 @@ plot.moveHMM <- function(m)
     }
 
     # Histogram of turning angles
-    if(m$angleDist!="NULL") {
+    if(m$angleDist!="none") {
       h <- hist(m$data$angle[ind],plot=F) # to choose ylim
       ymax <- 1.5*max(h$density)
       hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle")

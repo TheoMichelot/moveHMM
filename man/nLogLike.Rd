@@ -5,7 +5,7 @@
 \title{Negative log-likelihood function}
 \usage{
 nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
-  "weibull", "lnorm", "exp"), angleDist = c("NULL", "vm", "wrpcauchy"),
+  "weibull", "lnorm", "exp"), angleDist = c("none", "vm", "wrpcauchy"),
   angleMean = NULL, zeroInflation = FALSE)
 }
 \arguments{
@@ -23,7 +23,7 @@ number of parameters of the turning angle distribution).}
 
 \item{stepDist}{Name of the distribution of the step length values.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "NULL"
+\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "none"
 if the turning angles distributions is not estimated.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).

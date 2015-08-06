@@ -2,7 +2,7 @@
 #' Parameters definition
 #'
 #' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
+#' @param angleDist Name of the distribution of the turning angle values. Defaults to "none"
 #' if the turning angles distributions is not estimated.
 #' @param nbStates Number of states of the HMM.
 #' @param estAngleMean TRUE if the mean of the turning angles distribution is estimated,
@@ -49,7 +49,7 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
   }
 
   switch(angleDist,
-         "NULL"={
+         "none"={
            parSize[2] <- 0
            angleBounds <- NULL
          },

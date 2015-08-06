@@ -5,7 +5,7 @@
 \title{Simulation tool}
 \usage{
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
-  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
+  angleDist = c("none", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
   beta = NULL, nbCovs = 0, zeroInflation = FALSE, obsPerAnimal = c(500,
   1500))
 }
@@ -54,6 +54,6 @@ data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
 # step length only and zero-inflation
 stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 stepDist <- "gamma"
-data <- simData(5,2,stepDist,"NULL",stepPar,nbCovs=2,zeroInflation=TRUE)
+data <- simData(5,2,stepDist,"none",stepPar,nbCovs=2,zeroInflation=TRUE)
 }
 

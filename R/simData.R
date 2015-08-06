@@ -31,10 +31,10 @@
 #' # step length only and zero-inflation
 #' stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 #' stepDist <- "gamma"
-#' data <- simData(5,2,stepDist,"NULL",stepPar,nbCovs=2,zeroInflation=TRUE)
+#' data <- simData(5,2,stepDist,"none",stepPar,nbCovs=2,zeroInflation=TRUE)
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
-                    angleDist=c("NULL","vm","wrpcauchy"),stepPar,anglePar=NULL,
+                    angleDist=c("none","vm","wrpcauchy"),stepPar,anglePar=NULL,
                     beta=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
 {
   # check arguments
@@ -52,7 +52,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   stepBounds <- p$bounds[1:(p$parSize[1]*nbStates),]
   if(length(which(stepPar<stepBounds[,1] | stepPar>stepBounds[,2]))>0)
     stop("Check the step length parameters bounds.")
-  if(angleDist!="NULL")
+  if(angleDist!="none")
   {
     angleBounds <- p$bounds[(p$parSize[1]*nbStates+1):nrow(p$bounds),]
     if(length(which(anglePar<angleBounds[,1] | anglePar>angleBounds[,2]))>0)
@@ -78,7 +78,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     zeroMass <- rep(0,nbStates)
     stepPar <- par$stepPar
   }
-  anglePar <- par$anglePar # i.e. NULL if angleDist=="NULL"
+  anglePar <- par$anglePar # i.e. NULL if angleDist=="none"
 
   trackData <- NULL
   allCovs <- NULL
@@ -134,7 +134,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
         for(j in 1:nrow(stepPar))
           stepArgs[[j+1]] <- stepPar[j,Z[k]]
       }
-      if(angleDist!="NULL") {
+      if(angleDist!="none") {
         if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[Z[k]]
         else {
           for(j in 1:nrow(anglePar))
@@ -152,7 +152,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       if(runif(1)>zeroMass[Z[k]]) len <- do.call(stepFun,stepArgs)
       else len <- 0
 
-      if(angleDist!="NULL")
+      if(angleDist!="none")
         phi <- phi + do.call(angleFun,angleArgs)
 
       m <- len*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
@@ -192,7 +192,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       }
     }
 
-    if(angleDist=="NULL") a <- rep(NA,nbObs)
+    if(angleDist=="none") a <- rep(NA,nbObs)
     d <- data.frame(ID=trackData$ID[ind],step=s,angle=a,x=x,y=y)
     data <- rbind(data,d)
   }

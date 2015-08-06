@@ -53,7 +53,7 @@
 #'               "gamma","vm",angleMean,zeroInflation,verbose=2)
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
-                   stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("NULL","vm","wrpcauchy"),
+                   stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("none","vm","wrpcauchy"),
                    angleMean=NULL,zeroInflation=FALSE,verbose=0)
 {
   # check arguments

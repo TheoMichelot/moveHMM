@@ -14,7 +14,7 @@ allProbs(data, nbStates, stepDist, angleDist, stepPar, anglePar = NULL,
 
 \item{stepDist}{Name of the distribution of the step length values.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "NULL"
+\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "none"
 if the turning angles distributions is not estimated.}
 
 \item{stepPar}{Parameters of the step length distribution. Must be provided in a
