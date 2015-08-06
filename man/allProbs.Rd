@@ -4,8 +4,7 @@
 \alias{allProbs}
 \title{Matrix of all probabilities}
 \usage{
-allProbs(data, nbStates, stepDist = c("gamma", "weibull", "exp"),
-  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
+allProbs(data, nbStates, stepDist, angleDist, stepPar, anglePar = NULL,
   zeroInflation = FALSE)
 }
 \arguments{

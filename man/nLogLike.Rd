@@ -4,8 +4,7 @@
 \alias{nLogLike}
 \title{Negative log-likelihood function}
 \usage{
-nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
-  "weibull", "exp"), angleDist = c("NULL", "vm", "wrpcauchy"),
+nLogLike(wpar, nbStates, bounds, parSize, data, stepDist, angleDist,
   angleMean = NULL, zeroInflation = FALSE)
 }
 \arguments{

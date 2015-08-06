@@ -4,9 +4,8 @@
 \alias{viterbi}
 \title{Viterbi algorithm}
 \usage{
-viterbi(data, nbStates, beta, delta, stepDist = c("gamma", "weibull", "exp"),
-  angleDist = c("NULL", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
-  angleMean = NULL, zeroInflation = FALSE)
+viterbi(data, nbStates, beta, delta, stepDist, angleDist, stepPar,
+  anglePar = NULL, angleMean = NULL, zeroInflation = FALSE)
 }
 \arguments{
 \item{data}{An object moveData.}

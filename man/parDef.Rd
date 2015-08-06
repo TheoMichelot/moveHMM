@@ -4,8 +4,7 @@
 \alias{parDef}
 \title{Parameters definition}
 \usage{
-parDef(stepDist = c("gamma", "weibull", "exp"), angleDist = c("NULL", "vm",
-  "wrpcauchy"), nbStates, estAngleMean, zeroInflation)
+parDef(stepDist, angleDist, nbStates, estAngleMean, zeroInflation)
 }
 \arguments{
 \item{stepDist}{Name of the distribution of the step length values.}
