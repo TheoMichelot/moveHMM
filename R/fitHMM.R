@@ -8,9 +8,10 @@
 #' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
 #' @param delta0 Initial stationary distribution.
 #' @param formula Regression formula for the covariates. Default : ~1 (no covariate).
-#' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "NULL"
-#' if the turning angles distributions is not estimated.
+#' @param stepDist Name of the distribution from which to draw the step length values.
+#' Supported distributions are : gamma, weibull, lnorm, exp.
+#' @param angleDist Name of the distribution from which to draw the turning angle values.
+#' Supported distributions are : vm, wrpcauchy.
 #' @param angleMean Vector of state-dependent turning angles means. It defaults to NULL,
 #' i.e. the means should be estimated.
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.

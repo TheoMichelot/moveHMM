@@ -14,9 +14,11 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
 
 \item{nbStates}{Number of behavioural states to simulate.}
 
-\item{stepDist}{Name of the distribution from which to draw the step length values.}
+\item{stepDist}{Name of the distribution from which to draw the step length values.
+Supported distributions are : gamma, weibull, lnorm, exp.}
 
-\item{angleDist}{Name of the distribution from which to draw the turning angle values.}
+\item{angleDist}{Name of the distribution from which to draw the turning angle values.
+Supported distributions are : vm, wrpcauchy.}
 
 \item{stepPar}{Parameters of the step length distribution.}
 

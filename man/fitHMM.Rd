@@ -24,10 +24,11 @@ fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
 
 \item{formula}{Regression formula for the covariates. Default : ~1 (no covariate).}
 
-\item{stepDist}{Name of the distribution of the step length values.}
+\item{stepDist}{Name of the distribution from which to draw the step length values.
+Supported distributions are : gamma, weibull, lnorm, exp.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "NULL"
-if the turning angles distributions is not estimated.}
+\item{angleDist}{Name of the distribution from which to draw the turning angle values.
+Supported distributions are : vm, wrpcauchy.}
 
 \item{angleMean}{Vector of state-dependent turning angles means. It defaults to NULL,
 i.e. the means should be estimated.}

@@ -4,7 +4,9 @@
 #' @param nbAnimals Number of observed individuals to simulate.
 #' @param nbStates Number of behavioural states to simulate.
 #' @param stepDist Name of the distribution from which to draw the step length values.
+#' Supported distributions are : gamma, weibull, lnorm, exp.
 #' @param angleDist Name of the distribution from which to draw the turning angle values.
+#' Supported distributions are : vm, wrpcauchy.
 #' @param stepPar Parameters of the step length distribution.
 #' @param anglePar Parameters of the turning angle distribution.
 #' @param beta Matrix of regression parameters for the transition probability matrix.
