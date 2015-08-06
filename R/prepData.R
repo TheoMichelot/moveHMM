@@ -50,20 +50,6 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     }
     step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
 
-    # check for possibly abnormal step lengths
-    sdInf <- mean(step,na.rm=T)-4*sd(step,na.rm=T)
-    sdSup <- mean(step,na.rm=T)+4*sd(step,na.rm=T)
-    offObs <- which(step<sdInf | step>sdSup)
-    if(length(offObs)==1)
-      warning("Step length at index ",offObs," seems off.")
-    if(length(offObs)>1) {
-       w <- "Step lengths at indices "
-       for(i in 1:length(offObs))
-          w <- paste(w,offObs[i],", ")
-       w <- paste(w," seem off.")
-       warning(w)
-    }
-
     d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
                     step=step,
                     angle=angle)
