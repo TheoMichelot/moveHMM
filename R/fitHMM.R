@@ -74,10 +74,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
 
-  states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
-                 angleMean)
-
-  mh <- list(data=data,mle=mle,states=states,stepDist=stepDist,angleDist=angleDist,
+  mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
              angleMean=angleMean,mod=mod)
   return(moveHMM(mh))
 }

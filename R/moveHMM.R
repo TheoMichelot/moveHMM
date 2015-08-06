@@ -9,7 +9,7 @@
 
 moveHMM <- function(m)
 {
-  if(is.null(m$data) | is.null(m$states) | is.null(m$mle) | is.null(m$stepDist) |
+  if(is.null(m$data) | is.null(m$mle) | is.null(m$stepDist) |
        is.null(m$angleDist) | is.null(m$mod))
     stop("Can't construct moveHMM object : fields are missing")
 
