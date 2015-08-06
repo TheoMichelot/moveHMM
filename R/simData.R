@@ -21,18 +21,20 @@
 #' anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
-#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
+#' obsPerAnimal=c(100,150)
+#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,nbCovs=2,zeroInflation=TRUE,
+#'                obsPerAnimal=obsPerAnimal)
 #'
 #' stepPar <- c(1,10,1,5) # mean1, mean2, sd1, sd2
 #' anglePar <- c(0,pi,0.5,0.7) # mean1, mean2, k1, k2
 #' stepDist <- "weibull"
 #' angleDist <- "wrpcauchy"
-#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar)
+#' data <- simData(5,2,stepDist,angleDist,stepPar,anglePar,obsPerAnimal=obsPerAnimal)
 #'
 #' # step length only and zero-inflation
 #' stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 #' stepDist <- "gamma"
-#' data <- simData(5,2,stepDist,"none",stepPar,nbCovs=2,zeroInflation=TRUE)
+#' data <- simData(5,2,stepDist,"none",stepPar,nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
                     angleDist=c("vm","wrpcauchy","none"),stepPar,anglePar=NULL,
