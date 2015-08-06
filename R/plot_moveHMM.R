@@ -79,31 +79,36 @@ plot.moveHMM <- function(m)
         lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
       }
     }
+  }
 
-    # plot the transition probabilities as functions of the covariates
-    par(mfrow=c(nbStates,nbStates))
+  # plot the transition probabilities as functions of the covariates
+  par(mfrow=c(nbStates,nbStates))
 
-    covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
-                       names(m$data)!="step" & names(m$data)!="angle")
-    allCovs <- m$data[,covsCol]
+  covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
+                     names(m$data)!="step" & names(m$data)!="angle")
+  allCovs <- m$data[,covsCol]
 
-    if(nrow(m$mle$beta)>1) {
-      for(cov in 2:nrow(m$mle$beta)) {
-        inf <- min(allCovs[,cov],na.rm=T)
-        sup <- max(allCovs[,cov],na.rm=T)
+  if(nrow(m$mle$beta)>1) {
+    for(cov in 2:nrow(m$mle$beta)) {
+      inf <- min(allCovs[,cov],na.rm=T)
+      sup <- max(allCovs[,cov],na.rm=T)
 
-        meanCovs <- colSums(allCovs)/nrow(allCovs)
-        desMat <- matrix(rep(meanCovs,100),ncol=length(meanCovs),byrow=TRUE)
+      meanCovs <- colSums(allCovs)/nrow(allCovs)
+      desMat <- matrix(rep(meanCovs,100),ncol=length(meanCovs),byrow=TRUE)
 
-        desMat[,cov] <- seq(inf,sup,length=100)
+      desMat[,cov] <- seq(inf,sup,length=100)
 
-        trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
+      trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
 
-        for(i in 1:nbStates)
-          for(j in 1:nbStates)
-            plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
-                 ylab=paste(i,"->",j))
-      }
+      for(i in 1:nbStates)
+        for(j in 1:nbStates)
+          plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
+               ylab=paste(i,"->",j))
     }
   }
+
+  # back to default
+  par(mfrow=c(1,1))
+  par(mar=c(5,4,4,2)) # bottom, left, top, right
+  par(ask=TRUE)
 }

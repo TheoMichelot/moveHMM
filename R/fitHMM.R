@@ -91,6 +91,8 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
 
+  if(!is.null(angleMean)) mle$anglePar[1,] <- angleMean
+
   states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
                     angleMean)
 
