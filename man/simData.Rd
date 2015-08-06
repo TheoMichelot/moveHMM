@@ -5,7 +5,7 @@
 \title{Simulation tool}
 \usage{
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
-  angleDist = c("none", "vm", "wrpcauchy"), stepPar, anglePar = NULL,
+  angleDist = c("vm", "wrpcauchy", "none"), stepPar, anglePar = NULL,
   beta = NULL, nbCovs = 0, zeroInflation = FALSE, obsPerAnimal = c(500,
   1500))
 }
@@ -18,7 +18,8 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
 Supported distributions are : gamma, weibull, lnorm, exp.}
 
 \item{angleDist}{Name of the distribution from which to draw the turning angle values.
-Supported distributions are : vm, wrpcauchy.}
+Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
+not be estimated.}
 
 \item{stepPar}{Parameters of the step length distribution.}
 

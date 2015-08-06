@@ -1,9 +1,9 @@
 
 #' Parameters definition
 #'
-#' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "none"
-#' if the turning angles distributions is not estimated.
+#' @param stepDist Name of the distribution of the step lengths.
+#' @param angleDist Name of the distribution of the turning angles.
+#' Set to "none" if the angle distribution should not be estimated.
 #' @param nbStates Number of states of the HMM.
 #' @param estAngleMean TRUE if the mean of the turning angles distribution is estimated,
 #' FALSE otherwise.

@@ -6,7 +6,7 @@
 \usage{
 fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
   formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
-  angleDist = c("none", "vm", "wrpcauchy"), angleMean = NULL,
+  angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
   zeroInflation = FALSE, verbose = 0)
 }
 \arguments{
@@ -24,11 +24,12 @@ fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
 
 \item{formula}{Regression formula for the covariates. Default : ~1 (no covariate).}
 
-\item{stepDist}{Name of the distribution from which to draw the step length values.
+\item{stepDist}{Name of the distribution of the step lengths.
 Supported distributions are : gamma, weibull, lnorm, exp.}
 
-\item{angleDist}{Name of the distribution from which to draw the turning angle values.
-Supported distributions are : vm, wrpcauchy.}
+\item{angleDist}{Name of the distribution of the turning angles.
+Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
+not be estimated.}
 
 \item{angleMean}{Vector of state-dependent turning angles means. It defaults to NULL,
 i.e. the means should be estimated.}

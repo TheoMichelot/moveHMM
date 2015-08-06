@@ -16,10 +16,10 @@ viterbi(data, nbStates, beta, delta, stepDist, angleDist, stepPar,
 
 \item{delta}{Stationary distribution.}
 
-\item{stepDist}{Name of the distribution of the step length values.}
+\item{stepDist}{Name of the distribution of the step lengths.}
 
-\item{angleDist}{Name of the distribution of the turning angle values. Defaults to "none"
-if the turning angles distributions is not estimated.}
+\item{angleDist}{Name of the distribution of the turning angles.
+Set to "none" if the angle distribution should not be estimated.}
 
 \item{stepPar}{Vector of state-dependent step length distribution parameters.}
 

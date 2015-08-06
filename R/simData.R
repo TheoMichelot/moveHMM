@@ -6,7 +6,8 @@
 #' @param stepDist Name of the distribution from which to draw the step length values.
 #' Supported distributions are : gamma, weibull, lnorm, exp.
 #' @param angleDist Name of the distribution from which to draw the turning angle values.
-#' Supported distributions are : vm, wrpcauchy.
+#' Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
+#' not be estimated.
 #' @param stepPar Parameters of the step length distribution.
 #' @param anglePar Parameters of the turning angle distribution.
 #' @param beta Matrix of regression parameters for the transition probability matrix.
@@ -34,7 +35,7 @@
 #' data <- simData(5,2,stepDist,"none",stepPar,nbCovs=2,zeroInflation=TRUE)
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
-                    angleDist=c("none","vm","wrpcauchy"),stepPar,anglePar=NULL,
+                    angleDist=c("vm","wrpcauchy","none"),stepPar,anglePar=NULL,
                     beta=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
 {
   # check arguments

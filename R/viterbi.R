@@ -7,9 +7,9 @@
 #' @param nbStates Number of states of the HMM.
 #' @param beta Matrix of regression coefficients for the transition probability matrix.
 #' @param delta Stationary distribution.
-#' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "none"
-#' if the turning angles distributions is not estimated.
+#' @param stepDist Name of the distribution of the step lengths.
+#' @param angleDist Name of the distribution of the turning angles.
+#' Set to "none" if the angle distribution should not be estimated.
 #' @param stepPar Vector of state-dependent step length distribution parameters.
 #' @param anglePar Vector of state-dependent turning angle distribution parameters.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).

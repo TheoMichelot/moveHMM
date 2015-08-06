@@ -8,10 +8,11 @@
 #' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
 #' @param delta0 Initial stationary distribution.
 #' @param formula Regression formula for the covariates. Default : ~1 (no covariate).
-#' @param stepDist Name of the distribution from which to draw the step length values.
+#' @param stepDist Name of the distribution of the step lengths.
 #' Supported distributions are : gamma, weibull, lnorm, exp.
-#' @param angleDist Name of the distribution from which to draw the turning angle values.
-#' Supported distributions are : vm, wrpcauchy.
+#' @param angleDist Name of the distribution of the turning angles.
+#' Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
+#' not be estimated.
 #' @param angleMean Vector of state-dependent turning angles means. It defaults to NULL,
 #' i.e. the means should be estimated.
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
@@ -53,7 +54,7 @@
 #'               "gamma","vm",angleMean,zeroInflation,verbose=2)
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
-                   stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("none","vm","wrpcauchy"),
+                   stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
                    angleMean=NULL,zeroInflation=FALSE,verbose=0)
 {
   # check arguments

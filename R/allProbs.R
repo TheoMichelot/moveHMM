@@ -5,9 +5,9 @@
 #'
 #' @param data Object moveData.
 #' @param nbStates Number of states of the HMM.
-#' @param stepDist Name of the distribution of the step length values.
-#' @param angleDist Name of the distribution of the turning angle values. Defaults to "none"
-#' if the turning angles distributions is not estimated.
+#' @param stepDist Name of the distribution of the step lengths.
+#' @param angleDist Name of the distribution of the turning angles.
+#' Set to "none" if the angle distribution should not be estimated.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
 #' and one column for each state.
