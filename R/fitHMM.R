@@ -73,7 +73,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   # call to optimizer
   mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,angleDist,angleMean,
-             zeroInflation,print.level=verbose,iterlim=1000)
+             zeroInflation,print.level=verbose,iterlim=1000,hessian=TRUE)
 
   mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
 
