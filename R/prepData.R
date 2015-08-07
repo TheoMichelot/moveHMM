@@ -60,6 +60,19 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   if(length(covsCol)>0) {
     covs <- data.frame(trackData[,covsCol]) # to prevent error if nbCovs==1
     colnames(covs) <- names(trackData)[covsCol]
+
+    # account for missing values of the covariates
+    for(i in 1:length(covsCol)) {
+      if(length(is.na(covs[,i]))>0) { # if covariate i has missing values
+        if(is.na(covs[1,i])) { # if the first value of the covariate is missing
+          k <- 1
+          while(is.na(covs[k,i])) k <- k+1
+          for(j in k:2) covs[j-1,i] <- covs[j,i]
+        }
+        for(j in 2:nrow(trackData))
+          if(is.na(covs[j,i])) covs[j,i] <- covs[j-1,i]
+      }
+    }
   }
   else covs <- NULL
   data <- cbind(data,x=trackData$x,y=trackData$y)
