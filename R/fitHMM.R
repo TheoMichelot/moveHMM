@@ -64,7 +64,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  par0 <- c(stepPar0,angleMean,anglePar0)
+  par0 <- c(stepPar0,anglePar0)
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
@@ -101,9 +101,9 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   if(is.null(delta0)) delta0 <- rep(1,nbStates)/nbStates
 
-  wpar <- n2w(par0,bounds,beta0,delta0,nbStates)
+  wpar <- n2w(par0,bounds,beta0,delta0,nbStates,is.null(angleMean))
 
-  # this function is used to muffle the warning "NA/Inf replaced by maximum positive value"
+  # this function is used to muffle the warning "NA/Inf replaced by maximum positive value" in nlm
   h <- function(w) {
     if(any(grepl("NA/Inf replaced by maximum positive value",w)))
       invokeRestart("muffleWarning")
@@ -115,9 +115,10 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                                  iterlim=1000,hessian=TRUE),
                       warning=h)
 
-  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs)
+  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,is.null(angleMean))
 
-  if(!is.null(angleMean)) mle$anglePar[1,] <- angleMean
+  if(!is.null(angleMean))
+    mle$anglePar <- rbind(angleMean,mle$anglePar)
 
   states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
                     angleMean)

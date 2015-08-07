@@ -4,7 +4,7 @@
 \alias{n2w}
 \title{Scaling function : natural to working parameters.}
 \usage{
-n2w(par, bounds, beta, delta, nbStates)
+n2w(par, bounds, beta, delta, nbStates, estAngleMean)
 }
 \arguments{
 \item{par}{Vector of state-dependent distributions parameters.}
@@ -17,6 +17,8 @@ contains the lower and upper bound for the correponding parameter.}
 \item{delta}{Stationary distribution.}
 
 \item{nbStates}{The number of states of the HMM.}
+
+\item{estAngleMean}{TRUE if the angle mean is estimated, FALSE otherwise.}
 }
 \value{
 A vector of unconstrained parameters.

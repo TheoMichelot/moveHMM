@@ -4,7 +4,7 @@
 \alias{w2n}
 \title{Scaling function : working to natural parameters}
 \usage{
-w2n(wpar, bounds, parSize, nbStates, nbCovs)
+w2n(wpar, bounds, parSize, nbStates, nbCovs, estAngleMean)
 }
 \arguments{
 \item{wpar}{Vector of state-dependent distributions unconstrained parameters.}
@@ -18,6 +18,8 @@ number of parameters of the turning angle distribution).}
 \item{nbStates}{The number of states of the HMM.}
 
 \item{nbCovs}{The number of covariates.}
+
+\item{estAngleMean}{TRUE if the angle mean is estimated, FALSE otherwise.}
 }
 \value{
 A list containing a vector of natural (constrained) parameters, as well as delta

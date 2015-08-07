@@ -10,6 +10,7 @@
 #' @param beta Matrix of regression coefficients for the transition probability matrix.
 #' @param delta Stationary distribution.
 #' @param nbStates The number of states of the HMM.
+#' @param estAngleMean TRUE if the angle mean is estimated, FALSE otherwise.
 #'
 #' @return A vector of unconstrained parameters.
 #' @examples
@@ -22,7 +23,7 @@
 #' delta <- c(0.6,0.3,0.1)
 #' print(n2w(par,bounds,beta,delta,nbStates))
 
-n2w <- function(par,bounds,beta,delta,nbStates)
+n2w <- function(par,bounds,beta,delta,nbStates,estAngleMean)
 {
   if(length(which(par<bounds[,1] | par>bounds[,2]))>0)
     stop("Check the parameters bounds.")
@@ -48,17 +49,19 @@ n2w <- function(par,bounds,beta,delta,nbStates)
     wpar <- c(wpar,p)
   }
 
-  # identify angle distribution parameters
-  foo <- length(wpar)-nbStates+1
-  angleMean <- wpar[(foo-nbStates):(foo-1)]
-  con <- wpar[foo:length(wpar)]
+  if(estAngleMean) {
+    # identify angle distribution parameters
+    foo <- length(wpar)-nbStates+1
+    angleMean <- wpar[(foo-nbStates):(foo-1)]
+    con <- wpar[foo:length(wpar)]
 
-  # compute the working parameters for the angle distribution
-  x <- con*cos(angleMean)
-  y <- con*sin(angleMean)
+    # compute the working parameters for the angle distribution
+    x <- con*cos(angleMean)
+    y <- con*sin(angleMean)
 
-  wpar[(foo-nbStates):(foo-1)] <- x
-  wpar[foo:length(wpar)] <- y
+    wpar[(foo-nbStates):(foo-1)] <- x
+    wpar[foo:length(wpar)] <- y
+  }
 
   wbeta <- as.vector(beta)
   wdelta <- log(delta[-1]/delta[1])

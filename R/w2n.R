@@ -11,6 +11,7 @@
 #' number of parameters of the turning angle distribution).
 #' @param nbStates The number of states of the HMM.
 #' @param nbCovs The number of covariates.
+#' @param estAngleMean TRUE if the angle mean is estimated, FALSE otherwise.
 #'
 #' @return A list containing a vector of natural (constrained) parameters, as well as delta
 #' and beta.
@@ -27,7 +28,7 @@
 #' wpar <- n2w(par,bounds,beta,delta,nbStates)
 #' print(w2n(wpar,bounds,parSize,nbStates,nbCovs))
 
-w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
+w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean)
 {
   if(nbStates<1) stop("Number of states must be 1 at least.")
 
@@ -42,17 +43,19 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs)
   beta <- matrix(beta,nrow=nbCovs+1)
   wpar <- wpar[-(foo:length(wpar))]
 
-  # identify working parameters for the angle distribution (x and y)
-  foo <- length(wpar)-nbStates+1
-  x <- wpar[(foo-nbStates):(foo-1)]
-  y <- wpar[foo:length(wpar)]
+  if(estAngleMean) {
+    # identify working parameters for the angle distribution (x and y)
+    foo <- length(wpar)-nbStates+1
+    x <- wpar[(foo-nbStates):(foo-1)]
+    y <- wpar[foo:length(wpar)]
 
-  # compute natural parameters for the angle distribution
-  angleMean <- Arg(x+1i*y)
-  con <- sqrt(x^2+y^2)
-  # to scale them if necessary (see parDef)
-  wpar[(foo-nbStates):(foo-1)] <- angleMean
-  wpar[foo:length(wpar)] <- con
+    # compute natural parameters for the angle distribution
+    angleMean <- Arg(x+1i*y)
+    con <- sqrt(x^2+y^2)
+    # to scale them if necessary (see parDef)
+    wpar[(foo-nbStates):(foo-1)] <- angleMean
+    wpar[foo:length(wpar)] <- con
+  }
 
   nbPar <- length(wpar)/nbStates
   if(nbPar!=sum(parSize)) stop("Wrong number of parameters.")

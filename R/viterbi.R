@@ -39,7 +39,7 @@ viterbi <- function(data,nbStates,beta,delta,stepDist,angleDist,stepPar,
   if(is.matrix(anglePar)) vAnglePar <- c(t(anglePar))
   else vAnglePar <- anglePar
   par <- c(stepPar,anglePar)
-  p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
+  p <- parDef(stepDist,angleDist,nbStates,TRUE,zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
   if(sum(parSize)*nbStates!=length(par))

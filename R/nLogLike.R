@@ -61,10 +61,10 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
 
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  par <- w2n(wpar,bounds,parSize,nbStates,nbCovs)
+  par <- w2n(wpar,bounds,parSize,nbStates,nbCovs,is.null(angleMean))
 
   if(!is.null(angleMean)) # if the turning angles' mean is not estimated
-    par$anglePar[1,] <- angleMean
+    par$anglePar <- rbind(angleMean,par$anglePar)
 
   nbObs <- length(data$step)
   covs <- data[,covsCol]
