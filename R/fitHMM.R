@@ -68,6 +68,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
+
   if(sum(parSize)*nbStates!=length(par0))
     stop("Wrong number of initial parameters.")
   stepBounds <- bounds[1:(parSize[1]*nbStates),]

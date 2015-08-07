@@ -8,6 +8,7 @@ using namespace Rcpp;
 using namespace std;
 
 // Step length densities
+// [[Rcpp::export]]
 arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 {
     arma::colvec res(x.size());
@@ -22,6 +23,7 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
     return res;
 }
 
+// [[Rcpp::export]]
 arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 {
     arma::colvec res(x.size());
@@ -34,6 +36,7 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
     return res;
 }
 
+// [[Rcpp::export]]
 arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 {
     arma::colvec res(x.size());
@@ -46,6 +49,7 @@ arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
     return res;
 }
 
+// [[Rcpp::export]]
 arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 {
      arma::colvec res(x.size());
@@ -59,6 +63,7 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 }
 
 // Turning angle densities
+// [[Rcpp::export]]
 arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 {
     arma::colvec res(x.size());
@@ -72,6 +77,7 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
     return res;
 }
 
+// [[Rcpp::export]]
 arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
 {
     arma::colvec res(x.size());
