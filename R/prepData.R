@@ -62,8 +62,12 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     colnames(covs) <- names(trackData)[covsCol]
 
     # account for missing values of the covariates
+    if(length(which(is.na(covs)))>0)
+      warning(paste("There are",length(which(is.na(covs))),
+                    "missing covariate values.",
+                    "Each will be replaced by the closest available value."))
     for(i in 1:length(covsCol)) {
-      if(length(is.na(covs[,i]))>0) { # if covariate i has missing values
+      if(length(which(is.na(covs[,i])))>0) { # if covariate i has missing values
         if(is.na(covs[1,i])) { # if the first value of the covariate is missing
           k <- 1
           while(is.na(covs[k,i])) k <- k+1
