@@ -7,7 +7,7 @@
 fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
   formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
-  zeroInflation = FALSE, verbose = 0)
+  zeroInflation = FALSE, stationary = FALSE, verbose = 0)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}
@@ -35,6 +35,9 @@ not be estimated.}
 i.e. the means should be estimated.}
 
 \item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+
+\item{stationary}{FALSE if there are covariates. If TRUE, the initial distribution is considered
+equal to the stationary distribution.}
 
 \item{verbose}{Determines the print level of the optimizer. The default value of 0 means that no
 printing occurs, a value of 1 means that the first and last iterations of the optimization are

@@ -23,7 +23,7 @@
 #' delta <- c(0.6,0.3,0.1)
 #' print(n2w(par,bounds,beta,delta,nbStates))
 
-n2w <- function(par,bounds,beta,delta,nbStates,estAngleMean)
+n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
 {
   if(length(which(par<bounds[,1] | par>bounds[,2]))>0)
     stop("Check the parameters bounds.")
@@ -64,6 +64,6 @@ n2w <- function(par,bounds,beta,delta,nbStates,estAngleMean)
   }
 
   wbeta <- as.vector(beta)
-  wdelta <- log(delta[-1]/delta[1])
+  wdelta <- log(delta[-1]/delta[1]) # if delta is NULL, wdelta is NULL as well
   return(c(wpar,wbeta,wdelta))
 }

@@ -4,7 +4,7 @@
 \alias{w2n}
 \title{Scaling function : working to natural parameters}
 \usage{
-w2n(wpar, bounds, parSize, nbStates, nbCovs, estAngleMean)
+w2n(wpar, bounds, parSize, nbStates, nbCovs, estAngleMean, stationary)
 }
 \arguments{
 \item{wpar}{Vector of state-dependent distributions unconstrained parameters.}
@@ -20,6 +20,9 @@ number of parameters of the turning angle distribution).}
 \item{nbCovs}{The number of covariates.}
 
 \item{estAngleMean}{TRUE if the angle mean is estimated, FALSE otherwise.}
+
+\item{stationary}{FALSE if there are covariates. If TRUE, the initial distribution is considered
+equal to the stationary distribution.}
 }
 \value{
 A list containing a vector of natural (constrained) parameters, as well as delta
@@ -40,6 +43,6 @@ bounds <- matrix(c(0,1,0,1,0,1,
 beta <- matrix(rnorm(18),ncol=6,nrow=3)
 delta <- c(0.6,0.3,0.1)
 wpar <- n2w(par,bounds,beta,delta,nbStates)
-print(w2n(wpar,bounds,parSize,nbStates,nbCovs))
+print(w2n(wpar,bounds,parSize,nbStates,nbCovs,stationary=FALSE))
 }
 

@@ -16,6 +16,8 @@
 #' @param angleMean Vector of state-dependent turning angles means. It defaults to NULL,
 #' i.e. the means should be estimated.
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
+#' equal to the stationary distribution.
 #' @param verbose Determines the print level of the optimizer. The default value of 0 means that no
 #' printing occurs, a value of 1 means that the first and last iterations of the optimization are
 #' detailed, and a value of 2 means that each iteration of the optimization is detailed.
@@ -55,7 +57,7 @@
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
-                   angleMean=NULL,zeroInflation=FALSE,verbose=0)
+                   angleMean=NULL,zeroInflation=FALSE,stationary=FALSE,verbose=0)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -85,6 +87,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(length(which(data$angle < -pi | data$angle > pi))>0)
     stop("The turning angles should be between -pi and pi.")
 
+
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
@@ -94,12 +97,17 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   else data <- cbind(data,covs)
   nbCovs <- ncol(covs)-1 # substract intercept column
 
+  # check that stationary==FALSE if there are covariates
+  if(nbCovs>0 & stationary==TRUE)
+    stop("stationary can't be set to TRUE if there are covariates.")
+
   # generate initial values for beta and delta
   if(is.null(beta0))
     beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
                              nrow=nbCovs+1,byrow=TRUE)
 
   if(is.null(delta0)) delta0 <- rep(1,nbStates)/nbStates
+  if(stationary) delta0 <- NULL
 
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates,is.null(angleMean))
 
@@ -111,11 +119,18 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   # call to optimizer nlm
   withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
-                                 angleDist,angleMean,zeroInflation,print.level=verbose,
-                                 iterlim=1000,hessian=TRUE),
-                      warning=h)
+                                 angleDist,angleMean,zeroInflation,stationary,
+                                 print.level=verbose,
+                                 iterlim=1000,
+                                 hessian=TRUE),
+                      warning=h) # filter warnings using function h
 
-  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,is.null(angleMean))
+  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,is.null(angleMean),stationary)
+
+  if(stationary) {
+    gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]
+    mle$delta <- solve(t(diag(nbStates)-gamma+1),rep(1,nbStates))
+  }
 
   if(!is.null(angleMean))
     mle$anglePar <- rbind(angleMean,mle$anglePar)

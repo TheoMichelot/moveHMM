@@ -85,8 +85,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // nLogLike_rcpp
-double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist, std::string angleDist, arma::mat stepPar, arma::mat anglePar, arma::rowvec delta, IntegerVector aInd, bool zeroInflation);
-RcppExport SEXP moveHMM_nLogLike_rcpp(SEXP nbStatesSEXP, SEXP betaSEXP, SEXP covsSEXP, SEXP dataSEXP, SEXP stepDistSEXP, SEXP angleDistSEXP, SEXP stepParSEXP, SEXP angleParSEXP, SEXP deltaSEXP, SEXP aIndSEXP, SEXP zeroInflationSEXP) {
+double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist, std::string angleDist, arma::mat stepPar, arma::mat anglePar, arma::rowvec delta, IntegerVector aInd, bool zeroInflation, bool stationary);
+RcppExport SEXP moveHMM_nLogLike_rcpp(SEXP nbStatesSEXP, SEXP betaSEXP, SEXP covsSEXP, SEXP dataSEXP, SEXP stepDistSEXP, SEXP angleDistSEXP, SEXP stepParSEXP, SEXP angleParSEXP, SEXP deltaSEXP, SEXP aIndSEXP, SEXP zeroInflationSEXP, SEXP stationarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -101,7 +101,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::rowvec >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type aInd(aIndSEXP);
     Rcpp::traits::input_parameter< bool >::type zeroInflation(zeroInflationSEXP);
-    __result = Rcpp::wrap(nLogLike_rcpp(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation));
+    Rcpp::traits::input_parameter< bool >::type stationary(stationarySEXP);
+    __result = Rcpp::wrap(nLogLike_rcpp(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation, stationary));
     return __result;
 END_RCPP
 }

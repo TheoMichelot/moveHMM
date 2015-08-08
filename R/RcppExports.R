@@ -25,8 +25,8 @@ dwrpcauchy_rcpp <- function(x, mu, rho) {
     .Call('moveHMM_dwrpcauchy_rcpp', PACKAGE = 'moveHMM', x, mu, rho)
 }
 
-nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation = FALSE) {
-    .Call('moveHMM_nLogLike_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation)
+nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation = FALSE, stationary = FALSE) {
+    .Call('moveHMM_nLogLike_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation, stationary)
 }
 
 trMatrix_rcpp <- function(nbStates, beta, covs) {

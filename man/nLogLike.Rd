@@ -6,7 +6,7 @@
 \usage{
 nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
   "weibull", "lnorm", "exp"), angleDist = c("vm", "wrpcauchy", "none"),
-  angleMean = NULL, zeroInflation = FALSE)
+  angleMean = NULL, zeroInflation = FALSE, stationary = FALSE)
 }
 \arguments{
 \item{wpar}{Vector of working parameters.}
@@ -32,6 +32,9 @@ not be estimated.}
 Defaults to NULL.}
 
 \item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+
+\item{stationary}{FALSE if there are covariates. If TRUE, the initial distribution is considered
+equal to the stationary distribution.}
 }
 \value{
 The negative log-likelihood of wpar given data.

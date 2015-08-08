@@ -71,8 +71,8 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   delta <- rep(1,nbStates)/nbStates
 
   # format parameters
-  wpar <- n2w(c(stepPar,anglePar),p$bounds,beta,delta,nbStates)
-  par <- w2n(wpar,p$bounds,p$parSize,nbStates,nbCovs)
+  wpar <- n2w(c(stepPar,anglePar),p$bounds,beta,delta,nbStates,estAngleMean=TRUE)
+  par <- w2n(wpar,p$bounds,p$parSize,nbStates,nbCovs,estAngleMean=TRUE,stationary=FALSE)
   if(zeroInflation) {
     zeroMass <- par$stepPar[nrow(par$stepPar),]
     stepPar <- par$stepPar[-(nrow(par$stepPar)),]

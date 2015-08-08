@@ -3,7 +3,8 @@
 // [[Rcpp::export]]
 double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist, 
                         std::string angleDist, arma::mat stepPar, arma::mat anglePar, 
-                        arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false)
+                        arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false,
+                        bool stationary=false)
 {
     // 1. Computation of transition probability matrix trMat
     int nbObs = data.nrows();
@@ -45,7 +46,16 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     funMap["exp"]=dexp_rcpp;
     funMap["vm"]=dvm_rcpp;
     funMap["wrpcauchy"]=dwrpcauchy_rcpp;
-	
+
+    if(stationary) {
+        arma::mat diag(nbStates,nbStates);
+        diag.eye(); // diagonal of ones
+        arma::mat gamma = trMat.slice(0); // all slices are identical if stationary
+        arma::colvec v(nbStates);
+        v.ones(); // vector of ones
+        delta = arma::solve(diag-gamma+1,v).t();
+    }
+    
     arma::mat allProbs(nbObs,nbStates);
     allProbs.ones();
     

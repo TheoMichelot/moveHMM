@@ -4,7 +4,7 @@
 \alias{n2w}
 \title{Scaling function : natural to working parameters.}
 \usage{
-n2w(par, bounds, beta, delta, nbStates, estAngleMean)
+n2w(par, bounds, beta, delta = NULL, nbStates, estAngleMean)
 }
 \arguments{
 \item{par}{Vector of state-dependent distributions parameters.}

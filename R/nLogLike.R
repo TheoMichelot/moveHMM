@@ -16,6 +16,8 @@
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
 #' Defaults to NULL.
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
+#' equal to the stationary distribution.
 #'
 #' @return The negative log-likelihood of wpar given data.
 #'
@@ -37,7 +39,8 @@
 #'               simPar$angleMean,simPar$zeroInflation)
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","lnorm","exp"),
-                     angleDist=c("vm","wrpcauchy","none"),angleMean=NULL,zeroInflation=FALSE)
+                     angleDist=c("vm","wrpcauchy","none"),angleMean=NULL,zeroInflation=FALSE,
+                     stationary=FALSE)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -55,13 +58,15 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     nbCovs <- length(covsCol)-1 # substract intercept column
   }
 
-  if(length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)+nbStates-1)
+  if(!stationary & (length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)+nbStates-1))
+    stop("Wrong number of parameters in wpar.")
+  if(stationary & (length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)))
     stop("Wrong number of parameters in wpar.")
   if(length(data)<1) stop("The data input is empty.")
 
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  par <- w2n(wpar,bounds,parSize,nbStates,nbCovs,is.null(angleMean))
+  par <- w2n(wpar,bounds,parSize,nbStates,nbCovs,is.null(angleMean),stationary)
 
   if(!is.null(angleMean)) # if the turning angles' mean is not estimated
     par$anglePar <- rbind(angleMean,par$anglePar)
@@ -74,8 +79,9 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
+  if(stationary) par$delta <- rep(NA,nbStates) # NULL doesn't suit C++
   nllk <- nLogLike_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
-                        par$anglePar,par$delta,aInd,zeroInflation)
+                        par$anglePar,par$delta,aInd,zeroInflation,stationary)
 
   return(nllk)
 }

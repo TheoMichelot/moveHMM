@@ -12,6 +12,8 @@
 #' @param nbStates The number of states of the HMM.
 #' @param nbCovs The number of covariates.
 #' @param estAngleMean TRUE if the angle mean is estimated, FALSE otherwise.
+#' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
+#' equal to the stationary distribution.
 #'
 #' @return A list containing a vector of natural (constrained) parameters, as well as delta
 #' and beta.
@@ -26,17 +28,20 @@
 #' beta <- matrix(rnorm(18),ncol=6,nrow=3)
 #' delta <- c(0.6,0.3,0.1)
 #' wpar <- n2w(par,bounds,beta,delta,nbStates)
-#' print(w2n(wpar,bounds,parSize,nbStates,nbCovs))
+#' print(w2n(wpar,bounds,parSize,nbStates,nbCovs,stationary=FALSE))
 
-w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean)
+w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 {
   if(nbStates<1) stop("Number of states must be 1 at least.")
 
-  foo <- length(wpar)-nbStates+2
-  delta <- wpar[foo:length(wpar)]
-  delta <- exp(c(0,delta))
-  delta <- delta/sum(delta)
-  wpar <- wpar[-(foo:length(wpar))]
+  if(!stationary) {
+    foo <- length(wpar)-nbStates+2
+    delta <- wpar[foo:length(wpar)]
+    delta <- exp(c(0,delta))
+    delta <- delta/sum(delta)
+    wpar <- wpar[-(foo:length(wpar))]
+  }
+  else delta <- NULL
 
   foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
   beta <- wpar[foo:length(wpar)]
