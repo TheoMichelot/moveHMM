@@ -16,7 +16,9 @@ decode.moveHMM <- function(m)
   # states probabilities
   sp <- stateProbs(m)
 
-  #residuals...
-  d <- list(sp=sp)
+  # pseudo-residuals
+  res <- pseudoRes(m)
+
+  d <- list(sp=sp,res=res)
   return(d)
 }
