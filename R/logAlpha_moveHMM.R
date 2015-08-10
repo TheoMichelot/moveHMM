@@ -1,4 +1,6 @@
 
+logAlpha <- function(m) UseMethod("logAlpha") # define generic method logAlpha
+
 #' Forward log-probabilities
 #'
 #' @param m A moveHMM object.
@@ -8,8 +10,6 @@
 #' m <- example$mod # moveHMM object (returned by fitHMM)
 #'
 #' la <- logAlpha(m)
-
-logAlpha <- function(m) UseMethod("logAlpha") # define generic method logAlpha
 
 logAlpha.moveHMM <- function(m)
 {

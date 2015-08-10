@@ -1,4 +1,6 @@
 
+stateProbs <- function(m) UseMethod("stateProbs") # define generic method stateProbs
+
 #' State probabilities
 #'
 #' @param m A moveHMM object.
@@ -8,8 +10,6 @@
 #' m <- example$mod # moveHMM object (returned by fitHMM)
 #'
 #' sp <- stateProbs(m)
-
-stateProbs <- function(m) UseMethod("stateProbs") # define generic method stateProbs
 
 stateProbs.moveHMM <- function(m)
 {

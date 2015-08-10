@@ -1,4 +1,6 @@
 
+logBeta <- function(m) UseMethod("logBeta") # define generic method logBeta
+
 #' Backward log-probabilities
 #'
 #' @param m A moveHMM object.
@@ -8,8 +10,6 @@
 #' m <- example$mod # moveHMM object (returned by fitHMM)
 #'
 #' lb <- logBeta(m)
-
-logBeta <- function(m) UseMethod("logBeta") # define generic method logBeta
 
 logBeta.moveHMM <- function(m)
 {
