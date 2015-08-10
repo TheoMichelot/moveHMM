@@ -21,7 +21,7 @@ pseudoRes.moveHMM <- function(m)
   data <- m$data
   nbObs <- nrow(data)
   nbStates <- ncol(m$mle$stepPar)
-  la <- lalpha.moveHMM(m)
+  la <- logAlpha.moveHMM(m)
 
   stepRes <- rep(NA,nbObs)
   angleRes <- rep(NA,nbObs)
