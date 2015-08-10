@@ -4,12 +4,20 @@
 \alias{decode.moveHMM}
 \title{Decode the model}
 \usage{
-decode.moveHMM(m)
+\method{decode}{moveHMM}(m)
 }
 \arguments{
 \item{m}{moveHMM object}
 }
+\value{
+List of : sp (state probabilities), ...
+}
 \description{
 Decode the model
+}
+\examples{
+m <- example$mod # moveHMM object (returned by fitHMM)
+
+dec <- decode(m)
 }
 
