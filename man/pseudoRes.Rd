@@ -16,4 +16,10 @@ angleRes.
 \description{
 Pseudo-residuals
 }
+\examples{
+m <- example$mod # moveHMM object (returned by fitHMM)
+res <- pseudoRes(m)
+qqnorm(res$stepRes)
+qqnorm(res$angleRes)
+}
 

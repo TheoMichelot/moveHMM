@@ -15,4 +15,9 @@ The matrix of forward probabilities.
 \description{
 Forward probabilities
 }
+\examples{
+m <- example$mod # moveHMM object (returned by fitHMM)
+
+la <- lalpha(m)
+}
 

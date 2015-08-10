@@ -4,6 +4,10 @@
 #' @param m A moveHMM object.
 #'
 #' @return The matrix of forward probabilities.
+#' @examples
+#' m <- example$mod # moveHMM object (returned by fitHMM)
+#'
+#' la <- lalpha(m)
 
 lalpha <- function(m) UseMethod("lalpha") # define generic method lalpha
 
