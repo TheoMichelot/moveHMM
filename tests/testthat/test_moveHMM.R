@@ -9,7 +9,8 @@ test_that("Exceptions are thrown",{
   angleDist <- "vm"
   mod <- list(1,2,3)
 
-  m <- list(data=data,states=states,mle=mle,stepDist=stepDist,angleDist=angleDist,mod=mod)
+  m <- list(data=data,states=states,mle=mle,stepDist=stepDist,angleDist=angleDist,mod=mod,
+            zeroInflation=FALSE)
   expect_that(moveHMM(m),not(throws_error()))
 
   m <- list(data=data,states=states,mle=mle,stepDist=stepDist)
@@ -24,7 +25,8 @@ test_that("The output has the right class attribute",{
   angleDist <- "vm"
   mod <- list(1,2,3)
 
-  m <- list(data=data,states=states,mle=mle,stepDist=stepDist,angleDist=angleDist,mod=mod)
+  m <- list(data=data,states=states,mle=mle,stepDist=stepDist,angleDist=angleDist,mod=mod,
+            zeroInflation=FALSE)
   m <- moveHMM(m)
 
   expect_equal(length(which(class(m)=="moveHMM")),1)

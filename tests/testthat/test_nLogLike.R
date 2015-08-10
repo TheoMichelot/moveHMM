@@ -12,8 +12,8 @@ test_that("Exceptions are thrown",{
   parSize <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
                     estAngleMean,simPar$zeroInflation)$parSize
 
-  par <- c(par0$stepPar0,simPar$angleMean,par0$anglePar0)
-  wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates)
+  par <- c(par0$stepPar0,par0$anglePar0)
+  wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,estAngleMean)
 
   expect_that(nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,simPar$angleDist,
                        simPar$angleMean,simPar$zeroInflation),not(throws_error()))
@@ -49,7 +49,7 @@ test_that("angleMean=NULL, angleDist=NULL, and zeroInflation=TRUE work",{
   par0$stepPar0 <- c(par0$stepPar0,rep(0.2,simPar$nbStates)) # include zero mass parameters
   par0$anglePar0 <- c(rep(0,simPar$nbStates),par0$anglePar0) # include angle mean parameters
   par <- c(par0$stepPar0,par0$anglePar0)
-  wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates)
+  wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,estAngleMean)
 
   expect_that(nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,"none",
                        NULL,TRUE),not(throws_error()))

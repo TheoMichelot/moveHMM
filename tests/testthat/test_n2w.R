@@ -10,7 +10,8 @@ test_that("Exception is thrown",{
   beta <- matrix(rnorm(6),ncol=2,nrow=3)
   delta <- c(0.6,0.4)
 
-  expect_that(n2w(par,bounds,beta,delta,nbStates), throws_error())
+  expect_that(n2w(par,bounds,beta,delta,nbStates,estAngleMean=FALSE),
+              throws_error("Check the parameters bounds."))
 })
 
 test_that("Lengths of input and output are the same",{
@@ -22,5 +23,6 @@ test_that("Lengths of input and output are the same",{
   beta <- matrix(rnorm(6),ncol=2,nrow=3)
   delta <- c(0.6,0.4)
 
-  expect_equal(length(n2w(par,bounds,beta,delta,nbStates)),length(par)+length(beta)+length(delta)-1)
+  expect_equal(length(n2w(par,bounds,beta,delta,nbStates,estAngleMean=FALSE)),
+               length(par)+length(beta)+length(delta)-1)
 })
