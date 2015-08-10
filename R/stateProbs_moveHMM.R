@@ -16,16 +16,14 @@ stateProbs.moveHMM <- function(m)
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
   nbObs <- nrow(data)
-  la <- lalpha(m)
-  lb <- lbeta(m)
+  la <- logAlpha(m)
+  lb <- logBeta(m)
   c <- max(la[nbObs,])
   llk <- c + log(sum(exp(la[nbObs,]-c)))
   stateProbs <- matrix(NA,nbObs,nbStates)
 
-  for(i in 1:nbObs) {
-    cat(la[i,]," ; ",lb[i,]," ; ",llk,"\n")
+  for(i in 1:nbObs)
     stateProbs[i,] <- exp(la[i,]+lb[i,]-llk)
-  }
 
   return(stateProbs)
 }

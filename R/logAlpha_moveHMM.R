@@ -1,22 +1,22 @@
 
-#' Backward probabilities
+#' Forward log-probabilities
 #'
 #' @param m A moveHMM object.
 #'
-#' @return The matrix of backward probabilities.
+#' @return The matrix of forward log-probabilities.
 #' @examples
 #' m <- example$mod # moveHMM object (returned by fitHMM)
 #'
-#' lb <- lbeta(m)
+#' la <- logAlpha(m)
 
-lbeta <- function(m) UseMethod("lbeta") # define generic method lbeta
+logAlpha <- function(m) UseMethod("logAlpha") # define generic method logAlpha
 
-lbeta.moveHMM <- function(m)
+logAlpha.moveHMM <- function(m)
 {
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
   nbObs <- nrow(data)
-  lbeta <- matrix(NA,nbObs,nbStates)
+  lalpha <- matrix(NA,nbObs,nbStates)
 
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
@@ -25,17 +25,17 @@ lbeta.moveHMM <- function(m)
   allProbs <- allProbs(data,nbStates,m$stepDist,m$angleDist,m$mle$stepPar,m$mle$anglePar,m$zeroInflation)
   trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
 
-  lscale <- log(nbStates)
-  foo <- rep(1,nbStates)/nbStates
-  lbeta[nbObs,] <- rep(0,nbStates)
+  lscale <- 0
+  foo <- m$mle$delta*allProbs[1,]
+  lalpha[1,] <- log(foo)+lscale
 
-  for(i in (nbObs-1):1) {
+  for(i in 2:nbObs) {
     gamma <- trMat[,,i]
-    foo <- gamma%*%(allProbs[i+1,]*foo)
-    lbeta[i,] <- log(foo)+lscale
-    foo <- foo/sum(foo)
+    foo <- foo%*%gamma*allProbs[i,]
     lscale <- lscale+log(sum(foo))
+    foo <- foo/sum(foo)
+    lalpha[i,] <- log(foo)+lscale
   }
 
-  return(lbeta)
+  return(lalpha)
 }
