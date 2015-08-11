@@ -1,9 +1,9 @@
 
 #' Example data simulation
 #'
-#' Generate the file data/example.RData, used in other functions' examples.
+#' Generate the file data/example.RData, used in other functions' examples and unit tests.
 
-exampleGen <- function()
+exGen <- function()
 {
   set.seed(1)
 
@@ -47,6 +47,6 @@ exampleGen <- function()
   mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
                 "gamma","vm",angleMean,zeroInflation)
 
-  example <- list(data=data,mod=mod,simPar=simPar,par0=par0)
-  save(example,file="data/example.RData")
+  ex <- list(data=data,mod=mod,simPar=simPar,par0=par0)
+  save(ex,file="data/ex.RData")
 }
