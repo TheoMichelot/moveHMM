@@ -19,7 +19,7 @@ print.moveHMM <- function(m)
     cat(p$parNames[i],"\t",m$mle$stepPar[i,],"\n")
 
   cat("\n")
-  if(angleDist!="none") {
+  if(m$angleDist!="none") {
     cat("Turning angle parameters :\n")
     cat("------------------------\n")
     for(i in 1:nrow(m$mle$anglePar))

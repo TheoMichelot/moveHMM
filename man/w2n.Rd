@@ -42,7 +42,7 @@ bounds <- matrix(c(0,1,0,1,0,1,
                  byrow=TRUE,ncol=2)
 beta <- matrix(rnorm(18),ncol=6,nrow=3)
 delta <- c(0.6,0.3,0.1)
-wpar <- n2w(par,bounds,beta,delta,nbStates)
-print(w2n(wpar,bounds,parSize,nbStates,nbCovs,stationary=FALSE))
+wpar <- n2w(par,bounds,beta,delta,nbStates,FALSE)
+print(w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean=FALSE,stationary=FALSE))
 }
 

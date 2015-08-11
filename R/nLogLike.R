@@ -32,8 +32,8 @@
 #' parSize <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
 #'                   estAngleMean,simPar$zeroInflation)$parSize
 #'
-#' par <- c(par0$stepPar0,simPar$angleMean,par0$anglePar0)
-#' wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates)
+#' par <- c(par0$stepPar0,par0$anglePar0)
+#' wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,FALSE)
 #'
 #' l <- nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,simPar$angleDist,
 #'               simPar$angleMean,simPar$zeroInflation)
