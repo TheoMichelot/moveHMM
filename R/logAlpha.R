@@ -1,6 +1,4 @@
 
-logAlpha <- function(m) UseMethod("logAlpha") # define generic method logAlpha
-
 #' Forward log-probabilities
 #'
 #' @param m A moveHMM object.
@@ -11,7 +9,7 @@ logAlpha <- function(m) UseMethod("logAlpha") # define generic method logAlpha
 #'
 #' la <- logAlpha(m)
 
-logAlpha.moveHMM <- function(m)
+logAlpha <- function(m)
 {
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)

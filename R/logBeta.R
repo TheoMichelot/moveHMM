@@ -1,6 +1,4 @@
 
-logBeta <- function(m) UseMethod("logBeta") # define generic method logBeta
-
 #' Backward log-probabilities
 #'
 #' @param m A moveHMM object.
@@ -11,7 +9,7 @@ logBeta <- function(m) UseMethod("logBeta") # define generic method logBeta
 #'
 #' lb <- logBeta(m)
 
-logBeta.moveHMM <- function(m)
+logBeta <- function(m)
 {
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
