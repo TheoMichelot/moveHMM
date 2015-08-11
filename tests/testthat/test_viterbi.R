@@ -2,9 +2,9 @@
 context("viterbi")
 
 test_that("Exceptions are thrown",{
-  data <- example$data
-  mod <- example$mod
-  simPar <- example$simPar
+  data <- ex$data
+  mod <- ex$mod
+  simPar <- ex$simPar
 
   expect_that(viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
                       simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean),

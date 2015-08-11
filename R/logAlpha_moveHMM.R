@@ -7,7 +7,7 @@ logAlpha <- function(m) UseMethod("logAlpha") # define generic method logAlpha
 #'
 #' @return The matrix of forward log-probabilities.
 #' @examples
-#' m <- example$mod # moveHMM object (returned by fitHMM)
+#' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'
 #' la <- logAlpha(m)
 

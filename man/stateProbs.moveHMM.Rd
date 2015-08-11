@@ -16,7 +16,7 @@ The matrix of state probabilities.
 State probabilities
 }
 \examples{
-m <- example$mod # moveHMM object (returned by fitHMM)
+m <- ex$mod # moveHMM object (returned by fitHMM)
 
 sp <- stateProbs(m)
 }

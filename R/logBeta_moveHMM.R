@@ -7,7 +7,7 @@ logBeta <- function(m) UseMethod("logBeta") # define generic method logBeta
 #'
 #' @return The matrix of backward log-probabilities.
 #' @examples
-#' m <- example$mod # moveHMM object (returned by fitHMM)
+#' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'
 #' lb <- logBeta(m)
 

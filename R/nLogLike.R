@@ -22,9 +22,9 @@
 #' @return The negative log-likelihood of wpar given data.
 #'
 #' @examples
-#' data <- example$data
-#' simPar <- example$simPar
-#' par0 <- example$par0
+#' data <- ex$data # movement data (as returned by prepData or simData)
+#' simPar <- ex$simPar
+#' par0 <- ex$par0
 #'
 #' estAngleMean <- is.null(simPar$angleMean)
 #' bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,

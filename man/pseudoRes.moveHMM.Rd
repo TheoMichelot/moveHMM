@@ -17,7 +17,7 @@ the turning angles, angleRes.
 Pseudo-residuals
 }
 \examples{
-m <- example$mod # moveHMM object (returned by fitHMM)
+m <- ex$mod # moveHMM object (returned by fitHMM)
 res <- pseudoRes(m)
 qqnorm(res$stepRes)
 qqnorm(res$angleRes)

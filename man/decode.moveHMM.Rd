@@ -16,7 +16,7 @@ List of : sp (state probabilities), ...
 Decode the model
 }
 \examples{
-m <- example$mod # moveHMM object (returned by fitHMM)
+m <- ex$mod # moveHMM object (returned by fitHMM)
 
 dec <- decode(m)
 }

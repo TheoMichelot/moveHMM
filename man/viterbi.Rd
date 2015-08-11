@@ -37,12 +37,12 @@ The sequence of most probable states.
 Reconstructs the most probable states sequence.
 }
 \examples{
-data <- example$data
-mod <- example$mod
-simPar <- example$simPar
+data <- ex$data
+m <- ex$mod
+simPar <- ex$simPar
 
 # reconstruction of states sequence
-states <- viterbi(data,simPar$nbStates,mod$mle$beta,mod$mle$delta,simPar$stepDist,
-                  simPar$angleDist,mod$mle$stepPar,mod$mle$anglePar,simPar$angleMean)
+states <- viterbi(data,simPar$nbStates,m$mle$beta,m$mle$delta,simPar$stepDist,
+                  simPar$angleDist,m$mle$stepPar,m$mle$anglePar,simPar$angleMean)
 }
 

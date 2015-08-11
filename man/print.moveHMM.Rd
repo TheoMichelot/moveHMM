@@ -13,7 +13,7 @@
 Print moveHMM
 }
 \examples{
-m <- example$mod # moveHMM object (returned by fitHMM)
+m <- ex$mod # moveHMM object (returned by fitHMM)
 
 print(m)
 }

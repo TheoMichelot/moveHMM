@@ -8,7 +8,7 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 #' @return The pseudo-residuals for the step lengths, stepRes, and the pseudo-residuals for
 #' the turning angles, angleRes.
 #' @examples
-#' m <- example$mod # moveHMM object (returned by fitHMM)
+#' m <- ex$mod # moveHMM object (returned by fitHMM)
 #' res <- pseudoRes(m)
 #' qqnorm(res$stepRes)
 #' qqnorm(res$angleRes)

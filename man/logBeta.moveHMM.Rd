@@ -16,7 +16,7 @@ The matrix of backward log-probabilities.
 Backward log-probabilities
 }
 \examples{
-m <- example$mod # moveHMM object (returned by fitHMM)
+m <- ex$mod # moveHMM object (returned by fitHMM)
 
 lb <- logBeta(m)
 }

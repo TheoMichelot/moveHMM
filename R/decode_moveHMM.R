@@ -7,7 +7,7 @@ decode <- function(m) UseMethod("decode") # define generic method decode
 #'
 #' @return List of : sp (state probabilities), ...
 #' @examples
-#' m <- example$mod # moveHMM object (returned by fitHMM)
+#' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'
 #' dec <- decode(m)
 
