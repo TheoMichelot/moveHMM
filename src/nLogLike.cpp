@@ -85,9 +85,10 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
             stepArgs(i) = stepPar(i,state);
 
         if(zeroInflation) {
+            // remove the NAs from step (impossible to subset a vector with NAs)
             for(int i=0;i<nbObs;i++) {
                 if(R_IsNA(step(i))) {
-                    step(i) = -1; // impossible to subset a vector with NAs
+                    step(i) = -1;
                     stepProb(i) = 1;
                 }
             }
@@ -101,6 +102,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                 zm(i) = zeromass(state);
             stepProb.elem(arma::find(as<arma::vec>(step)==0)) = zm;
 
+            // put the NAs back
             for(int i=0;i<nbObs;i++) {
                 if(step(i)<0)
                     step(i) = NA_REAL;
