@@ -4,6 +4,7 @@
 stateProbs <- function(m) UseMethod("stateProbs") # define generic method stateProbs
 
 #' State probabilities
+#' @method stateProbs moveHMM
 #'
 #' @param m A moveHMM object.
 #'

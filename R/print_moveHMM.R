@@ -1,5 +1,6 @@
 
 #' Print moveHMM
+#' @method print moveHMM
 #'
 #' @param x A moveHMM object.
 #' @param ... Currently unused. For compatibility with generic method.

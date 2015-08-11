@@ -4,6 +4,7 @@
 decode <- function(m) UseMethod("decode") # define generic method decode
 
 #' Decode the model
+#' @method decode moveHMM
 #'
 #' @param m moveHMM object
 #'

@@ -4,6 +4,7 @@
 pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRes
 
 #' Pseudo-residuals
+#' @method pseudoRes moveHMM
 #'
 #' @param m A moveHMM object.
 #'

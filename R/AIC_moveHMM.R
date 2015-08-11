@@ -1,5 +1,6 @@
 
 #' AIC
+#' @method AIC moveHMM
 #'
 #' @param object A moveHMM object.
 #' @param ... Currently unused. For compatibility with generic method.
