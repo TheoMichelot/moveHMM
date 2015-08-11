@@ -44,11 +44,9 @@ plot.moveHMM <- function(m)
       # Constitute the lists of state-dependent parameters for the step and angle
       stepArgs <- list(grid)
 
-      if(nrow(m$mle$stepPar)==1) stepArgs[[2]] <- m$mle$stepPar[state]
-      else {
-        for(j in 1:nrow(m$mle$stepPar))
-          stepArgs[[j+1]] <- m$mle$stepPar[j,state]
-      }
+      for(j in 1:nrow(m$mle$stepPar))
+        stepArgs[[j+1]] <- m$mle$stepPar[j,state]
+
       # conversion between mean/sd and shape/scale if necessary
       if(m$stepDist=="gamma") {
         shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
@@ -70,11 +68,8 @@ plot.moveHMM <- function(m)
       for(state in 1:nbStates) {
         angleArgs <- list(grid)
 
-        if(nrow(m$mle$anglePar)==1) angleArgs[[2]] <- m$mle$anglePar[state]
-        else {
-          for(j in 1:nrow(m$mle$anglePar))
-            angleArgs[[j+1]] <- m$mle$anglePar[j,state]
-        }
+        for(j in 1:nrow(m$mle$anglePar))
+          angleArgs[[j+1]] <- m$mle$anglePar[j,state]
 
         lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
       }

@@ -57,11 +57,9 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
       stepPar <- stepPar[-nrow(stepPar),]
     }
 
-    if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[state]
-    else {
-      for(j in 1:nrow(stepPar))
-        stepArgs[[j+1]] <- stepPar[j,state]
-    }
+    for(j in 1:nrow(stepPar))
+      stepArgs[[j+1]] <- stepPar[j,state]
+
     # conversion between mean/sd and shape/scale if necessary
     if(stepDist=="gamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
@@ -77,11 +75,9 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
     else stepProb[stepInd] <- do.call(stepFun,stepArgs)
 
     if(angleDist!="none") {
-      if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[state]
-      else {
-        for(j in 1:nrow(anglePar))
-          angleArgs[[j+1]] <- anglePar[j,state]
-      }
+      for(j in 1:nrow(anglePar))
+        angleArgs[[j+1]] <- anglePar[j,state]
+
       angleProb[angleInd] <- do.call(angleFun,angleArgs)
 
       allProbs[,state] <- stepProb*angleProb

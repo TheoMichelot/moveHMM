@@ -132,17 +132,12 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     for (k in 1:(nbObs-1)){
       # prepare lists of arguments for step and angle distributions
       stepArgs <- list(1) ; angleArgs <- list(1) # first argument = 1 (one random draw)
-      if(nrow(stepPar)==1) stepArgs[[2]] <- stepPar[Z[k]]
-      else {
-        for(j in 1:nrow(stepPar))
+      for(j in 1:nrow(stepPar))
           stepArgs[[j+1]] <- stepPar[j,Z[k]]
-      }
+
       if(angleDist!="none") {
-        if(nrow(anglePar)==1) angleArgs[[2]] <- anglePar[Z[k]]
-        else {
-          for(j in 1:nrow(anglePar))
+        for(j in 1:nrow(anglePar))
             angleArgs[[j+1]] <- anglePar[j,Z[k]]
-        }
       }
 
       if(stepDist=="gamma") {
