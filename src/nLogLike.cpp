@@ -1,4 +1,4 @@
-#include "densities.hpp"
+#include "densities.h"
 
 // [[Rcpp::export]]
 double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist, 
