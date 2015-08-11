@@ -1,12 +1,16 @@
 
 #' Plot function for a moveData object
+#' @method plot moveData
 #'
-#' @param data An object moveData
+#' @param x An object moveData
 #' @param compact TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
 #' individual at a time)
+#' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveData <- function(data,compact=FALSE)
+plot.moveData <- function(x,compact=FALSE,...)
 {
+  data <- x
+
   # check arguments
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$ID) | is.null(data$x) | is.null(data$y) | is.null(data$step))

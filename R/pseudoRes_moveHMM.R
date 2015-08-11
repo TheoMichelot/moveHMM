@@ -1,4 +1,6 @@
 
+#' Generic pseudoRes method
+#' @param m Fitted model
 pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRes
 
 #' Pseudo-residuals
@@ -21,7 +23,7 @@ pseudoRes.moveHMM <- function(m)
   data <- m$data
   nbObs <- nrow(data)
   nbStates <- ncol(m$mle$stepPar)
-  la <- logAlpha.moveHMM(m)
+  la <- logAlpha(m)
 
   stepRes <- rep(NA,nbObs)
   angleRes <- rep(NA,nbObs)

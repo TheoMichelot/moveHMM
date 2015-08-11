@@ -1,15 +1,17 @@
 
 #' Print moveHMM
 #'
-#' @param m A moveHMM object.
+#' @param x A moveHMM object.
+#' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
 #' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'
 #' print(m)
 
-print.moveHMM <- function(m)
+print.moveHMM <- function(x,...)
 {
+  m <- x
   nbStates <- ncol(m$mle$stepPar)
   p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$zeroInflation)
 

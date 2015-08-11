@@ -4,10 +4,12 @@
 \alias{plot.moveHMM}
 \title{Plot moveHMM}
 \usage{
-plot.moveHMM(m)
+\method{plot}{moveHMM}(x, ...)
 }
 \arguments{
-\item{m}{Object moveHMM}
+\item{x}{Object moveHMM}
+
+\item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
 Plot moveHMM

@@ -1,4 +1,6 @@
 
+#' Generic decode method
+#' @param m Fitted model
 decode <- function(m) UseMethod("decode") # define generic method decode
 
 #' Decode the model

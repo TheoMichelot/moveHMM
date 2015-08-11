@@ -1,10 +1,13 @@
 
 #' Plot moveHMM
+#' @method plot moveHMM
 #'
-#' @param m Object moveHMM
+#' @param x Object moveHMM
+#' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveHMM <- function(m)
+plot.moveHMM <- function(x,...)
 {
+  m <- x
   nbAnimals <- length(unique(m$data$ID))
   nbStates <- ncol(m$mle$stepPar)
 

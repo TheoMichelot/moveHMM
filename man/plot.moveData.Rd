@@ -4,13 +4,15 @@
 \alias{plot.moveData}
 \title{Plot function for a moveData object}
 \usage{
-plot.moveData(data, compact = FALSE)
+\method{plot}{moveData}(x, compact = FALSE, ...)
 }
 \arguments{
-\item{data}{An object moveData}
+\item{x}{An object moveData}
 
 \item{compact}{TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
 individual at a time)}
+
+\item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
 Plot function for a moveData object

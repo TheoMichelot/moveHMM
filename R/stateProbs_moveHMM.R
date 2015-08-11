@@ -1,4 +1,6 @@
 
+#' Generic stateProbs method
+#' @param m Fitted model
 stateProbs <- function(m) UseMethod("stateProbs") # define generic method stateProbs
 
 #' State probabilities

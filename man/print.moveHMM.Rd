@@ -4,10 +4,12 @@
 \alias{print.moveHMM}
 \title{Print moveHMM}
 \usage{
-\method{print}{moveHMM}(m)
+\method{print}{moveHMM}(x, ...)
 }
 \arguments{
-\item{m}{A moveHMM object.}
+\item{x}{A moveHMM object.}
+
+\item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
 Print moveHMM
