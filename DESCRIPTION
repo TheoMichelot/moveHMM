@@ -5,9 +5,9 @@ Version: 0.1
 Date: 2015-07-14
 Author: Theo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
 Maintainer: Theo Michelot <theo.michelot@gmail.com>
-Description: Animal movement modelling using hidden Markov models
+Description: Animal movement modelling using hidden Markov models. Includes pre-processing of the tracking
+data, fitting of the HMM to the movement data, decoding of the HMM, visualization of the model.
 License: GPL-3
-LazyData: TRUE
 Depends:
     CircStats, sp
 Imports:
