@@ -88,7 +88,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
     stop("Scaling error.")
 
   # identify parameters related to angle dist
-  if(parSize[2]!=0) {
+  if(parSize[2]>0) {
     anglePar <- matrix(par[(length(par)-parSize[2]*nbStates+1):length(par)],
                                        ncol=nbStates,byrow=T)
     par <- par[-((length(par)-parSize[2]*nbStates+1):length(par))] # remove pars related to angle dist

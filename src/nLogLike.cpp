@@ -66,38 +66,57 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     arma::colvec angleProb(nbObs);
     NumericVector angleArgs(2);
     NumericVector angle(nbObs);
-
-    if(angleDist!="none")
-	angle = data["angle"];
+    
+    if(angleDist!="none") {
+        angle = data["angle"];
+    }
 
     arma::rowvec zeromass(nbStates);
 
     if(zeroInflation) {
-	zeromass = stepPar.row(stepPar.n_rows-1);
-	arma::mat stepPar2 = stepPar.submat(0,0,stepPar.n_rows-2,stepPar.n_cols-1);
-	stepPar = stepPar2;
+	    zeromass = stepPar.row(stepPar.n_rows-1);
+	    arma::mat stepPar2 = stepPar.submat(0,0,stepPar.n_rows-2,stepPar.n_cols-1);
+	    stepPar = stepPar2;
     }
 
     for(int state=0;state<nbStates;state++) 
     {
         for(int i=0;i<stepPar.n_rows;i++)
             stepArgs(i) = stepPar(i,state);
-	
-	stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
-	if(zeroInflation) {
-	    for(int i=0;i<nbObs;i++) {
-		if(step(i)==0) stepProb(i)=zeromass(state);
+
+        if(zeroInflation) {
+            for(int i=0;i<nbObs;i++) {
+                if(R_IsNA(step(i))) {
+                    step(i) = -1; // impossible to subset a vector with NAs
+                    stepProb(i) = 1;
+                }
+            }
+
+            // compute probability of non-zero observations
+            stepProb.elem(arma::find(as<arma::vec>(step)>0)) = (1-zeromass(state))*funMap[stepDist](step[step>0],stepArgs(0),stepArgs(1));
+            // compute probability of zero observations
+            int nbZeros = as<NumericVector>(step[step==0]).size();
+            arma::vec zm(nbZeros);
+            for(int i=0;i<nbZeros;i++)
+                zm(i) = zeromass(state);
+            stepProb.elem(arma::find(as<arma::vec>(step)==0)) = zm;
+
+            for(int i=0;i<nbObs;i++) {
+                if(step(i)<0)
+                    step(i) = NA_REAL;
+            }
+        }
+        else
+	        stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
+
+	    if(angleDist!="none") {
+	        for(int i=0;i<anglePar.n_rows;i++)
+		        angleArgs(i) = anglePar(i,state);
+
+	        angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
+	        allProbs.col(state) = stepProb%angleProb;
 	    }
-	}
-
-	if(angleDist!="none") {
-	    for(int i=0;i<anglePar.n_rows;i++)
-		angleArgs(i) = anglePar(i,state);
-
-	    angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
-	    allProbs.col(state) = stepProb%angleProb;
-	}
-	else allProbs.col(state) = stepProb;
+	    else allProbs.col(state) = stepProb;
     }
 
     // 3. Forward algorithm

@@ -70,14 +70,18 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
-
   if(sum(parSize)*nbStates!=length(par0))
     stop("Wrong number of initial parameters.")
+
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
-  angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
-  if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0 |
-       length(which(anglePar0<angleBounds[,1] | anglePar0>angleBounds[,2]))>0)
-    stop("Check the parameters bounds.")
+  if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0)
+    stop("Check the step parameters bounds.")
+
+  if(angleDist!="none") {
+    angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
+    if(length(which(anglePar0<angleBounds[,1] | anglePar0>angleBounds[,2]))>0)
+      stop("Check the angle parameters bounds.")
+  }
   if(!is.null(angleMean) & length(angleMean)!=nbStates)
     stop("The angleMean argument should be of length nbStates.")
 
@@ -109,7 +113,9 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(is.null(delta0)) delta0 <- rep(1,nbStates)/nbStates
   if(stationary) delta0 <- NULL
 
-  wpar <- n2w(par0,bounds,beta0,delta0,nbStates,is.null(angleMean))
+  estAngleMean <- (is.null(angleMean) & angleDist!="none")
+
+  wpar <- n2w(par0,bounds,beta0,delta0,nbStates,estAngleMean)
 
   # this function is used to muffle the warning "NA/Inf replaced by maximum positive value" in nlm
   h <- function(w) {
@@ -125,18 +131,18 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                                  hessian=TRUE),
                       warning=h) # filter warnings using function h
 
-  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,is.null(angleMean),stationary)
+  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 
   if(stationary) {
     gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]
     mle$delta <- solve(t(diag(nbStates)-gamma+1),rep(1,nbStates))
   }
 
-  if(!is.null(angleMean))
+  if(!is.null(angleMean) & angleDist!="none")
     mle$anglePar <- rbind(angleMean,mle$anglePar)
 
   states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
-                    angleMean)
+                    angleMean,zeroInflation)
 
   mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
              mod=mod,states=states,zeroInflation=zeroInflation)

@@ -42,13 +42,20 @@ viterbi <- function(data,nbStates,beta,delta,stepDist,angleDist,stepPar,
   p <- parDef(stepDist,angleDist,nbStates,TRUE,zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
+
   if(sum(parSize)*nbStates!=length(par))
     stop("Wrong number of parameters.")
+
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
-  angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
-  if(length(which(vStepPar<stepBounds[,1] | vStepPar>stepBounds[,2]))>0 |
-       length(which(vAnglePar<angleBounds[,1] | vAnglePar>angleBounds[,2]))>0)
-    stop("Check the parameters bounds.")
+  if(length(which(vStepPar<stepBounds[,1] | vStepPar>stepBounds[,2]))>0)
+    stop("Check the step parameters bounds.")
+
+  if(angleDist!="none") {
+    angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
+    if(length(which(vAnglePar<angleBounds[,1] | vAnglePar>angleBounds[,2]))>0)
+      stop("Check the angle parameters bounds.")
+  }
+
   if(!is.null(angleMean) & length(angleMean)!=nbStates)
     stop("The angleMean argument should be of length nbStates.")
 

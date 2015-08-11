@@ -66,9 +66,11 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
 
   if(is.null(data$step)) stop("Missing field(s) in data.")
 
-  par <- w2n(wpar,bounds,parSize,nbStates,nbCovs,is.null(angleMean),stationary)
+  estAngleMean <- (is.null(angleMean) & angleDist!="none")
 
-  if(!is.null(angleMean)) # if the turning angles' mean is not estimated
+  par <- w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
+
+  if(!is.null(angleMean) & angleDist!="none") # if the turning angles' mean is not estimated
     par$anglePar <- rbind(angleMean,par$anglePar)
 
   nbObs <- length(data$step)
@@ -79,7 +81,11 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
-  if(stationary) par$delta <- rep(NA,nbStates) # NULL doesn't suit C++
+  if(angleDist=="none")
+    par$anglePar <- matrix(NA) # NULL doesn't suit C++
+  if(stationary)
+    par$delta <- c(NA) # NULL doesn't suit C++
+
   nllk <- nLogLike_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
                         par$anglePar,par$delta,aInd,zeroInflation,stationary)
 
