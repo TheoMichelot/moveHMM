@@ -18,24 +18,28 @@ print.moveHMM <- function(x,...)
 
   cat("Step length parameters :\n")
   cat("----------------------\n")
-  for(i in 1:nrow(m$mle$stepPar))
-    cat(p$parNames[i],"\t",m$mle$stepPar[i,],"\n")
+  for(i in 1:nrow(m$mle$stepPar)) {
+    cat(p$parNames[i],"\n")
+    print(m$mle$stepPar[i,])
+  }
 
   cat("\n")
   if(m$angleDist!="none") {
     cat("Turning angle parameters :\n")
     cat("------------------------\n")
-    for(i in 1:nrow(m$mle$anglePar))
-      cat(p$parNames[nrow(m$mle$stepPar)+i],"\t",m$mle$anglePar[i,],"\n")
+    for(i in 1:nrow(m$mle$anglePar)) {
+      cat(p$parNames[nrow(m$mle$stepPar)+i],"\n")
+      print(m$mle$anglePar[i,])
+    }
   }
 
   cat("\n")
-  cat("Beta :\n")
-  cat("----\n")
+  cat("Transition probabilities parameters :\n")
+  cat("-----------------------------------\n")
   print(m$mle$beta)
 
   cat("\n")
   cat("Initial distribution :\n")
   cat("--------------------\n")
-  cat(m$mle$delta,"\n")
+  print(m$mle$delta)
 }
