@@ -79,17 +79,19 @@ plot.moveData <- function(x,compact=FALSE,breaks="Sturges",...)
         if(length(x)>nbObs) nbObs <- length(x)
       }
 
+      colors <- rainbow(nbAnimals) # to make sure that all colors are distinct
+
       ID <- unique(data$ID)[1]
       x <- data$x[which(data$ID==ID)]
       y <- data$y[which(data$ID==ID)]
-      plot(x,y,type="o",pch=20,lwd=1.3,col=2, cex=0.5,
+      plot(x,y,type="o",pch=20,lwd=1.3,col=colors[1], cex=0.5,
            xlim=c(xmin,xmax),ylim=c(ymin,ymax),xlab="x",ylab="y")
 
-      for(zoo in 2:length(data)) {
+      for(zoo in 2:nbAnimals) {
         ID <- unique(data$ID)[zoo]
         x <- data$x[which(data$ID==ID)]
         y <- data$y[which(data$ID==ID)]
-        points(x,y,type="o",pch=20,lwd=1.3,col=zoo+1,cex=0.5)
+        points(x,y,type="o",pch=20,lwd=1.3,col=colors[zoo],cex=0.5)
       }
 
       par(mfrow=c(2,2))
