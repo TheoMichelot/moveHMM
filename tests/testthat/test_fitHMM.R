@@ -58,3 +58,36 @@ test_that("The output has the right class",{
 
   expect_equal(length(which(class(mod)=="moveHMM")),1)
 })
+
+test_that("Step length only + zero-inflation works",{
+  nbAnimals <- 2
+  nbStates <- 2
+  nbCovs <- 2
+  mu <- c(10,60)
+  sigma <- c(10,40)
+  zeromass <- c(0.4,0)
+  stepPar <- c(mu,sigma,zeromass)
+  anglePar <- NULL
+  stepDist <- "gamma"
+  angleDist <- "none"
+  zeroInflation <- TRUE
+  nbAnim <- c(50,100)
+
+  data <- simData(nbAnimals=nbAnimals,nbStates=nbStates,stepDist=stepDist,angleDist=angleDist,
+                  stepPar=stepPar,anglePar=anglePar,nbCovs=nbCovs,zeroInflation=zeroInflation,
+                  obsPerAnimal=nbAnim)
+
+  mu0 <- c(20,50)
+  sigma0 <- c(15,30)
+  zeromass0 <- c(0.2,0.05)
+  stepPar0 <- c(mu0,sigma0,zeromass0)
+  anglePar0 <- NULL
+  angleMean <- NULL
+  formula <- ~cov1+cov2
+  beta0 <- NULL
+  delta0 <- NULL
+
+  expect_that(fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
+              stepDist,angleDist,angleMean,zeroInflation,verbose=0),
+              not(throws_error()))
+})
