@@ -7,7 +7,7 @@
 #' individual at a time)
 #' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveData <- function(x,compact=FALSE,...)
+plot.moveData <- function(x,compact=FALSE,breaks="Sturges",...)
 {
   data <- x
 
@@ -29,7 +29,7 @@ plot.moveData <- function(x,compact=FALSE,...)
       step <- data$step[which(data$ID==ID)]
       plot(step,type="l",xlab="t",ylab="step length",
            ylim=c(0,max(step,na.rm=T)))
-      hist(step,xlab="step length",main="")
+      hist(step,xlab="step length",main="",col="lightblue",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
     }
   }
@@ -54,8 +54,8 @@ plot.moveData <- function(x,compact=FALSE,...)
              ylim=c(-pi,pi))
         abline(h=c(-pi,0,pi),lty=2)
 
-        hist(step,xlab="step length",main="")
-        hist(angle,xlab="turning angle",main="")
+        hist(step,xlab="step length",main="", col="lightblue",border="white",breaks=breaks)
+        hist(angle,xlab="turning angle",main="", col="lightblue",border="white",breaks=breaks)
 
         mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }
@@ -104,8 +104,8 @@ plot.moveData <- function(x,compact=FALSE,...)
              ylim=c(-pi,pi))
         abline(h=c(-pi,0,pi),lty=2)
 
-        hist(step,xlab="step length",main="")
-        hist(angle,xlab="turning angle",main="")
+        hist(step,xlab="step length",main="", col="lightblue",border="white",breaks=breaks)
+        hist(angle,xlab="turning angle",main="", col="lightblue",border="white",breaks=breaks)
 
         mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }

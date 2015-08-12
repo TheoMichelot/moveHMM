@@ -6,9 +6,10 @@
 #' @param ask If TRUE, the execution pauses between each plot.
 #' @param animals Vector of indices of animals for which information will be plotted.
 #' Defaults to NULL, i.e. all animals are plotted.
+#' @param breaks Histogram parameter. See hist documentation.
 #' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveHMM <- function(x,ask=TRUE,animals=NULL,...)
+plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
 {
   m <- x
   nbAnimals <- length(unique(m$data$ID))
@@ -44,7 +45,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,...)
       # Histogram of step lengths
       h <- hist(m$data$step[ind],plot=F) # to choose ylim
       ymax <- 1.5*max(h$density)
-      hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length")
+      hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length",
+           col="lightblue",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
@@ -88,7 +90,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,...)
       # Histogram of step lengths
       h <- hist(m$data$step[ind],plot=F) # to choose ylim
       ymax <- 1.5*max(h$density)
-      hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length")
+      hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length",
+           col="lightblue",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
@@ -115,7 +118,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,...)
       if(m$angleDist!="none") {
         h <- hist(m$data$angle[ind],plot=F) # to choose ylim
         ymax <- 1.5*max(h$density)
-        hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle")
+        hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle",
+             col="lightblue",border="white",breaks=breaks)
         mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
         grid <- seq(-pi,pi,length=1000)
 
@@ -163,5 +167,5 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,...)
   # back to default
   par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)) # bottom, left, top, right
-  par(ask=TRUE)
+  par(ask=FALSE)
 }
