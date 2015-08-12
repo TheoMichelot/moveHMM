@@ -53,7 +53,10 @@ plot.moveHMM <- function(x,...)
           stepArgs[[2]] <- shape
           stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
         }
-        lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
+        if(zeroInflation)
+          lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
+        else
+          lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
       }
     }
   }
@@ -94,7 +97,10 @@ plot.moveHMM <- function(x,...)
           stepArgs[[2]] <- shape
           stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
         }
-        lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
+        if(zeroInflation)
+          lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
+        else
+          lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
       }
 
       # Histogram of turning angles
@@ -111,11 +117,13 @@ plot.moveHMM <- function(x,...)
           for(j in 1:nrow(m$mle$anglePar))
             angleArgs[[j+1]] <- m$mle$anglePar[j,state]
 
-          lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
+          if(zeroInflation)
+            lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
+          else
+            lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
         }
       }
     }
-
   }
 
   # plot the transition probabilities as functions of the covariates
