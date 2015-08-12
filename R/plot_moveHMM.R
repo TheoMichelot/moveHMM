@@ -3,9 +3,12 @@
 #' @method plot moveHMM
 #'
 #' @param x Object moveHMM
+#' @param ask If TRUE, the execution pauses between each plot.
+#' @param animals Vector of indices of animals for which information will be plotted.
+#' Defaults to NULL, i.e. all animals are plotted.
 #' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveHMM <- function(x,...)
+plot.moveHMM <- function(x,ask=TRUE,animals=NULL,...)
 {
   m <- x
   nbAnimals <- length(unique(m$data$ID))
@@ -14,6 +17,11 @@ plot.moveHMM <- function(x,...)
   stepFun <- paste("d",m$stepDist,sep="")
   if(m$angleDist!="none")
     angleFun <- paste("d",m$angleDist,sep="")
+
+  if(is.null(animals))
+    animals <- 1:nbAnimals
+  if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0)
+    stop("Check animals argument.")
 
   w <- rep(NA,nbStates)
   for(state in 1:nbStates)
@@ -26,10 +34,10 @@ plot.moveHMM <- function(x,...)
 
   par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
-  par(ask=TRUE)
+  par(ask=ask)
 
   if(m$angleDist=="none") { # if step only
-    for(zoo in 1:nbAnimals) {
+    for(zoo in animals) {
       ID <- unique(m$data$ID)[zoo]
       ind <- which(m$data$ID==ID)
 
@@ -61,7 +69,7 @@ plot.moveHMM <- function(x,...)
     }
   }
   else { # if step + angle
-    for(zoo in 1:nbAnimals) {
+    for(zoo in animals) {
       ID <- unique(m$data$ID)[zoo]
       ind <- which(m$data$ID==ID)
       x <- m$data$x[ind]
