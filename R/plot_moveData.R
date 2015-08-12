@@ -13,7 +13,7 @@ plot.moveData <- function(x,compact=FALSE,...)
 
   # check arguments
   if(length(data)<1) stop("The data input is empty.")
-  if(is.null(data$ID) | is.null(data$x) | is.null(data$y) | is.null(data$step))
+  if(is.null(data$ID) | is.null(data$x) | is.null(data$step))
     stop("Missing field(s) in data.")
 
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
@@ -21,7 +21,7 @@ plot.moveData <- function(x,compact=FALSE,...)
 
   nbAnimals <- length(unique(data$ID))
 
-  if(is.null(data$angle)) # only step length is provided
+  if(is.null(data$angle) | length(which(!is.na(data$angle)))==0) # only step length is provided
   {
     par(mfrow=c(1,2))
     for(zoo in 1:nbAnimals) {
