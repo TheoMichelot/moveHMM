@@ -140,6 +140,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
 
   # plot the transition probabilities as functions of the covariates
   par(mfrow=c(nbStates,nbStates))
+  par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
 
   covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
                      names(m$data)!="step" & names(m$data)!="angle")
@@ -161,6 +162,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
         for(j in 1:nbStates)
           plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
                ylab=paste(i,"->",j))
+
+      mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
     }
   }
 
