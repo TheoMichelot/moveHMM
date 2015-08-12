@@ -91,6 +91,11 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(length(which(data$angle < -pi | data$angle > pi))>0)
     stop("The turning angles should be between -pi and pi.")
 
+  # check that zeroInflation is consistent with the observations
+  if(!zeroInflation & length(which(data$step==0))>0)
+    stop("Zero-inflation should be included if step length can be zero.")
+  if(zeroInflation & length(which(data$step==0))==0)
+    stop("Zero-inflation should not be included if step length is never zero.")
 
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
