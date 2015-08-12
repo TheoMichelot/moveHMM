@@ -2,8 +2,8 @@
 context("densities")
 
 test_that("C++ and R density functions are identical",{
-  # dgamma (note the conversion between mean/sd and shape/rate)
   x <- seq(0,100,length=1000)
+  # dgamma (note the conversion between mean/sd and shape/rate)
   expect_equal(dgamma(x,0.05^2/0.01^2,0.05/0.01^2),c(dgamma_rcpp(x,0.05,0.01)),tolerance=1e-10)
   expect_equal(dgamma(x,1000^2/1000^2,1000/1000^2),c(dgamma_rcpp(x,1000,1000)),tolerance=1e-10)
   expect_equal(dgamma(x,50^2/10^2,50/10^2),c(dgamma_rcpp(x,50,10)),tolerance=1e-10)
@@ -23,6 +23,7 @@ test_that("C++ and R density functions are identical",{
   expect_equal(dexp(x,100),c(dexp_rcpp(x,100)),tolerance=1e-10)
   expect_equal(dexp(x,1),c(dexp_rcpp(x,1)),tolerance=1e-10)
 
+  x <- seq(-pi,pi,length=1000)
   # dvm
   expect_equal(dvm(x,0,0.05),c(dvm_rcpp(x,0,0.05)),tolerance=1e-10)
   expect_equal(dvm(x,pi,1000),c(dvm_rcpp(x,pi,1000)),tolerance=1e-10)
