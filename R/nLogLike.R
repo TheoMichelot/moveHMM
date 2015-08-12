@@ -81,10 +81,11 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
+  # NULL doesn't suit C++
   if(angleDist=="none")
-    par$anglePar <- matrix(NA) # NULL doesn't suit C++
+    par$anglePar <- matrix(NA)
   if(stationary)
-    par$delta <- c(NA) # NULL doesn't suit C++
+    par$delta <- c(NA)
 
   nllk <- nLogLike_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
                         par$anglePar,par$delta,aInd,zeroInflation,stationary)
