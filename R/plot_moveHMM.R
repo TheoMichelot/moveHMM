@@ -7,9 +7,10 @@
 #' @param animals Vector of indices of animals for which information will be plotted.
 #' Defaults to NULL, i.e. all animals are plotted.
 #' @param breaks Histogram parameter. See hist documentation.
+#' @param hist.ylim Histogram parameter. See hist documentation.
 #' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
+plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL,...)
 {
   m <- x
   nbAnimals <- length(unique(m$data$ID))
@@ -19,10 +20,14 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
   if(m$angleDist!="none")
     angleFun <- paste("d",m$angleDist,sep="")
 
+  # check arguments
   if(is.null(animals))
     animals <- 1:nbAnimals
   if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0)
     stop("Check animals argument.")
+
+  if(!is.null(hist.ylim) & length(hist.ylim)!=2)
+    stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
   w <- rep(NA,nbStates)
   for(state in 1:nbStates)
@@ -43,9 +48,16 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
       ind <- which(m$data$ID==ID)
 
       # Histogram of step lengths
-      h <- hist(m$data$step[ind],plot=F) # to choose ylim
-      ymax <- 1.5*max(h$density)
-      hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length",
+      if(is.null(hist.ylim)) {
+        ymin <- 0
+        h <- hist(m$data$step[ind],plot=F)
+        ymax <- 1.5*max(h$density)
+      }
+      else {
+        ymin <- hist.ylim[1]
+        ymax <- hist.ylim[2]
+      }
+      hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
            col="lightblue",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
@@ -88,9 +100,16 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
 
       # Histogram of step lengths
-      h <- hist(m$data$step[ind],plot=F) # to choose ylim
-      ymax <- 1.5*max(h$density)
-      hist(m$data$step[ind],prob=T,main="",ylim=c(0,ymax),xlab="step length",
+      if(is.null(hist.ylim)) {
+        ymin <- 0
+        h <- hist(m$data$step[ind],plot=F)
+        ymax <- 1.5*max(h$density)
+      }
+      else {
+        ymin <- hist.ylim[1]
+        ymax <- hist.ylim[2]
+      }
+      hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
            col="lightblue",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
@@ -115,25 +134,23 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",...)
       }
 
       # Histogram of turning angles
-      if(m$angleDist!="none") {
-        h <- hist(m$data$angle[ind],plot=F) # to choose ylim
-        ymax <- 1.5*max(h$density)
-        hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle",
-             col="lightblue",border="white",breaks=breaks)
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
-        grid <- seq(-pi,pi,length=1000)
+      h <- hist(m$data$angle[ind],plot=F) # to determine ylim
+      ymax <- 1.5*max(h$density)
+      hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle",
+           col="lightblue",border="white",breaks=breaks)
+      mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+      grid <- seq(-pi,pi,length=1000)
 
-        for(state in 1:nbStates) {
-          angleArgs <- list(grid)
+      for(state in 1:nbStates) {
+        angleArgs <- list(grid)
 
-          for(j in 1:nrow(m$mle$anglePar))
-            angleArgs[[j+1]] <- m$mle$anglePar[j,state]
+        for(j in 1:nrow(m$mle$anglePar))
+          angleArgs[[j+1]] <- m$mle$anglePar[j,state]
 
-          if(m$zeroInflation)
-            lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
-          else
-            lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
-        }
+        if(m$zeroInflation)
+          lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
+        else
+          lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
       }
     }
   }
