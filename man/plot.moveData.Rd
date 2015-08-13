@@ -4,13 +4,15 @@
 \alias{plot.moveData}
 \title{Plot function for a moveData object}
 \usage{
-\method{plot}{moveData}(x, compact = FALSE, ...)
+\method{plot}{moveData}(x, compact = FALSE, breaks = "Sturges", ...)
 }
 \arguments{
 \item{x}{An object moveData}
 
 \item{compact}{TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
 individual at a time)}
+
+\item{breaks}{Histogram parameter. See hist documentation.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }

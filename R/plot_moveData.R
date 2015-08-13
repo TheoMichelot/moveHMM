@@ -5,9 +5,10 @@
 #' @param x An object moveData
 #' @param compact TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
 #' individual at a time)
+#' @param breaks Histogram parameter. See hist documentation.
 #' @param ... Currently unused. For compatibility with generic method.
 
-plot.moveData <- function(x,compact=FALSE,breaks="Sturges",...)
+plot.moveData <- function(x,compact=FALSE,breaks="Sturges",ask=TRUE,...)
 {
   data <- x
 
@@ -17,7 +18,7 @@ plot.moveData <- function(x,compact=FALSE,breaks="Sturges",...)
     stop("Missing field(s) in data.")
 
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
-  par(ask=TRUE)
+  par(ask=ask)
 
   nbAnimals <- length(unique(data$ID))
 

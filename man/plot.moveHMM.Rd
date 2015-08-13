@@ -4,10 +4,20 @@
 \alias{plot.moveHMM}
 \title{Plot moveHMM}
 \usage{
-\method{plot}{moveHMM}(x, ...)
+\method{plot}{moveHMM}(x, ask = TRUE, animals = NULL, breaks = "Sturges",
+  hist.ylim = NULL, ...)
 }
 \arguments{
 \item{x}{Object moveHMM}
+
+\item{ask}{If TRUE, the execution pauses between each plot.}
+
+\item{animals}{Vector of indices of animals for which information will be plotted.
+Defaults to NULL, i.e. all animals are plotted.}
+
+\item{breaks}{Histogram parameter. See hist documentation.}
+
+\item{hist.ylim}{Histogram parameter. See hist documentation.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
