@@ -26,12 +26,20 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
 
   if(!is.null(trackData$ID)) ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
   else ID <- rep("Animal1",length(x)) # default ID if none provided
+  ID[which(is.na(ID))] <- "Missing ID"
 
   data <- data.frame(ID=character(),
                      step=numeric(),
                      angle=numeric())
 
   nbAnimals <- length(unique(ID))
+
+  # check that each animal's observations are contiguous
+  for(i in 1:nbAnimals) {
+    ind <- which(ID==unique(ID)[i])
+    if(length(ind)!=length(ind[1]:ind[length(ind)]))
+      stop("Each animal's obervations must be contiguous.")
+  }
 
   for(zoo in 1:nbAnimals) {
     nbObs <- length(which(ID==unique(ID)[zoo]))
