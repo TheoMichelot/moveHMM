@@ -19,7 +19,7 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 
     for(int i=0;i<x.size();i++) {
     	res(i) = R::dgamma(x(i),shape,scale,0);
-	    if(R_IsNA(res(i))) 
+	    if(!arma::is_finite(res(i)))
             res(i) = 1; // if missing observation
     }
 
@@ -81,7 +81,7 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 
     for(int i=0;i<x.size();i++) {
 	    res(i) = 1/(2*M_PI*b)*pow((exp(cos(x(i)-mu)-1)),kappa);
-	    if(R_IsNA(res(i))) 
+	    if(!arma::is_finite(res(i)))
             res(i) = 1; // is missing observation
     }
 
