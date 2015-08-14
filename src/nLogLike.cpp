@@ -39,15 +39,17 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     // 2. Computation of matrix of joint probabilities allProbs
     
     // map the functions names with the actual functions
+    // (the type FunPtr and the density functions are defined in densities.h)
     map<std::string,FunPtr> funMap;
-    funMap["gamma"]=dgamma_rcpp;
-    funMap["weibull"]=dweibull_rcpp;
-    funMap["lnorm"]=dlnorm_rcpp;
-    funMap["exp"]=dexp_rcpp;
-    funMap["vm"]=dvm_rcpp;
-    funMap["wrpcauchy"]=dwrpcauchy_rcpp;
+    funMap["gamma"] = dgamma_rcpp;
+    funMap["weibull"] = dweibull_rcpp;
+    funMap["lnorm"] = dlnorm_rcpp;
+    funMap["exp"] = dexp_rcpp;
+    funMap["vm"] = dvm_rcpp;
+    funMap["wrpcauchy"] = dwrpcauchy_rcpp;
 
-    if(stationary) {
+    // compute stationary distribution delta
+    if(stationary) { 
         arma::mat diag(nbStates,nbStates);
         diag.eye(); // diagonal of ones
         arma::mat gamma = trMat.slice(0); // all slices are identical if stationary
@@ -95,6 +97,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 
             // compute probability of non-zero observations
             stepProb.elem(arma::find(as<arma::vec>(step)>0)) = (1-zeromass(state))*funMap[stepDist](step[step>0],stepArgs(0),stepArgs(1));
+            
             // compute probability of zero observations
             int nbZeros = as<NumericVector>(step[step==0]).size();
             arma::vec zm(nbZeros);
@@ -128,10 +131,10 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     arma::rowvec alpha = delta%allProbs.row(0);
 
     for(int i=1;i<allProbs.n_rows;i++) {
-	if(k<aInd.size() && i==aInd(k)-1) {
-	    k++;
-	    alpha = delta%allProbs.row(i);
-	}
+	    if(k<aInd.size() && i==aInd(k)-1) {
+	        k++;
+	        alpha = delta%allProbs.row(i);
+	    }
         gamma = trMat.slice(i);
         alpha = alpha*gamma%allProbs.row(i);
 
