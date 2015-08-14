@@ -5,9 +5,9 @@ An R package for animal movement modelling using hidden Markov models.
 
 1. Install package dependencies : CircStats, sp, Rcpp, RcppArmadillo (from CRAN, using `install.packages` for example).
 
-2. Install the package devtools from CRAN.
+2. Install the package devtools from CRAN, and load it.
 
-3. Install moveHMM from the GitHub repository using `install.github(TheoMichelot/moveHMM)`.
+3. Install moveHMM from the GitHub repository using `install.github("TheoMichelot/moveHMM")`.
 
 Alternatively, on Linux, you can :
 
