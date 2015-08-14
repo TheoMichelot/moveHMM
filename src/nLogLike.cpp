@@ -83,7 +83,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 
     for(int state=0;state<nbStates;state++) 
     {
-        for(int i=0;i<stepPar.n_rows;i++)
+        for(unsigned int i=0;i<stepPar.n_rows;i++)
             stepArgs(i) = stepPar(i,state);
 
         if(zeroInflation) {
@@ -115,7 +115,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	        stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
 
 	    if(angleDist!="none") {
-	        for(int i=0;i<anglePar.n_rows;i++)
+	        for(unsigned int i=0;i<anglePar.n_rows;i++)
 		        angleArgs(i) = anglePar(i,state);
 
 	        angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
@@ -130,7 +130,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     int k=1;
     arma::rowvec alpha = delta%allProbs.row(0);
 
-    for(int i=1;i<allProbs.n_rows;i++) {
+    for(unsigned int i=1;i<allProbs.n_rows;i++) {
 	    if(k<aInd.size() && i==aInd(k)-1) {
 	        k++;
 	        alpha = delta%allProbs.row(i);
