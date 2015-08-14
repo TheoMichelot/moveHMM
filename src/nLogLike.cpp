@@ -131,7 +131,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     arma::rowvec alpha = delta%allProbs.row(0);
 
     for(unsigned int i=1;i<allProbs.n_rows;i++) {
-	    if(k<aInd.size() && i==aInd(k)-1) {
+	    if(k<aInd.size() && i==(unsigned)(aInd(k)-1)) {
 	        k++;
 	        alpha = delta%allProbs.row(i);
 	    }

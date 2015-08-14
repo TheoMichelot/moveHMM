@@ -34,7 +34,7 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 
     for(int i=0;i<x.size();i++) {
 	    res(i) = R::dweibull(x(i),shape,scale,0);
-	    if(R_IsNA(res(i))) 
+        if(!arma::is_finite(res(i)))  
             res(i) = 1; // if missing observation
     }
 
@@ -49,7 +49,7 @@ arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 
     for(int i=0;i<x.size();i++) {
 	    res(i) = R::dlnorm(x(i),meanlog,sdlog,0);
-	    if(R_IsNA(res(i))) 
+        if(!arma::is_finite(res(i)))
             res(i) = 1; // if missing observation
     }
 
@@ -64,7 +64,7 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 
     for(int i=0;i<x.size();i++) {
 	    res(i) = R::dexp(x(i),1/rate,0); // R::dexp expects scale=1/rate
-	    if(R_IsNA(res(i))) 
+	    if(!arma::is_finite(res(i)))
             res(i) = 1; // if missing observation
     }
 
@@ -99,7 +99,7 @@ arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
     for(int i=0;i<x.size();i++) {
 	    den = (2*M_PI)*(1+rho*rho-2*rho*cos(x(i)-mu));
 	    res(i) = num/den;
-	    if(R_IsNA(res(i))) 
+	    if(!arma::is_finite(res(i)))  
             res(i) = 1; // if missing observation
     }
 
