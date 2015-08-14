@@ -1,7 +1,7 @@
 
 #' Matrix of all probabilities
 #'
-#' Used in the function viterbi.
+#' Used in functions viterbi, logAlpha, logBeta.
 #'
 #' @param data Object moveData.
 #' @param nbStates Number of states of the HMM.
@@ -13,9 +13,9 @@
 #' and one column for each state.
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
 #' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
-#' and one column for each state. Defaults to NULL if the turning angles distributions
+#' and one column for each state. Default : NULL ; if the turning angles distribution
 #' is not estimated.
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero. Default : FALSE.
 #'
 #' @return Matrix of all probabilities.
 #'

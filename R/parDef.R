@@ -9,10 +9,12 @@
 #' FALSE otherwise.
 #' @param zeroInflation TRUE if the step length distribution is inflated in zero.
 #'
-#' @return A list of three elements : parSize (= c(number of parameters of the step length
-#' distribution,number of parameters of the turning angle distribution)), bounds
-#' (matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
-#' bound for the correponding parameter), and parNames (names of parameters).
+#' @return A list of three elements :
+#' - parSize (= c(number of parameters of the step length distribution,
+#' number of parameters of the turning angle distribution)),
+#' - bounds (matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
+#' bound for the correponding parameter), and
+#' - parNames (names of parameters).
 
 parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
 {
@@ -72,7 +74,7 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
            if(estAngleMean) {
              parSize[2] <- 2
              # bounds are chosen such that the mean is not scaled, but the concentration is
-             # scaled from ]0,1[ to ]0,Inf[ (for computing c and y)
+             # scaled from ]0,1[ to ]0,Inf[ (for computing x and y)
              angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,1),nbStates)),
                                    ncol=2,byrow=TRUE)
              parNames <- c(parNames,"location","concentration")

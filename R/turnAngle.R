@@ -1,6 +1,8 @@
 
 #' Turning angle
 #'
+#' Used in prepData.
+#'
 #' @param x First point
 #' @param y Second point
 #' @param z Third point

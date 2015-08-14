@@ -1,6 +1,8 @@
 
 #' Backward log-probabilities
 #'
+#' Used in stateProbs.
+#'
 #' @param m A moveHMM object.
 #'
 #' @return The matrix of backward log-probabilities.

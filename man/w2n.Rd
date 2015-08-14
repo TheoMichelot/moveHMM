@@ -22,7 +22,7 @@ number of parameters of the turning angle distribution).}
 \item{estAngleMean}{TRUE if the angle mean is estimated, FALSE otherwise.}
 
 \item{stationary}{FALSE if there are covariates. If TRUE, the initial distribution is considered
-equal to the stationary distribution.}
+equal to the stationary distribution. Default : FALSE.}
 }
 \value{
 A list containing a vector of natural (constrained) parameters, as well as delta

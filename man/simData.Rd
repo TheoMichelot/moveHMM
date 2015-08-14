@@ -14,22 +14,23 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
 
 \item{nbStates}{Number of behavioural states to simulate.}
 
-\item{stepDist}{Name of the distribution from which to draw the step length values.
-Supported distributions are : gamma, weibull, lnorm, exp.}
+\item{stepDist}{Name of the distribution of the step lengths (as a character string).
+Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.}
 
-\item{angleDist}{Name of the distribution from which to draw the turning angle values.
+\item{angleDist}{Name of the distribution of the turning angles (as a character string).
 Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
-not be estimated.}
+not be estimated. Default : vm.}
 
 \item{stepPar}{Parameters of the step length distribution.}
 
 \item{anglePar}{Parameters of the turning angle distribution.}
 
-\item{beta}{Matrix of regression parameters for the transition probability matrix.}
+\item{beta}{Matrix of regression parameters for the transition probabilities.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default).}
 
-\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+\item{zeroInflation}{TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
+values for the zero-mass parameters should be included in stepPar.}
 
 \item{obsPerAnimal}{Bounds of the number of observations per animal. Default : (500,1500).}
 }
@@ -37,7 +38,7 @@ not be estimated.}
 An object moveData
 }
 \description{
-Simulation tool
+Simulates movement data from an HMM.
 }
 \examples{
 stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2

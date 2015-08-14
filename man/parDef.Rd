@@ -20,10 +20,12 @@ FALSE otherwise.}
 \item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
 }
 \value{
-A list of three elements : parSize (= c(number of parameters of the step length
-distribution,number of parameters of the turning angle distribution)), bounds
-(matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
-bound for the correponding parameter), and parNames (names of parameters).
+A list of three elements :
+- parSize (= c(number of parameters of the step length distribution,
+number of parameters of the turning angle distribution)),
+- bounds (matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
+bound for the correponding parameter), and
+- parNames (names of parameters).
 }
 \description{
 Parameters definition

@@ -16,6 +16,8 @@ print.moveHMM <- function(x,...)
   nbStates <- ncol(m$mle$stepPar)
   p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$zeroInflation)
 
+  cat("Value of the maximum likelihood :",-m$mod$minimum,"\n\n")
+
   cat("Step length parameters :\n")
   cat("----------------------\n")
   for(i in 1:nrow(m$mle$stepPar)) {

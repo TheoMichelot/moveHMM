@@ -1,7 +1,7 @@
 
 #' Viterbi algorithm
 #'
-#' Reconstructs the most probable states sequence.
+#' Reconstructs the most probable states sequence. Is included in fitHMM.
 #'
 #' @param data An object moveData.
 #' @param nbStates Number of states of the HMM.

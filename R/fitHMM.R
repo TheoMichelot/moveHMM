@@ -4,25 +4,35 @@
 #' @param nbStates Number of states of the HMM.
 #' @param data An object moveData.
 #' @param stepPar0 Vector of initial state-dependent step length distribution parameters.
+#' The parameters should be in the order expected by the pdf of stepDist, and the (optional) zero-mass
+#' parameter should be the last. For example, for a 2-state model using the Gamma (gamma) distribution and
+#' including zero-inflation, the vector of initial parameters would be something like :
+#' c(mu1,mu2,sigma1,sigma2,zeromass1,zeromass2).
 #' @param anglePar0 Vector of initial state-dependent turning angle distribution parameters.
-#' @param beta0 Initial matrix of regression coefficients for the transition probability matrix.
-#' @param delta0 Initial stationary distribution.
-#' @param formula Regression formula for the covariates. Default : ~1 (no covariate).
-#' @param stepDist Name of the distribution of the step lengths.
-#' Supported distributions are : gamma, weibull, lnorm, exp.
-#' @param angleDist Name of the distribution of the turning angles.
+#' The parameters should be in the order expected by the pdf of angleDist. For example, for a 2-state
+#' model using the Von Mises (vm) distribution, the vector of initial parameters would be something like :
+#' c(mu1,mu2,kappa1,kappa2).
+#' @param beta0 Initial matrix of regression coefficients for the transition probabilities. Default : NULL.
+#' If not specified, beta0 is initialized such that the diagonal elements of the transition probability
+#' matrix are dominant.
+#' @param delta0 Initial value for the initial distribution of the HMM. Default : rep(1/nbStates,nbStates).
+#' @param formula Regression formula for the covariates. Default : ~1 (no covariate effect).
+#' @param stepDist Name of the distribution of the step lengths (as a character string).
+#' Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.
+#' @param angleDist Name of the distribution of the turning angles (as a character string).
 #' Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
-#' not be estimated.
-#' @param angleMean Vector of state-dependent turning angles means. It defaults to NULL,
-#' i.e. the means should be estimated.
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' not be estimated. Default : vm.
+#' @param angleMean Vector of means of turning angles if not estimated (one for each state).
+#' Default : NULL (the angle mean is estimated).
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
+#' initial values for the zero-mass parameters should be included in stepPar0.
 #' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
-#' equal to the stationary distribution.
+#' equal to the stationary distribution. Default : FALSE.
 #' @param verbose Determines the print level of the optimizer. The default value of 0 means that no
 #' printing occurs, a value of 1 means that the first and last iterations of the optimization are
 #' detailed, and a value of 2 means that each iteration of the optimization is detailed.
 #'
-#' @return The MLE of the parameters of the model.
+#' @return A moveHMM object, including the MLE of the model parameters.
 #' @examples
 #' ### 1. simulate data
 #' # define all the arguments of simData
@@ -48,12 +58,12 @@
 #' mu0 <- c(20,70)
 #' sigma0 <- c(10,30)
 #' kappa0 <- c(1,1)
-#' stepPar0 <- c(mu0,sigma0)
-#' anglePar0 <- kappa0
+#' stepPar0 <- c(mu0,sigma0) # no zero-inflation, so no zero-mass included
+#' anglePar0 <- kappa0 # the angle mean is not estimated, so only the concentration parameter is needed
 #' formula <- ~cov1+cos(cov2)
 #'
-#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,NULL,NULL,formula,
-#'               "gamma","vm",angleMean,zeroInflation,verbose=2)
+#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
+#'               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
@@ -120,6 +130,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   estAngleMean <- (is.null(angleMean) & angleDist!="none")
 
+  # build the vector of working parameters
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates,estAngleMean)
 
   # this function is used to muffle the warning "NA/Inf replaced by maximum positive value" in nlm
@@ -136,6 +147,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                                  hessian=TRUE),
                       warning=h) # filter warnings using function h
 
+  # convert the parameters back to their natural scale
   mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 
   if(stationary) {
@@ -143,9 +155,12 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     mle$delta <- solve(t(diag(nbStates)-gamma+1),rep(1,nbStates))
   }
 
-  if(!is.null(angleMean) & angleDist!="none")
+  if(!is.null(angleMean) & angleDist!="none") {
     mle$anglePar <- rbind(angleMean,mle$anglePar)
+    rownames(mle$anglePar) <- NULL # remove rbind row name
+  }
 
+  # decode the sequence of states
   states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
                     angleMean,zeroInflation)
 

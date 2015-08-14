@@ -21,23 +21,24 @@ number of parameters of the turning angle distribution).}
 
 \item{data}{An object moveData.}
 
-\item{stepDist}{Name of the distribution of the step lengths.
-Supported distributions are : gamma, weibull, lnorm, exp.}
+\item{stepDist}{Name of the distribution of the step lengths (as a character string).
+Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.}
 
-\item{angleDist}{Name of the distribution of the turning angles.
+\item{angleDist}{Name of the distribution of the turning angles (as a character string).
 Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
-not be estimated.}
+not be estimated. Default : vm.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
-Defaults to NULL.}
+Default : NULL (the angle mean is estimated).}
 
-\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+\item{zeroInflation}{TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
+initial values for the zero-mass parameters should be included in stepPar0.}
 
 \item{stationary}{FALSE if there are covariates. If TRUE, the initial distribution is considered
-equal to the stationary distribution.}
+equal to the stationary distribution. Default : FALSE.}
 }
 \value{
-The negative log-likelihood of wpar given data.
+The negative log-likelihood of the parameters given the data.
 }
 \description{
 Negative log-likelihood function

@@ -5,10 +5,16 @@
 #' @param x Object moveHMM
 #' @param ask If TRUE, the execution pauses between each plot.
 #' @param animals Vector of indices of animals for which information will be plotted.
-#' Defaults to NULL, i.e. all animals are plotted.
+#' Default : NULL ; all animals are plotted.
 #' @param breaks Histogram parameter. See hist documentation.
-#' @param hist.ylim Histogram parameter. See hist documentation.
+#' @param hist.ylim Parameter ylim for the step length histograms. See hist documentation.
+#' Default : NULL ; the function sets default values.
 #' @param ... Currently unused. For compatibility with generic method.
+#'
+#' @examples
+#' m <- ex$mod # moveHMM object, as returned by fitHMM
+#'
+#' plot(m,ask=TRUE,animals=1,breaks=20)
 
 plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL,...)
 {
@@ -29,6 +35,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
   if(!is.null(hist.ylim) & length(hist.ylim)!=2)
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
+  # proportion of each state in the states sequence returned by the Viterbi algorithm
   w <- rep(NA,nbStates)
   for(state in 1:nbStates)
     w[state] <- length(which(m$states==state))/length(m$states)
@@ -48,7 +55,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
       ind <- which(m$data$ID==ID)
 
       # Histogram of step lengths
-      if(is.null(hist.ylim)) {
+      if(is.null(hist.ylim)) { # default
         ymin <- 0
         h <- hist(m$data$step[ind],plot=F)
         ymax <- 1.5*max(h$density)
@@ -75,6 +82,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
           stepArgs[[2]] <- shape
           stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
         }
+        # add state-dependent densities to the histogram
+        # (weighted by the proportion of each state in the Viterbi states sequence)
         if(m$zeroInflation)
           lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
         else
@@ -100,7 +109,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
 
       # Histogram of step lengths
-      if(is.null(hist.ylim)) {
+      if(is.null(hist.ylim)) { # default
         ymin <- 0
         h <- hist(m$data$step[ind],plot=F)
         ymax <- 1.5*max(h$density)
@@ -114,7 +123,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
-        # Constitute the lists of state-dependent parameters for the step and angle
+        # Constitute the lists of state-dependent parameters for the step
         stepArgs <- list(grid)
 
         for(j in 1:nrow(m$mle$stepPar))
@@ -127,6 +136,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
           stepArgs[[2]] <- shape
           stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
         }
+        # add state-dependent densities to the histogram
+        # (weighted by the proportion of each state in the Viterbi states sequence)
         if(m$zeroInflation)
           lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
         else
@@ -142,11 +153,14 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
       grid <- seq(-pi,pi,length=1000)
 
       for(state in 1:nbStates) {
+        # Constitute the lists of state-dependent parameters for the angle
         angleArgs <- list(grid)
 
         for(j in 1:nrow(m$mle$anglePar))
           angleArgs[[j+1]] <- m$mle$anglePar[j,state]
 
+        # add state-dependent densities to the histogram
+        # (weighted by the proportion of each state in the Viterbi states sequence)
         if(m$zeroInflation)
           lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
         else
@@ -184,7 +198,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
     }
   }
 
-  # back to default
+  # set the graphical parameters back to default
   par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)) # bottom, left, top, right
   par(ask=FALSE)

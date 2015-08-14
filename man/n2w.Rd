@@ -12,9 +12,9 @@ n2w(par, bounds, beta, delta = NULL, nbStates, estAngleMean)
 \item{bounds}{Matrix with 2 columns and as many rows as there are elements in par. Each row
 contains the lower and upper bound for the correponding parameter.}
 
-\item{beta}{Matrix of regression coefficients for the transition probability matrix.}
+\item{beta}{Matrix of regression coefficients for the transition probabilities.}
 
-\item{delta}{Stationary distribution.}
+\item{delta}{Initial distribution. Default : NULL ; if the initial distribution is not estimated.}
 
 \item{nbStates}{The number of states of the HMM.}
 
@@ -30,11 +30,15 @@ unconstrained optimization. Used during the optimization of the log-likelihood.
 \examples{
 nbStates <- 3
 par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
-bounds <- matrix(c(0,1,0,1,0,1,
-                   0,Inf,0,Inf,0,Inf),
+bounds <- matrix(c(0,1, # bounds for first parameter
+                   0,1, # bounds for second parameter
+                   0,1, # ...
+                   0,Inf,
+                   0,Inf,
+                   0,Inf),
                  byrow=TRUE,ncol=2)
 beta <- matrix(rnorm(18),ncol=6,nrow=3)
 delta <- c(0.6,0.3,0.1)
-print(n2w(par,bounds,beta,delta,nbStates,FALSE))
+wpar <- n2w(par,bounds,beta,delta,nbStates,FALSE) # vector of working parameters
 }
 

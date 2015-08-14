@@ -1,18 +1,21 @@
 
 #' Simulation tool
 #'
+#' Simulates movement data from an HMM.
+#'
 #' @param nbAnimals Number of observed individuals to simulate.
 #' @param nbStates Number of behavioural states to simulate.
-#' @param stepDist Name of the distribution from which to draw the step length values.
-#' Supported distributions are : gamma, weibull, lnorm, exp.
-#' @param angleDist Name of the distribution from which to draw the turning angle values.
+#' @param stepDist Name of the distribution of the step lengths (as a character string).
+#' Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.
+#' @param angleDist Name of the distribution of the turning angles (as a character string).
 #' Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
-#' not be estimated.
+#' not be estimated. Default : vm.
 #' @param stepPar Parameters of the step length distribution.
 #' @param anglePar Parameters of the turning angle distribution.
-#' @param beta Matrix of regression parameters for the transition probability matrix.
+#' @param beta Matrix of regression parameters for the transition probabilities.
 #' @param nbCovs Number of covariates to simulate (0 by default).
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
+#' values for the zero-mass parameters should be included in stepPar.
 #' @param obsPerAnimal Bounds of the number of observations per animal. Default : (500,1500).
 #'
 #' @return An object moveData
@@ -148,8 +151,10 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
         stepArgs[[3]] <- 1/scale # rgamma expects rate=1/scale
       }
 
-      if(runif(1)>zeroMass[Z[k]]) len <- do.call(stepFun,stepArgs)
-      else len <- 0
+      if(runif(1)>zeroMass[Z[k]])
+        len <- do.call(stepFun,stepArgs)
+      else
+        len <- 0
 
       if(angleDist!="none")
         phi <- phi + do.call(angleFun,angleArgs)
@@ -191,11 +196,13 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       }
     }
 
-    if(angleDist=="none") a <- rep(NA,nbObs)
+    if(angleDist=="none")
+      a <- rep(NA,nbObs)
     d <- data.frame(ID=trackData$ID[ind],step=s,angle=a,x=x,y=y)
     data <- rbind(data,d)
   }
 
-  if(nbCovs>0) data <- cbind(data,allCovs)
+  if(nbCovs>0)
+    data <- cbind(data,allCovs)
   return(moveData(data))
 }

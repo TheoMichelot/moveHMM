@@ -1,7 +1,7 @@
 
 #' Example data simulation
 #'
-#' Generate the file data/example.RData, used in other functions' examples and unit tests.
+#' Generate the file data/ex.RData, used in other functions' examples and unit tests.
 
 exGen <- function()
 {
@@ -28,7 +28,7 @@ exGen <- function()
   data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,NULL,nbCovs,zeroInflation,
                   obsPerAnimal)
 
-  # estimation
+  # estimate model
   mu0 <- c(20,70)
   sigma0 <- c(10,30)
   kappa0 <- c(1,1)

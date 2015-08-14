@@ -13,7 +13,7 @@
 #' @param nbCovs The number of covariates.
 #' @param estAngleMean TRUE if the angle mean is estimated, FALSE otherwise.
 #' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
-#' equal to the stationary distribution.
+#' equal to the stationary distribution. Default : FALSE.
 #'
 #' @return A list containing a vector of natural (constrained) parameters, as well as delta
 #' and beta.
@@ -34,6 +34,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 {
   if(nbStates<1) stop("Number of states must be 1 at least.")
 
+  # identify initial distribution parameters
   if(!stationary) {
     foo <- length(wpar)-nbStates+2
     delta <- wpar[foo:length(wpar)]
@@ -43,6 +44,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   }
   else delta <- NULL
 
+  # identify regression coefficients for the transition probabilities
   foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
   beta <- wpar[foo:length(wpar)]
   beta <- matrix(beta,nrow=nbCovs+1)

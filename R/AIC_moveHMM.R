@@ -1,10 +1,13 @@
 
 #' AIC
+#'
+#' Akaike information criterion of a moveHMM model.
+#'
 #' @method AIC moveHMM
 #'
 #' @param object A moveHMM object.
 #' @param ... Currently unused. For compatibility with generic method.
-#' @param k Penalty per parameter (default k=2 for classical AIC).
+#' @param k Penalty per parameter. Default : 2 ; for classical AIC.
 #'
 #' @return The AIC of the fitted model.
 

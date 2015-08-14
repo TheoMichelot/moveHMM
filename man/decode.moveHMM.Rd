@@ -10,7 +10,7 @@
 \item{m}{moveHMM object}
 }
 \value{
-List of : sp (state probabilities), ...
+List of : sp (state probabilities), res (pseudo-residuals),...
 }
 \description{
 Decode the model
@@ -19,5 +19,7 @@ Decode the model
 m <- ex$mod # moveHMM object (returned by fitHMM)
 
 dec <- decode(m)
+dec$sp # state probabilities
+dec$res # pseudo-residuals
 }
 

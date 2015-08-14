@@ -8,18 +8,19 @@
 #' @param parSize Vector of two values : c(number of parameters of the step length distribution,
 #' number of parameters of the turning angle distribution).
 #' @param data An object moveData.
-#' @param stepDist Name of the distribution of the step lengths.
-#' Supported distributions are : gamma, weibull, lnorm, exp.
-#' @param angleDist Name of the distribution of the turning angles.
+#' @param stepDist Name of the distribution of the step lengths (as a character string).
+#' Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.
+#' @param angleDist Name of the distribution of the turning angles (as a character string).
 #' Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
-#' not be estimated.
+#' not be estimated. Default : vm.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
-#' Defaults to NULL.
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' Default : NULL (the angle mean is estimated).
+#' @param zeroInflation TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
+#' initial values for the zero-mass parameters should be included in stepPar0.
 #' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
-#' equal to the stationary distribution.
+#' equal to the stationary distribution. Default : FALSE.
 #'
-#' @return The negative log-likelihood of wpar given data.
+#' @return The negative log-likelihood of the parameters given the data.
 #'
 #' @examples
 #' data <- ex$data # movement data (as returned by prepData or simData)
@@ -45,7 +46,8 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   # check arguments
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
-  if(nbStates<1) stop("nbStates must be at least 1.")
+  if(nbStates<1)
+    stop("nbStates must be at least 1.")
 
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
@@ -62,12 +64,15 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     stop("Wrong number of parameters in wpar.")
   if(stationary & (length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)))
     stop("Wrong number of parameters in wpar.")
-  if(length(data)<1) stop("The data input is empty.")
+  if(length(data)<1)
+    stop("The data input is empty.")
 
-  if(is.null(data$step)) stop("Missing field(s) in data.")
+  if(is.null(data$step))
+    stop("Missing field(s) in data.")
 
   estAngleMean <- (is.null(angleMean) & angleDist!="none")
 
+  # convert the parameters back to their natural scale
   par <- w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 
   if(!is.null(angleMean) & angleDist!="none") # if the turning angles' mean is not estimated
@@ -77,11 +82,13 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   covs <- data[,covsCol]
 
   nbAnimals <- length(unique(data$ID))
+
+  # aInd = list of indices of first observation for each animal
   aInd <- NULL
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
-  # NULL doesn't suit C++
+  # NULL arguments don't suit C++
   if(angleDist=="none")
     par$anglePar <- matrix(NA)
   if(stationary)

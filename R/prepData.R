@@ -49,12 +49,14 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     i2 <- i1+nbObs-1
     for(i in (i1+1):(i2-1)) {
       if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(y[i-1]) & !is.na(y[i])) {
+        # step length
         step[i-i1+1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
                                   pt = c(x[i],y[i]),
                                   longlat = (type=='GCD')) # TRUE if 'GCD', FALSE otherwise
       }
 
       if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(x[i+1]) & !is.na(y[i-1]) & !is.na(y[i]) & !is.na(y[i+1])) {
+        # turning angle
         angle[i-i1+1] <- turnAngle(c(x[i-1],y[i-1]),
                                    c(x[i],y[i]),
                                    c(x[i+1],y[i+1]))
@@ -62,12 +64,15 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     }
     step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
 
+    # d = data for one individual
     d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
                     step=step,
                     angle=angle)
+    # append individual data to output
     data <- rbind(data,d)
   }
 
+  # identify covariate columns
   covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
   if(length(covsCol)>0) {
     covs <- data.frame(trackData[,covsCol]) # to prevent error if nbCovs==1
@@ -91,6 +96,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     }
   }
   else covs <- NULL
+
   data <- cbind(data,x=trackData$x,y=trackData$y)
   if(!is.null(covs)) data <- cbind(data,covs)
   return(moveData(data))

@@ -24,6 +24,8 @@ pseudoRes.moveHMM <- function(m)
   data <- m$data
   nbObs <- nrow(data)
   nbStates <- ncol(m$mle$stepPar)
+
+  # forward log-probabilities
   la <- logAlpha(m)
 
   stepRes <- rep(NA,nbObs)
@@ -75,7 +77,7 @@ pseudoRes.moveHMM <- function(m)
 
   for(i in 2:nbObs) {
     gamma <- trMat[,,i]
-    c <- max(la[i-1,])
+    c <- max(la[i-1,]) # cancels below ; prevents numerical errors
     a <- exp(la[i-1,]-c)
 
     if(!is.na(data$step[i]))

@@ -19,9 +19,9 @@ stateProbs.moveHMM <- function(m)
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
   nbObs <- nrow(data)
-  la <- logAlpha(m)
-  lb <- logBeta(m)
-  c <- max(la[nbObs,])
+  la <- logAlpha(m) # forward log-probabilities
+  lb <- logBeta(m) # backward log-probabilities
+  c <- max(la[nbObs,]) # cancels out below ; prevents numerical errors
   llk <- c + log(sum(exp(la[nbObs,]-c)))
   stateProbs <- matrix(NA,nbObs,nbStates)
 

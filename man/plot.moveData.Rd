@@ -2,9 +2,10 @@
 % Please edit documentation in R/plot_moveData.R
 \name{plot.moveData}
 \alias{plot.moveData}
-\title{Plot function for a moveData object}
+\title{Plot function for the moveData class}
 \usage{
-\method{plot}{moveData}(x, compact = FALSE, breaks = "Sturges", ...)
+\method{plot}{moveData}(x, compact = FALSE, ask = TRUE,
+  breaks = "Sturges", ...)
 }
 \arguments{
 \item{x}{An object moveData}
@@ -12,11 +13,18 @@
 \item{compact}{TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
 individual at a time)}
 
+\item{ask}{If TRUE, the execution pauses between each plot.}
+
 \item{breaks}{Histogram parameter. See hist documentation.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
-Plot function for a moveData object
+Plot function for the moveData class
+}
+\examples{
+data <- ex$data # moveData object, as returned by prepData or simData
+
+plot(data,compact=TRUE,breaks=20,ask=FALSE)
 }
 

@@ -13,7 +13,7 @@ logAlpha(m)
 The matrix of forward log-probabilities.
 }
 \description{
-Forward log-probabilities
+Used in stateProbs and pseudoRes.
 }
 \examples{
 m <- ex$mod # moveHMM object (returned by fitHMM)

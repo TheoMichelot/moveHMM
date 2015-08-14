@@ -11,12 +11,12 @@
 
 \item{...}{Currently unused. For compatibility with generic method.}
 
-\item{k}{Penalty per parameter (default k=2 for classical AIC).}
+\item{k}{Penalty per parameter. Default : 2 ; for classical AIC.}
 }
 \value{
 The AIC of the fitted model.
 }
 \description{
-AIC
+Akaike information criterion of a moveHMM model.
 }
 

@@ -13,7 +13,7 @@ logBeta(m)
 The matrix of backward log-probabilities.
 }
 \description{
-Backward log-probabilities
+Used in stateProbs.
 }
 \examples{
 m <- ex$mod # moveHMM object (returned by fitHMM)

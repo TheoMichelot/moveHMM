@@ -1,6 +1,8 @@
 
 #' Forward log-probabilities
 #'
+#' Used in stateProbs and pseudoRes.
+#'
 #' @param m A moveHMM object.
 #'
 #' @return The matrix of forward log-probabilities.

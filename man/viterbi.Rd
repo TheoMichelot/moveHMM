@@ -34,7 +34,7 @@ Defaults to NULL.}
 The sequence of most probable states.
 }
 \description{
-Reconstructs the most probable states sequence.
+Reconstructs the most probable states sequence. Is included in fitHMM.
 }
 \examples{
 data <- ex$data

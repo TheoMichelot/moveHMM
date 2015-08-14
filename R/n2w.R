@@ -7,8 +7,8 @@
 #' @param par Vector of state-dependent distributions parameters.
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in par. Each row
 #' contains the lower and upper bound for the correponding parameter.
-#' @param beta Matrix of regression coefficients for the transition probability matrix.
-#' @param delta Stationary distribution.
+#' @param beta Matrix of regression coefficients for the transition probabilities.
+#' @param delta Initial distribution. Default : NULL ; if the initial distribution is not estimated.
 #' @param nbStates The number of states of the HMM.
 #' @param estAngleMean TRUE if the angle mean is estimated, FALSE otherwise.
 #'
@@ -16,12 +16,16 @@
 #' @examples
 #' nbStates <- 3
 #' par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
-#' bounds <- matrix(c(0,1,0,1,0,1,
-#'                    0,Inf,0,Inf,0,Inf),
+#' bounds <- matrix(c(0,1, # bounds for first parameter
+#'                    0,1, # bounds for second parameter
+#'                    0,1, # ...
+#'                    0,Inf,
+#'                    0,Inf,
+#'                    0,Inf),
 #'                  byrow=TRUE,ncol=2)
 #' beta <- matrix(rnorm(18),ncol=6,nrow=3)
 #' delta <- c(0.6,0.3,0.1)
-#' print(n2w(par,bounds,beta,delta,nbStates,FALSE))
+#' wpar <- n2w(par,bounds,beta,delta,nbStates,FALSE) # vector of working parameters
 
 n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
 {
