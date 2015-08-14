@@ -125,7 +125,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     }
 
     for(int i=0;i<30;i++)
-        cout << allProbs(i,0) << ", " << allProbs(i,1) << endl;
+        Rcout << allProbs(i,0) << ", " << allProbs(i,1) << endl;
 
     // 3. Forward algorithm
     arma::mat gamma(nbStates,nbStates);
