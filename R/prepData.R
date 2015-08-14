@@ -40,13 +40,17 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
     i1 <- which(ID==unique(ID)[zoo])[1]
     i2 <- i1+nbObs-1
     for(i in (i1+1):(i2-1)) {
-      step[i-i1+1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
-                              pt = c(x[i],y[i]),
-                              longlat = (type=='GCD')) # TRUE if 'GCD', FALSE otherwise
+      if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(y[i-1]) & !is.na(y[i])) {
+        step[i-i1+1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
+                                  pt = c(x[i],y[i]),
+                                  longlat = (type=='GCD')) # TRUE if 'GCD', FALSE otherwise
+      }
 
-      angle[i-i1+1] <- turnAngle(c(x[i-1],y[i-1]),
-                                 c(x[i],y[i]),
-                                 c(x[i+1],y[i+1]))
+      if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(x[i+1]) & !is.na(y[i-1]) & !is.na(y[i]) & !is.na(y[i+1])) {
+        angle[i-i1+1] <- turnAngle(c(x[i-1],y[i-1]),
+                                   c(x[i],y[i]),
+                                   c(x[i+1],y[i+1]))
+      }
     }
     step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
 
