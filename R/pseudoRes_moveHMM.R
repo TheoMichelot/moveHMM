@@ -19,7 +19,9 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 pseudoRes.moveHMM <- function(m)
 {
   stepFun <- paste("p",m$stepDist,sep="")
-  angleFun <- paste("d",m$angleDist,sep="") # integrated below
+  angleDist <- m$angleDist
+  if(angleDist!="none")
+    angleFun <- paste("d",angleDist,sep="") # integrated below
 
   data <- m$data
   nbObs <- nrow(data)
@@ -29,9 +31,16 @@ pseudoRes.moveHMM <- function(m)
   la <- logAlpha(m)
 
   stepRes <- rep(NA,nbObs)
-  angleRes <- rep(NA,nbObs)
   pStepMat <- matrix(NA,nbObs,nbStates)
-  pAngleMat <- matrix(NA,nbObs,nbStates)
+
+  if(angleDist!="none") {
+    angleRes <- rep(NA,nbObs)
+    pAngleMat <- matrix(NA,nbObs,nbStates)
+  }
+  else {
+    angleRes <- NULL
+    pAngleMat <- NULL
+  }
 
   for(state in 1:nbStates) {
     # define lists of parameters
@@ -46,27 +55,32 @@ pseudoRes.moveHMM <- function(m)
       stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
     }
 
-    angleArgs <- list(angleFun,-pi,data$angle[1]) # to pass to function "integrate" below
-    for(k in 1:nrow(m$mle$anglePar))
-      angleArgs[[k+3]] <- m$mle$anglePar[k,state]
+    if(angleDist!="none") {
+      angleArgs <- list(angleFun,-pi,data$angle[1]) # to pass to function "integrate" below
+      for(k in 1:nrow(m$mle$anglePar))
+        angleArgs[[k+3]] <- m$mle$anglePar[k,state]
 
-    for(i in 1:nbObs) {
-      if(!is.na(data$step[i])) {
-        stepArgs[[1]] <- data$step[i]
-        pStepMat[i,state] <- do.call(stepFun,stepArgs)
-      }
+      for(i in 1:nbObs) {
+        if(!is.na(data$step[i])) {
+          stepArgs[[1]] <- data$step[i]
+          pStepMat[i,state] <- do.call(stepFun,stepArgs)
+        }
 
-      if(!is.na(data$angle[i])) {
-        angleArgs[[3]] <- data$angle[i]
-        pAngleMat[i,state] <- do.call(integrate,angleArgs)$value
+        if(!is.na(data$angle[i])) {
+          angleArgs[[3]] <- data$angle[i]
+          pAngleMat[i,state] <- do.call(integrate,angleArgs)$value
+        }
       }
     }
   }
 
   if(!is.na(data$step[1]))
     stepRes[1] <- qnorm(t(m$mle$delta)%*%pStepMat[1,])
-  if(!is.na(data$angle[1]))
-    angleRes[1] <- qnorm(t(m$mle$delta)%*%pAngleMat[1,])
+
+  if(angleDist!="none") {
+    if(!is.na(data$angle[1]))
+      angleRes[1] <- qnorm(t(m$mle$delta)%*%pAngleMat[1,])
+  }
 
   # define covariates
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
@@ -82,8 +96,11 @@ pseudoRes.moveHMM <- function(m)
 
     if(!is.na(data$step[i]))
       stepRes[i] <-qnorm(t(a)%*%(gamma/sum(a))%*%pStepMat[i,])
-    if(!is.na(data$angle[i]))
-      angleRes[i] <- qnorm(t(a)%*%(gamma/sum(a))%*%pAngleMat[i,])
+
+    if(angleDist!="none") {
+      if(!is.na(data$angle[i]))
+        angleRes[i] <- qnorm(t(a)%*%(gamma/sum(a))%*%pAngleMat[i,])
+    }
   }
 
   return(list(stepRes=stepRes,angleRes=angleRes))
