@@ -90,6 +90,13 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   trackData <- NULL
   allCovs <- NULL
 
+  # build the data frame to be returned
+  data <- data.frame(ID=character(),
+                     step=numeric(),
+                     angle=numeric(),
+                     x=numeric(),
+                     y=numeric())
+
   for (zoo in 1:nbAnimals) {
     if(obsPerAnimal[1]!=obsPerAnimal[2])
       nbObs <- sample(obsPerAnimal[1]:obsPerAnimal[2],1)
@@ -132,16 +139,19 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     X[1,] <- c(0,0) # initial position of animal
 
     phi <- 0
+    s <- rep(NA,nbObs)
+    a <- rep(NA,nbObs)
+
     # simulate movement path
     for (k in 1:(nbObs-1)){
       # prepare lists of arguments for step and angle distributions
       stepArgs <- list(1) ; angleArgs <- list(1) # first argument = 1 (one random draw)
       for(j in 1:nrow(stepPar))
-          stepArgs[[j+1]] <- stepPar[j,Z[k]]
+        stepArgs[[j+1]] <- stepPar[j,Z[k]]
 
       if(angleDist!="none") {
         for(j in 1:nrow(anglePar))
-            angleArgs[[j+1]] <- anglePar[j,Z[k]]
+          angleArgs[[j+1]] <- anglePar[j,Z[k]]
       }
 
       if(stepDist=="gamma") {
@@ -152,53 +162,26 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       }
 
       if(runif(1)>zeroMass[Z[k]])
-        len <- do.call(stepFun,stepArgs)
+        s[k] <- do.call(stepFun,stepArgs)
       else
-        len <- 0
+        s[k] <- 0
 
-      if(angleDist!="none")
-        phi <- phi + do.call(angleFun,angleArgs)
+      if(angleDist!="none" & s[k]>0) {
+        a[k] <- do.call(angleFun,angleArgs)
+        if(a[k] >  pi) a[k] <- a[k]-2*pi
+        if(a[k] < -pi) a[k] <- a[k]+2*pi
+        phi <- phi + a[k]
+      }
+      else if(s[k]==0) {
+        a[k] <- NA # angle = NA if step = 0
+      }
 
-      m <- len*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
+      m <- s[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
       X[k+1,] <- X[k,] + m
     }
 
-    d <- data.frame(ID=rep(zoo,nbObs),x=X[,1],y=X[,2])
-    trackData <- rbind(trackData,d)
-  }
-
-  # build the data frame to be returned
-  data <- data.frame(ID=character(),
-                     step=numeric(),
-                     angle=numeric(),
-                     x=numeric(),
-                     y=numeric())
-
-  for (zoo in 1:nbAnimals) {
-    ind <- which(trackData$ID==unique(trackData$ID)[zoo])
-    nbObs <- length(ind)
-
-    s <- rep(NA,nbObs)
-    a <- rep(NA,nbObs)
-    compDir <- rep(NA,nbObs)
-
-    for(k in 1:(nbObs-1)) {
-      x <- trackData$x[ind]
-      y <- trackData$y[ind]
-      s[k] <- sqrt((x[k+1]-x[k])^2+(y[k+1]-y[k])^2) # euclidean distance
-      coo <- c(x[k+1],y[k+1])-c(x[k],y[k])
-      compDir[k] <- Arg(coo[1]+1i*coo[2]) # compass direction
-      if (k!=1){
-        a[k] <- compDir[k]-compDir[k-1]
-        # angles between -pi and pi
-        if(a[k] >  pi) a[k] <- a[k]-2*pi
-        if(a[k] < -pi) a[k] <- a[k]+2*pi
-      }
-    }
-
-    if(angleDist=="none")
-      a <- rep(NA,nbObs)
-    d <- data.frame(ID=trackData$ID[ind],step=s,angle=a,x=x,y=y)
+    a[1] <- NA # the first angle value is arbitrary
+    d <- data.frame(ID=rep(zoo,nbObs),step=s,angle=a,x=X[,1],y=X[,2])
     data <- rbind(data,d)
   }
 
