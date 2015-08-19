@@ -48,6 +48,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
   beta <- wpar[foo:length(wpar)]
   beta <- matrix(beta,nrow=nbCovs+1)
+
   wpar <- wpar[-(foo:length(wpar))]
 
   if(estAngleMean) {
@@ -58,13 +59,14 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 
     # compute natural parameters for the angle distribution
     angleMean <- Arg(x+1i*y)
-    con <- sqrt(x^2+y^2)
+    kappa <- sqrt(x^2+y^2)
     # to scale them if necessary (see parDef)
     wpar[(foo-nbStates):(foo-1)] <- angleMean
-    wpar[foo:length(wpar)] <- con
+    wpar[foo:length(wpar)] <- kappa
   }
 
   nbPar <- length(wpar)/nbStates
+
   if(nbPar!=sum(parSize)) stop("Wrong number of parameters.")
   par <- NULL
   for(i in 1:nbPar) {

@@ -57,11 +57,11 @@ n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
     # identify angle distribution parameters
     foo <- length(wpar)-nbStates+1
     angleMean <- wpar[(foo-nbStates):(foo-1)]
-    con <- wpar[foo:length(wpar)]
+    kappa <- wpar[foo:length(wpar)]
 
     # compute the working parameters for the angle distribution
-    x <- con*cos(angleMean)
-    y <- con*sin(angleMean)
+    x <- kappa*cos(angleMean)
+    y <- kappa*sin(angleMean)
 
     wpar[(foo-nbStates):(foo-1)] <- x
     wpar[foo:length(wpar)] <- y
