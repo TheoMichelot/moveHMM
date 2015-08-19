@@ -21,6 +21,9 @@ deltaMethod <- function(m) UseMethod("deltaMethod") # define generic method delt
 
 deltaMethod.moveHMM <- function(m)
 {
+    if(m$angleDist=="none")
+      stop("No angle parameter estimated.")
+
     wpar <- m$mod$estimate
     nbStates <- ncol(m$mle$stepPar)
 
