@@ -69,19 +69,46 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
                    angleMean=NULL,zeroInflation=FALSE,stationary=FALSE,verbose=0)
 {
+  # build design matrix
+  covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
+                     names(data)!="step" & names(data)!="angle")
+  covs <- model.matrix(formula,data)
+
+  if(length(covsCol)>0) data <- cbind(data[-covsCol],covs)
+  else data <- cbind(data,covs)
+  nbCovs <- ncol(covs)-1 # substract intercept column
+
   # check arguments
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
   if(nbStates<0) stop("nbStates should be at least 1.")
   if(length(data)<1) stop("The data input is empty.")
-  if(is.null(data$step)) stop("Missing field(s) in data.")
+  if(is.null(data$step)) stop("Missing field in data : step.")
 
   par0 <- c(stepPar0,anglePar0)
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
   bounds <- p$bounds
   parSize <- p$parSize
-  if(sum(parSize)*nbStates!=length(par0))
-    stop("Wrong number of initial parameters.")
+  if(sum(parSize)*nbStates!=length(par0)) {
+    error <- "Wrong number of initial parameters."
+    if(parSize[1]*nbStates!=length(stepPar0))
+      error <- paste(error,": there should be",parSize[1]*nbStates,"initial step parameters.")
+    if(angleDist!="none" & parSize[2]*nbStates!=length(stepPar0))
+      error <- paste(error,": there should be",parSize[2]*nbStates,"initial angle parameters.")
+    stop(error)
+  }
+
+  if(!is.null(beta0)) {
+    if(ncol(beta0)!=nbStates*(nbStates-1) | nrow(beta0)!=nbCovs+1) {
+      error <- paste("beta0 has wrong dimensions : it should have",nbCovs+1,"rows and",
+                     nbStates*(nbStates-1),"columns.")
+      stop(error)
+    }
+  }
+
+  if(!is.null(delta0))
+    if(length(delta0)!=nbStates)
+      stop(paste("delta0 has the wrong length : it should have",nbStates,"elements."))
 
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
   if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0)
@@ -106,15 +133,6 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     stop("Zero-inflation should be included if step length can be zero.")
   if(zeroInflation & length(which(data$step==0))==0)
     stop("Zero-inflation should not be included if step length is never zero.")
-
-  # build design matrix
-  covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                     names(data)!="step" & names(data)!="angle")
-  covs <- model.matrix(formula,data)
-
-  if(length(covsCol)>0) data <- cbind(data[-covsCol],covs)
-  else data <- cbind(data,covs)
-  nbCovs <- ncol(covs)-1 # substract intercept column
 
   # check that stationary==FALSE if there are covariates
   if(nbCovs>0 & stationary==TRUE)
