@@ -34,7 +34,7 @@ confIntervals.moveHMM <- function(m)
   Sigma <- ginv(m$mod$hessian)
   var <- diag(Sigma)
 
-  p <- parDef(m$stepDist,m$angleDist,nbStates,m$estAngleMean,m$zeroInflation)
+  p <- parDef(m$stepDist,m$angleDist,nbStates,m$conditions$estAngleMean,m$conditions$zeroInflation)
 
   # identify parameters of interest
   i1 <- p$parSize[1]*nbStates

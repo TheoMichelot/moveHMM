@@ -40,7 +40,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
   for(state in 1:nbStates)
     w[state] <- length(which(m$states==state))/length(m$states)
 
-  if(m$zeroInflation) {
+  if(m$conditions$zeroInflation) {
     zeromass <- m$mle$stepPar[nrow(m$mle$stepPar),]
     m$mle$stepPar <- m$mle$stepPar[-nrow(m$mle$stepPar),]
   }
@@ -84,7 +84,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         }
         # add state-dependent densities to the histogram
         # (weighted by the proportion of each state in the Viterbi states sequence)
-        if(m$zeroInflation)
+        if(m$conditions$zeroInflation)
           lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
         else
           lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
@@ -138,7 +138,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         }
         # add state-dependent densities to the histogram
         # (weighted by the proportion of each state in the Viterbi states sequence)
-        if(m$zeroInflation)
+        if(m$conditions$zeroInflation)
           lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
         else
           lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
@@ -161,7 +161,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
 
         # add state-dependent densities to the histogram
         # (weighted by the proportion of each state in the Viterbi states sequence)
-        if(m$zeroInflation)
+        if(m$conditions$zeroInflation)
           lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
         else
           lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)

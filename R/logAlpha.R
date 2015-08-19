@@ -22,7 +22,8 @@ logAlpha <- function(m)
                      names(data)!="step" & names(data)!="angle")
   covs <- data[,covsCol]
 
-  allProbs <- allProbs(data,nbStates,m$stepDist,m$angleDist,m$mle$stepPar,m$mle$anglePar,m$zeroInflation)
+  allProbs <- allProbs(data,nbStates,m$stepDist,m$angleDist,m$mle$stepPar,m$mle$anglePar,
+                       m$conditions$zeroInflation)
   trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
 
   lscale <- 0

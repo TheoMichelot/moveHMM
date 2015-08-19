@@ -14,7 +14,7 @@ print.moveHMM <- function(x,...)
 {
   m <- x
   nbStates <- ncol(m$mle$stepPar)
-  p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$zeroInflation)
+  p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$conditions$zeroInflation)
 
   cat("Value of the maximum log-likelihood :",-m$mod$minimum,"\n\n")
 

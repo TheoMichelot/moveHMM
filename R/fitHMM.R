@@ -182,8 +182,10 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
                     angleMean,zeroInflation)
 
+  # conditions of the fit
+  conditions <- list(zeroInflation=zeroInflation,estAngleMean=estAngleMean,stationary=stationary)
+
   mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
-             mod=mod,states=states,zeroInflation=zeroInflation,
-             estAngleMean=estAngleMean,stationary=stationary)
+             mod=mod,states=states,conditions=conditions)
   return(moveHMM(mh))
 }

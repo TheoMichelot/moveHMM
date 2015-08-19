@@ -8,7 +8,8 @@ moveHMM(m)
 }
 \arguments{
 \item{m}{A list of attributes of the fitted model. Mandatory slots : data, states, mle,
-stepDist, angleDist, mod (result of call to optimizer), zeroInflation.}
+stepDist, angleDist, mod (result of call to optimizer), conditions (zeroInflation,
+estAngleMean, and stationary).}
 }
 \value{
 An object moveHMM.
