@@ -165,6 +165,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                     angleMean,zeroInflation)
 
   mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
-             mod=mod,states=states,zeroInflation=zeroInflation)
+             mod=mod,states=states,zeroInflation=zeroInflation,
+             estAngleMean=estAngleMean,stationary=stationary)
   return(moveHMM(mh))
 }
