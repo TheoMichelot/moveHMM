@@ -9,7 +9,7 @@ Description: Animal movement modelling using hidden Markov models. Pre-processin
 License: GPL-3
 LazyData: TRUE
 Depends:
-    CircStats, boot, sp
+    CircStats, boot, MASS, sp
 Imports:
     Rcpp (>= 0.11.6)
 LinkingTo:
