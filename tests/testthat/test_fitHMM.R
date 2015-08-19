@@ -45,6 +45,25 @@ test_that("Exceptions are thrown",{
                      par0$formula,simPar$stepDist,simPar$angleDist,c(simPar$angleMean,0),
                      simPar$zeroInflation), throws_error())
 
+  # if wrong number of initial parameters
+  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0[-1],par0$anglePar0,par0$beta0,par0$delta0,
+                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
+                     simPar$zeroInflation), throws_error())
+
+  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0[-1],par0$beta0,par0$delta0,
+                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
+                     simPar$zeroInflation), throws_error())
+
+  # if beta0 has the wrong dimensions
+  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0[-1,],par0$delta0,
+                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
+                     simPar$zeroInflation), throws_error())
+
+  # if delta0 has the wrong length
+  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0[-1],
+                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
+                     simPar$zeroInflation), throws_error())
+
 })
 
 test_that("The output has the right class",{

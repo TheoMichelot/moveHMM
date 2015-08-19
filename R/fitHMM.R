@@ -90,7 +90,7 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   bounds <- p$bounds
   parSize <- p$parSize
   if(sum(parSize)*nbStates!=length(par0)) {
-    error <- "Wrong number of initial parameters."
+    error <- "Wrong number of initial parameters"
     if(parSize[1]*nbStates!=length(stepPar0))
       error <- paste(error,": there should be",parSize[1]*nbStates,"initial step parameters.")
     if(angleDist!="none" & parSize[2]*nbStates!=length(stepPar0))
