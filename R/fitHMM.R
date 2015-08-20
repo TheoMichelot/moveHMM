@@ -178,6 +178,12 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     rownames(mle$anglePar) <- NULL # remove rbind row name
   }
 
+  # compute t.p.m. if no covariates
+  if(nbCovs==0) {
+    trMat <- trMatrix_rcpp(nbStates,mle$beta,covs)
+    mle$gamma <- trMat[,,1]
+  }
+
   # decode the sequence of states
   states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
                     angleMean,zeroInflation)

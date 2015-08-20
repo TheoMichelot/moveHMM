@@ -40,6 +40,13 @@ print.moveHMM <- function(x,...)
   cat("-----------------------------------\n")
   print(m$mle$beta)
 
+  if(!is.null(m$mle$gamma)) {
+    cat("\n")
+    cat("Transition probability matrix :\n")
+    cat("-----------------------------------\n")
+    print(m$mle$gamma)
+  }
+
   cat("\n")
   cat("Initial distribution :\n")
   cat("--------------------\n")
