@@ -40,25 +40,58 @@ Figure \ref{struct} illustrates the links between the main components of the pac
 
 
 \subsection{Main functions} \label{main_functions}
-We list the main user functions, and discuss the options they include, e.g.
-\begin{itemize}
-	\item step and angle distributions:
-	\item zero-inflation for the step distribution;
-	\item covariates for the transition probabilities;
-	\item step-length modelling only;
-	\item stationary model;
-	\item angle mean estimation or not;
-	\item ...
-\end{itemize}
-We can also mention and justify the default values of the options.
 
 \subsubsection{prepData}
+Most of the time, tracking data consists in time series of either easting-northing coordinates or longitude-latitude values. However, the data needed to use hidden Markov modelling are the time series of step lengths and turning angles.\\
+
+The function \texttt{prepData} computes the steps/angles from the coordinates. As an input, this function takes an R data frame with mandatory column names ``x'' (either easting or longitude) and ``y'' (either northing or latitude). If several animals were observed, there should also be a colum ``ID'' which identifies the animal being observed. If there is no ``ID'' column, all observations will be considered to concern a single animal. All additional columns are considered as covariates.
+
+In addition to the data frame, \texttt{prepData} takes an argument \texttt{type}, which can either be ``GCD'' (default) or ``euclidean''. The former indicates that the coordinates are longitude-latitude values, and the latter that they are easting-northing values. This option is used in the computation of the step lengths.\\
+
+\texttt{prepData} outputs a data frame, with the same columns as the input, plus columns ``step'' and ``angle''. This object is of the class \texttt{moveData}, and can be plotted using the generic method \texttt{plot}.
 
 \subsubsection{fitHMM}
+To an object \texttt{moveData} can then be fitted an HMM, using the function \texttt{fitHMM}. This function takes the following arguments :
 
-\subsubsection{Classes methods}
+\begin{itemize}
+	\item \texttt{data} : a \texttt{moveData} object.
+	\item \texttt{nbStates} : the number of states of the HMM to be fitted.
+	\item \texttt{stepPar0} : initial values for the step length distribution parameters. Note that they should be in a vector, in the order expected by the density function of the used distribution. For an example, see Section \ref{application}.
+	\item \texttt{anglePar0} : initial values for the turning angle distribution parameters. Same remark as for \texttt{stepPar0}.
+	\item \texttt{beta0} : initial values for the regression coefficients of the transition probabilities. If set to \texttt{NULL}, a default value is chosen such that the transition probabilities do not depend on the covariates, and diagonal elements of the transition probability matrix are dominant.
+	\item \texttt{delta0} : initial value for the initial distribution of the HMM. If set to \texttt{NULL}, the default value is chosen to be \texttt{rep(1/nbStates,nbStates)}.
+	\item \texttt{formula} : the formula that determines the relationship between the transition probabilities and the covariates. Default is \texttt{~1}, i.e. covariate-free model.
+	\item \texttt{stepDist} : distribution for the step lengths. Possible values are ``gamma'' (default), ``weibull'', ``lnorm'', and ``exp''.
+	\item \texttt{angleDist} : distribution for the turning angles. Possible values are ``vm'' (Von Mises distribution, default), ``wrpcauchy'', and ``none'' (only steps should be modelled).
+	\item \texttt{angleMean} : mean parameter of the angle distribution. If set to \texttt{NULL}, the angle mean is estimated.
+	\item \texttt{zeroInflation} : boolean value, \texttt{TRUE} if zero-inflation should be included in the model, \texttt{FALSE} otherwise (default).
+	\item \texttt{stationary} : boolean value, \texttt{TRUE} if the initial distribution is considered to be the stationary distribution, \texttt{FALSE} otherwise (default).
+	\item \texttt{verbose} : level of printing of the optimization function. Can be \texttt{0} (no printing), \texttt{1} (first and last iteration of the optimization are printed), or \texttt{2} (all iterations are printed).
+\end{itemize}
+
+This function outputs a list of information about the model. Most elements of that list are only meant to be used by the \texttt{moveHMM} methods (see Section \ref{methods}), but a few can be informative \textit{per se} :
+\begin{itemize}
+	\item \texttt{mle} contains the estimates of the parameters of the model;
+	\item \texttt{mod} contains the output of the optimization function \texttt{nlm}, including \texttt{mod\$minimum} (minimum of the negative log-likelihood) and \texttt{mod\$hessian}, the hessian of the negative log-likelihood function at its minimum.
+	\item \texttt{states} contains the sequence of most probable states, as computed by the Viterbi algorithm.
+\end{itemize}
+
+\subsubsection{Classes methods} \label{methods}
+Methods (i.e. class functions) are available for both \texttt{moveData} and \texttt{moveHMM} objects, to operate on them. Here is a list of them ; for details on the options, see the documentation, and for an example of their use, see Section \ref{application}.
+
+\begin{itemize}
+	\item \texttt{plot.moveData} plots a few graphs to illustrate the data : a map of each animal's track, time series of the steps and angles, histograms of the steps and angles.
+	\item \texttt{plot.moveHMM} plots a few graphs to illustrate the fitted model : a map of each animal's track, colored by states, plots of the estimated density functions, plots of the transition probabilities as functions of the covariates.
+	\item \texttt{AIC.moveHMM} returns the AIC of the fitted model.
+	\item \texttt{pseudoRes.moveHMM} computes the pseudo-residuals of the model.
+	\item \texttt{stateProbs.moveHMM} computes the state probabilities for each observation.
+	\item \texttt{decode.moveHMM} wraps \texttt{pseudoRes} and \texttt{stateProbs}.
+	\item \texttt{confIntervals.moveHMM} computes the confidence intervals for the step length distribution parameters and for the regression coefficients of the transition probabilities.
+	\item \texttt{deltaMethod.moveHMM} computes the confidence intervals for the turning angle distribution parameters, using the delta method.
+\end{itemize} 
 
 \subsubsection{simData}
+
 
 \section{Application} \label{application}
 We take the user through a detailed example. I think that we will include a (relatively small) real data set in \texttt{data/}, which will serve in this example.
