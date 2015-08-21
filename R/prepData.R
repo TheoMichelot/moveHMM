@@ -1,28 +1,32 @@
 
 #' Preprocessing of the tracking data
 #'
-#' @param trackData A dataframe of the tracking data, including at least the fields "x" and "y"
+#' @param trackData A dataframe of the tracking data, including at least coordinates
 #' (either longitude/latitude values or cartesian coordinates), and optionnaly a field "ID"
 #' (identifiers for the observed individuals). Additionnal fields are considered as covariates.
+#' Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
+#' should specified.
 #' @param type 'GCD' if longitude/latitude provided (default), 'euclidean' otherwise.
+#' @param coordNames Names of the columns of coordinates in the data frame. Default : c("x","y").
 #'
 #' @return An object moveData, i.e. a dataframe of ID, step lengths,
 #' turning angles and covariates values (if any).
 #'
 #' @examples
-#' x <- c(1,2,3,4,5,6,7,8,9,10)
-#' y <- c(1,1,1,2,2,2,1,1,1,2)
-#' trackData <- data.frame(x=x,y=y)
-#' d <- prepData(trackData,'euclidean')
+#' coord1 <- c(1,2,3,4,5,6,7,8,9,10)
+#' coord2 <- c(1,1,1,2,2,2,1,1,1,2)
+#' trackData <- data.frame(coord1=coord1,coord2=coord2)
+#' d <- prepData(trackData,'euclidean',coordNames=c("coord1","coord2"))
 
-prepData <- function(trackData, type=c('GCD','euclidean'))
+prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
 {
   # check arguments
   type <- match.arg(type)
-  x <- trackData$x
-  y <- trackData$y
-  if(is.null(x) | is.null(y))
-    stop("The data does not have the right structure. x and y fields needed.")
+  if(length(which(coordNames %in% names(trackData)))<2)
+    stop("Check the columns names of your coordinates.")
+
+  x <- trackData[,coordNames[1]]
+  y <- trackData[,coordNames[2]]
 
   if(!is.null(trackData$ID)) ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
   else ID <- rep("Animal1",length(x)) # default ID if none provided
@@ -97,7 +101,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'))
   }
   else covs <- NULL
 
-  data <- cbind(data,x=trackData$x,y=trackData$y)
+  data <- cbind(data,x=x,y=y)
   if(!is.null(covs)) data <- cbind(data,covs)
   return(moveData(data))
 }

@@ -4,14 +4,18 @@
 \alias{prepData}
 \title{Preprocessing of the tracking data}
 \usage{
-prepData(trackData, type = c("GCD", "euclidean"))
+prepData(trackData, type = c("GCD", "euclidean"), coordNames = c("x", "y"))
 }
 \arguments{
-\item{trackData}{A dataframe of the tracking data, including at least the fields "x" and "y"
+\item{trackData}{A dataframe of the tracking data, including at least coordinates
 (either longitude/latitude values or cartesian coordinates), and optionnaly a field "ID"
-(identifiers for the observed individuals). Additionnal fields are considered as covariates.}
+(identifiers for the observed individuals). Additionnal fields are considered as covariates.
+Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
+should specified.}
 
 \item{type}{'GCD' if longitude/latitude provided (default), 'euclidean' otherwise.}
+
+\item{coordNames}{Names of the columns of coordinates in the data frame. Default : c("x","y").}
 }
 \value{
 An object moveData, i.e. a dataframe of ID, step lengths,
@@ -21,9 +25,9 @@ turning angles and covariates values (if any).
 Preprocessing of the tracking data
 }
 \examples{
-x <- c(1,2,3,4,5,6,7,8,9,10)
-y <- c(1,1,1,2,2,2,1,1,1,2)
-trackData <- data.frame(x=x,y=y)
-d <- prepData(trackData,'euclidean')
+coord1 <- c(1,2,3,4,5,6,7,8,9,10)
+coord2 <- c(1,1,1,2,2,2,1,1,1,2)
+trackData <- data.frame(coord1=coord1,coord2=coord2)
+d <- prepData(trackData,'euclidean',coordNames=c("coord1","coord2"))
 }
 
