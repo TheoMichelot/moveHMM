@@ -97,7 +97,10 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
         if(length(x)>nbObs) nbObs <- length(x)
       }
 
-      colors <- rainbow(nbAnimals) # to make sure that all colors are distinct
+      if(nbAnimals>5)
+        colors <- rainbow(nbAnimals) # to make sure that all colors are distinct
+      else
+        colors <- c(3,4,5,6,7)
 
       ID <- unique(data$ID)[1]
       x <- data$x[which(data$ID==ID)]
