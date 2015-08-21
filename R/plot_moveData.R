@@ -61,13 +61,18 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
         par(mfrow=c(2,2))
         plot(step,type="l",xlab="t",ylab="step length",
              ylim=c(0,max(step,na.rm=T)))
-        plot(angle,type="l",xlab="t",ylab="turning angle",
-             ylim=c(-pi,pi))
+        plot(angle,type="l",xlab="t",ylab="turning angle (radians)",
+             ylim=c(-pi,pi),yaxt="n")
+        axis(2, at = c(-pi, -pi/2, 0, pi/2, pi),
+             labels = expression(-pi, -pi/2, 0, pi/2, pi))
         abline(h=c(-pi,0,pi),lty=2)
 
         # step and angle histograms
-        hist(step,xlab="step length",main="", col="lightblue",border="white",breaks=breaks)
-        hist(angle,xlab="turning angle",main="", col="lightblue",border="white",breaks=breaks)
+        hist(step,xlab="step length",main="", col="lightgrey",border="white",breaks=breaks)
+        hist(angle,xlab="turning angle (radians)",main="", col="lightgrey",border="white",
+             breaks=breaks,xaxt="n")
+        axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+             labels = expression(-pi, -pi/2, 0, pi/2, pi))
 
         mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }
@@ -118,13 +123,18 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
         # step and angle time series
         plot(step,type="l",xlab="t",ylab="step length",
              ylim=c(0,max(step,na.rm=T)))
-        plot(angle,type="l",xlab="t",ylab="turning angle",
-             ylim=c(-pi,pi))
+        plot(angle,type="l",xlab="t",ylab="turning angle (radians)",
+             ylim=c(-pi,pi),yaxt="n")
+        axis(2, at = c(-pi, -pi/2, 0, pi/2, pi),
+             labels = expression(-pi, -pi/2, 0, pi/2, pi))
         abline(h=c(-pi,0,pi),lty=2)
 
         # step and angle histograms
-        hist(step,xlab="step length",main="", col="lightblue",border="white",breaks=breaks)
-        hist(angle,xlab="turning angle",main="", col="lightblue",border="white",breaks=breaks)
+        hist(step,xlab="step length",main="", col="lightgrey",border="white",breaks=breaks)
+        hist(angle,xlab="turning angle (radians)",main="", col="lightgrey",border="white",breaks=breaks,
+             xaxt="n")
+        axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+             labels = expression(-pi, -pi/2, 0, pi/2, pi))
 
         mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }

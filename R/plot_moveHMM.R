@@ -65,7 +65,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         ymax <- hist.ylim[2]
       }
       hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
-           col="lightblue",border="white",breaks=breaks)
+           col="lightgrey",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
@@ -119,7 +119,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         ymax <- hist.ylim[2]
       }
       hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
-           col="lightblue",border="white",breaks=breaks)
+           col="lightgrey",border="white",breaks=breaks)
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
@@ -147,8 +147,10 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
       # Histogram of turning angles
       h <- hist(m$data$angle[ind],plot=F) # to determine ylim
       ymax <- 1.5*max(h$density)
-      hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle",
-           col="lightblue",border="white",breaks=breaks)
+      hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
+           col="lightgrey",border="white",breaks=breaks,xaxt="n")
+      axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+           labels = expression(-pi, -pi/2, 0, pi/2, pi))
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       grid <- seq(-pi,pi,length=1000)
 
