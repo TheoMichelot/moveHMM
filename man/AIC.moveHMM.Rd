@@ -9,12 +9,12 @@
 \arguments{
 \item{object}{A moveHMM object.}
 
-\item{...}{Currently unused. For compatibility with generic method.}
+\item{...}{Optional additional moveHMM objects, to compare AICs of the different models.}
 
 \item{k}{Penalty per parameter. Default : 2 ; for classical AIC.}
 }
 \value{
-The AIC of the fitted model.
+The AIC of the model(s) provided.
 }
 \description{
 Akaike information criterion of a moveHMM model.
