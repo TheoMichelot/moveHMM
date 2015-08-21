@@ -31,6 +31,9 @@
 #' @param verbose Determines the print level of the optimizer. The default value of 0 means that no
 #' printing occurs, a value of 1 means that the first and last iterations of the optimization are
 #' detailed, and a value of 2 means that each iteration of the optimization is detailed.
+#' @param fit TRUE if an HMM should be fitted to the data, FALSE otherwise. If fit=FALSE, a model
+#' is returned with the MLE replaced by the initial parameters given in input (can be used to assess
+#' the initial parameters). Default : TRUE.
 #'
 #' @return A moveHMM object, including the MLE of the model parameters.
 #' @examples
