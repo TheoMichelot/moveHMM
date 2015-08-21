@@ -24,6 +24,9 @@ deltaMethod.moveHMM <- function(m)
     if(m$angleDist=="none")
       stop("No angle parameter estimated.")
 
+    if(is.na(m$mod))
+      stop("The given model hasn't been fitted.")
+
     wpar <- m$mod$estimate
     nbStates <- ncol(m$mle$stepPar)
 

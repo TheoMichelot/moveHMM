@@ -7,7 +7,7 @@
 fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
   formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
-  zeroInflation = FALSE, stationary = FALSE, verbose = 0)
+  zeroInflation = FALSE, stationary = FALSE, verbose = 0, fit = TRUE)
 }
 \arguments{
 \item{nbStates}{Number of states of the HMM.}

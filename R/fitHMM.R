@@ -67,7 +67,7 @@
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
-                   angleMean=NULL,zeroInflation=FALSE,stationary=FALSE,verbose=0)
+                   angleMean=NULL,zeroInflation=FALSE,stationary=FALSE,verbose=0,fit=TRUE)
 {
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
@@ -157,16 +157,22 @@ fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
       invokeRestart("muffleWarning")
   }
 
-  # call to optimizer nlm
-  withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
-                                 angleDist,angleMean,zeroInflation,stationary,
-                                 print.level=verbose,
-                                 iterlim=1000,
-                                 hessian=TRUE),
-                      warning=h) # filter warnings using function h
+  if(fit) {
+    # call to optimizer nlm
+    withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
+                                   angleDist,angleMean,zeroInflation,stationary,
+                                   print.level=verbose,
+                                   iterlim=1000,
+                                   hessian=TRUE),
+                        warning=h) # filter warnings using function h
 
-  # convert the parameters back to their natural scale
-  mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
+    # convert the parameters back to their natural scale
+    mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
+  }
+  else {
+    mod <- NA
+    mle <- w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
+  }
 
   if(stationary) {
     gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]

@@ -23,6 +23,9 @@ confIntervals <- function(m) UseMethod("confIntervals") # define generic method 
 
 confIntervals.moveHMM <- function(m)
 {
+  if(is.na(m$mod))
+    stop("The given model hasn't been fitted.")
+
   nbStates <- ncol(m$mle$stepPar)
 
   # identify covariates
