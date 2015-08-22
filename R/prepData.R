@@ -77,7 +77,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
   }
 
   # identify covariate columns
-  covsCol <- which(names(trackData)!="ID" & names(trackData)!="x" & names(trackData)!="y")
+  covsCol <- which(names(trackData)!="ID" & names(trackData)!=coordNames[1] & names(trackData)!=coordNames[2])
   if(length(covsCol)>0) {
     covs <- data.frame(trackData[,covsCol]) # to prevent error if nbCovs==1
     colnames(covs) <- names(trackData)[covsCol]

@@ -16,7 +16,7 @@ print.moveHMM <- function(x,...)
   nbStates <- ncol(m$mle$stepPar)
   p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$conditions$zeroInflation)
 
-  if(!is.na(m$mod))
+  if(length(m$mod)>1)
     cat("Value of the maximum log-likelihood :",-m$mod$minimum,"\n\n")
 
   cat("Step length parameters :\n")
