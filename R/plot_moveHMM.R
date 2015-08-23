@@ -85,9 +85,9 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         # add state-dependent densities to the histogram
         # (weighted by the proportion of each state in the Viterbi states sequence)
         if(m$conditions$zeroInflation)
-          lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+2,lwd=2)
+          lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
         else
-          lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+2,lwd=2)
+          lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
       }
     }
   }
@@ -103,8 +103,8 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
       plot(x[1],y[1],xlim=c(min(x,na.rm=T),max(x,na.rm=T)),ylim=c(min(y,na.rm=T),max(y,na.rm=T)),
            pch=18,xlab="x",ylab="y")
       for(i in 2:length(x)) {
-        points(x[i],y[i],pch=16,col=states[i-1]+2,cex=0.6)
-        segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+2,lwd=1.3)
+        points(x[i],y[i],pch=16,col=states[i-1]+1,cex=0.6)
+        segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+1,lwd=1.3)
       }
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
 
@@ -139,9 +139,9 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         # add state-dependent densities to the histogram
         # (weighted by the proportion of each state in the Viterbi states sequence)
         if(m$conditions$zeroInflation)
-          lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+2,lwd=2)
+          lines(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
         else
-          lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+2,lwd=2)
+          lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
       }
 
       # Histogram of turning angles
@@ -164,9 +164,9 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
         # add state-dependent densities to the histogram
         # (weighted by the proportion of each state in the Viterbi states sequence)
         if(m$conditions$zeroInflation)
-          lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+2,lwd=2)
+          lines(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
         else
-          lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+2,lwd=2)
+          lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
       }
     }
   }
