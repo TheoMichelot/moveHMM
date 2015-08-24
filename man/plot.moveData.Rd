@@ -4,11 +4,14 @@
 \alias{plot.moveData}
 \title{Plot \code{moveData}}
 \usage{
-\method{plot}{moveData}(x, compact = FALSE, ask = TRUE,
+\method{plot}{moveData}(x, animals = NULL, compact = FALSE, ask = TRUE,
   breaks = "Sturges", ...)
 }
 \arguments{
 \item{x}{An object \code{moveData}}
+
+\item{animals}{Vector of indices or IDs of animals for which information will be plotted.
+Default : \code{NULL} ; all animals are plotted.}
 
 \item{compact}{\code{TRUE} for a compact plot (all individuals at once), \code{FALSE} otherwise
 (default -- one individual at a time).}

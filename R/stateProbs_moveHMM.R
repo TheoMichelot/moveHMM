@@ -14,6 +14,10 @@ stateProbs <- function(m) UseMethod("stateProbs") # define generic method stateP
 #' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'
 #' sp <- stateProbs(m)
+#'
+#' @references Zucchini, W. and MacDonald, I.L. 2009.
+#' Hidden Markov Models for Time Series: An Introduction Using R.
+#' Chapman & Hall (London).
 
 stateProbs.moveHMM <- function(m)
 {

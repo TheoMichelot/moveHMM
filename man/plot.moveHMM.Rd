@@ -4,16 +4,16 @@
 \alias{plot.moveHMM}
 \title{Plot \code{moveHMM}}
 \usage{
-\method{plot}{moveHMM}(x, ask = TRUE, animals = NULL, breaks = "Sturges",
+\method{plot}{moveHMM}(x, animals = NULL, ask = TRUE, breaks = "Sturges",
   hist.ylim = NULL, ...)
 }
 \arguments{
 \item{x}{Object \code{moveHMM}}
 
-\item{ask}{If \code{TRUE}, the execution pauses between each plot.}
-
-\item{animals}{Vector of indices of animals for which information will be plotted.
+\item{animals}{Vector of indices or IDs of animals for which information will be plotted.
 Default : \code{NULL} ; all animals are plotted.}
+
+\item{ask}{If \code{TRUE}, the execution pauses between each plot.}
 
 \item{breaks}{Histogram parameter. See \code{hist} documentation.}
 

@@ -17,6 +17,10 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 #' res <- pseudoRes(m)
 #' qqnorm(res$stepRes)
 #' qqnorm(res$angleRes)
+#'
+#' @references Zucchini, W. and MacDonald, I.L. 2009.
+#' Hidden Markov Models for Time Series: An Introduction Using R.
+#' Chapman & Hall (London).
 
 pseudoRes.moveHMM <- function(m)
 {

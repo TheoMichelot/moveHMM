@@ -1,6 +1,9 @@
 
 #' Fit an HMM to the data
 #'
+#' Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
+#' function.
+#'
 #' @param nbStates Number of states of the HMM.
 #' @param data An object \code{moveData}.
 #' @param stepPar0 Vector of initial state-dependent step length distribution parameters.
@@ -77,6 +80,14 @@
 #'
 #' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
 #'               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
+#'
+#' @references Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
+#' Classifying movement behaviour in relation to environmental conditions using hidden Markov models.
+#' Journal of Animal Ecology, 78 (6), 1113-1123.
+#'
+#' Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M. 2012.
+#' Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions.
+#' Ecology, 93 (11), 2336-2342.
 
 fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),

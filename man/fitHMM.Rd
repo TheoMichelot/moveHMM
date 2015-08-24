@@ -70,7 +70,8 @@ A \code{moveHMM} object, i.e. a list of :
 \code{stationary})}
 }
 \description{
-Fit an HMM to the data
+Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
+function.
 }
 \examples{
 ### 1. simulate data
@@ -103,5 +104,14 @@ formula <- ~cov1+cos(cov2)
 
 mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
+}
+\references{
+Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
+Classifying movement behaviour in relation to environmental conditions using hidden Markov models.
+Journal of Animal Ecology, 78 (6), 1113-1123.
+
+Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M. 2012.
+Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions.
+Ecology, 93 (11), 2336-2342.
 }
 

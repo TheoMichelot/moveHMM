@@ -26,6 +26,10 @@
 #' # reconstruction of states sequence
 #' states <- viterbi(data,simPar$nbStates,m$mle$beta,m$mle$delta,simPar$stepDist,
 #'                   simPar$angleDist,m$mle$stepPar,m$mle$anglePar,simPar$angleMean)
+#'
+#' @references Zucchini, W. and MacDonald, I.L. 2009.
+#' Hidden Markov Models for Time Series: An Introduction Using R.
+#' Chapman & Hall (London).
 
 viterbi <- function(data,nbStates,beta,delta,stepDist,angleDist,stepPar,
                     anglePar=NULL,angleMean=NULL,zeroInflation=FALSE)
