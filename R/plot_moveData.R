@@ -3,6 +3,8 @@
 #' @method plot moveData
 #'
 #' @param x An object \code{moveData}
+#' @param animals Vector of indices or IDs of animals for which information will be plotted.
+#' Default : \code{NULL} ; all animals are plotted.
 #' @param compact \code{TRUE} for a compact plot (all individuals at once), \code{FALSE} otherwise
 #' (default -- one individual at a time).
 #' @param ask If \code{TRUE}, the execution pauses between each plot.

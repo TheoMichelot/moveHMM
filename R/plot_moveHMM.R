@@ -3,9 +3,9 @@
 #' @method plot moveHMM
 #'
 #' @param x Object \code{moveHMM}
-#' @param ask If \code{TRUE}, the execution pauses between each plot.
-#' @param animals Vector of indices of animals for which information will be plotted.
+#' @param animals Vector of indices or IDs of animals for which information will be plotted.
 #' Default : \code{NULL} ; all animals are plotted.
+#' @param ask If \code{TRUE}, the execution pauses between each plot.
 #' @param breaks Histogram parameter. See \code{hist} documentation.
 #' @param hist.ylim Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
 #' Default : \code{NULL} ; the function sets default values.
@@ -16,7 +16,7 @@
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
 
-plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL,...)
+plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,...)
 {
   m <- x
   nbAnimals <- length(unique(m$data$ID))
