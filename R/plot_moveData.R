@@ -14,24 +14,45 @@
 #'
 #' plot(data,compact=TRUE,breaks=20,ask=FALSE)
 
-plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
+plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges",...)
 {
   data <- x
-
   # check arguments
   if(length(data)<1) stop("The data input is empty.")
   if(is.null(data$ID) | is.null(data$x) | is.null(data$step))
     stop("Missing field(s) in data.")
 
+  nbAnimals <- length(unique(data$ID))
+
+  # define animals to be plotted
+  if(is.null(animals)) # all animals are plotted
+    animalsInd <- 1:nbAnimals
+  else {
+    if(is.character(animals)) { # animals' IDs provided
+      animalsInd <- NULL
+      for(zoo in 1:length(animals)) {
+        if(length(which(unique(data$ID)==animals[zoo]))==0) # ID not found
+          stop("Check animals argument.")
+
+        animalsInd <- c(animalsInd,which(unique(data$ID)==animals[zoo]))
+      }
+    }
+
+    if(is.numeric(animals)) { # animals' indices provided
+      if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
+        stop("Check animals argument.")
+
+      animalsInd <- animals
+    }
+  }
+
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=ask)
-
-  nbAnimals <- length(unique(data$ID))
 
   if(is.null(data$angle) | length(which(!is.na(data$angle)))==0) # only step length is provided
   {
     par(mfrow=c(1,2))
-    for(zoo in 1:nbAnimals) {
+    for(zoo in animalsInd) {
       ID <- unique(data$ID)[zoo]
       step <- data$step[which(data$ID==ID)]
       # step length time series
@@ -45,7 +66,7 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
   else # step length and turning angle are provided
   {
     if(!compact) { # tracks are plotted on a separate map for each animal
-      for(zoo in 1:nbAnimals) {
+      for(zoo in animalsInd) {
         ID <- unique(data$ID)[zoo]
         x <- data$x[which(data$ID==ID)]
         y <- data$y[which(data$ID==ID)]
@@ -82,7 +103,7 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
       xmin <- Inf; xmax <- -Inf
       ymin <- Inf; ymax <- -Inf
       stepmax <- -Inf; nbObs <- -Inf
-      for(zoo in 1:nbAnimals) {
+      for(zoo in animalsInd) {
         # compute the x and y bounds to draw the map
         ID <- unique(data$ID)[zoo]
         x <- data$x[which(data$ID==ID)]
@@ -97,12 +118,12 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
         if(length(x)>nbObs) nbObs <- length(x)
       }
 
-      if(nbAnimals>6)
-        colors <- rainbow(nbAnimals) # to make sure that all colors are distinct
+      if(length(animalsInd)>6)
+        colors <- rainbow(length(animalsInd)) # to make sure that all colors are distinct
       else
         colors <- c(2,3,4,5,6,7)
 
-      ID <- unique(data$ID)[1]
+      ID <- unique(data$ID)[animalsInd[1]]
       x <- data$x[which(data$ID==ID)]
       y <- data$y[which(data$ID==ID)]
       # plot the first animal's track
@@ -110,7 +131,7 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
            xlim=c(xmin,xmax),ylim=c(ymin,ymax),xlab="x",ylab="y")
 
       # add each other animal's track to the map
-      for(zoo in 2:nbAnimals) {
+      for(zoo in animalsInd[-1]) {
         ID <- unique(data$ID)[zoo]
         x <- data$x[which(data$ID==ID)]
         y <- data$y[which(data$ID==ID)]
@@ -118,7 +139,7 @@ plot.moveData <- function(x,compact=FALSE,ask=TRUE,breaks="Sturges",...)
       }
 
       par(mfrow=c(2,2))
-      for(zoo in 1:nbAnimals) {
+      for(zoo in animalsInd) {
         ID <- unique(data$ID)[zoo]
         step <- data$step[which(data$ID==ID)]
         angle <- data$angle[which(data$ID==ID)]

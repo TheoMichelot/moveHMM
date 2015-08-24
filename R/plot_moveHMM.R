@@ -26,12 +26,29 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
   if(m$angleDist!="none")
     angleFun <- paste("d",m$angleDist,sep="")
 
-  # check arguments
-  if(is.null(animals))
-    animals <- 1:nbAnimals
-  if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0)
-    stop("Check animals argument.")
+  # define animals to be plotted
+  if(is.null(animals)) # all animals are plotted
+    animalsInd <- 1:nbAnimals
+  else {
+    if(is.character(animals)) { # animals' IDs provided
+      animalsInd <- NULL
+      for(zoo in 1:length(animals)) {
+        if(length(which(unique(m$data$ID)==animals[zoo]))==0) # ID not found
+          stop("Check animals argument.")
 
+        animalsInd <- c(animalsInd,which(unique(m$data$ID)==animals[zoo]))
+      }
+    }
+
+    if(is.numeric(animals)) { # animals' indices provided
+      if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
+        stop("Check animals argument.")
+
+      animalsInd <- animals
+    }
+  }
+
+  # check arguments
   if(!is.null(hist.ylim) & length(hist.ylim)!=2)
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
@@ -50,7 +67,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
   par(ask=ask)
 
   if(m$angleDist=="none") { # if step only
-    for(zoo in animals) {
+    for(zoo in animalsInd) {
       ID <- unique(m$data$ID)[zoo]
       ind <- which(m$data$ID==ID)
 
@@ -92,7 +109,7 @@ plot.moveHMM <- function(x,ask=TRUE,animals=NULL,breaks="Sturges",hist.ylim=NULL
     }
   }
   else { # if step + angle
-    for(zoo in animals) {
+    for(zoo in animalsInd) {
       ID <- unique(m$data$ID)[zoo]
       ind <- which(m$data$ID==ID)
       x <- m$data$x[ind]
