@@ -2,17 +2,17 @@
 % Please edit documentation in R/print_moveHMM.R
 \name{print.moveHMM}
 \alias{print.moveHMM}
-\title{Print moveHMM}
+\title{Print \code{moveHMM}}
 \usage{
 \method{print}{moveHMM}(x, ...)
 }
 \arguments{
-\item{x}{A moveHMM object.}
+\item{x}{A \code{moveHMM} object.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
-Print moveHMM
+Print \code{moveHMM}
 }
 \examples{
 m <- ex$mod # moveHMM object (returned by fitHMM)

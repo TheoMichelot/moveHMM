@@ -8,18 +8,23 @@ prepData(trackData, type = c("GCD", "euclidean"), coordNames = c("x", "y"))
 }
 \arguments{
 \item{trackData}{A dataframe of the tracking data, including at least coordinates
-(either longitude/latitude values or cartesian coordinates), and optionnaly a field "ID"
+(either longitude/latitude values or cartesian coordinates), and optionnaly a field \code{ID}
 (identifiers for the observed individuals). Additionnal fields are considered as covariates.
 Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
 should specified.}
 
-\item{type}{'GCD' if longitude/latitude provided (default), 'euclidean' otherwise.}
+\item{type}{\code{'GCD'} if longitude/latitude provided (default), \code{'euclidean'} if easting/northing.}
 
-\item{coordNames}{Names of the columns of coordinates in the data frame. Default : c("x","y").}
+\item{coordNames}{Names of the columns of coordinates in the data frame. Default : \code{c("x","y")}.}
 }
 \value{
-An object moveData, i.e. a dataframe of ID, step lengths,
-turning angles and covariates values (if any).
+An object \code{moveData}, i.e. a dataframe of :
+\item{ID}{The ID(s) of the observed animal(s)}
+\item{step}{The step lengths}
+\item{angle}{The turning angles (if any)}
+\item{x}{Either easting or longitude}
+\item{y}{Either norting or latitude}
+\item{...}{Covariates (if any)}
 }
 \description{
 Preprocessing of the tracking data

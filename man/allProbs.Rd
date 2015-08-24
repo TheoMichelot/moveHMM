@@ -8,7 +8,7 @@ allProbs(data, nbStates, stepDist, angleDist, stepPar, anglePar = NULL,
   zeroInflation = FALSE)
 }
 \arguments{
-\item{data}{Object moveData.}
+\item{data}{Object \code{moveData}.}
 
 \item{nbStates}{Number of states of the HMM.}
 
@@ -18,21 +18,22 @@ allProbs(data, nbStates, stepDist, angleDist, stepPar, anglePar = NULL,
 Set to "none" if the angle distribution should not be estimated.}
 
 \item{stepPar}{Parameters of the step length distribution. Must be provided in a
-matrix with one row for each parameter (in the order expected by the pdf of stepDist),
+matrix with one row for each parameter (in the order expected by the pdf of \code{stepDist}),
 and one column for each state.}
 
 \item{anglePar}{Parameters of the turning angle distribution. Must be provided in a
-matrix with one row for each parameter (in the order expected by the pdf of angleDist),
-and one column for each state. Default : NULL ; if the turning angles distribution
+matrix with one row for each parameter (in the order expected by the pdf of \code{angleDist}),
+and one column for each state. Default : \code{NULL} ; if the turning angles distribution
 is not estimated.}
 
-\item{zeroInflation}{TRUE if the step length distribution is inflated in zero. Default : FALSE.}
+\item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
+Default : \code{FALSE}.}
 }
 \value{
 Matrix of all probabilities.
 }
 \description{
-Used in functions viterbi, logAlpha, logBeta.
+Used in functions \code{\link{viterbi}}, \code{\link{logAlpha}}, \code{\link{logBeta}}.
 }
 \examples{
 stepPar <- matrix(c(1,10,

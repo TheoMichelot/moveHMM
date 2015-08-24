@@ -1,8 +1,8 @@
 
-#' Print moveHMM
+#' Print \code{moveHMM}
 #' @method print moveHMM
 #'
-#' @param x A moveHMM object.
+#' @param x A \code{moveHMM} object.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples

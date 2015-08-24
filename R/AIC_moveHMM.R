@@ -5,11 +5,15 @@
 #'
 #' @method AIC moveHMM
 #'
-#' @param object A moveHMM object.
-#' @param ... Optional additional moveHMM objects, to compare AICs of the different models.
+#' @param object A \code{moveHMM} object.
+#' @param ... Optional additional \code{moveHMM} objects, to compare AICs of the different models.
 #' @param k Penalty per parameter. Default : 2 ; for classical AIC.
 #'
 #' @return The AIC of the model(s) provided.
+#'
+#' @examples
+#' m <- ex$mod # moveHMM object, as returned by fitHMM
+#' AIC(m)
 
 AIC.moveHMM <- function(object,...,k=2)
 {

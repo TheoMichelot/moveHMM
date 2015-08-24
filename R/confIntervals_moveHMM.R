@@ -10,11 +10,13 @@ confIntervals <- function(m) UseMethod("confIntervals") # define generic method 
 #'
 #' @method confIntervals moveHMM
 #'
-#' @param m A moveHMM object
+#' @param m A \code{moveHMM} object
 #'
-#' @return inf (inferior bound of 95% confidence interval) and sup (superior bound of 95%
-#' confidence interval) for the parameters of the step lengths distribution, and for the
-#' transition probabilities regression parameters.
+#' @return A list of the following objects :
+#' \item{inf}{Inferior bound of 95% confidence interval for the parameters of the step lengths
+#' distribution, and for the transition probabilities regression parameters}
+#' \item{sup}{Superior bound of 95% confidence interval for the parameters of the step lengths
+#' distribution, and for the transition probabilities regression parameters}
 #'
 #' @examples
 #' m <- ex$mod # moveHMM object, as returned by fitHMM

@@ -1,22 +1,23 @@
 
 #' Viterbi algorithm
 #'
-#' Reconstructs the most probable states sequence. Is included in fitHMM.
+#' Reconstructs the most probable states sequence. Is included in \code{\link{fitHMM}}.
 #'
-#' @param data An object moveData.
+#' @param data An object \code{moveData}.
 #' @param nbStates Number of states of the HMM.
 #' @param beta Matrix of regression coefficients for the transition probability matrix.
 #' @param delta Stationary distribution.
 #' @param stepDist Name of the distribution of the step lengths.
 #' @param angleDist Name of the distribution of the turning angles.
-#' Set to "none" if the angle distribution should not be estimated.
+#' Set to \code{"none"} if the angle distribution should not be estimated.
 #' @param stepPar Vector of state-dependent step length distribution parameters.
 #' @param anglePar Vector of state-dependent turning angle distribution parameters.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
-#' Defaults to NULL.
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' Defaults to \code{NULL}.
+#' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
 #'
 #' @return The sequence of most probable states.
+#'
 #' @examples
 #' data <- ex$data
 #' m <- ex$mod

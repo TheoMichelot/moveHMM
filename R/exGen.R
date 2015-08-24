@@ -1,7 +1,7 @@
 
 #' Example data simulation
 #'
-#' Generate the file data/ex.RData, used in other functions' examples and unit tests.
+#' Generate the file \code{data/ex.RData}, used in other functions' examples and unit tests.
 
 exGen <- function()
 {

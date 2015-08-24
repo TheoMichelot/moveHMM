@@ -9,10 +9,12 @@ deltaMethod <- function(m) UseMethod("deltaMethod") # define generic method delt
 #'
 #' @method deltaMethod moveHMM
 #'
-#' @param m A moveHMM object.
+#' @param m A \code{moveHMM} object.
 #'
-#' @return inf (inferior bound of 95% confidence interval) and sup (superior bound of 95%
-#' confidence interval) for the parameters of the turning angle distribution.
+#' @return A list of :
+#' \code{inf} inferior bound of 95% confidence interval;
+#' \code{sup} superior bound of 95% confidence interval;
+#' both for the parameters of the turning angle distribution.
 #'
 #' @examples
 #' m <- ex$mod # moveHMM object, as returned by fitHMM

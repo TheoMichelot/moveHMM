@@ -1,7 +1,7 @@
 
 #' Turning angle
 #'
-#' Used in prepData.
+#' Used in \code{\link{prepData}}.
 #'
 #' @param x First point
 #' @param y Second point

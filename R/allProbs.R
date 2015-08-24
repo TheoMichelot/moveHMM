@@ -1,21 +1,22 @@
 
 #' Matrix of all probabilities
 #'
-#' Used in functions viterbi, logAlpha, logBeta.
+#' Used in functions \code{\link{viterbi}}, \code{\link{logAlpha}}, \code{\link{logBeta}}.
 #'
-#' @param data Object moveData.
+#' @param data Object \code{moveData}.
 #' @param nbStates Number of states of the HMM.
 #' @param stepDist Name of the distribution of the step lengths.
 #' @param angleDist Name of the distribution of the turning angles.
 #' Set to "none" if the angle distribution should not be estimated.
 #' @param stepPar Parameters of the step length distribution. Must be provided in a
-#' matrix with one row for each parameter (in the order expected by the pdf of stepDist),
+#' matrix with one row for each parameter (in the order expected by the pdf of \code{stepDist}),
 #' and one column for each state.
 #' @param anglePar Parameters of the turning angle distribution. Must be provided in a
-#' matrix with one row for each parameter (in the order expected by the pdf of angleDist),
-#' and one column for each state. Default : NULL ; if the turning angles distribution
+#' matrix with one row for each parameter (in the order expected by the pdf of \code{angleDist}),
+#' and one column for each state. Default : \code{NULL} ; if the turning angles distribution
 #' is not estimated.
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero. Default : FALSE.
+#' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
+#' Default : \code{FALSE}.
 #'
 #' @return Matrix of all probabilities.
 #'

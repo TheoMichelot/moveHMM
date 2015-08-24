@@ -6,10 +6,12 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 #' Pseudo-residuals
 #' @method pseudoRes moveHMM
 #'
-#' @param m A moveHMM object.
+#' @param m A \code{moveHMM} object.
 #'
-#' @return The pseudo-residuals for the step lengths, stepRes, and the pseudo-residuals for
-#' the turning angles, angleRes.
+#' @return A list of :
+#' \item{stepRes}{The pseudo-residuals for the step lengths}
+#' \item{angleRes}{The pseudo-residuals for the turning angles}
+#'
 #' @examples
 #' m <- ex$mod # moveHMM object (returned by fitHMM)
 #' res <- pseudoRes(m)

@@ -2,19 +2,22 @@
 % Please edit documentation in R/moveHMM.R
 \name{moveHMM}
 \alias{moveHMM}
-\title{Constructor of moveHMM objects}
+\title{Constructor of \code{moveHMM} objects}
 \usage{
 moveHMM(m)
 }
 \arguments{
-\item{m}{A list of attributes of the fitted model. Mandatory slots : data, states, mle,
-stepDist, angleDist, mod (result of call to optimizer), conditions (zeroInflation,
-estAngleMean, and stationary).}
+\item{m}{A list of attributes of the fitted model : \code{mle} (the maximum likelihood estimates of
+the parameters of the model), \code{data} (the movement data), \code{stepDist} (the step length
+distribution name), \code{angleDist} (the turning angle distribution name), \code{mod} (the object
+returned by the numerical optimizer \code{nlm}), \code{states} (the series of most probable states,
+decoded by the Viterbi algorithm), \code{conditions} (a few conditions used to fit the model :
+\code{zeroInflation}, \code{estAngleMean}, \code{stationary}).}
 }
 \value{
-An object moveHMM.
+An object \code{moveHMM}.
 }
 \description{
-Constructor of moveHMM objects
+Constructor of \code{moveHMM} objects
 }
 

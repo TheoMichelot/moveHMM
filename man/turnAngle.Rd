@@ -17,7 +17,7 @@ turnAngle(x, y, z)
 The angle between vectors (x,y) and (y,z)
 }
 \description{
-Used in prepData.
+Used in \code{\link{prepData}}.
 }
 \examples{
 x <- c(0,0)

@@ -3,18 +3,18 @@
 #'
 #' @param stepDist Name of the distribution of the step lengths.
 #' @param angleDist Name of the distribution of the turning angles.
-#' Set to "none" if the angle distribution should not be estimated.
+#' Set to \code{"none"} if the angle distribution should not be estimated.
 #' @param nbStates Number of states of the HMM.
-#' @param estAngleMean TRUE if the mean of the turning angles distribution is estimated,
-#' FALSE otherwise.
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero.
+#' @param estAngleMean \code{TRUE} if the mean of the turning angles distribution is estimated,
+#' \code{FALSE} otherwise.
+#' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
 #'
-#' @return A list of three elements :
-#' - parSize (= c(number of parameters of the step length distribution,
-#' number of parameters of the turning angle distribution)),
-#' - bounds (matrix with 2 columns and sum(parSize) rows - each row contains the lower and upper
-#' bound for the correponding parameter), and
-#' - parNames (names of parameters).
+#' @return A list of :
+#' \item{parSize}{Vector of two values : number of parameters of the step length distribution,
+#' number of parameters of the turning angle distribution}
+#' \item{bounds}{Matrix with 2 columns and \code{sum(parSize)} rows - each row contains the lower and upper
+#' bound for the correponding parameter)}
+#' \item{parNames}{Names of parameters}
 
 parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
 {

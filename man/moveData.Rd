@@ -2,19 +2,19 @@
 % Please edit documentation in R/moveData.R
 \name{moveData}
 \alias{moveData}
-\title{Constructor of moveData objects}
+\title{Constructor of \code{moveData} objects}
 \usage{
 moveData(data)
 }
 \arguments{
-\item{data}{A dataframe containing the IDs, step lengths, turning angles (if any),
-and covariates (if any), as well as the x/y values (either cartesian coordinates
-or longitude/latitude)}
+\item{data}{A dataframe containing : \code{ID} (the ID(s) of the observed animal(s)), \code{step}
+(the step lengths), \code{angle} (the turning angles, if any), \code{x} (either easting or longitude),
+\code{y} (either norting or latitude), and covariates, if any.}
 }
 \value{
-An object moveData.
+An object \code{moveData}.
 }
 \description{
-Constructor of moveData objects
+Constructor of \code{moveData} objects
 }
 

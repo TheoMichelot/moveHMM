@@ -1,11 +1,12 @@
 
 #' Backward log-probabilities
 #'
-#' Used in stateProbs.
+#' Used in \code{\link{stateProbs}}.
 #'
-#' @param m A moveHMM object.
+#' @param m A \code{moveHMM} object.
 #'
 #' @return The matrix of backward log-probabilities.
+#'
 #' @examples
 #' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'

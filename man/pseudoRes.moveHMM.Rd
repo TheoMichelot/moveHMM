@@ -7,11 +7,12 @@
 \method{pseudoRes}{moveHMM}(m)
 }
 \arguments{
-\item{m}{A moveHMM object.}
+\item{m}{A \code{moveHMM} object.}
 }
 \value{
-The pseudo-residuals for the step lengths, stepRes, and the pseudo-residuals for
-the turning angles, angleRes.
+A list of :
+\item{stepRes}{The pseudo-residuals for the step lengths}
+\item{angleRes}{The pseudo-residuals for the turning angles}
 }
 \description{
 Pseudo-residuals

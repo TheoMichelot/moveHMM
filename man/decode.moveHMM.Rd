@@ -7,10 +7,12 @@
 \method{decode}{moveHMM}(m)
 }
 \arguments{
-\item{m}{moveHMM object}
+\item{m}{\code{moveHMM} object}
 }
 \value{
-List of : sp (state probabilities), res (pseudo-residuals),...
+List of :
+\item{sp}{State probabilities}
+\item{res}{Pseudo-residuals}
 }
 \description{
 Decode the model

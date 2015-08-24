@@ -8,7 +8,7 @@ viterbi(data, nbStates, beta, delta, stepDist, angleDist, stepPar,
   anglePar = NULL, angleMean = NULL, zeroInflation = FALSE)
 }
 \arguments{
-\item{data}{An object moveData.}
+\item{data}{An object \code{moveData}.}
 
 \item{nbStates}{Number of states of the HMM.}
 
@@ -19,22 +19,22 @@ viterbi(data, nbStates, beta, delta, stepDist, angleDist, stepPar,
 \item{stepDist}{Name of the distribution of the step lengths.}
 
 \item{angleDist}{Name of the distribution of the turning angles.
-Set to "none" if the angle distribution should not be estimated.}
+Set to \code{"none"} if the angle distribution should not be estimated.}
 
 \item{stepPar}{Vector of state-dependent step length distribution parameters.}
 
 \item{anglePar}{Vector of state-dependent turning angle distribution parameters.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
-Defaults to NULL.}
+Defaults to \code{NULL}.}
 
-\item{zeroInflation}{TRUE if the step length distribution is inflated in zero.}
+\item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.}
 }
 \value{
 The sequence of most probable states.
 }
 \description{
-Reconstructs the most probable states sequence. Is included in fitHMM.
+Reconstructs the most probable states sequence. Is included in \code{\link{fitHMM}}.
 }
 \examples{
 data <- ex$data

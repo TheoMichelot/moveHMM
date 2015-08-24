@@ -8,17 +8,25 @@
 #' @param stepDist Name of the distribution of the step lengths (as a character string).
 #' Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.
 #' @param angleDist Name of the distribution of the turning angles (as a character string).
-#' Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
+#' Supported distributions are : vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
 #' not be estimated. Default : vm.
 #' @param stepPar Parameters of the step length distribution.
 #' @param anglePar Parameters of the turning angle distribution.
 #' @param beta Matrix of regression parameters for the transition probabilities.
 #' @param nbCovs Number of covariates to simulate (0 by default).
-#' @param zeroInflation TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
-#' values for the zero-mass parameters should be included in stepPar.
-#' @param obsPerAnimal Bounds of the number of observations per animal. Default : (500,1500).
+#' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
+#' Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
+#' included in \code{stepPar}.
+#' @param obsPerAnimal Bounds of the number of observations per animal. Default : \code{c(500,1500)}.
 #'
-#' @return An object moveData
+#' @return An object moveData, i.e. a dataframe of :
+#' \item{ID}{The ID(s) of the observed animal(s)}
+#' \item{step}{The step lengths}
+#' \item{angle}{The turning angles (if any)}
+#' \item{x}{Either easting or longitude}
+#' \item{y}{Either norting or latitude}
+#' \item{...}{Covariates (if any)}
+#'
 #' @examples
 #' stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 #' anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2

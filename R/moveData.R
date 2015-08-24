@@ -1,11 +1,11 @@
 
-#' Constructor of moveData objects
+#' Constructor of \code{moveData} objects
 #'
-#' @param data A dataframe containing the IDs, step lengths, turning angles (if any),
-#' and covariates (if any), as well as the x/y values (either cartesian coordinates
-#' or longitude/latitude)
+#' @param data A dataframe containing : \code{ID} (the ID(s) of the observed animal(s)), \code{step}
+#' (the step lengths), \code{angle} (the turning angles, if any), \code{x} (either easting or longitude),
+#' \code{y} (either norting or latitude), and covariates, if any.
 #'
-#' @return An object moveData.
+#' @return An object \code{moveData}.
 
 moveData <- function(data)
 {

@@ -7,11 +7,13 @@
 \method{deltaMethod}{moveHMM}(m)
 }
 \arguments{
-\item{m}{A moveHMM object.}
+\item{m}{A \code{moveHMM} object.}
 }
 \value{
-inf (inferior bound of 95% confidence interval) and sup (superior bound of 95%
-confidence interval) for the parameters of the turning angle distribution.
+A list of :
+\code{inf} inferior bound of 95% confidence interval;
+\code{sup} superior bound of 95% confidence interval;
+both for the parameters of the turning angle distribution.
 }
 \description{
 Computes confidence intervals for the turning angle parameters, using the delta method.

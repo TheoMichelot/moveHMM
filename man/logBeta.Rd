@@ -7,13 +7,13 @@
 logBeta(m)
 }
 \arguments{
-\item{m}{A moveHMM object.}
+\item{m}{A \code{moveHMM} object.}
 }
 \value{
 The matrix of backward log-probabilities.
 }
 \description{
-Used in stateProbs.
+Used in \code{\link{stateProbs}}.
 }
 \examples{
 m <- ex$mod # moveHMM object (returned by fitHMM)

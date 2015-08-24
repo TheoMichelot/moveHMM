@@ -1,12 +1,12 @@
 
-#' Plot function for the moveData class
+#' Plot \code{moveData}
 #' @method plot moveData
 #'
-#' @param x An object moveData
-#' @param compact TRUE for a compact plot (all individuals at once), FALSE otherwise (default -- one
-#' individual at a time)
-#' @param ask If TRUE, the execution pauses between each plot.
-#' @param breaks Histogram parameter. See hist documentation.
+#' @param x An object \code{moveData}
+#' @param compact \code{TRUE} for a compact plot (all individuals at once), \code{FALSE} otherwise
+#' (default -- one individual at a time).
+#' @param ask If \code{TRUE}, the execution pauses between each plot.
+#' @param breaks Histogram parameter. See \code{hist} documentation.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples

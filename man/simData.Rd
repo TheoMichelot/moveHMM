@@ -18,7 +18,7 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
 Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.}
 
 \item{angleDist}{Name of the distribution of the turning angles (as a character string).
-Supported distributions are : vm, wrpcauchy. Set to "none" if the angle distribution should
+Supported distributions are : vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
 not be estimated. Default : vm.}
 
 \item{stepPar}{Parameters of the step length distribution.}
@@ -29,13 +29,20 @@ not be estimated. Default : vm.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default).}
 
-\item{zeroInflation}{TRUE if the step length distribution is inflated in zero. Default : FALSE. If TRUE,
-values for the zero-mass parameters should be included in stepPar.}
+\item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
+Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
+included in \code{stepPar}.}
 
-\item{obsPerAnimal}{Bounds of the number of observations per animal. Default : (500,1500).}
+\item{obsPerAnimal}{Bounds of the number of observations per animal. Default : \code{c(500,1500)}.}
 }
 \value{
-An object moveData
+An object moveData, i.e. a dataframe of :
+\item{ID}{The ID(s) of the observed animal(s)}
+\item{step}{The step lengths}
+\item{angle}{The turning angles (if any)}
+\item{x}{Either easting or longitude}
+\item{y}{Either norting or latitude}
+\item{...}{Covariates (if any)}
 }
 \description{
 Simulates movement data from an HMM.

@@ -6,9 +6,12 @@ decode <- function(m) UseMethod("decode") # define generic method decode
 #' Decode the model
 #' @method decode moveHMM
 #'
-#' @param m moveHMM object
+#' @param m \code{moveHMM} object
 #'
-#' @return List of : sp (state probabilities), res (pseudo-residuals),...
+#' @return List of :
+#' \item{sp}{State probabilities}
+#' \item{res}{Pseudo-residuals}
+#'
 #' @examples
 #' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'

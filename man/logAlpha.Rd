@@ -7,13 +7,13 @@
 logAlpha(m)
 }
 \arguments{
-\item{m}{A moveHMM object.}
+\item{m}{A \code{moveHMM} object.}
 }
 \value{
 The matrix of forward log-probabilities.
 }
 \description{
-Used in stateProbs and pseudoRes.
+Used in \code{\link{stateProbs}} and \code{\link{pseudoRes}}.
 }
 \examples{
 m <- ex$mod # moveHMM object (returned by fitHMM)

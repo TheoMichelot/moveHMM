@@ -7,12 +7,14 @@
 \method{confIntervals}{moveHMM}(m)
 }
 \arguments{
-\item{m}{A moveHMM object}
+\item{m}{A \code{moveHMM} object}
 }
 \value{
-inf (inferior bound of 95% confidence interval) and sup (superior bound of 95%
-confidence interval) for the parameters of the step lengths distribution, and for the
-transition probabilities regression parameters.
+A list of the following objects :
+\item{inf}{Inferior bound of 95% confidence interval for the parameters of the step lengths
+distribution, and for the transition probabilities regression parameters}
+\item{sup}{Superior bound of 95% confidence interval for the parameters of the step lengths
+distribution, and for the transition probabilities regression parameters}
 }
 \description{
 Computes the confidence intervals of the step length parameters, as well as for the transition

@@ -1,11 +1,12 @@
 
 #' Forward log-probabilities
 #'
-#' Used in stateProbs and pseudoRes.
+#' Used in \code{\link{stateProbs}} and \code{\link{pseudoRes}}.
 #'
-#' @param m A moveHMM object.
+#' @param m A \code{moveHMM} object.
 #'
 #' @return The matrix of forward log-probabilities.
+#'
 #' @examples
 #' m <- ex$mod # moveHMM object (returned by fitHMM)
 #'

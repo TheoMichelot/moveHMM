@@ -9,16 +9,16 @@ n2w(par, bounds, beta, delta = NULL, nbStates, estAngleMean)
 \arguments{
 \item{par}{Vector of state-dependent distributions parameters.}
 
-\item{bounds}{Matrix with 2 columns and as many rows as there are elements in par. Each row
+\item{bounds}{Matrix with 2 columns and as many rows as there are elements in \code{par}. Each row
 contains the lower and upper bound for the correponding parameter.}
 
 \item{beta}{Matrix of regression coefficients for the transition probabilities.}
 
-\item{delta}{Initial distribution. Default : NULL ; if the initial distribution is not estimated.}
+\item{delta}{Initial distribution. Default : \code{NULL} ; if the initial distribution is not estimated.}
 
 \item{nbStates}{The number of states of the HMM.}
 
-\item{estAngleMean}{TRUE if the angle mean is estimated, FALSE otherwise.}
+\item{estAngleMean}{\code{TRUE} if the angle mean is estimated, \code{FALSE} otherwise.}
 }
 \value{
 A vector of unconstrained parameters.

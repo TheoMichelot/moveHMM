@@ -2,15 +2,20 @@
 #' Preprocessing of the tracking data
 #'
 #' @param trackData A dataframe of the tracking data, including at least coordinates
-#' (either longitude/latitude values or cartesian coordinates), and optionnaly a field "ID"
+#' (either longitude/latitude values or cartesian coordinates), and optionnaly a field \code{ID}
 #' (identifiers for the observed individuals). Additionnal fields are considered as covariates.
 #' Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
 #' should specified.
-#' @param type 'GCD' if longitude/latitude provided (default), 'euclidean' otherwise.
-#' @param coordNames Names of the columns of coordinates in the data frame. Default : c("x","y").
+#' @param type \code{'GCD'} if longitude/latitude provided (default), \code{'euclidean'} if easting/northing.
+#' @param coordNames Names of the columns of coordinates in the data frame. Default : \code{c("x","y")}.
 #'
-#' @return An object moveData, i.e. a dataframe of ID, step lengths,
-#' turning angles and covariates values (if any).
+#' @return An object \code{moveData}, i.e. a dataframe of :
+#' \item{ID}{The ID(s) of the observed animal(s)}
+#' \item{step}{The step lengths}
+#' \item{angle}{The turning angles (if any)}
+#' \item{x}{Either easting or longitude}
+#' \item{y}{Either norting or latitude}
+#' \item{...}{Covariates (if any)}
 #'
 #' @examples
 #' coord1 <- c(1,2,3,4,5,6,7,8,9,10)

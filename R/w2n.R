@@ -5,18 +5,22 @@
 #' Used during the optimization of the log-likelihood.
 #'
 #' @param wpar Vector of state-dependent distributions unconstrained parameters.
-#' @param bounds Matrix with 2 columns and as many rows as there are elements in wpar. Each row
+#' @param bounds Matrix with 2 columns and as many rows as there are elements in \code{wpar}. Each row
 #' contains the lower and upper bound for the correponding parameter.
-#' @param parSize Vector of two values : c(number of parameters of the step length distribution,
-#' number of parameters of the turning angle distribution).
+#' @param parSize Vector of two values : number of parameters of the step length distribution,
+#' number of parameters of the turning angle distribution.
 #' @param nbStates The number of states of the HMM.
 #' @param nbCovs The number of covariates.
-#' @param estAngleMean TRUE if the angle mean is estimated, FALSE otherwise.
-#' @param stationary FALSE if there are covariates. If TRUE, the initial distribution is considered
-#' equal to the stationary distribution. Default : FALSE.
+#' @param estAngleMean \code{TRUE} if the angle mean is estimated, \code{FALSE} otherwise.
+#' @param stationary \code{FALSE} if there are covariates. If TRUE, the initial distribution is considered
+#' equal to the stationary distribution. Default : \code{FALSE}.
 #'
-#' @return A list containing a vector of natural (constrained) parameters, as well as delta
-#' and beta.
+#' @return A list of :
+#' \item{stepPar}{Matrix of natural parameters of the step length distribution}
+#' \item{anglePar}{Matrix of natural parameters of the turning angle distribution}
+#' \item{beta}{Matrix of regression coefficients of the transition probabilities}
+#' \item{delta}{Initial distribution}
+#'
 #' @examples
 #' nbStates <- 3
 #' nbCovs <- 2

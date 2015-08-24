@@ -7,9 +7,9 @@
 \method{AIC}{moveHMM}(object, ..., k = 2)
 }
 \arguments{
-\item{object}{A moveHMM object.}
+\item{object}{A \code{moveHMM} object.}
 
-\item{...}{Optional additional moveHMM objects, to compare AICs of the different models.}
+\item{...}{Optional additional \code{moveHMM} objects, to compare AICs of the different models.}
 
 \item{k}{Penalty per parameter. Default : 2 ; for classical AIC.}
 }
@@ -18,5 +18,9 @@ The AIC of the model(s) provided.
 }
 \description{
 Akaike information criterion of a moveHMM model.
+}
+\examples{
+m <- ex$mod # moveHMM object, as returned by fitHMM
+AIC(m)
 }
 

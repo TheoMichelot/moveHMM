@@ -2,28 +2,28 @@
 % Please edit documentation in R/plot_moveHMM.R
 \name{plot.moveHMM}
 \alias{plot.moveHMM}
-\title{Plot moveHMM}
+\title{Plot \code{moveHMM}}
 \usage{
 \method{plot}{moveHMM}(x, ask = TRUE, animals = NULL, breaks = "Sturges",
   hist.ylim = NULL, ...)
 }
 \arguments{
-\item{x}{Object moveHMM}
+\item{x}{Object \code{moveHMM}}
 
-\item{ask}{If TRUE, the execution pauses between each plot.}
+\item{ask}{If \code{TRUE}, the execution pauses between each plot.}
 
 \item{animals}{Vector of indices of animals for which information will be plotted.
-Default : NULL ; all animals are plotted.}
+Default : \code{NULL} ; all animals are plotted.}
 
-\item{breaks}{Histogram parameter. See hist documentation.}
+\item{breaks}{Histogram parameter. See \code{hist} documentation.}
 
-\item{hist.ylim}{Parameter ylim for the step length histograms. See hist documentation.
-Default : NULL ; the function sets default values.}
+\item{hist.ylim}{Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
+Default : \code{NULL} ; the function sets default values.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
-Plot moveHMM
+Plot \code{moveHMM}
 }
 \examples{
 m <- ex$mod # moveHMM object, as returned by fitHMM

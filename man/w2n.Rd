@@ -9,24 +9,27 @@ w2n(wpar, bounds, parSize, nbStates, nbCovs, estAngleMean, stationary)
 \arguments{
 \item{wpar}{Vector of state-dependent distributions unconstrained parameters.}
 
-\item{bounds}{Matrix with 2 columns and as many rows as there are elements in wpar. Each row
+\item{bounds}{Matrix with 2 columns and as many rows as there are elements in \code{wpar}. Each row
 contains the lower and upper bound for the correponding parameter.}
 
-\item{parSize}{Vector of two values : c(number of parameters of the step length distribution,
-number of parameters of the turning angle distribution).}
+\item{parSize}{Vector of two values : number of parameters of the step length distribution,
+number of parameters of the turning angle distribution.}
 
 \item{nbStates}{The number of states of the HMM.}
 
 \item{nbCovs}{The number of covariates.}
 
-\item{estAngleMean}{TRUE if the angle mean is estimated, FALSE otherwise.}
+\item{estAngleMean}{\code{TRUE} if the angle mean is estimated, \code{FALSE} otherwise.}
 
-\item{stationary}{FALSE if there are covariates. If TRUE, the initial distribution is considered
-equal to the stationary distribution. Default : FALSE.}
+\item{stationary}{\code{FALSE} if there are covariates. If TRUE, the initial distribution is considered
+equal to the stationary distribution. Default : \code{FALSE}.}
 }
 \value{
-A list containing a vector of natural (constrained) parameters, as well as delta
-and beta.
+A list of :
+\item{stepPar}{Matrix of natural parameters of the step length distribution}
+\item{anglePar}{Matrix of natural parameters of the turning angle distribution}
+\item{beta}{Matrix of regression coefficients of the transition probabilities}
+\item{delta}{Initial distribution}
 }
 \description{
 Scales each parameter from the set of real numbers, back to its natural interval.

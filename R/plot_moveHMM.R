@@ -1,14 +1,14 @@
 
-#' Plot moveHMM
+#' Plot \code{moveHMM}
 #' @method plot moveHMM
 #'
-#' @param x Object moveHMM
-#' @param ask If TRUE, the execution pauses between each plot.
+#' @param x Object \code{moveHMM}
+#' @param ask If \code{TRUE}, the execution pauses between each plot.
 #' @param animals Vector of indices of animals for which information will be plotted.
-#' Default : NULL ; all animals are plotted.
-#' @param breaks Histogram parameter. See hist documentation.
-#' @param hist.ylim Parameter ylim for the step length histograms. See hist documentation.
-#' Default : NULL ; the function sets default values.
+#' Default : \code{NULL} ; all animals are plotted.
+#' @param breaks Histogram parameter. See \code{hist} documentation.
+#' @param hist.ylim Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
+#' Default : \code{NULL} ; the function sets default values.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
