@@ -56,8 +56,8 @@ To an object \texttt{moveData} can then be fitted an HMM, using the function \te
 \begin{itemize}
 	\item \texttt{data} : a \texttt{moveData} object.
 	\item \texttt{nbStates} : the number of states of the HMM to be fitted.
-	\item \texttt{stepPar0} : initial values for the step length distribution parameters. Note that they should be in a vector, in the order expected by the density function of the used distribution. For an example, see Section \ref{application}.
-	\item \texttt{anglePar0} : initial values for the turning angle distribution parameters. Same remark as for \texttt{stepPar0}.
+	\item \texttt{stepPar0} : initial values for the step length distribution parameters. Note that they should be in a vector, in the order expected by the density function of the used distribution (except for ``gamma'' which expects mean and standard deviation, in this order, instead of shape and rate). For an example, see Section \ref{application}.
+	\item \texttt{anglePar0} : initial values for the turning angle distribution parameters. Same remark as for \texttt{stepPar0}. Can be \texttt{NULL} if the angle distribution is not estimated.
 	\item \texttt{beta0} : initial values for the regression coefficients of the transition probabilities. If set to \texttt{NULL}, a default value is chosen such that the transition probabilities do not depend on the covariates, and diagonal elements of the transition probability matrix are dominant.
 	\item \texttt{delta0} : initial value for the initial distribution of the HMM. If set to \texttt{NULL}, the default value is chosen to be \texttt{rep(1/nbStates,nbStates)}.
 	\item \texttt{formula} : the formula that determines the relationship between the transition probabilities and the covariates. Default is \texttt{~1}, i.e. covariate-free model.
@@ -91,7 +91,21 @@ Methods (i.e. class functions) are available for both \texttt{moveData} and \tex
 \end{itemize} 
 
 \subsubsection{simData}
+The function \texttt{simData} simulates movement data from an HMM, given its parameters. The returned object is of the class \texttt{moveData}, and can then be visualized using \texttt{plot.moveData}, or fitted using \texttt{fitHMM}.\\
 
+In order to simulate data, the following arguments can be provided :
+\begin{itemize}
+	\item \texttt{nbAnimals} : number of animals;
+	\item \texttt{nbStates} : number of states of the HMM from which the data is simulated;
+	\item \texttt{stepDist} : distribution of the simulated step lengths. Possible values are ``gamma'' (default), ``weibull'', ``lnorm'', and ``exp''.
+	\item \texttt{angleDist} : distribution of the simulated turning angles. Possible values are ``vm'' (Von Mises distribution, default), ``wrpcauchy'', and ``none'' (only steps should be simulated).
+	\item \texttt{stepPar} :  parameters of the step distribution. Note that they should be in a vector, in the order expected by the density function of the used distribution (except for ``gamma'' which expects mean and standard deviation, in this order, instead of shape and rate). For an example, see Section \ref{application}.
+	\item \texttt{anglePar} : parameters of the angle distribution. Same remark as for \texttt{stepPar}. Can be \texttt{NULL} if angles are not simulated.
+	\item \texttt{beta} : matrix of regression coefficients for the transition probabilities. If not specified, random values are chosen.
+	\item \texttt{nbCovs} : number of covariates to simulate.
+	\item \texttt{zeroInflation} : \texttt{TRUE} if zero-inflation should be included in the simulation, \texttt{FALSE} otherwise (default).
+	\item \texttt{obsPerAnimal} : range of the number of observations to be simulated for each animal, as \texttt{c(nbMin,nbMax)}. Default : \texttt{c(500,1500)}.
+\end{itemize}
 
 \section{Application} \label{application}
 We take the user through a detailed example. I think that we will include a (relatively small) real data set in \texttt{data/}, which will serve in this example.
