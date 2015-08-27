@@ -51,8 +51,18 @@ pseudoRes.moveHMM <- function(m)
   for(state in 1:nbStates) {
     # define lists of parameters
     stepArgs <- list(data$step[1])
-    for(k in 1:nrow(m$mle$stepPar))
-      stepArgs[[k+1]] <- m$mle$stepPar[k,state]
+    if(!m$conditions$zeroInflation) {
+        for(k in 1:nrow(m$mle$stepPar))
+            stepArgs[[k+1]] <- m$mle$stepPar[k,state]
+
+        zeromass <- 0
+    }
+    else {
+        for(k in 1:(nrow(m$mle$stepPar)-1))
+            stepArgs[[k+1]] <- m$mle$stepPar[k,state]
+
+        zeromass <- m$mle$stepPar[nrow(m$mle$stepPar),state]
+    }
 
     if(m$stepDist=="gamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
@@ -69,7 +79,7 @@ pseudoRes.moveHMM <- function(m)
       for(i in 1:nbObs) {
         if(!is.na(data$step[i])) {
           stepArgs[[1]] <- data$step[i]
-          pStepMat[i,state] <- do.call(stepFun,stepArgs)
+          pStepMat[i,state] <- zeromass+(1-zeromass)*do.call(stepFun,stepArgs)
         }
 
         if(!is.na(data$angle[i])) {
