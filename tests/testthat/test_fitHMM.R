@@ -6,61 +6,61 @@ test_that("Exceptions are thrown",{
   simPar <- ex$simPar
   par0 <- ex$par0
 
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), not(throws_error()))
 
   # if nbStates<1
-  expect_that(fitHMM(0,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,0,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if data empty
-  expect_that(fitHMM(simPar$nbStates,data.frame(),par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data.frame(),simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if stepPar empty
-  expect_that(fitHMM(simPar$nbStates,data,c(),par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,c(),par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if stepDist not in list
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,"unif",simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if angleDist not in list
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,"norm",simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if stepPar not within bounds
-  expect_that(fitHMM(simPar$nbStates,data,-par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,-par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if angleMean too long
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,c(simPar$angleMean,0),
                      simPar$zeroInflation), throws_error())
 
   # if wrong number of initial parameters
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0[-1],par0$anglePar0,par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0[-1],par0$anglePar0,par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0[-1],par0$beta0,par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0[-1],par0$beta0,par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if beta0 has the wrong dimensions
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0[-1,],par0$delta0,
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0[-1,],par0$delta0,
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
   # if delta0 has the wrong length
-  expect_that(fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0[-1],
+  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0[-1],
                      par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                      simPar$zeroInflation), throws_error())
 
@@ -71,7 +71,7 @@ test_that("The output has the right class",{
   simPar <- ex$simPar
   par0 <- ex$par0
 
-  mod <- fitHMM(simPar$nbStates,data,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
+  mod <- fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
                 par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
                 simPar$zeroInflation)
 
@@ -106,7 +106,7 @@ test_that("Step length only + zero-inflation works",{
   beta0 <- NULL
   delta0 <- NULL
 
-  expect_that(fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
+  expect_that(fitHMM(data,nbStates,stepPar0,anglePar0,beta0,delta0,formula,
               stepDist,angleDist,angleMean,zeroInflation,verbose=0),
               not(throws_error()))
 })
