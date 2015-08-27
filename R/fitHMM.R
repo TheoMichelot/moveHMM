@@ -4,8 +4,8 @@
 #' Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
 #' function.
 #'
-#' @param nbStates Number of states of the HMM.
 #' @param data An object \code{moveData}.
+#' @param nbStates Number of states of the HMM.
 #' @param stepPar0 Vector of initial state-dependent step length distribution parameters.
 #' The parameters should be in the order expected by the pdf of \code{stepDist}, and the (optional) zero-mass
 #' parameter should be the last. For example, for a 2-state model using the Gamma (gamma) distribution and
@@ -78,7 +78,7 @@
 #' anglePar0 <- kappa0 # the angle mean is not estimated, so only the concentration parameter is needed
 #' formula <- ~cov1+cos(cov2)
 #'
-#' mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
+#' mod <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
 #'               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
 #'
 #' @references Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
@@ -89,7 +89,7 @@
 #' Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions.
 #' Ecology, 93 (11), 2336-2342.
 
-fitHMM <- function(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
+fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
                    angleMean=NULL,zeroInflation=FALSE,stationary=FALSE,verbose=0,fit=TRUE)
 {

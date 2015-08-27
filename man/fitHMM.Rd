@@ -4,15 +4,15 @@
 \alias{fitHMM}
 \title{Fit an HMM to the data}
 \usage{
-fitHMM(nbStates, data, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
+fitHMM(data, nbStates, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
   formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
   zeroInflation = FALSE, stationary = FALSE, verbose = 0, fit = TRUE)
 }
 \arguments{
-\item{nbStates}{Number of states of the HMM.}
-
 \item{data}{An object \code{moveData}.}
+
+\item{nbStates}{Number of states of the HMM.}
 
 \item{stepPar0}{Vector of initial state-dependent step length distribution parameters.
 The parameters should be in the order expected by the pdf of \code{stepDist}, and the (optional) zero-mass
@@ -102,7 +102,7 @@ stepPar0 <- c(mu0,sigma0) # no zero-inflation, so no zero-mass included
 anglePar0 <- kappa0 # the angle mean is not estimated, so only the concentration parameter is needed
 formula <- ~cov1+cos(cov2)
 
-mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
+mod <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
 }
 \references{

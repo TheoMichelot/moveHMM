@@ -44,7 +44,7 @@ exGen <- function()
   par0 <- list(stepPar0=stepPar0,anglePar0=anglePar0,formula=formula,nbCovs=nbCovs,beta0=beta0,
                delta0=delta0)
 
-  mod <- fitHMM(nbStates,data,stepPar0,anglePar0,beta0,delta0,formula,
+  mod <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0,delta0,formula,
                 "gamma","vm",angleMean,zeroInflation)
 
   ex <- list(data=data,mod=mod,simPar=simPar,par0=par0)
