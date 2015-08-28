@@ -44,7 +44,7 @@ print.moveHMM <- function(x,...)
   if(!is.null(m$mle$gamma)) {
     cat("\n")
     cat("Transition probability matrix :\n")
-    cat("-----------------------------------\n")
+    cat("-----------------------------\n")
     print(m$mle$gamma)
   }
 
