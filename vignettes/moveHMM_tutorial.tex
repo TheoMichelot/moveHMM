@@ -11,7 +11,7 @@
 \definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
 \lstset{
 	backgroundcolor=\color{lightgrey},
-	basicstyle=\footnotesize,
+	basicstyle=\footnotesize\ttfamily,
   	breakatwhitespace=false,
  	breaklines=true,
   	keepspaces=true,
@@ -268,18 +268,86 @@ The resulting map, and the steps and angles graphs for the first animal, are dis
 	\label{moveData}
 \end{figure}
 
-\subsection{Fitting the model}
-We go through all the options of \texttt{fitHMM}, and demonstrate its use on the real data example.
+The time series of the step lengths is one way to check the data for outliers.
 
-Here we can warn the user about the choice of the initial values.
+\subsection{Fitting the model}
+The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments are described in the documentation. Here are a few choices we make :
+\begin{itemize}
+	\item \texttt{nbStates=2}, i.e. we fit a 2-state HMM to the data;
+	\item \texttt{beta0=NULL} and \texttt{delta0=NULL}, i.e. \texttt{beta0} and \texttt{delta0} will take their default values.
+	\item \texttt{formula=~1}, i.e. covariate free model;
+	\item \texttt{stepDist="gamma"}, to model the step lengths with the Gamma distribution;
+	\item \texttt{angleDist="vm"}, to model the turning angles with the Von Mises distribution;
+	\item \texttt{angleMean=NULL}, because we want to estimate the mean of the angle distribution;
+	\item \texttt{zeroInflation=TRUE}, because some step lengths are zero;
+	\item \texttt{stationary=TRUE}, i.e. we consider the initial distribution as the stationary distribution. This is possible because there are no covariates in the model. 
+\end{itemize}
+
+We also need to specify initial values for the parameters, which are used by the optimization function. Note that this choice is crucial, and that the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen.
+
+\begin{lstlisting}
+# initial parameters
+mu0 <- c(100,1000) # mean of the steps
+sigma0 <- c(100,1000) # sd of the steps
+zeromass0 <- c(0.05,0.0001) # zero-mass of the steps
+stepPar0 <- c(mu0,sigma0,zeromass0)
+angleMean0 <- c(pi,0) # mean of the angles
+kappa0 <- c(1,1) # concentration of the angles
+anglePar0 <- c(angleMean0,kappa0)
+
+# call to fitting function
+m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,
+		anglePar0=anglePar0,zeroInflation=TRUE,stationary=TRUE)
+\end{lstlisting}
+
+The returned object, \texttt{m}, is of the class \texttt{moveHMM}. It can be printed, to get the MLE of the parameters.
+
+\begin{lstlisting}
+> m
+Value of the maximum log-likelihood : -6939.139 
+
+Step length parameters :
+----------------------
+mean 
+[1]  370.2011 3230.1156
+sd 
+[1]  394.7855 4357.0133
+zero-mass 
+[1] 2.010399e-03 3.301028e-09
+
+Turning angle parameters :
+------------------------
+mean 
+[1] -3.0223613 -0.0391857
+concentration 
+[1] 0.6029967 0.2028802
+
+Transition probabilities parameters :
+-----------------------------------
+          [,1]      [,2]
+[1,] -2.312046 -1.400165
+
+Transition probability matrix :
+-----------------------------
+          [,1]       [,2]
+[1,] 0.9098698 0.09013023
+[2,] 0.1977899 0.80221012
+
+Initial distribution :
+--------------------
+[1] 0.686961 0.313039
+\end{lstlisting}
 
 \subsection{Using the model}
-We need to mention :
-\begin{itemize}
-	\item Plotting : describe the function \texttt{plot.moveHMM} and the graphical options, and display all the plots;
-	\item Decoding : describe the decoding functions, such as \texttt{viterbi}, \texttt{stateProbs}, and \texttt{pseudoRes}, and apply them to the data;
-	\item Assessing : we don't really have the functions yet, but we will need to explain how to obtain confidence intervals, and how to plot them. We might want to mention the simulation function as an assessing tool.
-\end{itemize}
+Various methods are available for the class \texttt{moveHMM}, and here we explain how to use them on the example.
+
+\subsubsection{Plot the model}
+
+
+
+\subsubsection{Decode the model}
+
+\subsubsection{Assess the model}
 
 
 \begin{thebibliography}{}
