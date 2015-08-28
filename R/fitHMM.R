@@ -81,7 +81,8 @@
 #' mod <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
 #'               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
 #'
-#' @references Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
+#' @references
+#' Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
 #' Classifying movement behaviour in relation to environmental conditions using hidden Markov models.
 #' Journal of Animal Ecology, 78 (6), 1113-1123.
 #'
