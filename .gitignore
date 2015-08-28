@@ -8,3 +8,4 @@ src/*.dll
 vignettes/*.aux
 vignettes/*.log
 vignettes/*.gz
+vignettes/*.out
