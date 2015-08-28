@@ -3,7 +3,22 @@
 \usepackage[pdftex]{graphicx} % for includegraphics
 \usepackage[bf,font={small,sl}]{caption} % for pretty captions
 \usepackage{natbib} % for the bibliography
-\usepackage{amsmath} % for align
+\usepackage{amsmath} % for align and cases
+\usepackage{listings} % for lstlisting
+\usepackage{color} % for lstlisting background color
+
+% listing style
+\definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
+\lstset{
+	backgroundcolor=\color{lightgrey},
+	basicstyle=\footnotesize,
+  	breakatwhitespace=false,
+ 	breaklines=true,
+  	keepspaces=true,
+  	language=R,
+  	tabsize=2,
+  	deletekeywords={data,step}
+}
 
 \title{\texttt{moveHMM}\\ An R package for animal movement modelling}
 \author{Michelot T., Langrock R., Patterson T., and Rexstad E.}
@@ -160,22 +175,98 @@ The function \texttt{simData} simulates movement data from an HMM, given its par
 The arguments of \texttt{simData} are detailed in the documentation.
 
 \section{Application} \label{application}
-We take the user through a detailed example. I think that we will include a (relatively small) real data set in \texttt{data/}, which will serve in this example.
+In this section, we illustrate the possibilities of the package on a real data example. We use the data from \cite{morales2004}, collected on four elks in Canada. 
 
 \subsection{Movement data}
-We describe the format of the data that the user needs to input :
+In order to be preprocessed and fitted, the data needs to have the correct format. It needs to be a \texttt{data.frame}, with two mandatory columns :
 \begin{itemize}
-	\item R data frame;
-	\item regular time intervals;
-	\item mandatory column names : "ID", "x", "y", ...;
-	\item additional columns are considered as covariates;
-	\item warn the user about missing covariate values;
-	\item warn the user about outliers.
+	\item Easting or longitude (default name : \texttt{x})
+	\item Northing or latitude (default name : \texttt{y})
+\end{itemize}
+It is possible to have a column ``ID'', which contains the identifiers of the observed animals. If no column named ``ID'' is provided, all the observations will be considered to concern a single animal.
+
+Additional columns are considered as covariates. Note that covariates need to have numerical values.\\
+
+\subsubsection{Load and format the tracking data}
+
+The data is available from the following URL : 
+\begin{center}
+	http://www.esapubs.org/archive/ecol/E085/072/elk\_data.txt
+\end{center}
+We load the relevant rows and columns into a data frame using the \texttt{read.table} command.
+
+\begin{lstlisting}
+trackData <- read.table(
+		"http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
+		sep="\t",header=TRUE)[1:735,c(1,2,3)]
+\end{lstlisting}
+
+The dataframe \texttt{trackData} now has three columns : ``Individual'', ``Easting'', and ``Northing''.
+
+\begin{lstlisting}
+> head(trackData)
+  Individual Easting Northing
+1    elk-115  769928  4992847
+2    elk-115  766875  4997444
+3    elk-115  765949  4998516
+4    elk-115  765938  4998276
+5    elk-115  766275  4998005
+6    elk-115  766368  4998051
+\end{lstlisting}
+
+The animals' identifiers need to be stored in a column named ``ID'', before we can preprocess the data. Thus, we modify it accordingly.
+
+\begin{lstlisting}
+colnames(trackData)[1] <- "ID"
+\end{lstlisting}
+
+\subsubsection{Use \texttt{prepData}}
+Now that the data has the right format, it is possible to call the preprocessing function \texttt{prepData}. We choose the arguments carefully :
+\begin{itemize}
+	\item \texttt{type} specifies whether the coordinates are easting/northing or longitude/latitude values. The latter is the default, so we need to call the function with the argument \texttt{type="euclidean"}, to indicate that we want to use the euclidean distance.
+	\item \texttt{coordNames} are the names of the coordinates in the input dataframe. The default is ``x'' and ``y'', so we need to call the function with the argument \texttt{coordNames=c("Easting","Northing")}.
 \end{itemize}
 
-We explain how to use the function \texttt{prepData} to transform the tracking data into movement data.
+\noindent Eventually, the call to the function is,
 
-We explain how to use \texttt{plot.moveData}, which graphical options are available, and we display the output.
+\begin{lstlisting}
+data <- prepData(trackData,type="euclidean",coordNames=c("Easting","Northing"))
+\end{lstlisting}
+
+The step lengths and turning angles are computed, and the returned object is a data frame.
+
+\begin{lstlisting}
+> head(data)
+       ID      step      angle      x       y
+1 elk-115        NA         NA 769928 4992847
+2 elk-115 5518.4434  0.1262112 766875 4997444
+3 elk-115 1416.5663  2.3832412 765949 4998516
+4 elk-115  239.7525  0.9385238 765938 4998276
+5 elk-115  432.7600  1.1375066 766275 4998005
+6 elk-115  103.7545 -0.9687435 766368 4998051
+\end{lstlisting}
+
+Note that the coordinate have been renamed ``x'' and ``y''. This makes the processing of the data simpler.\\
+
+If the data contains covariates, which have missing values, those are replaced by the closer non-missing value (by default, the previous one if it is available). This is arbitrary, and might result in misinterpretation of the data.
+
+\subsubsection{Use \texttt{plot.moveData}}
+Once the data has been preprocessed, it is possible to plot it, using the generic function \texttt{plot}. It displays maps of the animals' tracks, times series of the steps and angles, and histograms of the steps and angles. A few plotting options are available, and described in the documentation.\\
+
+\noindent We want to plot all animals' tracks on a single map, so we call :
+
+\begin{lstlisting}
+plot(data,compact=T)
+\end{lstlisting}
+
+The resulting map, and the steps and angles graphs for the first animal, are displayed in Figure \ref{moveData}.
+
+\begin{figure}[h]
+	\includegraphics[width=0.49\textwidth]{pictures/map_moveData}
+	\includegraphics[width=0.49\textwidth]{pictures/graphs_elk1}
+	\caption{Map of the animals' tracks (left) -- each color represents an animal. Graphs of the step lengths and turning angles for one individual (right).}
+	\label{moveData}
+\end{figure}
 
 \subsection{Fitting the model}
 We go through all the options of \texttt{fitHMM}, and demonstrate its use on the real data example.
@@ -193,15 +284,20 @@ We need to mention :
 
 \begin{thebibliography}{}
 
-\bibitem[\protect\citeauthoryear{Langrock}{2012}]{langrock2012}
+\bibitem[\protect\citeauthoryear{Langrock et al.}{2012}]{langrock2012}
 \textsc{Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M.} (2012),
 ``Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions''
-\textit{Ecology}, 93 (11), 2336-2342.
+\textit{Ecology}, 93 (11), 2336--2342.
 
-\bibitem[\protect\citeauthoryear{Patterson}{2009}]{patterson2009}
-\textsc{Patterson T.A., Basson M., Bravington M.V., Gunn J.S.} (2012),
+\bibitem[\protect\citeauthoryear{Morales et al.}{2004}]{morales2004}
+\textsc{Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M.} (2004),
+``Extracting more out of relocation data : building movement models as mixtures of random walks'',
+\textit{Ecology}, 85 (9), 2436--2445.
+
+\bibitem[\protect\citeauthoryear{Patterson et al.}{2009}]{patterson2009}
+\textsc{Patterson T.A., Basson M., Bravington M.V., Gunn J.S.} (2009),
 ``Classifying movement behaviour in relation to environmental conditions using hidden Markov models''
-\textit{Journal of Animal Ecology}, 78 (6), 1113-1123.
+\textit{Journal of Animal Ecology}, 78 (6), 1113--1123.
 
 \bibitem[\protect\citeauthoryear{Zucchini and MacDonald}{2009}]{zucchini2009}
 \textsc{Zucchini, W.\ and MacDonald, I.L.} (2009).
