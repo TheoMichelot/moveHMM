@@ -251,7 +251,7 @@ Note that the coordinate have been renamed ``x'' and ``y''. This makes the proce
 If the data contains covariates, which have missing values, those are replaced by the closer non-missing value (by default, the previous one if it is available). This is arbitrary, and might result in misinterpretation of the data.
 
 \subsubsection{Use \texttt{plot.moveData}}
-Once the data has been preprocessed, it is possible to plot it, using the generic function \texttt{plot}. It displays maps of the animals' tracks, times series of the steps and angles, and histograms of the steps and angles. A few plotting options are available, and described in the documentation.\\
+Once the data has been preprocessed, it is possible to plot it, using the generic method \texttt{plot}. It displays maps of the animals' tracks, times series of the steps and angles, and histograms of the steps and angles. A few plotting options are available, and described in the documentation.\\
 
 \noindent We want to plot all animals' tracks on a single map, so we call :
 
@@ -342,7 +342,13 @@ Initial distribution :
 Various methods are available for the class \texttt{moveHMM}, and here we explain how to use them on the example.
 
 \subsubsection{Plot the model}
+The fitted model can be plotted, using the generic method \texttt{plot}. A few graphical options are available, and listed in the documentation.
 
+Here, we plot the map of the first animal's track, colored by states, and the fitted densities of the steps and angles for that animal (elk-115). To do so, we call :
+
+\begin{lstlisting}
+plot(m,animals="elk-115")
+\end{lstlisting}
 
 
 \subsubsection{Decode the model}
