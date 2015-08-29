@@ -55,7 +55,7 @@ deltaMethod.moveHMM <- function(m)
     Sigma <- Sigma[(foo-nbStates):length(wpar),(foo-nbStates):length(wpar)]
 
     grad_kappa <- c(x/sqrt(x^2+y^2),y/sqrt(x^2+y^2))
-    grad_angleMean <- c(-y/(x^2+y^2),1/(x^2+y^2))
+    grad_angleMean <- c(-y/(x^2+y^2),1/(x+y^2/x))
 
     var_kappa <- grad_kappa%*%Sigma%*%grad_kappa
     var_angleMean <- grad_angleMean%*%Sigma%*%grad_angleMean
