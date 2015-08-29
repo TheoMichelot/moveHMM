@@ -9,6 +9,7 @@
 
 % listing style
 \definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
+\definecolor{lightblue}{rgb}{0.5,0.5,1}
 \lstset{
 	backgroundcolor=\color{lightgrey},
 	basicstyle=\footnotesize\ttfamily,
@@ -17,7 +18,8 @@
   	keepspaces=true,
   	language=R,
   	tabsize=2,
-  	deletekeywords={data,step}
+  	deletekeywords={data,step},
+  	commentstyle=\footnotesize\color{lightblue}\it\ttfamily
 }
 
 \title{\texttt{moveHMM}\\ An R package for animal movement modelling}
