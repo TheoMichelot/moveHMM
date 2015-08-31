@@ -36,7 +36,8 @@
 
 w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 {
-  if(nbStates<1) stop("Number of states must be 1 at least.")
+  if(nbStates<1)
+    stop("Number of states must be 1 at least.")
 
   # identify initial distribution parameters
   if(!stationary) {
@@ -52,7 +53,6 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
   beta <- wpar[foo:length(wpar)]
   beta <- matrix(beta,nrow=nbCovs+1)
-
   wpar <- wpar[-(foo:length(wpar))]
 
   if(estAngleMean) {
@@ -70,8 +70,9 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   }
 
   nbPar <- length(wpar)/nbStates
+  if(nbPar!=sum(parSize))
+    stop("Wrong number of parameters.")
 
-  if(nbPar!=sum(parSize)) stop("Wrong number of parameters.")
   par <- NULL
   for(i in 1:nbPar) {
     index <- (i-1)*nbStates+1

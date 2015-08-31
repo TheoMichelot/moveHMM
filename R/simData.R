@@ -77,7 +77,8 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     stop("obsPerAnimal should have positive values.")
 
   # generate regression parameters for transition probabilities
-  if(is.null(beta)) beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
+  if(is.null(beta))
+    beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
   # initial state distribution
   delta <- rep(1,nbStates)/nbStates
 
