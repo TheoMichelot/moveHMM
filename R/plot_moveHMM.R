@@ -74,7 +74,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       # Histogram of step lengths
       if(is.null(hist.ylim)) { # default
         ymin <- 0
-        h <- hist(m$data$step[ind],plot=F)
+        h <- hist(m$data$step[ind],plot=F,breaks=breaks)
         ymax <- 1.5*max(h$density)
       }
       else {
@@ -128,7 +128,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       # Histogram of step lengths
       if(is.null(hist.ylim)) { # default
         ymin <- 0
-        h <- hist(m$data$step[ind],plot=F)
+        h <- hist(m$data$step[ind],plot=F,breaks=breaks)
         ymax <- 1.5*max(h$density)
       }
       else {
@@ -162,7 +162,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
 
       # Histogram of turning angles
-      h <- hist(m$data$angle[ind],plot=F) # to determine ylim
+      h <- hist(m$data$angle[ind],plot=F,breaks=breaks) # to determine ylim
       ymax <- 1.5*max(h$density)
       hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
            col="lightgrey",border="white",breaks=breaks,xaxt="n")
