@@ -9,6 +9,8 @@
 #' @param breaks Histogram parameter. See \code{hist} documentation.
 #' @param hist.ylim Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
 #' Default : \code{NULL} ; the function sets default values.
+#' @param compactHist If \code{TRUE}, the function only plots histograms of all observations for steps
+#' and angles, with the fitted densities (no map, and no individual-specific plot). Default : \code{FALSE}.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
@@ -16,7 +18,7 @@
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
 
-plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,...)
+plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,compactHist=FALSE,...)
 {
   m <- x
   nbAnimals <- length(unique(m$data$ID))
@@ -48,6 +50,10 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     }
   }
 
+  # if compactHist, only one histogram is plotted
+  if(compactHist)
+    animalsInd <- 1
+
   # check arguments
   if(!is.null(hist.ylim) & length(hist.ylim)!=2)
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
@@ -68,8 +74,13 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
   if(m$angleDist=="none") { # if step only
     for(zoo in animalsInd) {
-      ID <- unique(m$data$ID)[zoo]
-      ind <- which(m$data$ID==ID)
+      if(compactHist) {
+        ID <- "all animals"
+        ind <- 1:nrow(m$data)
+      } else {
+        ID <- unique(m$data$ID)[zoo]
+        ind <- which(m$data$ID==ID)
+      }
 
       # Histogram of step lengths
       if(is.null(hist.ylim)) { # default
@@ -110,20 +121,25 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
   }
   else { # if step + angle
     for(zoo in animalsInd) {
-      ID <- unique(m$data$ID)[zoo]
-      ind <- which(m$data$ID==ID)
-      x <- m$data$x[ind]
-      y <- m$data$y[ind]
-      states <- m$states[ind]
+      if(compactHist) {
+        ID <- "all animals"
+        ind <- 1:nrow(m$data)
+      } else {
+        ID <- unique(m$data$ID)[zoo]
+        ind <- which(m$data$ID==ID)
+        x <- m$data$x[ind]
+        y <- m$data$y[ind]
+        states <- m$states[ind]
 
-      # Map of the track, colored by states
-      plot(x[1],y[1],xlim=c(min(x,na.rm=T),max(x,na.rm=T)),ylim=c(min(y,na.rm=T),max(y,na.rm=T)),
-           pch=18,xlab="x",ylab="y")
-      for(i in 2:length(x)) {
-        points(x[i],y[i],pch=16,col=states[i-1]+1,cex=0.6)
-        segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+1,lwd=1.3)
+        # Map of the track, colored by states
+        plot(x[1],y[1],xlim=c(min(x,na.rm=T),max(x,na.rm=T)),ylim=c(min(y,na.rm=T),max(y,na.rm=T)),
+             pch=18,xlab="x",ylab="y")
+        for(i in 2:length(x)) {
+          points(x[i],y[i],pch=16,col=states[i-1]+1,cex=0.6)
+          segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+1,lwd=1.3)
+        }
+        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }
-      mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
 
       # Histogram of step lengths
       if(is.null(hist.ylim)) { # default
@@ -188,32 +204,34 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     }
   }
 
-  # plot the transition probabilities as functions of the covariates
-  par(mfrow=c(nbStates,nbStates))
-  par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
+  if(!compactHist) {
+    # plot the transition probabilities as functions of the covariates
+    par(mfrow=c(nbStates,nbStates))
+    par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
 
-  covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
-                     names(m$data)!="step" & names(m$data)!="angle")
-  allCovs <- m$data[,covsCol]
+    covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
+                       names(m$data)!="step" & names(m$data)!="angle")
+    allCovs <- m$data[,covsCol]
 
-  if(nrow(m$mle$beta)>1) {
-    for(cov in 2:nrow(m$mle$beta)) {
-      inf <- min(allCovs[,cov],na.rm=T)
-      sup <- max(allCovs[,cov],na.rm=T)
+    if(nrow(m$mle$beta)>1) {
+      for(cov in 2:nrow(m$mle$beta)) {
+        inf <- min(allCovs[,cov],na.rm=T)
+        sup <- max(allCovs[,cov],na.rm=T)
 
-      meanCovs <- colSums(allCovs)/nrow(allCovs)
-      desMat <- matrix(rep(meanCovs,100),ncol=length(meanCovs),byrow=TRUE)
+        meanCovs <- colSums(allCovs)/nrow(allCovs)
+        desMat <- matrix(rep(meanCovs,100),ncol=length(meanCovs),byrow=TRUE)
 
-      desMat[,cov] <- seq(inf,sup,length=100)
+        desMat[,cov] <- seq(inf,sup,length=100)
 
-      trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
+        trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
 
-      for(i in 1:nbStates)
-        for(j in 1:nbStates)
-          plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
-               ylab=paste(i,"->",j))
+        for(i in 1:nbStates)
+          for(j in 1:nbStates)
+            plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
+                 ylab=paste(i,"->",j))
 
-      mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
+        mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
+      }
     }
   }
 
