@@ -25,7 +25,7 @@ confIntervals <- function(m) UseMethod("confIntervals") # define generic method 
 
 confIntervals.moveHMM <- function(m)
 {
-  if(is.na(m$mod))
+  if(length(m$mod)<=1)
     stop("The given model hasn't been fitted.")
 
   nbStates <- ncol(m$mle$stepPar)
