@@ -27,7 +27,7 @@ deltaMethod.moveHMM <- function(m)
     stop("No angle parameter estimated.")
 
   if(length(m$mod)<=1)
-    stop("The given model hasn't been fitted.")
+    stop("The given model hasn't been fitted.") # if fit=FALSE in fitHMM
 
   wpar <- m$mod$estimate
   nbStates <- ncol(m$mle$stepPar)
@@ -37,10 +37,15 @@ deltaMethod.moveHMM <- function(m)
                      names(m$data)!="step" & names(m$data)!="angle")
   nbCovs <- length(covsCol)-1 # substract intercept column
 
+  # remove delta
   foo <- length(wpar)-nbStates+2
   wpar <- wpar[-(foo:length(wpar))]
+
+  # remove beta
   foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
   wpar <- wpar[-(foo:length(wpar))]
+
+  # identify x and y
   foo <- length(wpar)-nbStates+1
   x <- wpar[(foo-nbStates):(foo-1)]
   y <- wpar[foo:length(wpar)]
@@ -48,12 +53,17 @@ deltaMethod.moveHMM <- function(m)
   angleMean <- m$mle$anglePar[1,]
   kappa <- m$mle$anglePar[2,]
 
+  # compute covariance matrix
   Sigma <- ginv(m$mod$hessian)
+  # only keep relevant rows and columns (x and y parameters)
   Sigma <- Sigma[(foo-nbStates):length(wpar),(foo-nbStates):length(wpar)]
 
+  # gradient of sqrt(x^2+y^2)
   grad_kappa <- c(x/sqrt(x^2+y^2),y/sqrt(x^2+y^2))
+  # gradient of arctan(y/x)
   grad_angleMean <- c(-y/(x^2+y^2),1/(x+y^2/x))
 
+  # apply delta method formula
   var_kappa <- grad_kappa%*%Sigma%*%grad_kappa
   if(m$conditions$estAngleMean)
     var_angleMean <- grad_angleMean%*%Sigma%*%grad_angleMean
