@@ -19,7 +19,8 @@
   	language=R,
   	tabsize=2,
   	deletekeywords={data,step},
-  	commentstyle=\footnotesize\color{lightblue}\it\ttfamily
+  	commentstyle=\footnotesize\color{lightblue}\it\ttfamily,
+  	literate={~} {$\sim$}{1} % for nice tildes in listings
 }
 
 \title{\texttt{moveHMM}\\ An R package for animal movement modelling}
@@ -200,26 +201,45 @@ We load the relevant rows and columns into a data frame using the \texttt{read.t
 \begin{lstlisting}
 trackData <- read.table(
 		"http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
-		sep="\t",header=TRUE)[1:735,c(1,2,3)]
+		sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
 \end{lstlisting}
 
-The dataframe \texttt{trackData} now has three columns : ``Individual'', ``Easting'', and ``Northing''.
+The dataframe \texttt{trackData} now has four columns : ``Individual'', ``Easting'', and ``Northing'', and ``dist\_water..meters.''. The last one is the distance of the animal to water, which we want to include in the model as a covariate.
 
 \begin{lstlisting}
 > head(trackData)
-  Individual Easting Northing
-1    elk-115  769928  4992847
-2    elk-115  766875  4997444
-3    elk-115  765949  4998516
-4    elk-115  765938  4998276
-5    elk-115  766275  4998005
-6    elk-115  766368  4998051
+  Individual Easting Northing dist_water..meters.
+1    elk-115  769928  4992847              200.00
+2    elk-115  766875  4997444              600.52
+3    elk-115  765949  4998516              561.81
+4    elk-115  765938  4998276              550.00
+5    elk-115  766275  4998005              302.08
+6    elk-115  766368  4998051              213.60
 \end{lstlisting}
 
-The animals' identifiers need to be stored in a column named ``ID'', before we can preprocess the data. Thus, we modify it accordingly.
+The animals' identifiers need to be stored in a column named ``ID'', before we can preprocess the data. Thus, we modify it accordingly. We also shorten the name of the covariate.
 
 \begin{lstlisting}
 colnames(trackData)[1] <- "ID"
+colnames(trackData)[4] <- "dist_water"
+\end{lstlisting}
+
+Besides, we decide that we want to deal with distances in kilometers, instead of meters, for the step lengths.
+\begin{lstlisting}
+trackData$Easting <- trackData$Easting/1000
+trackData$Northing <- trackData$Northing/1000
+\end{lstlisting}
+
+\noindent Finally, this is what the data looks like :
+\begin{lstlisting}
+> head(trackData)
+       ID Easting Northing dist_water
+1 elk-115 769.928 4992.847     200.00
+2 elk-115 766.875 4997.444     600.52
+3 elk-115 765.949 4998.516     561.81
+4 elk-115 765.938 4998.276     550.00
+5 elk-115 766.275 4998.005     302.08
+6 elk-115 766.368 4998.051     213.60
 \end{lstlisting}
 
 \subsubsection{Use \texttt{prepData}}
@@ -239,13 +259,13 @@ The step lengths and turning angles are computed, and the returned object is a d
 
 \begin{lstlisting}
 > head(data)
-       ID      step      angle      x       y
-1 elk-115        NA         NA 769928 4992847
-2 elk-115 5518.4434  0.1262112 766875 4997444
-3 elk-115 1416.5663  2.3832412 765949 4998516
-4 elk-115  239.7525  0.9385238 765938 4998276
-5 elk-115  432.7600  1.1375066 766275 4998005
-6 elk-115  103.7545 -0.9687435 766368 4998051
+       ID      step      angle       x        y dist_water
+1 elk-115        NA         NA 769.928 4992.847     200.00
+2 elk-115 5.5184434  0.1262112 766.875 4997.444     600.52
+3 elk-115 1.4165663  2.3832412 765.949 4998.516     561.81
+4 elk-115 0.2397525  0.9385238 765.938 4998.276     550.00
+5 elk-115 0.4327600  1.1375066 766.275 4998.005     302.08
+6 elk-115 0.1037545 -0.9687435 766.368 4998.051     213.60
 \end{lstlisting}
 
 Note that the coordinate have been renamed ``x'' and ``y''. This makes the processing of the data simpler.\\
@@ -277,67 +297,62 @@ The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments ar
 \begin{itemize}
 	\item \texttt{nbStates=2}, i.e. we fit a 2-state HMM to the data;
 	\item \texttt{beta0=NULL} and \texttt{delta0=NULL}, i.e. \texttt{beta0} and \texttt{delta0} will take their default values.
-	\item \texttt{formula=~1}, i.e. covariate free model;
+	\item \texttt{formula=$\sim$dist\_water}, i.e. the transition probabilities are functions of the covariate ``dist\_water'';
 	\item \texttt{stepDist="gamma"}, to model the step lengths with the Gamma distribution;
 	\item \texttt{angleDist="vm"}, to model the turning angles with the Von Mises distribution;
 	\item \texttt{angleMean=NULL}, because we want to estimate the mean of the angle distribution;
 	\item \texttt{zeroInflation=TRUE}, because some step lengths are zero;
-	\item \texttt{stationary=TRUE}, i.e. we consider the initial distribution as the stationary distribution. This is possible because there are no covariates in the model. 
+	\item \texttt{stationary=FALSE}, because there are covariates in the model, so the process is not stationary. 
 \end{itemize}
 
 We also need to specify initial values for the parameters, which are used by the optimization function. Note that this choice is crucial, and that the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen.
 
 \begin{lstlisting}
 # initial parameters
-mu0 <- c(100,1000) # mean of the steps
-sigma0 <- c(100,1000) # sd of the steps
-zeromass0 <- c(0.05,0.0001) # zero-mass of the steps
+mu0 <- c(0.1,1) # step mean
+sigma0 <- c(0.1,1) # step SD
+zeromass0 <- c(0.05,0.0001) # step zero-mass
 stepPar0 <- c(mu0,sigma0,zeromass0)
-angleMean0 <- c(pi,0) # mean of the angles
-kappa0 <- c(1,1) # concentration of the angles
+angleMean0 <- c(pi,0) # angle mean
+kappa0 <- c(1,1) # angle concentration
 anglePar0 <- c(angleMean0,kappa0)
 
 # call to fitting function
 m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,
-		anglePar0=anglePar0,zeroInflation=TRUE,stationary=TRUE)
+			anglePar0=anglePar0,formula=~dist_water,
+			zeroInflation=TRUE)
 \end{lstlisting}
 
 The returned object, \texttt{m}, is of the class \texttt{moveHMM}. It can be printed, to get the MLE of the parameters.
 
 \begin{lstlisting}
-> m
-Value of the maximum log-likelihood : -6939.139 
+Value of the maximum log-likelihood : -1889.577 
 
 Step length parameters :
 ----------------------
 mean 
-[1]  370.2011 3230.1156
+[1] 0.3518201 3.2158010
 sd 
-[1]  394.7855 4357.0133
+[1] 0.3733844 4.2300706
 zero-mass 
-[1] 2.010399e-03 3.301028e-09
+[1] 1.972930e-03 9.868506e-05
 
 Turning angle parameters :
 ------------------------
 mean 
-[1] -3.0223613 -0.0391857
+[1] -3.00374082  0.07483796
 concentration 
-[1] 0.6029967 0.2028802
+[1] 0.6107724 0.1995998
 
 Transition probabilities parameters :
 -----------------------------------
-          [,1]      [,2]
-[1,] -2.312046 -1.400165
-
-Transition probability matrix :
------------------------------
-          [,1]       [,2]
-[1,] 0.9098698 0.09013023
-[2,] 0.1977899 0.80221012
+              [,1]        [,2]
+[1,] -1.7361333832 -1.75859013
+[2,] -0.0004917698  0.00096799
 
 Initial distribution :
 --------------------
-[1] 0.686961 0.313039
+[1] 0.4535416 0.5464584
 \end{lstlisting}
 
 \subsection{Using the model}
@@ -352,8 +367,23 @@ Here, we plot the map of the first animal's track, colored by states, and the fi
 plot(m,animals="elk-115")
 \end{lstlisting}
 
+This outputs four plots, which are shown in Figure \ref{moveHMM}.\\
+
+\begin{figure}[h]
+	\includegraphics[width=0.49\textwidth]{pictures/hist_step_elk1}
+	\includegraphics[width=0.49\textwidth]{pictures/hist_angle_elk1} \\
+ 	\includegraphics[width=0.49\textwidth]{pictures/map_elk1}
+	\includegraphics[width=0.49\textwidth]{pictures/tpm_elk1}
+	\caption{Output of \texttt{plot.moveHMM} for ``elk-115''. Histogram of step lengths with fitted distributions (top-left), histogram of turning angles with fitted distributions (top-right), map of decoded track (bottom-left), and transition probabilities as functions of ``dist\_water'' (bottom-right).}
+	\label{moveHMM}
+\end{figure}
+
+The first state (in red on the plots) corresponds to short steps, and angles centered around $\pi$, and the second state (en green on the plots) corresponds to longer steps, and angles centered around $0$.
+
+The second row of plots of the transition probabilities as functions of the distance to water seem to indicate that the animals tend to switch from the second state to the first state when they are far from water, whereas they stay in the second state when closer to water.
 
 \subsubsection{Decode the model}
+
 
 \subsubsection{Assess the model}
 
