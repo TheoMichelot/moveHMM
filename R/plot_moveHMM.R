@@ -68,6 +68,11 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     m$mle$stepPar <- m$mle$stepPar[-nrow(m$mle$stepPar),]
   }
 
+  # text for legends
+  text <- NULL
+  for(i in 1:nbStates)
+    text <- c(text,paste("State",i))
+
   par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=ask)
@@ -94,7 +99,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
       hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
            col="lightgrey",border="white",breaks=breaks)
+
       mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
         # Constitute the lists of state-dependent parameters for the step
@@ -117,6 +124,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         else
           lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
       }
+
+      # add a legend
+      legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
     }
   }
   else { # if step + angle
@@ -177,6 +187,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           lines(grid,w[state]*do.call(stepFun,stepArgs),col=state+1,lwd=2)
       }
 
+      # add a legend
+      legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+
       # Histogram of turning angles
       h <- hist(m$data$angle[ind],plot=F,breaks=breaks) # to determine ylim
       ymax <- 1.5*max(h$density)
@@ -201,6 +214,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         else
           lines(grid,w[state]*do.call(angleFun,angleArgs),col=state+1,lwd=2)
       }
+
+      # add a legend
+      legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
     }
   }
 
