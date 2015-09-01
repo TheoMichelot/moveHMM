@@ -11,6 +11,7 @@
 #' Default : \code{NULL} ; the function sets default values.
 #' @param compactHist If \code{TRUE}, the function only plots histograms of all observations for steps
 #' and angles, with the fitted densities (no map, and no individual-specific plot). Default : \code{FALSE}.
+#' @param sepStates If TRUE, the data is split by states in the histograms. Default : \code{FALSE}.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
@@ -18,7 +19,8 @@
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
 
-plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,compactHist=FALSE,...)
+plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,compactHist=FALSE,
+                         sepStates=FALSE,...)
 {
   m <- x
   nbAnimals <- length(unique(m$data$ID))
@@ -58,10 +60,14 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
   if(!is.null(hist.ylim) & length(hist.ylim)!=2)
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
-  # proportion of each state in the states sequence returned by the Viterbi algorithm
-  w <- rep(NA,nbStates)
-  for(state in 1:nbStates)
-    w[state] <- length(which(m$states==state))/length(m$states)
+  if(sepStates)
+    w <- rep(1,nbStates)
+  else {
+    # proportion of each state in the states sequence returned by the Viterbi algorithm
+    w <- rep(NA,nbStates)
+    for(state in 1:nbStates)
+      w[state] <- length(which(m$states==state))/length(m$states)
+  }
 
   if(m$conditions$zeroInflation) {
     zeromass <- m$mle$stepPar[nrow(m$mle$stepPar),]
@@ -88,22 +94,43 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
 
       # Histogram of step lengths
-      if(is.null(hist.ylim)) { # default
-        ymin <- 0
-        h <- hist(m$data$step[ind],plot=F,breaks=breaks)
-        ymax <- 1.5*max(h$density)
-      }
-      else {
-        ymin <- hist.ylim[1]
-        ymax <- hist.ylim[2]
-      }
-      hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
-           col="lightgrey",border="white",breaks=breaks)
+      if(!sepStates) {
+        if(is.null(hist.ylim)) { # default
+          ymin <- 0
+          h <- hist(m$data$step[ind],plot=F,breaks=breaks)
+          ymax <- 1.5*max(h$density)
+        } else {
+          ymin <- hist.ylim[1]
+          ymax <- hist.ylim[2]
+        }
 
-      mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
+             col="lightgrey",border="white",breaks=breaks)
+
+        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+      }
 
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
+        if(sepStates) {
+          stateInd <- ind[which(m$states[ind]==state)]
+
+          if(is.null(hist.ylim)) { # default
+            ymin <- 0
+            h <- hist(m$data$step[stateInd],plot=F,breaks=breaks)
+            ymax <- 1.5*max(h$density)
+          }
+          else {
+            ymin <- hist.ylim[1]
+            ymax <- hist.ylim[2]
+          }
+
+          hist(m$data$step[stateInd],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
+               col="lightgrey",border="white",breaks=breaks)
+
+          mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
+        }
+
         # Constitute the lists of state-dependent parameters for the step
         stepArgs <- list(grid)
 
@@ -126,7 +153,8 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
 
       # add a legend
-      legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+      if(!sepStates)
+        legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
     }
   }
   else { # if step + angle
@@ -152,20 +180,43 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
 
       # Histogram of step lengths
-      if(is.null(hist.ylim)) { # default
-        ymin <- 0
-        h <- hist(m$data$step[ind],plot=F,breaks=breaks)
-        ymax <- 1.5*max(h$density)
+      if(!sepStates) {
+        if(is.null(hist.ylim)) { # default
+          ymin <- 0
+          h <- hist(m$data$step[ind],plot=F,breaks=breaks)
+          ymax <- 1.5*max(h$density)
+        }
+        else {
+          ymin <- hist.ylim[1]
+          ymax <- hist.ylim[2]
+        }
+
+        hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
+             col="lightgrey",border="white",breaks=breaks)
+        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }
-      else {
-        ymin <- hist.ylim[1]
-        ymax <- hist.ylim[2]
-      }
-      hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
-           col="lightgrey",border="white",breaks=breaks)
-      mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
+        if(sepStates) {
+          stateInd <- ind[which(m$states[ind]==state)]
+
+          if(is.null(hist.ylim)) { # default
+            ymin <- 0
+            h <- hist(m$data$step[stateInd],plot=F,breaks=breaks)
+            ymax <- 1.5*max(h$density)
+          }
+          else {
+            ymin <- hist.ylim[1]
+            ymax <- hist.ylim[2]
+          }
+
+          hist(m$data$step[stateInd],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
+               col="lightgrey",border="white",breaks=breaks)
+
+          mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
+        }
+
         # Constitute the lists of state-dependent parameters for the step
         stepArgs <- list(grid)
 
@@ -188,19 +239,37 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
 
       # add a legend
-      legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+      if(!sepStates)
+        legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
 
       # Histogram of turning angles
-      h <- hist(m$data$angle[ind],plot=F,breaks=breaks) # to determine ylim
-      ymax <- 1.5*max(h$density)
-      hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
-           col="lightgrey",border="white",breaks=breaks,xaxt="n")
-      axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
-           labels = expression(-pi, -pi/2, 0, pi/2, pi))
-      mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+      if(!sepStates) {
+        h <- hist(m$data$angle[ind],plot=F,breaks=breaks) # to determine ylim
+        ymax <- 1.5*max(h$density)
+
+        hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
+             col="lightgrey",border="white",breaks=breaks,xaxt="n")
+        axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+             labels = expression(-pi, -pi/2, 0, pi/2, pi))
+        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+      }
+
       grid <- seq(-pi,pi,length=1000)
 
       for(state in 1:nbStates) {
+        if(sepStates) {
+          stateInd <- ind[which(m$states[ind]==state)]
+
+          h <- hist(m$data$angle[stateInd],plot=F,breaks=breaks) # to determine ylim
+          ymax <- 1.5*max(h$density)
+
+          hist(m$data$angle[stateInd],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
+               col="lightgrey",border="white",breaks=breaks,xaxt="n")
+          axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+               labels = expression(-pi, -pi/2, 0, pi/2, pi))
+          mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
+        }
+
         # Constitute the lists of state-dependent parameters for the angle
         angleArgs <- list(grid)
 
@@ -216,12 +285,13 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       }
 
       # add a legend
-      legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+      if(!sepStates)
+        legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
     }
   }
 
+  # plot the transition probabilities as functions of the covariates
   if(!compactHist) {
-    # plot the transition probabilities as functions of the covariates
     par(mfrow=c(nbStates,nbStates))
     par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
 
