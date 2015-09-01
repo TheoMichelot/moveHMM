@@ -5,7 +5,7 @@
 \title{Plot \code{moveHMM}}
 \usage{
 \method{plot}{moveHMM}(x, animals = NULL, ask = TRUE, breaks = "Sturges",
-  hist.ylim = NULL, ...)
+  hist.ylim = NULL, compactHist = FALSE, ...)
 }
 \arguments{
 \item{x}{Object \code{moveHMM}}
@@ -19,6 +19,9 @@ Default : \code{NULL} ; all animals are plotted.}
 
 \item{hist.ylim}{Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
 Default : \code{NULL} ; the function sets default values.}
+
+\item{compactHist}{If \code{TRUE}, the function only plots histograms of all observations for steps
+and angles, with the fitted densities (no map, and no individual-specific plot). Default : \code{FALSE}.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
