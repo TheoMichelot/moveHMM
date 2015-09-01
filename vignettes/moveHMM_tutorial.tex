@@ -138,11 +138,13 @@ In practice, we chose to store coefficients for the non-diagonal transition prob
 \subsubsection{prepData}
 Most of the time, tracking data consists in time series of either easting-northing coordinates or longitude-latitude values. However, the data needed to use hidden Markov modelling are the time series of step lengths and turning angles.\\
 
-The function \texttt{prepData} computes the steps/angles from the coordinates. As an input, this function takes an R data frame with mandatory column names ``x'' (either easting or longitude) and ``y'' (either northing or latitude). If several animals were observed, there should also be a colum ``ID'' which identifies the animal being observed. If there is no ``ID'' column, all observations will be considered to concern a single animal. All additional columns are considered as covariates.
+The function \texttt{prepData} computes the steps/angles from the coordinates. As an input, this function takes an R data frame with mandatory columns ``x'' (either easting or longitude) and ``y'' (either northing or latitude). If several animals were observed, there should also be a colum ``ID'' which identifies the animal being observed. If there is no ``ID'' column, all observations will be considered to concern a single animal. All additional columns are considered as covariates.
 
 In addition to the data frame, \texttt{prepData} takes an argument \texttt{type}, which can either be ``GCD'' (default) or ``euclidean''. The former indicates that the coordinates are longitude-latitude values, and the latter that they are easting-northing values. This option is used in the computation of the step lengths.
 
-To do so, \texttt{prepData} calls the function \texttt{spDistN1}, from the package \texttt{sp}. The step lengths are in the metrics of the input if easting/northing are provided, and in kilometres if longitude/latitude are provided.\\
+To do so, \texttt{prepData} calls the function \texttt{spDistN1}, from the package \texttt{sp}. The step lengths are in the metrics of the input if easting/northing are provided, and in kilometres if longitude/latitude are provided.
+
+Finally, if the names of the coordinates columns are not ``x'' and ``y'', then the argument \texttt{coordNames} should specify them.\\
 
 \texttt{prepData} outputs a data frame, with the same columns as the input, plus columns ``step'' and ``angle''. This object is of the class \texttt{moveData}, and can be plotted using the generic method \texttt{plot}.
 
@@ -268,7 +270,7 @@ The step lengths and turning angles are computed, and the returned object is a d
 6 elk-115 0.1037545 -0.9687435 766.368 4998.051     213.60
 \end{lstlisting}
 
-Note that the coordinate have been renamed ``x'' and ``y''. This makes the processing of the data simpler.\\
+Note that the coordinates have been renamed ``x'' and ``y''. This makes the processing of the data simpler.\\
 
 If the data contains covariates, which have missing values, those are replaced by the closer non-missing value (by default, the previous one if it is available). This is arbitrary, and might result in misinterpretation of the data.
 
@@ -367,7 +369,7 @@ Here, we plot the map of the first animal's track, colored by states, and the fi
 plot(m,animals="elk-115")
 \end{lstlisting}
 
-This outputs four plots, which are shown in Figure \ref{moveHMM}.\\
+\noindent This outputs four plots, which are shown in Figure \ref{moveHMM}.\\
 
 \begin{figure}[h]
 	\includegraphics[width=0.49\textwidth]{pictures/hist_step_elk1}
@@ -383,9 +385,46 @@ The first state (in red on the plots) corresponds to short steps, and angles cen
 The second row of plots of the transition probabilities as functions of the distance to water seem to indicate that the animals tend to switch from the second state to the first state when they are far from water, whereas they stay in the second state when closer to water.
 
 \subsubsection{Decode the model}
+Several functions can be used to understand better the model that was fitted. 
 
+In order to decode the state process, the Viterbi algorithm is implemented in the function \texttt{viterbi}. This function outputs the sequence of most probable states. Note that \texttt{viterbi} is already included in the main function \texttt{fitHMM}, and that the sequence of most probable states is part of the returned model. This information is used to plot the animal's track, coloured by states, in \texttt{plot.moveHMM}.\\
+
+To get more accurate information on the state process, it is possible to compute the state probabilities for each observation, using \texttt{stateProbs}. This returns a matrix with as many columns as there are states in the model, where each element is defined as,
+\begin{center}
+	\texttt{stateProbs[i,j]} = $\Pr(C_i=j)$
+\end{center}
+where $(C_t)$ is the state process.\\
+
+\noindent For example :
+\begin{lstlisting}
+> sp <- stateProbs(m)
+> head(sp)
+             [,1]      [,2]
+[1,] 1.118098e-01 0.8881902
+[2,] 1.250599e-05 0.9999875
+[3,] 1.626308e-01 0.8373692
+[4,] 3.831052e-01 0.6168948
+[5,] 4.010413e-01 0.5989587
+[6,] 3.096862e-01 0.6903138
+\end{lstlisting}
+
+Figure \ref{stateProbs} shows the plots of both columns of the matrix of state probabilities, and was obtained with the following code :
+\begin{lstlisting}
+par(mar=c(1,4,1,1))
+par(mfrow=c(2,1))
+plot(sp[,1],type="l",lwd=2,xaxt="n",ylab="Pr(State 1)")
+plot(sp[,2],type="l",lwd=2,xaxt="n",ylab="Pr(State 2)")
+\end{lstlisting}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/stateProbs}
+	\caption{State probabilities of all observations.}
+	\label{stateProbs}
+\end{figure}
 
 \subsubsection{Assess the model}
+The pseudo-residuals of the model can be computed with \texttt{pseudoRes}. For details, see \cite{zucchini2009}.
 
 
 \begin{thebibliography}{}
