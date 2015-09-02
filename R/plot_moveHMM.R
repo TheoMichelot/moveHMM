@@ -75,9 +75,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
   }
 
   # text for legends
-  text <- NULL
+  legText <- NULL
   for(i in 1:nbStates)
-    text <- c(text,paste("State",i))
+    legText <- c(legText,paste("State",i))
 
   par(mfrow=c(1,1))
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
@@ -98,7 +98,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         if(is.null(hist.ylim)) { # default
           ymin <- 0
           h <- hist(m$data$step[ind],plot=F,breaks=breaks)
-          ymax <- 1.5*max(h$density)
+          ymax <- 1.3*max(h$density)
         } else {
           ymin <- hist.ylim[1]
           ymax <- hist.ylim[2]
@@ -118,7 +118,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           if(is.null(hist.ylim)) { # default
             ymin <- 0
             h <- hist(m$data$step[stateInd],plot=F,breaks=breaks)
-            ymax <- 1.5*max(h$density)
+            ymax <- 1.3*max(h$density)
           }
           else {
             ymin <- hist.ylim[1]
@@ -154,7 +154,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
       # add a legend
       if(!sepStates)
-        legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+        legend("top",legText,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
     }
   }
   else { # if step + angle
@@ -184,7 +184,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         if(is.null(hist.ylim)) { # default
           ymin <- 0
           h <- hist(m$data$step[ind],plot=F,breaks=breaks)
-          ymax <- 1.5*max(h$density)
+          ymax <- 1.3*max(h$density)
         }
         else {
           ymin <- hist.ylim[1]
@@ -204,7 +204,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           if(is.null(hist.ylim)) { # default
             ymin <- 0
             h <- hist(m$data$step[stateInd],plot=F,breaks=breaks)
-            ymax <- 1.5*max(h$density)
+            ymax <- 1.3*max(h$density)
           }
           else {
             ymin <- hist.ylim[1]
@@ -240,12 +240,12 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
       # add a legend
       if(!sepStates)
-        legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+        legend("top",legText,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
 
       # Histogram of turning angles
       if(!sepStates) {
         h <- hist(m$data$angle[ind],plot=F,breaks=breaks) # to determine ylim
-        ymax <- 1.5*max(h$density)
+        ymax <- 1.3*max(h$density)
 
         hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
              col="lightgrey",border="white",breaks=breaks,xaxt="n")
@@ -261,7 +261,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           stateInd <- ind[which(m$states[ind]==state)]
 
           h <- hist(m$data$angle[stateInd],plot=F,breaks=breaks) # to determine ylim
-          ymax <- 1.5*max(h$density)
+          ymax <- 1.3*max(h$density)
 
           hist(m$data$angle[stateInd],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
                col="lightgrey",border="white",breaks=breaks,xaxt="n")
@@ -286,7 +286,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
       # add a legend
       if(!sepStates)
-        legend("topright",text,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
+        legend("top",legText,lwd=rep(2,nbStates),col=c(2:(nbStates+1)),bty="n")
     }
   }
 
