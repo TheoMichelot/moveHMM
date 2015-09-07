@@ -52,10 +52,10 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     if(stationary) { 
         arma::mat diag(nbStates,nbStates);
         diag.eye(); // diagonal of ones
-        arma::mat gamma = trMat.slice(0); // all slices are identical if stationary
+        arma::mat Gamma = trMat.slice(0); // all slices are identical if stationary
         arma::colvec v(nbStates);
         v.ones(); // vector of ones
-        delta = arma::solve(diag-gamma+1,v).t();
+        delta = arma::solve(diag-Gamma+1,v).t();
     }
     
     arma::mat allProbs(nbObs,nbStates);
@@ -125,7 +125,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     }
 
     // 3. Forward algorithm
-    arma::mat gamma(nbStates,nbStates);
+    arma::mat Gamma(nbStates,nbStates);
     double lscale = 0;
     int k=1;
     arma::rowvec alpha = delta%allProbs.row(0);
@@ -135,8 +135,8 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 	        k++;
 	        alpha = delta%allProbs.row(i);
 	    }
-        gamma = trMat.slice(i);
-        alpha = alpha*gamma%allProbs.row(i);
+        Gamma = trMat.slice(i);
+        alpha = alpha*Gamma%allProbs.row(i);
 
         lscale = lscale + log(sum(alpha));
         alpha = alpha/sum(alpha);

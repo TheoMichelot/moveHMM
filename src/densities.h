@@ -19,7 +19,7 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 
     for(int i=0;i<x.size();i++) {
     	res(i) = R::dgamma(x(i),shape,scale,0);
-	    if(!arma::is_finite(x(i)))
+        if(!arma::is_finite(x(i)))
             res(i) = 1; // if missing observation
     }
 
