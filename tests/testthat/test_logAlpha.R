@@ -1,5 +1,5 @@
 
-context("logAlpha.moveHMM")
+context("logAlpha")
 
 test_that("Exceptions are thrown",{
   m <- ex$mod
