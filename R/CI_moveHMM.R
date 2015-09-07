@@ -1,29 +1,31 @@
 
-#' Generic confIntervals method
+#' Generic CI method
 #' @param m Fitted model
-confIntervals <- function(m) UseMethod("confIntervals") # define generic method confIntervals
+CI <- function(m) UseMethod("CI") # define generic method CI
 
 #' Confidence intervals
 #'
-#' Computes the confidence intervals of the step length parameters, as well as for the transition
-#' probabilities regression parameters.
+#' Computes the confidence intervals of the step length and turning angle parameters,
+#' as well as for the transition probabilities regression parameters.
 #'
-#' @method confIntervals moveHMM
+#' @method CI moveHMM
 #'
 #' @param m A \code{moveHMM} object
 #'
 #' @return A list of the following objects :
 #' \item{inf}{Inferior bound of 95% confidence interval for the parameters of the step lengths
-#' distribution, and for the transition probabilities regression parameters}
+#' distribution, for the parameters of the turning angle distribution, and for the transition
+#' probabilities regression parameters}
 #' \item{sup}{Superior bound of 95% confidence interval for the parameters of the step lengths
-#' distribution, and for the transition probabilities regression parameters}
+#' distribution, for the parameters of the turning angle distribution, and for the transition
+#' probabilities regression parameters}
 #'
 #' @examples
 #' m <- ex$mod # moveHMM object, as returned by fitHMM
 #'
-#' confIntervals(m)
+#' CI(m)
 
-confIntervals.moveHMM <- function(m)
+CI.moveHMM <- function(m)
 {
   if(length(m$mod)<=1)
     stop("The given model hasn't been fitted.")
@@ -58,8 +60,9 @@ confIntervals.moveHMM <- function(m)
   inf <- w2n(winf,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
   sup <- w2n(wsup,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
 
-  inf <- list(stepPar=inf$stepPar,beta=inf$beta)
-  sup <- list(stepPar=sup$stepPar,beta=sup$beta)
+  # group CIs for step parameters, angle parameters, and t.p. coefficients
+  inf <- list(stepPar=inf$stepPar,anglePar=angleCI(m)$inf,beta=inf$beta)
+  sup <- list(stepPar=sup$stepPar,anglePar=angleCI(m)$sup,beta=sup$beta)
 
   return(list(inf=inf,sup=sup))
 }
