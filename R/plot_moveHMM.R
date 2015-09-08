@@ -248,7 +248,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         ymax <- 1.3*max(h$density)
 
         hist(m$data$angle[ind],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
-             col="lightgrey",border="white",breaks=breaks,xaxt="n")
+             col="lightgrey",border="white",breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
         axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
              labels = expression(-pi, -pi/2, 0, pi/2, pi))
         mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
@@ -264,7 +264,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           ymax <- 1.3*max(h$density)
 
           hist(m$data$angle[stateInd],prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
-               col="lightgrey",border="white",breaks=breaks,xaxt="n")
+               col="lightgrey",border="white",breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
           axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
                labels = expression(-pi, -pi/2, 0, pi/2, pi))
           mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
