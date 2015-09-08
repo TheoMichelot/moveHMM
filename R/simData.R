@@ -83,16 +83,22 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   if(length(which(obsPerAnimal<0))>0)
     stop("obsPerAnimal should have positive values.")
 
-  if(!is.null(covs) & nbCovs>0 & ncol(covs)!=nbCovs)
-    warning("covs and nbCovs argument conflicting - nbCovs was set to ncol(covs)")
+  if(!is.null(covs) & nbCovs>0) {
+    if(ncol(covs)!=nbCovs)
+      warning("covs and nbCovs argument conflicting - nbCovs was set to ncol(covs)")
+  }
 
-  if(!is.null(covs) & nrow(covs)%%nbAnimals!=0)
-    stop("The number of rows in covs should be a multiple of nbAnimals")
+  if(!is.null(covs)) {
+    if(nrow(covs)%%nbAnimals!=0)
+      stop("The number of rows in covs should be a multiple of nbAnimals")
+  }
 
-  obsPerAnimal <- c(nrow(covs)/nbAnimals,nrow(covs)/nbAnimals)
+  if(!is.null(covs)) {
+    # same number of observations for all animals
+    obsPerAnimal <- c(nrow(covs)/nbAnimals,nrow(covs)/nbAnimals)
 
-  if(!is.null(covs))
     nbCovs <- ncol(covs)
+  }
 
   # generate regression parameters for transition probabilities
   if(is.null(beta))
@@ -131,21 +137,23 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       nbObs <- obsPerAnimal[1]
 
     # generate covariate values
-    if(is.null(covs)) {
-      if(nbCovs==1) subCovs <- data.frame(cov1=rnorm(nbObs))
-      if(nbCovs>1) {
-        subCovs <- data.frame(cov1=rnorm(nbObs))
-        for(j in 2:nbCovs) {
-          c <- data.frame(rnorm(nbObs))
-          colnames(c) <- paste("cov",j,sep="")
-          subCovs <- cbind(subCovs,c)
+    if(nbCovs>0) {
+      if(is.null(covs)) {
+        if(nbCovs==1) subCovs <- data.frame(cov1=rnorm(nbObs))
+        if(nbCovs>1) {
+          subCovs <- data.frame(cov1=rnorm(nbObs))
+          for(j in 2:nbCovs) {
+            c <- data.frame(rnorm(nbObs))
+            colnames(c) <- paste("cov",j,sep="")
+            subCovs <- cbind(subCovs,c)
+          }
         }
+      } else {
+        # select covariate values which concern the current animal
+        subCovs <- covs[((zoo-1)*obsPerAnimal[1]+1):(zoo*obsPerAnimal[1]),]
       }
-    } else {
-      # select covariate values which concern the current animal
-      subCovs <- covs[((zoo-1)*obsPerAnimal[1]+1):(zoo*obsPerAnimal[1]),]
+      allCovs <- rbind(allCovs,subCovs)
     }
-    allCovs <- rbind(allCovs,subCovs)
 
     # generate state sequence Z
     Z <- rep(NA,nbObs)
