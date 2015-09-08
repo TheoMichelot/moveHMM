@@ -26,9 +26,14 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 pseudoRes.moveHMM <- function(m)
 {
   stepFun <- paste("p",m$stepDist,sep="")
+
   angleDist <- m$angleDist
-  if(angleDist!="none")
+  if(angleDist!="none") {
     angleFun <- paste("d",angleDist,sep="") # integrated below
+
+    if(length(which(data$angle==pi))>0)
+      warning("Some angle are equal to pi, and the corresponding pseudo-residuals are not included")
+  }
 
   data <- m$data
   nbObs <- nrow(data)
@@ -84,8 +89,11 @@ pseudoRes.moveHMM <- function(m)
         }
 
         if(!is.na(data$angle[i])) {
-          angleArgs[[3]] <- data$angle[i]
-          pAngleMat[i,state] <- do.call(integrate,angleArgs)$value
+          # angle==pi => residual=Inf
+          if(data$angle[i]!=pi) {
+            angleArgs[[3]] <- data$angle[i]
+            pAngleMat[i,state] <- do.call(integrate,angleArgs)$value
+          }
         }
       }
     }
