@@ -7,8 +7,10 @@
 #' @param data An object \code{moveData}.
 #' @param nbStates Number of states of the HMM.
 #' @param stepPar0 Vector of initial state-dependent step length distribution parameters.
-#' The parameters should be in the order expected by the pdf of \code{stepDist}, and the (optional) zero-mass
-#' parameter should be the last. For example, for a 2-state model using the Gamma (gamma) distribution and
+#' The parameters should be in the order expected by the pdf of \code{stepDist}, and the zero-mass
+#' parameter should be the last. Note that zero-mass parameters are mandatory if there are steps of
+#' length zero in the data.
+#' For example, for a 2-state model using the Gamma (gamma) distribution and
 #' including zero-inflation, the vector of initial parameters would be something like :
 #' \code{c(mu1,mu2,sigma1,sigma2,zeromass1,zeromass2)}.
 #' @param anglePar0 Vector of initial state-dependent turning angle distribution parameters.
@@ -27,9 +29,6 @@
 #' not be estimated. Default : vm.
 #' @param angleMean Vector of means of turning angles if not estimated (one for each state).
 #' Default : \code{NULL} (the angle mean is estimated).
-#' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
-#' Default : \code{FALSE}. If \code{TRUE}, initial values for the zero-mass parameters should be
-#' included in \code{stepPar0}.
 #' @param stationary \code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
 #' equal to the stationary distribution. Default : \code{FALSE}.
 #' @param verbose Determines the print level of the optimizer. The default value of 0 means that no
@@ -79,7 +78,7 @@
 #' formula <- ~cov1+cos(cov2)
 #'
 #' m <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
-#'               stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
+#'               stepDist="gamma",angleDist="vm",angleMean,verbose=2)
 #'
 #' @references
 #' Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
@@ -92,23 +91,42 @@
 
 fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
-                   angleMean=NULL,zeroInflation=FALSE,stationary=FALSE,verbose=0,fit=TRUE)
+                   angleMean=NULL,stationary=FALSE,verbose=0,fit=TRUE)
 {
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
   covs <- model.matrix(formula,data)
 
-  if(length(covsCol)>0) data <- cbind(data[-covsCol],covs)
-  else data <- cbind(data,covs)
+  if(length(covsCol)>0)
+    data <- cbind(data[-covsCol],covs)
+  else
+    data <- cbind(data,covs)
   nbCovs <- ncol(covs)-1 # substract intercept column
+
+  # determine whether zero-inflation should be included
+  if(length(which(data$step==0))>0)
+    zeroInflation <- TRUE
+  else
+    zeroInflation <- FALSE
+
+  # check that zero-mass is in the open interval (0,1)
+  if(zeroInflation) {
+    zm0 <- stepPar0[(length(stepPar)-nbStates+1):length(stepPar)]
+    zm0[which(zm0==0)] <- 1e-8
+    zm0[which(zm0==1)] <- 1-1e-8
+    stepPar0[(length(stepPar)-nbStates+1):length(stepPar)] <- zm0
+  }
 
   # check arguments
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
-  if(nbStates<0) stop("nbStates should be at least 1.")
-  if(length(data)<1) stop("The data input is empty.")
-  if(is.null(data$step)) stop("Missing field in data : step.")
+  if(nbStates<0)
+    stop("nbStates should be at least 1.")
+  if(length(data)<1)
+    stop("The data input is empty.")
+  if(is.null(data$step))
+    stop("Missing field in data : step.")
 
   par0 <- c(stepPar0,anglePar0)
   p <- parDef(stepDist,angleDist,nbStates,is.null(angleMean),zeroInflation)
@@ -116,8 +134,12 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   parSize <- p$parSize
   if(sum(parSize)*nbStates!=length(par0)) {
     error <- "Wrong number of initial parameters"
-    if(parSize[1]*nbStates!=length(stepPar0))
+    if(parSize[1]*nbStates!=length(stepPar0)) {
       error <- paste(error,": there should be",parSize[1]*nbStates,"initial step parameters.")
+      if(zeroInflation)
+        error <- paste(error,"Zero-mass parameters should be included.")
+    }
+
     if(angleDist!="none" & parSize[2]*nbStates!=length(stepPar0))
       error <- paste(error,": there should be",parSize[2]*nbStates,"initial angle parameters.")
     stop(error)
@@ -152,12 +174,6 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     stop("The step lengths should be positive.")
   if(length(which(data$angle < -pi | data$angle > pi))>0)
     stop("The turning angles should be between -pi and pi.")
-
-  # check that zeroInflation is consistent with the observations
-  if(!zeroInflation & length(which(data$step==0))>0)
-    stop("Zero-inflation should be included if step length can be zero.")
-  if(zeroInflation & length(which(data$step==0))==0)
-    stop("Zero-inflation should not be included if step length is never zero.")
 
   # check that stationary==FALSE if there are covariates
   if(nbCovs>0 & stationary==TRUE)

@@ -7,7 +7,7 @@
 fitHMM(data, nbStates, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
   formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
-  zeroInflation = FALSE, stationary = FALSE, verbose = 0, fit = TRUE)
+  stationary = FALSE, verbose = 0, fit = TRUE)
 }
 \arguments{
 \item{data}{An object \code{moveData}.}
@@ -15,8 +15,10 @@ fitHMM(data, nbStates, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
 \item{nbStates}{Number of states of the HMM.}
 
 \item{stepPar0}{Vector of initial state-dependent step length distribution parameters.
-The parameters should be in the order expected by the pdf of \code{stepDist}, and the (optional) zero-mass
-parameter should be the last. For example, for a 2-state model using the Gamma (gamma) distribution and
+The parameters should be in the order expected by the pdf of \code{stepDist}, and the zero-mass
+parameter should be the last. Note that zero-mass parameters are mandatory if there are steps of
+length zero in the data.
+For example, for a 2-state model using the Gamma (gamma) distribution and
 including zero-inflation, the vector of initial parameters would be something like :
 \code{c(mu1,mu2,sigma1,sigma2,zeromass1,zeromass2)}.}
 
@@ -42,10 +44,6 @@ not be estimated. Default : vm.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
 Default : \code{NULL} (the angle mean is estimated).}
-
-\item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
-Default : \code{FALSE}. If \code{TRUE}, initial values for the zero-mass parameters should be
-included in \code{stepPar0}.}
 
 \item{stationary}{\code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
 equal to the stationary distribution. Default : \code{FALSE}.}
@@ -103,7 +101,7 @@ anglePar0 <- kappa0 # the angle mean is not estimated, so only the concentration
 formula <- ~cov1+cos(cov2)
 
 m <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
-              stepDist="gamma",angleDist="vm",angleMean,zeroInflation,verbose=2)
+              stepDist="gamma",angleDist="vm",angleMean,verbose=2)
 }
 \references{
 Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
