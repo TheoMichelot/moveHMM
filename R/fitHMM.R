@@ -112,10 +112,10 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   # check that zero-mass is in the open interval (0,1)
   if(zeroInflation) {
-    zm0 <- stepPar0[(length(stepPar)-nbStates+1):length(stepPar)]
+    zm0 <- stepPar0[(length(stepPar0)-nbStates+1):length(stepPar0)]
     zm0[which(zm0==0)] <- 1e-8
     zm0[which(zm0==1)] <- 1-1e-8
-    stepPar0[(length(stepPar)-nbStates+1):length(stepPar)] <- zm0
+    stepPar0[(length(stepPar0)-nbStates+1):length(stepPar0)] <- zm0
   }
 
   # check arguments
