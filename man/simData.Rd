@@ -6,8 +6,8 @@
 \usage{
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), stepPar, anglePar = NULL,
-  beta = NULL, nbCovs = 0, zeroInflation = FALSE, obsPerAnimal = c(500,
-  1500))
+  beta = NULL, covs = NULL, nbCovs = 0, zeroInflation = FALSE,
+  obsPerAnimal = c(500, 1500))
 }
 \arguments{
 \item{nbAnimals}{Number of observed individuals to simulate.}
@@ -27,13 +27,21 @@ not be estimated. Default : vm.}
 
 \item{beta}{Matrix of regression parameters for the transition probabilities.}
 
-\item{nbCovs}{Number of covariates to simulate (0 by default).}
+\item{covs}{Covariate values to include in the model, as a dataframe. The number of rows of \code{covs}
+needs to be a multiple of the number of animals, and the same number of observations will be
+simulated for each animal. Default : \code{NULL}. Covariates can also be simulated according to a standard
+normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code{nbCovs}.}
+
+\item{nbCovs}{Number of covariates to simulate (0 by default). Does not need to be specified of
+\code{covs} is specified.}
 
 \item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
 Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
 included in \code{stepPar}.}
 
-\item{obsPerAnimal}{Bounds of the number of observations per animal. Default : \code{c(500,1500)}.}
+\item{obsPerAnimal}{Bounds of the number of observations per animal. Default : \code{c(500,1500)}.
+The number of obervations generated for each animal are uniformously picked from this interval.
+\code{obsPerAnimal} does not need to be specified if \code{covs} is specified.}
 }
 \value{
 An object moveData, i.e. a dataframe of :

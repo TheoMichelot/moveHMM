@@ -13,11 +13,18 @@
 #' @param stepPar Parameters of the step length distribution.
 #' @param anglePar Parameters of the turning angle distribution.
 #' @param beta Matrix of regression parameters for the transition probabilities.
-#' @param nbCovs Number of covariates to simulate (0 by default).
+#' @param covs Covariate values to include in the model, as a dataframe. The number of rows of \code{covs}
+#' needs to be a multiple of the number of animals, and the same number of observations will be
+#' simulated for each animal. Default : \code{NULL}. Covariates can also be simulated according to a standard
+#' normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code{nbCovs}.
+#' @param nbCovs Number of covariates to simulate (0 by default). Does not need to be specified of
+#' \code{covs} is specified.
 #' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
 #' Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
 #' included in \code{stepPar}.
 #' @param obsPerAnimal Bounds of the number of observations per animal. Default : \code{c(500,1500)}.
+#' The number of obervations generated for each animal are uniformously picked from this interval.
+#' \code{obsPerAnimal} does not need to be specified if \code{covs} is specified.
 #'
 #' @return An object moveData, i.e. a dataframe of :
 #' \item{ID}{The ID(s) of the observed animal(s)}
@@ -49,7 +56,7 @@
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
                     angleDist=c("vm","wrpcauchy","none"),stepPar,anglePar=NULL,
-                    beta=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
+                    beta=NULL,covs=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -75,6 +82,17 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
 
   if(length(which(obsPerAnimal<0))>0)
     stop("obsPerAnimal should have positive values.")
+
+  if(!is.null(covs) & nbCovs>0 & ncol(covs)!=nbCovs)
+    warning("covs and nbCovs argument conflicting - nbCovs was set to ncol(covs)")
+
+  if(!is.null(covs) & nrow(covs)%%nbAnimals!=0)
+    stop("The number of rows in covs should be a multiple of nbAnimals")
+
+  obsPerAnimal <- c(nrow(covs)/nbAnimals,nrow(covs)/nbAnimals)
+
+  if(!is.null(covs))
+    nbCovs <- ncol(covs)
 
   # generate regression parameters for transition probabilities
   if(is.null(beta))
@@ -113,17 +131,21 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       nbObs <- obsPerAnimal[1]
 
     # generate covariate values
-    covs <- NULL
-    if(nbCovs==1) covs <- data.frame(cov1=rnorm(nbObs))
-    if(nbCovs>1) {
-      covs <- data.frame(cov1=rnorm(nbObs))
-      for(j in 2:nbCovs) {
-        c <- data.frame(rnorm(nbObs))
-        colnames(c) <- paste("cov",j,sep="")
-        covs <- cbind(covs,c)
+    if(is.null(covs)) {
+      if(nbCovs==1) subCovs <- data.frame(cov1=rnorm(nbObs))
+      if(nbCovs>1) {
+        subCovs <- data.frame(cov1=rnorm(nbObs))
+        for(j in 2:nbCovs) {
+          c <- data.frame(rnorm(nbObs))
+          colnames(c) <- paste("cov",j,sep="")
+          subCovs <- cbind(subCovs,c)
+        }
       }
+    } else {
+      # select covariate values which concern the current animal
+      subCovs <- covs[((zoo-1)*obsPerAnimal[1]+1):(zoo*obsPerAnimal[1]),]
     }
-    allCovs <- rbind(allCovs,covs)
+    allCovs <- rbind(allCovs,subCovs)
 
     # generate state sequence Z
     Z <- rep(NA,nbObs)
@@ -132,10 +154,10 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       gamma <- diag(nbStates)
 
       g <- beta[1,]
-      if(nbCovs==1) g <- g + beta[2,]*covs[k]
+      if(nbCovs==1) g <- g + beta[2,]*subCovs[k,1]
       if(nbCovs>1) {
         for(j in 1:nbCovs)
-          g <- g + beta[j+1,]*covs[k,j]
+          g <- g + beta[j+1,]*subCovs[k,j]
       }
 
       gamma[!gamma] <- exp(g)
@@ -193,6 +215,10 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     d <- data.frame(ID=rep(zoo,nbObs),step=s,angle=a,x=X[,1],y=X[,2])
     data <- rbind(data,d)
   }
+
+  # if covs provided as argument
+  if(!is.null(covs) & is.null(allCovs))
+    allCovs <- covs
 
   if(nbCovs>0)
     data <- cbind(data,allCovs)
