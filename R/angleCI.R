@@ -13,6 +13,9 @@
 
 angleCI <- function(m,alpha)
 {
+  if(alpha<0 | alpha>1)
+    stop("alpha needs to be between 0 and 1.")
+
   nbStates <- ncol(m$mle$anglePar)
   inf <- matrix(NA,ncol=nbStates,nrow=2)
   sup <- matrix(NA,ncol=nbStates,nrow=2)

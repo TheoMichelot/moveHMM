@@ -32,6 +32,9 @@ CI.moveHMM <- function(m,alpha=0.95)
   if(length(m$mod)<=1)
     stop("The given model hasn't been fitted.")
 
+  if(alpha<0 | alpha>1)
+    stop("alpha needs to be between 0 and 1.")
+
   nbStates <- ncol(m$mle$stepPar)
 
   # identify covariates
