@@ -295,28 +295,47 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     par(mfrow=c(nbStates,nbStates))
     par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
 
-    covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
-                       names(m$data)!="step" & names(m$data)!="angle")
-    allCovs <- m$data[,covsCol]
+    rawCovs <- m$rawCovs
+    gridLength <- 100
 
     if(nrow(m$mle$beta)>1) {
-      for(cov in 2:nrow(m$mle$beta)) {
-        inf <- min(allCovs[,cov],na.rm=T)
-        sup <- max(allCovs[,cov],na.rm=T)
+      for(cov in 1:ncol(m$rawCovs)) {
+        inf <- min(rawCovs[,cov],na.rm=T)
+        sup <- max(rawCovs[,cov],na.rm=T)
 
-        meanCovs <- colSums(allCovs)/nrow(allCovs)
-        desMat <- matrix(rep(meanCovs,100),ncol=length(meanCovs),byrow=TRUE)
+        # mean values of each covariate
+        meanCovs <- colSums(rawCovs)/nrow(rawCovs)
 
-        desMat[,cov] <- seq(inf,sup,length=100)
+        # set all covariates to their mean, except for "cov"
+        # (which takes a grid of values from inf to sup)
+        tempCovs <- data.frame(rep(meanCovs[1],gridLength))
+        if(length(meanCovs)>1)
+           for(i in 2:length(meanCovs))
+             tempCovs <- cbind(tempCovs,rep(meanCovs[i],gridLength))
 
-        trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
+        tempCovs[,cov] <- seq(inf,sup,length=gridLength)
+        colnames(tempCovs) <- colnames(rawCovs)
 
-        for(i in 1:nbStates)
-          for(j in 1:nbStates)
-            plot(desMat[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(allCovs)[cov],
-                 ylab=paste(i,"->",j))
+        desMat <- model.matrix(m$conditions$formula,data=tempCovs)
 
-        mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
+        # check that the current covariate (cov) is included in the model
+        used <- FALSE
+        for(i in 2:ncol(desMat)) {
+          c <- desMat[,i]
+          if(length(which(c!=mean(c)))>0)
+            used <- TRUE
+        }
+
+        if(used) {
+          trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
+
+          for(i in 1:nbStates)
+            for(j in 1:nbStates)
+              plot(tempCovs[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(rawCovs)[cov],
+                   ylab=paste(i,"->",j))
+
+          mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
+        }
       }
     }
   }

@@ -25,8 +25,9 @@ exGen <- function()
   simPar <- list(nbAnimals=nbAnimals,nbStates=nbStates,angleMean=angleMean,stepDist=stepDist,
                  angleDist=angleDist,zeroInflation=zeroInflation)
 
-  data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,NULL,nbCovs,zeroInflation,
-                  obsPerAnimal)
+  data <- simData(nbAnimals=nbAnimals,nbStates=nbStates,stepDist=stepDist,angleDist=angleDist,
+                  stepPar=stepPar,anglePar=anglePar,nbCovs=nbCovs,zeroInflation=zeroInflation,
+                  obsPerAnimal=obsPerAnimal)
 
   # estimate model
   mu0 <- c(20,70)
@@ -44,8 +45,9 @@ exGen <- function()
   par0 <- list(stepPar0=stepPar0,anglePar0=anglePar0,formula=formula,nbCovs=nbCovs,beta0=beta0,
                delta0=delta0)
 
-  mod <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0,delta0,formula,
-                "gamma","vm",angleMean,zeroInflation)
+  mod <- fitHMM(data=data,nbStates=nbStates,stepPar0=stepPar0,anglePar0=anglePar0,beta0=beta0,
+                delta0=delta0,formula=formula,stepDist=stepDist,angleDist=angleDist,
+                angleMean=angleMean)
 
   ex <- list(data=data,mod=mod,simPar=simPar,par0=par0)
   save(ex,file="data/ex.RData")

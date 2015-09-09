@@ -46,7 +46,8 @@
 #' \item{mod}{The object returned by the numerical optimizer \code{nlm}}
 #' \item{states}{The series of most probable states, decoded by the Viterbi algorithm}
 #' \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
-#' \code{stationary})}
+#' \code{stationary}, and \code{formula})}
+#' \item{rawCovs}{Raw covariate values, as found in the data. Used in \code{\link{plot.moveHMM}}.}
 #'
 #' @examples
 #' ### 1. simulate data
@@ -98,8 +99,10 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                      names(data)!="step" & names(data)!="angle")
   covs <- model.matrix(formula,data)
 
-  if(length(covsCol)>0)
+  if(length(covsCol)>0) {
+    rawCovs <- data[covsCol]
     data <- cbind(data[-covsCol],covs)
+  }
   else
     data <- cbind(data,covs)
   nbCovs <- ncol(covs)-1 # substract intercept column
@@ -236,9 +239,10 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                     angleMean,zeroInflation)
 
   # conditions of the fit
-  conditions <- list(zeroInflation=zeroInflation,estAngleMean=estAngleMean,stationary=stationary)
+  conditions <- list(zeroInflation=zeroInflation,estAngleMean=estAngleMean,stationary=stationary,
+                     formula=formula)
 
   mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
-             mod=mod,states=states,conditions=conditions)
+             mod=mod,states=states,conditions=conditions,rawCovs=rawCovs)
   return(moveHMM(mh))
 }

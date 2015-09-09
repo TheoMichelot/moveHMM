@@ -12,7 +12,7 @@ the parameters of the model), \code{data} (the movement data), \code{stepDist} (
 distribution name), \code{angleDist} (the turning angle distribution name), \code{mod} (the object
 returned by the numerical optimizer \code{nlm}), \code{states} (the series of most probable states,
 decoded by the Viterbi algorithm), \code{conditions} (a few conditions used to fit the model :
-\code{zeroInflation}, \code{estAngleMean}, \code{stationary}).}
+\code{zeroInflation}, \code{estAngleMean}, \code{stationary}, and \code{formula}), \code{rawCovs}.}
 }
 \value{
 An object \code{moveHMM}.
