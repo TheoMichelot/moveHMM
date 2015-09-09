@@ -25,7 +25,7 @@ angleCI <- function(m,alpha)
   bounds <- pdef$bounds
 
   for(state in 1:nbStates) {
-    nbSims <- 10^7 # the bigger the better
+    nbSims <- 10^6 # the bigger the better
 
     # working MLE
     wpar <- m$mod$estimate
