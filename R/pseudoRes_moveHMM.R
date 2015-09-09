@@ -32,7 +32,7 @@ pseudoRes.moveHMM <- function(m)
     angleFun <- paste("d",angleDist,sep="") # integrated below
 
     if(length(which(m$data$angle==pi))>0)
-      warning("Some angle are equal to pi, and the corresponding pseudo-residuals are not included")
+      warning("Some angles are equal to pi, and the corresponding pseudo-residuals are not included")
   }
 
   data <- m$data
