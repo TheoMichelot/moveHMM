@@ -12,7 +12,7 @@
 #' @return The AIC of the model(s) provided.
 #'
 #' @examples
-#' m <- ex$mod # moveHMM object, as returned by fitHMM
+#' m <- ex$m # moveHMM object, as returned by fitHMM
 #' AIC(m)
 
 AIC.moveHMM <- function(object,...,k=2)

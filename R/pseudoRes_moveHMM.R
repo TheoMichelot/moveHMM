@@ -13,7 +13,7 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 #' \item{angleRes}{The pseudo-residuals for the turning angles}
 #'
 #' @examples
-#' m <- ex$mod # moveHMM object (returned by fitHMM)
+#' m <- ex$m # moveHMM object (returned by fitHMM)
 #' res <- pseudoRes(m)
 #' qqnorm(res$stepRes)
 #' qqnorm(res$angleRes)
@@ -31,7 +31,7 @@ pseudoRes.moveHMM <- function(m)
   if(angleDist!="none") {
     angleFun <- paste("d",angleDist,sep="") # integrated below
 
-    if(length(which(data$angle==pi))>0)
+    if(length(which(m$data$angle==pi))>0)
       warning("Some angle are equal to pi, and the corresponding pseudo-residuals are not included")
   }
 

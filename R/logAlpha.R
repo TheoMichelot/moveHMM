@@ -8,7 +8,7 @@
 #' @return The matrix of forward log-probabilities.
 #'
 #' @examples
-#' m <- ex$mod # moveHMM object (returned by fitHMM)
+#' m <- ex$m # moveHMM object (returned by fitHMM)
 #'
 #' la <- logAlpha(m)
 

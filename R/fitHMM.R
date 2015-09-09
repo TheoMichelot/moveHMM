@@ -66,8 +66,9 @@
 #' zeroInflation <- FALSE
 #' obsPerAnimal <- c(50,100)
 #'
-#' data <- simData(nbAnimals,nbStates,stepDist,angleDist,stepPar,anglePar,NULL,nbCovs,zeroInflation,
-#'                 obsPerAnimal)
+#' data <- simData(nbAnimals=nbAnimals,nbStates=nbStates,stepDist=stepDist,angleDist=angleDist,
+#'                  stepPar=stepPar,anglePar=anglePar,nbCovs=nbCovs,zeroInflation=zeroInflation,
+#'                  obsPerAnimal=obsPerAnimal)
 #'
 #' ### 2. fit the model to the simulated data
 #' # define initial values for the parameters

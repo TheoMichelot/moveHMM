@@ -18,7 +18,7 @@ A list of :
 Pseudo-residuals
 }
 \examples{
-m <- ex$mod # moveHMM object (returned by fitHMM)
+m <- ex$m # moveHMM object (returned by fitHMM)
 res <- pseudoRes(m)
 qqnorm(res$stepRes)
 qqnorm(res$angleRes)

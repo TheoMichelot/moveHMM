@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' data <- ex$data
-#' m <- ex$mod
+#' m <- ex$m
 #' simPar <- ex$simPar
 #'
 #' # reconstruction of states sequence

@@ -16,7 +16,7 @@ The matrix of forward log-probabilities.
 Used in \code{\link{stateProbs}} and \code{\link{pseudoRes}}.
 }
 \examples{
-m <- ex$mod # moveHMM object (returned by fitHMM)
+m <- ex$m # moveHMM object (returned by fitHMM)
 
 la <- logAlpha(m)
 }

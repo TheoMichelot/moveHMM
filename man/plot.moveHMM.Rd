@@ -31,7 +31,7 @@ and angles, with the fitted densities (no map, and no individual-specific plot).
 Plot \code{moveHMM}
 }
 \examples{
-m <- ex$mod # moveHMM object, as returned by fitHMM
+m <- ex$m # moveHMM object, as returned by fitHMM
 
 plot(m,ask=TRUE,animals=1,breaks=20)
 }

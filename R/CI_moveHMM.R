@@ -21,7 +21,7 @@ CI <- function(m) UseMethod("CI") # define generic method CI
 #' probabilities regression parameters}
 #'
 #' @examples
-#' m <- ex$mod # moveHMM object, as returned by fitHMM
+#' m <- ex$m # moveHMM object, as returned by fitHMM
 #'
 #' CI(m)
 

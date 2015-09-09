@@ -15,7 +15,7 @@
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
-#' m <- ex$mod # moveHMM object, as returned by fitHMM
+#' m <- ex$m # moveHMM object, as returned by fitHMM
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
 

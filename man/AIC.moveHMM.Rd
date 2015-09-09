@@ -20,7 +20,7 @@ The AIC of the model(s) provided.
 Akaike information criterion of a moveHMM model.
 }
 \examples{
-m <- ex$mod # moveHMM object, as returned by fitHMM
+m <- ex$m # moveHMM object, as returned by fitHMM
 AIC(m)
 }
 

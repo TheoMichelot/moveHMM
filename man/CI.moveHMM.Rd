@@ -23,7 +23,7 @@ Computes the confidence intervals of the step length and turning angle parameter
 as well as for the transition probabilities regression parameters.
 }
 \examples{
-m <- ex$mod # moveHMM object, as returned by fitHMM
+m <- ex$m # moveHMM object, as returned by fitHMM
 
 CI(m)
 }
