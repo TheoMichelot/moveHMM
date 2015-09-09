@@ -39,9 +39,11 @@ normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code
 Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
 included in \code{stepPar}.}
 
-\item{obsPerAnimal}{Bounds of the number of observations per animal. Default : \code{c(500,1500)}.
-The number of obervations generated for each animal are uniformously picked from this interval.
-\code{obsPerAnimal} does not need to be specified if \code{covs} is specified.}
+\item{obsPerAnimal}{Either the number of the number of observations per animal (if single value),
+or the bounds of the number of observations per animal (if vector of two values). In the latter case,
+the numbers of obervations generated for each animal are uniformously picked from this interval.
+Default : \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
+specified.}
 }
 \value{
 An object moveData, i.e. a dataframe of :

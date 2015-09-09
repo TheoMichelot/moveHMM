@@ -22,9 +22,11 @@
 #' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
 #' Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
 #' included in \code{stepPar}.
-#' @param obsPerAnimal Bounds of the number of observations per animal. Default : \code{c(500,1500)}.
-#' The number of obervations generated for each animal are uniformously picked from this interval.
-#' \code{obsPerAnimal} does not need to be specified if \code{covs} is specified.
+#' @param obsPerAnimal Either the number of the number of observations per animal (if single value),
+#' or the bounds of the number of observations per animal (if vector of two values). In the latter case,
+#' the numbers of obervations generated for each animal are uniformously picked from this interval.
+#' Default : \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
+#' specified.
 #'
 #' @return An object moveData, i.e. a dataframe of :
 #' \item{ID}{The ID(s) of the observed animal(s)}
@@ -80,7 +82,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       stop("Check the turning angle parameters bounds.")
   }
 
-  if(length(which(obsPerAnimal<0))>0)
+  if(length(which(obsPerAnimal<1))>0)
     stop("obsPerAnimal should have positive values.")
 
   if(!is.null(covs) & nbCovs>0) {
@@ -99,6 +101,11 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
 
     nbCovs <- ncol(covs)
   }
+
+  if(length(obsPerAnimal)==1)
+    obsPerAnimal <- rep(obsPerAnimal,2)
+  else if(length(obsPerAnimal)!=2)
+    stop("obsPerAnimal should be of length 1 or 2.")
 
   # generate regression parameters for transition probabilities
   if(is.null(beta))
