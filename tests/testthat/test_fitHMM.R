@@ -6,63 +6,63 @@ test_that("Exceptions are thrown",{
   simPar <- ex$simPar
   par0 <- ex$par0
 
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), not(throws_error()))
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), not(throws_error()))
 
   # if nbStates<1
-  expect_that(fitHMM(data,0,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=0,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if data empty
-  expect_that(fitHMM(data.frame(),simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data.frame(),nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if stepPar empty
-  expect_that(fitHMM(data,simPar$nbStates,c(),par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=c(),anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if stepDist not in list
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,"unif",simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist="unif",
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if angleDist not in list
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,"norm",simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist="norm",angleMean=simPar$angleMean), throws_error())
 
   # if stepPar not within bounds
-  expect_that(fitHMM(data,simPar$nbStates,-par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=-par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if angleMean too long
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,c(simPar$angleMean,0),
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=c(simPar$angleMean,0)), throws_error())
 
   # if wrong number of initial parameters
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0[-1],par0$anglePar0,par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0[-1],anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0[-1],par0$beta0,par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0[-1],
+                     beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if beta0 has the wrong dimensions
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0[-1,],par0$delta0,
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0[1,],delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
   # if delta0 has the wrong length
-  expect_that(fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0[-1],
-                     par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                     simPar$zeroInflation), throws_error())
+  expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                     beta0=par0$beta0,delta0=par0$delta0[-1],formula=par0$formula,stepDist=simPar$stepDist,
+                     angleDist=simPar$angleDist,angleMean=simPar$angleMean), throws_error())
 
 })
 
@@ -71,11 +71,11 @@ test_that("The output has the right class",{
   simPar <- ex$simPar
   par0 <- ex$par0
 
-  mod <- fitHMM(data,simPar$nbStates,par0$stepPar0,par0$anglePar0,par0$beta0,par0$delta0,
-                par0$formula,simPar$stepDist,simPar$angleDist,simPar$angleMean,
-                simPar$zeroInflation)
+  m <- fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
+                beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
+                angleDist=simPar$angleDist,angleMean=simPar$angleMean)
 
-  expect_equal(length(which(class(mod)=="moveHMM")),1)
+  expect_equal(length(which(class(m)=="moveHMM")),1)
 })
 
 test_that("Step length only + zero-inflation works",{
@@ -103,10 +103,7 @@ test_that("Step length only + zero-inflation works",{
   anglePar0 <- NULL
   angleMean <- NULL
   formula <- ~cov1+cov2
-  beta0 <- NULL
-  delta0 <- NULL
 
-  expect_that(fitHMM(data,nbStates,stepPar0,anglePar0,beta0,delta0,formula,
-              stepDist,angleDist,angleMean,zeroInflation,verbose=0),
-              not(throws_error()))
+  expect_that(fitHMM(data=data,nbStates=nbStates,stepPar0=stepPar0,anglePar0=anglePar0,formula=formula,
+              stepDist=stepDist,angleDist=angleDist,angleMean=angleMean,verbose=0), not(throws_error()))
 })
