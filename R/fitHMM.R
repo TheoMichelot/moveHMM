@@ -139,13 +139,13 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(sum(parSize)*nbStates!=length(par0)) {
     error <- "Wrong number of initial parameters"
     if(parSize[1]*nbStates!=length(stepPar0)) {
-      error <- paste(error,": there should be",parSize[1]*nbStates,"initial step parameters.")
+      error <- paste(error,"-- there should be",parSize[1]*nbStates,"initial step parameters")
       if(zeroInflation)
-        error <- paste(error,"Zero-mass parameters should be included.")
+        error <- paste(error,"-- zero-mass parameters should be included")
     }
 
-    if(angleDist!="none" & parSize[2]*nbStates!=length(stepPar0))
-      error <- paste(error,": there should be",parSize[2]*nbStates,"initial angle parameters.")
+    if(angleDist!="none" & parSize[2]*nbStates!=length(anglePar0))
+      error <- paste(error,"-- there should be",parSize[2]*nbStates,"initial angle parameters.")
     stop(error)
   }
 
