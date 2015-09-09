@@ -1,7 +1,8 @@
 
 #' Generic CI method
 #' @param m Fitted model
-CI <- function(m) UseMethod("CI") # define generic method CI
+#' @param alpha Range of the confidence interval.
+CI <- function(m,alpha) UseMethod("CI") # define generic method CI
 
 #' Confidence intervals
 #'
@@ -11,12 +12,13 @@ CI <- function(m) UseMethod("CI") # define generic method CI
 #' @method CI moveHMM
 #'
 #' @param m A \code{moveHMM} object
+#' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95% CIs).
 #'
 #' @return A list of the following objects :
-#' \item{inf}{Inferior bound of 95% confidence interval for the parameters of the step lengths
+#' \item{inf}{Inferior bound of the confidence interval for the parameters of the step lengths
 #' distribution, for the parameters of the turning angle distribution, and for the transition
 #' probabilities regression parameters}
-#' \item{sup}{Superior bound of 95% confidence interval for the parameters of the step lengths
+#' \item{sup}{Superior bound of the confidence interval for the parameters of the step lengths
 #' distribution, for the parameters of the turning angle distribution, and for the transition
 #' probabilities regression parameters}
 #'
@@ -25,7 +27,7 @@ CI <- function(m) UseMethod("CI") # define generic method CI
 #'
 #' CI(m)
 
-CI.moveHMM <- function(m)
+CI.moveHMM <- function(m,alpha=0.95)
 {
   if(length(m$mod)<=1)
     stop("The given model hasn't been fitted.")
@@ -52,17 +54,20 @@ CI.moveHMM <- function(m)
 
   var <- c(var[1:i1],var[i2:i3])
 
+  # define appropriate quantile
+  quantSup <- qnorm(1-(1-alpha)/2)
+
   # compute inf and sup for working parameters
-  winf <- est-1.96*sqrt(var)
-  wsup <- est+1.96*sqrt(var)
+  winf <- est-quantSup*sqrt(var)
+  wsup <- est+quantSup*sqrt(var)
 
   # compute inf and sup on natural scale
   inf <- w2n(winf,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
   sup <- w2n(wsup,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
 
   # group CIs for step parameters, angle parameters, and t.p. coefficients
-  inf <- list(stepPar=inf$stepPar,anglePar=angleCI(m)$inf,beta=inf$beta)
-  sup <- list(stepPar=sup$stepPar,anglePar=angleCI(m)$sup,beta=sup$beta)
+  inf <- list(stepPar=inf$stepPar,anglePar=angleCI(m,alpha)$inf,beta=inf$beta)
+  sup <- list(stepPar=sup$stepPar,anglePar=angleCI(m,alpha)$sup,beta=sup$beta)
 
   return(list(inf=inf,sup=sup))
 }

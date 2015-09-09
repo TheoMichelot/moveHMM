@@ -4,18 +4,20 @@
 \alias{angleCI}
 \title{Confidence intervals for angle parameters}
 \usage{
-angleCI(m)
+angleCI(m, alpha)
 }
 \arguments{
 \item{m}{A \code{moveHMM} object}
+
+\item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95% CIs).}
 }
 \value{
 A list of the following objects :
-\item{inf}{Inferior bound of 95\% confidence interval for the parameters of the angle distribution}
-\item{sup}{Superior bound of 95\% confidence interval for the parameters of the angle distribution}
+\item{inf}{Inferior bound of the confidence interval for the parameters of the angle distribution}
+\item{sup}{Superior bound of the confidence interval for the parameters of the angle distribution}
 }
 \description{
 Simulation-based computation of confidence intervals for the parameters of the angle distribution.
-Used in CI.moveHMM.
+Used in \code{\link{CI.moveHMM}}.
 }
 

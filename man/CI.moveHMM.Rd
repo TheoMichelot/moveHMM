@@ -4,17 +4,19 @@
 \alias{CI.moveHMM}
 \title{Confidence intervals}
 \usage{
-\method{CI}{moveHMM}(m)
+\method{CI}{moveHMM}(m, alpha = 0.95)
 }
 \arguments{
 \item{m}{A \code{moveHMM} object}
+
+\item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95% CIs).}
 }
 \value{
 A list of the following objects :
-\item{inf}{Inferior bound of 95% confidence interval for the parameters of the step lengths
+\item{inf}{Inferior bound of the confidence interval for the parameters of the step lengths
 distribution, for the parameters of the turning angle distribution, and for the transition
 probabilities regression parameters}
-\item{sup}{Superior bound of 95% confidence interval for the parameters of the step lengths
+\item{sup}{Superior bound of the confidence interval for the parameters of the step lengths
 distribution, for the parameters of the turning angle distribution, and for the transition
 probabilities regression parameters}
 }

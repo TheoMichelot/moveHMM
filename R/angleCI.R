@@ -2,15 +2,16 @@
 #' Confidence intervals for angle parameters
 #'
 #' Simulation-based computation of confidence intervals for the parameters of the angle distribution.
-#' Used in CI.moveHMM.
+#' Used in \code{\link{CI.moveHMM}}.
 #'
 #' @param m A \code{moveHMM} object
+#' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95% CIs).
 #'
 #' @return A list of the following objects :
-#' \item{inf}{Inferior bound of 95\% confidence interval for the parameters of the angle distribution}
-#' \item{sup}{Superior bound of 95\% confidence interval for the parameters of the angle distribution}
+#' \item{inf}{Inferior bound of the confidence interval for the parameters of the angle distribution}
+#' \item{sup}{Superior bound of the confidence interval for the parameters of the angle distribution}
 
-angleCI <- function(m)
+angleCI <- function(m,alpha)
 {
   nbStates <- ncol(m$mle$anglePar)
   inf <- matrix(NA,ncol=nbStates,nrow=2)
@@ -21,7 +22,7 @@ angleCI <- function(m)
   bounds <- pdef$bounds
 
   for(state in 1:nbStates) {
-    nbSims <- 10^6 # the bigger the better
+    nbSims <- 10^7 # the bigger the better
 
     # working MLE
     wpar <- m$mod$estimate
@@ -55,11 +56,15 @@ angleCI <- function(m)
     if(m$mle$anglePar[1,state]<(-pi/2) | m$mle$anglePar[1,state]>(pi/2))
       nSims[which(nSims[,1]<0),1] <- nSims[which(nSims[,1]<0),1]+2*pi
 
+    # define appropriate quantile
+    quantInf <- (1-alpha)/2
+    quantSup <- 1-quantInf
+
     # compute CIs
-    inf[1,state] <- quantile(nSims[,1],0.025)
-    inf[2,state] <- quantile(nSims[,2],0.025)
-    sup[1,state] <- quantile(nSims[,1],0.975)
-    sup[2,state] <- quantile(nSims[,2],0.975)
+    inf[1,state] <- quantile(nSims[,1],quantInf)
+    inf[2,state] <- quantile(nSims[,2],quantInf)
+    sup[1,state] <- quantile(nSims[,1],quantSup)
+    sup[2,state] <- quantile(nSims[,2],quantSup)
   }
 
   return(list(inf=inf,sup=sup))
