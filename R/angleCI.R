@@ -46,18 +46,23 @@ angleCI <- function(m,alpha)
     # simulated working parameters
     wSims <- mvrnorm(nbSims, mu=c(x[state],y[state]), Sigma=Sigma)
 
+    # check whether some angles are close to -pi and others to pi
+    theta <- Arg(wSims[,1]+1i*wSims[,2])
+    if(length(which(theta>pi/2))>nbSims/10 & length(which(theta<pi/2))>nbSims/10) {
+      theta_hat <- Arg(-(wSims[,1]+1i*wSims[,2])) # points are rotated to be around 0
+      if(m$mle$anglePar[1,state]<0)
+        theta <- theta_hat-pi # points are rotated to be around -pi
+      else
+        theta <- theta_hat+pi # points are rotated to be around pi
+    }
+
     # simulated natural parameters
-    nSims <- cbind(Arg(wSims[,1]+1i*wSims[,2]),
-                   sqrt(wSims[,1]^2+wSims[,2]^2))
+    nSims <- cbind(theta, sqrt(wSims[,1]^2+wSims[,2]^2))
 
     # scale concentration if necessary
     # (assumes that concentration has bounds like ]-Inf,b])
     if(is.finite(bounds[sum(parSize)*nbStates,2]))
       nSims[,2] <- -(exp(-nSims[,2])-bounds[sum(parSize)*nbStates,2])
-
-    # if the mean is around -pi/pi, add 2*pi to negative values
-    if(m$mle$anglePar[1,state]<(-pi/2) | m$mle$anglePar[1,state]>(pi/2))
-      nSims[which(nSims[,1]<0),1] <- nSims[which(nSims[,1]<0),1]+2*pi
 
     # define appropriate quantile
     quantInf <- (1-alpha)/2
