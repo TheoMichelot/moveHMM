@@ -102,8 +102,8 @@ stepPar0 <- c(mu0,sigma0) # no zero-inflation, so no zero-mass included
 anglePar0 <- kappa0 # the angle mean is not estimated, so only the concentration parameter is needed
 formula <- ~cov1+cos(cov2)
 
-m <- fitHMM(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula,
-              stepDist="gamma",angleDist="vm",angleMean,verbose=2)
+m <- fitHMM(data=data,nbStates=nbStates,stepPar0=stepPar0,anglePar0=anglePar0,formula=formula,
+              stepDist=stepDist,angleDist=angleDist,angleMean=angleMean,verbose=2)
 }
 \references{
 Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.

@@ -12,7 +12,7 @@ CI <- function(m,alpha) UseMethod("CI") # define generic method CI
 #' @method CI moveHMM
 #'
 #' @param m A \code{moveHMM} object
-#' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95% CIs).
+#' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
 #'
 #' @return A list of the following objects :
 #' \item{inf}{Inferior bound of the confidence interval for the parameters of the step lengths

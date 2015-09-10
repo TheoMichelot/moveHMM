@@ -42,8 +42,9 @@ m <- ex$m
 simPar <- ex$simPar
 
 # reconstruction of states sequence
-states <- viterbi(data,simPar$nbStates,m$mle$beta,m$mle$delta,simPar$stepDist,
-                  simPar$angleDist,m$mle$stepPar,m$mle$anglePar,simPar$angleMean)
+states <- viterbi(data=data,nbStates=simPar$nbStates,beta=m$mle$beta,delta=m$mle$delta,
+                 stepDist=simPar$stepDist,angleDist=simPar$angleDist,stepPar=m$mle$stepPar,
+                 anglePar=m$mle$anglePar,angleMean=simPar$angleMean)
 }
 \references{
 Zucchini, W. and MacDonald, I.L. 2009.

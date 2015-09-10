@@ -9,7 +9,7 @@ angleCI(m, alpha)
 \arguments{
 \item{m}{A \code{moveHMM} object}
 
-\item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95% CIs).}
+\item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).}
 }
 \value{
 A list of the following objects :

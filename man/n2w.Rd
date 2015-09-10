@@ -39,6 +39,9 @@ bounds <- matrix(c(0,1, # bounds for first parameter
                  byrow=TRUE,ncol=2)
 beta <- matrix(rnorm(18),ncol=6,nrow=3)
 delta <- c(0.6,0.3,0.1)
-wpar <- n2w(par,bounds,beta,delta,nbStates,FALSE) # vector of working parameters
+
+# vector of working parameters
+wpar <- n2w(par=par,bounds=bounds,beta=beta,delta=delta,nbStates=nbStates,
+           estAngleMean=FALSE)
 }
 
