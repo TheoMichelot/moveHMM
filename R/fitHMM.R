@@ -47,7 +47,7 @@
 #' \item{states}{The series of most probable states, decoded by the Viterbi algorithm}
 #' \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 #' \code{stationary}, and \code{formula})}
-#' \item{rawCovs}{Raw covariate values, as found in the data. Used in \code{\link{plot.moveHMM}}.}
+#' \item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
 #'
 #' @examples
 #' ### 1. simulate data
@@ -104,8 +104,11 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     rawCovs <- data[covsCol]
     data <- cbind(data[-covsCol],covs)
   }
-  else
+  else {
+    rawCovs <- NULL
     data <- cbind(data,covs)
+  }
+
   nbCovs <- ncol(covs)-1 # substract intercept column
 
   # determine whether zero-inflation should be included

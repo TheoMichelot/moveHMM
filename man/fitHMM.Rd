@@ -66,7 +66,7 @@ A \code{moveHMM} object, i.e. a list of :
 \item{states}{The series of most probable states, decoded by the Viterbi algorithm}
 \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 \code{stationary}, and \code{formula})}
-\item{rawCovs}{Raw covariate values, as found in the data. Used in \code{\link{plot.moveHMM}}.}
+\item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
 }
 \description{
 Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
