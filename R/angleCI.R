@@ -48,7 +48,11 @@ angleCI <- function(m,alpha)
 
     # check whether some angles are close to -pi and others to pi
     theta <- Arg(wSims[,1]+1i*wSims[,2])
-    if(length(which(theta>pi/2))>nbSims/10 & length(which(theta<pi/2))>nbSims/10) {
+    c1 <- (length(which(theta>pi/2))>0) # are some angles above pi/2?
+    c2 <- (length(which(theta<pi/2))>0) # are some angles below -pi/2?
+    # are there more angles in [-pi,-pi/2]U[pi/2,pi] than on [-pi/2,pi/2]?
+    c3 <- (length(which(theta<(-pi/2) | theta>pi/2))>length(which(theta>(-pi/2) & theta<pi/2)))
+    if(c1 & c2 & c3) {
       theta_hat <- Arg(-(wSims[,1]+1i*wSims[,2])) # points are rotated to be around 0
       if(m$mle$anglePar[1,state]<0)
         theta <- theta_hat-pi # points are rotated to be around -pi
