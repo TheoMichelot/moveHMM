@@ -44,7 +44,6 @@
 #' \item{stepDist}{The step length distribution name}
 #' \item{angleDist}{The turning angle distribution name}
 #' \item{mod}{The object returned by the numerical optimizer \code{nlm}}
-#' \item{states}{The series of most probable states, decoded by the Viterbi algorithm}
 #' \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 #' \code{stationary}, and \code{formula})}
 #' \item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
@@ -238,15 +237,11 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     mle$gamma <- trMat[,,1]
   }
 
-  # decode the sequence of states
-  states <- viterbi(data,nbStates,mle$beta,mle$delta,stepDist,angleDist,mle$stepPar,mle$anglePar,
-                    angleMean,zeroInflation)
-
   # conditions of the fit
   conditions <- list(zeroInflation=zeroInflation,estAngleMean=estAngleMean,stationary=stationary,
                      formula=formula)
 
   mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
-             mod=mod,states=states,conditions=conditions,rawCovs=rawCovs)
+             mod=mod,conditions=conditions,rawCovs=rawCovs)
   return(moveHMM(mh))
 }

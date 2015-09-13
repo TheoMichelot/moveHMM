@@ -63,7 +63,6 @@ A \code{moveHMM} object, i.e. a list of :
 \item{stepDist}{The step length distribution name}
 \item{angleDist}{The turning angle distribution name}
 \item{mod}{The object returned by the numerical optimizer \code{nlm}}
-\item{states}{The series of most probable states, decoded by the Viterbi algorithm}
 \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 \code{stationary}, and \code{formula})}
 \item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}

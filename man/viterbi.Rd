@@ -2,53 +2,14 @@
 % Please edit documentation in R/viterbi.R
 \name{viterbi}
 \alias{viterbi}
-\title{Viterbi algorithm}
+\title{Generic viterbi method}
 \usage{
-viterbi(data, nbStates, beta, delta, stepDist, angleDist, stepPar,
-  anglePar = NULL, angleMean = NULL, zeroInflation = FALSE)
+viterbi(m)
 }
 \arguments{
-\item{data}{An object \code{moveData}.}
-
-\item{nbStates}{Number of states of the HMM.}
-
-\item{beta}{Matrix of regression coefficients for the transition probability matrix.}
-
-\item{delta}{Stationary distribution.}
-
-\item{stepDist}{Name of the distribution of the step lengths.}
-
-\item{angleDist}{Name of the distribution of the turning angles.
-Set to \code{"none"} if the angle distribution should not be estimated.}
-
-\item{stepPar}{Vector of state-dependent step length distribution parameters.}
-
-\item{anglePar}{Vector of state-dependent turning angle distribution parameters.}
-
-\item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
-Defaults to \code{NULL}.}
-
-\item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.}
-}
-\value{
-The sequence of most probable states.
+\item{m}{Fitted model}
 }
 \description{
-Reconstructs the most probable states sequence. Is included in \code{\link{fitHMM}}.
-}
-\examples{
-data <- ex$data
-m <- ex$m
-simPar <- ex$simPar
-
-# reconstruction of states sequence
-states <- viterbi(data=data,nbStates=simPar$nbStates,beta=m$mle$beta,delta=m$mle$delta,
-                 stepDist=simPar$stepDist,angleDist=simPar$angleDist,stepPar=m$mle$stepPar,
-                 anglePar=m$mle$anglePar,angleMean=simPar$angleMean)
-}
-\references{
-Zucchini, W. and MacDonald, I.L. 2009.
-Hidden Markov Models for Time Series: An Introduction Using R.
-Chapman & Hall (London).
+Generic viterbi method
 }
 

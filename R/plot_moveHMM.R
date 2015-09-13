@@ -60,13 +60,18 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
   if(!is.null(hist.ylim) & length(hist.ylim)!=2)
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
+  # compute most probable states sequence using Viterbi
+  cat("Decoding states sequence... ")
+  vitStates <- viterbi(m)
+  cat("DONE\n")
+
   if(sepStates)
     w <- rep(1,nbStates)
   else {
     # proportion of each state in the states sequence returned by the Viterbi algorithm
     w <- rep(NA,nbStates)
     for(state in 1:nbStates)
-      w[state] <- length(which(m$states==state))/length(m$states)
+      w[state] <- length(which(vitStates==state))/length(vitStates)
   }
 
   if(m$conditions$zeroInflation) {
@@ -113,7 +118,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
         if(sepStates) {
-          stateInd <- ind[which(m$states[ind]==state)]
+          stateInd <- ind[which(vitStates[ind]==state)]
 
           if(is.null(hist.ylim)) { # default
             ymin <- 0
@@ -167,7 +172,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         ind <- which(m$data$ID==ID)
         x <- m$data$x[ind]
         y <- m$data$y[ind]
-        states <- m$states[ind]
+        states <- vitStates[ind]
 
         # Map of the track, colored by states
         plot(x[1],y[1],xlim=c(min(x,na.rm=T),max(x,na.rm=T)),ylim=c(min(y,na.rm=T),max(y,na.rm=T)),
@@ -199,7 +204,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
       for(state in 1:nbStates) {
         if(sepStates) {
-          stateInd <- ind[which(m$states[ind]==state)]
+          stateInd <- ind[which(vitStates[ind]==state)]
 
           if(is.null(hist.ylim)) { # default
             ymin <- 0
@@ -258,7 +263,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
       for(state in 1:nbStates) {
         if(sepStates) {
-          stateInd <- ind[which(m$states[ind]==state)]
+          stateInd <- ind[which(vitStates[ind]==state)]
 
           h <- hist(m$data$angle[stateInd],plot=F,breaks=breaks) # to determine ylim
           ymax <- 1.3*max(h$density)
