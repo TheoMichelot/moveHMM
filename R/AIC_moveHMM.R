@@ -9,7 +9,8 @@
 #' @param ... Optional additional \code{moveHMM} objects, to compare AICs of the different models.
 #' @param k Penalty per parameter. Default : 2 ; for classical AIC.
 #'
-#' @return The AIC of the model(s) provided.
+#' @return The AIC of the model(s) provided. If several models are provided, the AICs are output
+#' in ascending order.
 #'
 #' @examples
 #' m <- ex$m # moveHMM object, as returned by fitHMM
@@ -22,7 +23,12 @@ AIC.moveHMM <- function(object,...,k=2)
   if(length(models)>0) { # if several models are provided
     modNames <- all.vars(match.call()) # store the names of the models given as arguments
 
-    models[[length(models)+1]] <- object
+    # include "object" in "models"
+    for(i in 1:length(models))
+      models[[i+1]] <- models[[i]]
+    models[[1]] <- object
+
+    # compute AICs of models
     AIC <- rep(NA,length(models))
 
     for(i in 1:length(models)) {
@@ -32,7 +38,8 @@ AIC.moveHMM <- function(object,...,k=2)
       AIC[i] <- -2*maxLogLike+k*nbPar
     }
 
-    return(data.frame(Model=modNames,AIC=AIC))
+    ord <- order(AIC) # order models by increasing AIC
+    return(data.frame(Model=modNames[ord],AIC=AIC[ord]))
   }
   else { # if only one model is provided
     m <- object
