@@ -13,8 +13,8 @@ angleCI(m, alpha)
 }
 \value{
 A list of the following objects :
-\item{inf}{Inferior bound of the confidence interval for the parameters of the angle distribution}
-\item{sup}{Superior bound of the confidence interval for the parameters of the angle distribution}
+\item{lower}{Lower bound of the confidence interval for the parameters of the angle distribution}
+\item{upper}{Upper bound of the confidence interval for the parameters of the angle distribution}
 }
 \description{
 Simulation-based computation of confidence intervals for the parameters of the angle distribution.

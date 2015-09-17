@@ -13,10 +13,10 @@
 }
 \value{
 A list of the following objects :
-\item{inf}{Inferior bound of the confidence interval for the parameters of the step lengths
+\item{lower}{Lower bound of the confidence interval for the parameters of the step lengths
 distribution, for the parameters of the turning angle distribution, and for the transition
 probabilities regression parameters}
-\item{sup}{Superior bound of the confidence interval for the parameters of the step lengths
+\item{upper}{Upper bound of the confidence interval for the parameters of the step lengths
 distribution, for the parameters of the turning angle distribution, and for the transition
 probabilities regression parameters}
 }

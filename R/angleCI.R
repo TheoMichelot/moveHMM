@@ -8,8 +8,8 @@
 #' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
 #'
 #' @return A list of the following objects :
-#' \item{inf}{Inferior bound of the confidence interval for the parameters of the angle distribution}
-#' \item{sup}{Superior bound of the confidence interval for the parameters of the angle distribution}
+#' \item{lower}{Lower bound of the confidence interval for the parameters of the angle distribution}
+#' \item{upper}{Upper bound of the confidence interval for the parameters of the angle distribution}
 
 angleCI <- function(m,alpha)
 {
@@ -17,8 +17,8 @@ angleCI <- function(m,alpha)
     stop("alpha needs to be between 0 and 1")
 
   nbStates <- ncol(m$mle$anglePar)
-  inf <- matrix(NA,ncol=nbStates,nrow=2)
-  sup <- matrix(NA,ncol=nbStates,nrow=2)
+  lower <- matrix(NA,ncol=nbStates,nrow=2)
+  upper <- matrix(NA,ncol=nbStates,nrow=2)
 
   pdef <- parDef(m$stepDist,m$angleDist,nbStates,estAngleMean=TRUE,m$conditions$zeroInflation)
   parSize <- pdef$parSize
@@ -73,11 +73,11 @@ angleCI <- function(m,alpha)
     quantSup <- 1-quantInf
 
     # compute CIs
-    inf[1,state] <- quantile(nSims[,1],quantInf)
-    inf[2,state] <- quantile(nSims[,2],quantInf)
-    sup[1,state] <- quantile(nSims[,1],quantSup)
-    sup[2,state] <- quantile(nSims[,2],quantSup)
+    lower[1,state] <- quantile(nSims[,1],quantInf)
+    lower[2,state] <- quantile(nSims[,2],quantInf)
+    upper[1,state] <- quantile(nSims[,1],quantSup)
+    upper[2,state] <- quantile(nSims[,2],quantSup)
   }
 
-  return(list(inf=inf,sup=sup))
+  return(list(lower=lower,upper=upper))
 }

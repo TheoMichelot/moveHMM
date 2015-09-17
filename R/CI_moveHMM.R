@@ -2,7 +2,7 @@
 #' Generic CI method
 #' @param m Fitted model
 #' @param alpha Range of the confidence interval.
-CI <- function(m,alpha) UseMethod("CI") # define generic method CI
+CI <- function(m,alpha) UseMethod("CI")
 
 #' Confidence intervals
 #'
@@ -15,10 +15,10 @@ CI <- function(m,alpha) UseMethod("CI") # define generic method CI
 #' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
 #'
 #' @return A list of the following objects :
-#' \item{inf}{Inferior bound of the confidence interval for the parameters of the step lengths
+#' \item{lower}{Lower bound of the confidence interval for the parameters of the step lengths
 #' distribution, for the parameters of the turning angle distribution, and for the transition
 #' probabilities regression parameters}
-#' \item{sup}{Superior bound of the confidence interval for the parameters of the step lengths
+#' \item{upper}{Upper bound of the confidence interval for the parameters of the step lengths
 #' distribution, for the parameters of the turning angle distribution, and for the transition
 #' probabilities regression parameters}
 #'
@@ -60,17 +60,17 @@ CI.moveHMM <- function(m,alpha=0.95)
   # define appropriate quantile
   quantSup <- qnorm(1-(1-alpha)/2)
 
-  # compute inf and sup for working parameters
-  winf <- est-quantSup*sqrt(var)
-  wsup <- est+quantSup*sqrt(var)
+  # compute lower and upper for working parameters
+  wlower <- est-quantSup*sqrt(var)
+  wupper <- est+quantSup*sqrt(var)
 
-  # compute inf and sup on natural scale
-  inf <- w2n(winf,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
-  sup <- w2n(wsup,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
+  # compute lower and upper on natural scale
+  lower <- w2n(wlower,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
+  upper <- w2n(wupper,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
 
   # group CIs for step parameters, angle parameters, and t.p. coefficients
-  inf <- list(stepPar=inf$stepPar,anglePar=angleCI(m,alpha)$inf,beta=inf$beta)
-  sup <- list(stepPar=sup$stepPar,anglePar=angleCI(m,alpha)$sup,beta=sup$beta)
+  lower <- list(stepPar=lower$stepPar,anglePar=angleCI(m,alpha)$lower,beta=lower$beta)
+  upper <- list(stepPar=upper$stepPar,anglePar=angleCI(m,alpha)$upper,beta=upper$beta)
 
-  return(list(inf=inf,sup=sup))
+  return(list(lower=lower,upper=upper))
 }
