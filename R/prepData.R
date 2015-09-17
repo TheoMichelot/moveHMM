@@ -59,7 +59,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
     for(i in (i1+1):(i2-1)) {
       if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(y[i-1]) & !is.na(y[i])) {
         # step length
-        step[i-i1+1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
+        step[i-i1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
                                   pt = c(x[i],y[i]),
                                   longlat = (type=='GCD')) # TRUE if 'GCD', FALSE otherwise
       }
@@ -71,7 +71,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
                                    c(x[i+1],y[i+1]))
       }
     }
-    step[i2-i1+1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
+    step[i2-i1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
 
     # d = data for one individual
     d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
