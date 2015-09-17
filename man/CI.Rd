@@ -4,12 +4,14 @@
 \alias{CI}
 \title{Generic CI method}
 \usage{
-CI(m, alpha)
+CI(m, alpha, nbSims)
 }
 \arguments{
 \item{m}{Fitted model}
 
 \item{alpha}{Range of the confidence interval.}
+
+\item{nbSims}{Number of simulations.}
 }
 \description{
 Generic CI method

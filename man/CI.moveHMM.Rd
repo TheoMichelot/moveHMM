@@ -4,12 +4,15 @@
 \alias{CI.moveHMM}
 \title{Confidence intervals}
 \usage{
-\method{CI}{moveHMM}(m, alpha = 0.95)
+\method{CI}{moveHMM}(m, alpha = 0.95, nbSims = 10^6)
 }
 \arguments{
 \item{m}{A \code{moveHMM} object}
 
 \item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).}
+
+\item{nbSims}{Number of simulations in the computation of the CIs for the angle parameters.
+Default : 10^6.}
 }
 \value{
 A list of the following objects :

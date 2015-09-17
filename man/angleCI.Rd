@@ -4,12 +4,14 @@
 \alias{angleCI}
 \title{Confidence intervals for angle parameters}
 \usage{
-angleCI(m, alpha)
+angleCI(m, alpha, nbSims = 10^6)
 }
 \arguments{
 \item{m}{A \code{moveHMM} object}
 
 \item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).}
+
+\item{nbSims}{Number of simulations. Default : 10^6.}
 }
 \value{
 A list of the following objects :

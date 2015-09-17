@@ -2,7 +2,8 @@
 #' Generic CI method
 #' @param m Fitted model
 #' @param alpha Range of the confidence interval.
-CI <- function(m,alpha) UseMethod("CI")
+#' @param nbSims Number of simulations.
+CI <- function(m,alpha,nbSims) UseMethod("CI")
 
 #' Confidence intervals
 #'
@@ -13,6 +14,8 @@ CI <- function(m,alpha) UseMethod("CI")
 #'
 #' @param m A \code{moveHMM} object
 #' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
+#' @param nbSims Number of simulations in the computation of the CIs for the angle parameters.
+#' Default : 10^6.
 #'
 #' @return A list of the following objects :
 #' \item{lower}{Lower bound of the confidence interval for the parameters of the step lengths
@@ -27,7 +30,7 @@ CI <- function(m,alpha) UseMethod("CI")
 #'
 #' CI(m)
 
-CI.moveHMM <- function(m,alpha=0.95)
+CI.moveHMM <- function(m,alpha=0.95,nbSims=10^6)
 {
   if(length(m$mod)<=1)
     stop("The given model hasn't been fitted.")
@@ -68,9 +71,12 @@ CI.moveHMM <- function(m,alpha=0.95)
   lower <- w2n(wlower,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
   upper <- w2n(wupper,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
 
+  # CIs for angle parameters
+  aCI <- angleCI(m,alpha,nbSims)
+
   # group CIs for step parameters, angle parameters, and t.p. coefficients
-  lower <- list(stepPar=lower$stepPar,anglePar=angleCI(m,alpha)$lower,beta=lower$beta)
-  upper <- list(stepPar=upper$stepPar,anglePar=angleCI(m,alpha)$upper,beta=upper$beta)
+  lower <- list(stepPar=lower$stepPar,anglePar=aCI$lower,beta=lower$beta)
+  upper <- list(stepPar=upper$stepPar,anglePar=aCI$upper,beta=upper$beta)
 
   return(list(lower=lower,upper=upper))
 }

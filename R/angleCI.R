@@ -6,12 +6,13 @@
 #'
 #' @param m A \code{moveHMM} object
 #' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
+#' @param nbSims Number of simulations. Default : 10^6.
 #'
 #' @return A list of the following objects :
 #' \item{lower}{Lower bound of the confidence interval for the parameters of the angle distribution}
 #' \item{upper}{Upper bound of the confidence interval for the parameters of the angle distribution}
 
-angleCI <- function(m,alpha)
+angleCI <- function(m,alpha,nbSims=10^6)
 {
   if(alpha<0 | alpha>1)
     stop("alpha needs to be between 0 and 1")
@@ -25,8 +26,6 @@ angleCI <- function(m,alpha)
   bounds <- pdef$bounds
 
   for(state in 1:nbStates) {
-    nbSims <- 10^6 # the bigger the better
-
     # working MLE
     wpar <- m$mod$estimate
     # only keep the angle parameters
