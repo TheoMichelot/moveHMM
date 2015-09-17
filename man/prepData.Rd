@@ -4,7 +4,7 @@
 \alias{prepData}
 \title{Preprocessing of the tracking data}
 \usage{
-prepData(trackData, type = c("GCD", "euclidean"), coordNames = c("x", "y"))
+prepData(trackData, type = c("LL", "UTM"), coordNames = c("x", "y"))
 }
 \arguments{
 \item{trackData}{A dataframe of the tracking data, including at least coordinates
@@ -13,7 +13,7 @@ prepData(trackData, type = c("GCD", "euclidean"), coordNames = c("x", "y"))
 Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
 should specified.}
 
-\item{type}{\code{'GCD'} if longitude/latitude provided (default), \code{'euclidean'} if easting/northing.}
+\item{type}{\code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.}
 
 \item{coordNames}{Names of the columns of coordinates in the data frame. Default : \code{c("x","y")}.}
 }
@@ -33,6 +33,6 @@ Preprocessing of the tracking data
 coord1 <- c(1,2,3,4,5,6,7,8,9,10)
 coord2 <- c(1,1,1,2,2,2,1,1,1,2)
 trackData <- data.frame(coord1=coord1,coord2=coord2)
-d <- prepData(trackData,type='euclidean',coordNames=c("coord1","coord2"))
+d <- prepData(trackData,type='UTM',coordNames=c("coord1","coord2"))
 }
 

@@ -6,7 +6,7 @@
 #' (identifiers for the observed individuals). Additionnal fields are considered as covariates.
 #' Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
 #' should specified.
-#' @param type \code{'GCD'} if longitude/latitude provided (default), \code{'euclidean'} if easting/northing.
+#' @param type \code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.
 #' @param coordNames Names of the columns of coordinates in the data frame. Default : \code{c("x","y")}.
 #'
 #' @return An object \code{moveData}, i.e. a dataframe of :
@@ -21,9 +21,9 @@
 #' coord1 <- c(1,2,3,4,5,6,7,8,9,10)
 #' coord2 <- c(1,1,1,2,2,2,1,1,1,2)
 #' trackData <- data.frame(coord1=coord1,coord2=coord2)
-#' d <- prepData(trackData,type='euclidean',coordNames=c("coord1","coord2"))
+#' d <- prepData(trackData,type='UTM',coordNames=c("coord1","coord2"))
 
-prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
+prepData <- function(trackData, type=c('LL','UTM'),coordNames=c("x","y"))
 {
   # check arguments
   type <- match.arg(type)
@@ -33,9 +33,13 @@ prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
   x <- trackData[,coordNames[1]]
   y <- trackData[,coordNames[2]]
 
-  if(!is.null(trackData$ID)) ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
-  else ID <- rep("Animal1",length(x)) # default ID if none provided
-  ID[which(is.na(ID))] <- "Missing ID"
+  if(!is.null(trackData$ID))
+    ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
+  else
+    ID <- rep("Animal1",length(x)) # default ID if none provided
+
+  if(length(which(is.na(ID)))>0)
+    stop("Missing IDs")
 
   data <- data.frame(ID=character(),
                      step=numeric(),
@@ -61,7 +65,7 @@ prepData <- function(trackData, type=c('GCD','euclidean'),coordNames=c("x","y"))
         # step length
         step[i-i1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
                                   pt = c(x[i],y[i]),
-                                  longlat = (type=='GCD')) # TRUE if 'GCD', FALSE otherwise
+                                  longlat = (type=='LL')) # TRUE if 'LL', FALSE otherwise
       }
 
       if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(x[i+1]) & !is.na(y[i-1]) & !is.na(y[i]) & !is.na(y[i+1])) {
