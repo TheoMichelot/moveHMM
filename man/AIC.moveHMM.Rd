@@ -14,7 +14,8 @@
 \item{k}{Penalty per parameter. Default : 2 ; for classical AIC.}
 }
 \value{
-The AIC of the model(s) provided.
+The AIC of the model(s) provided. If several models are provided, the AICs are output
+in ascending order.
 }
 \description{
 Akaike information criterion of a moveHMM model.
