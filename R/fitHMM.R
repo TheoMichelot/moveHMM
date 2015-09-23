@@ -175,6 +175,10 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(!is.null(angleMean) & length(angleMean)!=nbStates)
     stop("The angleMean argument should be of length nbStates.")
 
+  # check that verbose is in {0,1,2}
+  if(!(verbose %in% c(0,1,2)))
+    stop("verbose must be in {0,1,2}")
+
   # check that observations are within expected bounds
   if(length(which(data$step<0))>0)
     stop("The step lengths should be positive.")
