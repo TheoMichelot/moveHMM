@@ -131,6 +131,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
 
   trackData <- NULL
   allCovs <- NULL
+  allStates <- NULL
 
   # build the data frame to be returned
   data <- data.frame(ID=character(),
@@ -182,6 +183,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       gamma <- gamma/apply(gamma,1,sum)
       Z[k] <- sample(1:nbStates,size=1,prob=gamma[Z[k-1],])
     }
+    allStates <- c(allStates,Z)
 
     X <- matrix(nbObs,nrow=nbObs,ncol=2)
     X[1,] <- c(0,0) # initial position of animal
@@ -239,5 +241,8 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
 
   if(nbCovs>0)
     data <- cbind(data,allCovs)
+
+  # include states sequence in the data
+  data <- cbind(data,states=allStates)
   return(moveData(data))
 }

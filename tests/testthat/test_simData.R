@@ -39,16 +39,19 @@ test_that("Exceptions are thrown",{
 test_that("The right slots are defined",{
   stepPar <- c(1,10,1,5,0.2,0.3)
   anglePar <- c(0,pi,0.5,2)
-  data <- simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE)
+  nbCovs <- 2
+  data <- simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=nbCovs,zeroInflation=TRUE)
 
   expect_that(!is.null(data$ID),is_true())
   expect_that(!is.null(data$x),is_true())
   expect_that(!is.null(data$y),is_true())
   expect_that(!is.null(data$step),is_true())
   expect_that(!is.null(data$angle),is_true())
+  expect_that(!is.null(data$states),is_true())
 
   expect_equal(length(which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                              names(data)!="step" & names(data)!="angle")),2)
+                              names(data)!="step" & names(data)!="angle" &
+                              names(data)!="states")),nbCovs)
 })
 
 test_that("The returned object is of the correct class",{
