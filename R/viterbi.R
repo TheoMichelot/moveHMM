@@ -75,7 +75,7 @@ viterbi.moveHMM <- function(m)
     stSeq <- rep(NA,nbObs)
     stSeq[nbObs] <- which.max(xi[nbObs,])
     for(i in (nbObs-1):1)
-      stSeq[i] <- which.max(tm[,stSeq[i+1],i]*xi[i,])
+      stSeq[i] <- which.max(tm[,stSeq[i+1],i+1]*xi[i,])
 
     allStates <- c(allStates,stSeq)
   }
