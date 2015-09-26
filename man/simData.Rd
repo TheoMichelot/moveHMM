@@ -7,7 +7,7 @@
 simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), stepPar, anglePar = NULL,
   beta = NULL, covs = NULL, nbCovs = 0, zeroInflation = FALSE,
-  obsPerAnimal = c(500, 1500))
+  obsPerAnimal = c(500, 1500), states = FALSE)
 }
 \arguments{
 \item{nbAnimals}{Number of observed individuals to simulate.}
@@ -44,6 +44,8 @@ or the bounds of the number of observations per animal (if vector of two values)
 the numbers of obervations generated for each animal are uniformously picked from this interval.
 Default : \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
 specified.}
+
+\item{states}{\code{TRUE} if the simulated states should be returned, \code{FALSE} otherwise (default).}
 }
 \value{
 An object moveData, i.e. a dataframe of :

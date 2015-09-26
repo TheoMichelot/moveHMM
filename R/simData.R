@@ -27,6 +27,7 @@
 #' the numbers of obervations generated for each animal are uniformously picked from this interval.
 #' Default : \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
 #' specified.
+#' @param states \code{TRUE} if the simulated states should be returned, \code{FALSE} otherwise (default).
 #'
 #' @return An object moveData, i.e. a dataframe of :
 #' \item{ID}{The ID(s) of the observed animal(s)}
@@ -60,7 +61,8 @@
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
                     angleDist=c("vm","wrpcauchy","none"),stepPar,anglePar=NULL,
-                    beta=NULL,covs=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500))
+                    beta=NULL,covs=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500),
+                    states=FALSE)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -243,6 +245,7 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     data <- cbind(data,allCovs)
 
   # include states sequence in the data
-  data <- cbind(data,states=allStates)
+  if(states)
+    data <- cbind(data,states=allStates)
   return(moveData(data))
 }
