@@ -47,11 +47,9 @@ test_that("The right slots are defined",{
   expect_that(!is.null(data$y),is_true())
   expect_that(!is.null(data$step),is_true())
   expect_that(!is.null(data$angle),is_true())
-  expect_that(!is.null(data$states),is_true())
 
   expect_equal(length(which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                              names(data)!="step" & names(data)!="angle" &
-                              names(data)!="states")),nbCovs)
+                              names(data)!="step" & names(data)!="angle")),nbCovs)
 })
 
 test_that("The returned object is of the correct class",{
