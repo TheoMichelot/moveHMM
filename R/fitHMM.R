@@ -228,10 +228,14 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     mle <- w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   }
 
+  # compute stationary distribution
   if(stationary) {
     gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]
     mle$delta <- solve(t(diag(nbStates)-gamma+1),rep(1,nbStates))
   }
+
+  if(nbStates==1)
+    mle$delta <- 1
 
   if(!is.null(angleMean) & angleDist!="none") {
     mle$anglePar <- rbind(angleMean,mle$anglePar)
