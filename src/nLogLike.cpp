@@ -6,6 +6,8 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                      arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false,
                      bool stationary=false)
 {
+  Rcout << "1" << endl;
+
   // 1. Computation of transition probability matrix trMat
   int nbObs = data.nrows();
   arma::cube trMat(nbStates,nbStates,nbObs);
@@ -14,27 +16,30 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
   rowSums.zeros();
 
   arma::mat g(nbObs,nbStates*(nbStates-1));
-  g = covs*beta;
 
-  for(int k=0;k<nbObs;k++) {
-    int cpt=0;
-    for(int i=0;i<nbStates;i++) {
-      for(int j=0;j<nbStates;j++) {
-        if(i==j) {
-          trMat(i,j,k)=1;
-          cpt++;
+  if(nbStates>1) {
+    g = covs*beta;
+
+    for(int k=0;k<nbObs;k++) {
+      int cpt=0;
+      for(int i=0;i<nbStates;i++) {
+        for(int j=0;j<nbStates;j++) {
+          if(i==j) {
+            trMat(i,j,k)=1;
+            cpt++;
+          }
+          else trMat(i,j,k) = exp(g(k,i*nbStates+j-cpt));
+          rowSums(i,k)=rowSums(i,k)+trMat(i,j,k);
         }
-        else trMat(i,j,k) = exp(g(k,i*nbStates+j-cpt));
-        rowSums(i,k)=rowSums(i,k)+trMat(i,j,k);
       }
     }
-  }
 
   // normalization
   for(int k=0;k<nbObs;k++)
     for(int i=0;i<nbStates;i++)
       for(int j=0;j<nbStates;j++)
         trMat(i,j,k) = trMat(i,j,k)/rowSums(i,k);
+  }
 
   // 2. Computation of matrix of joint probabilities allProbs
 
@@ -48,8 +53,11 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
   funMap["vm"] = dvm_rcpp;
   funMap["wrpcauchy"] = dwrpcauchy_rcpp;
 
-  // compute stationary distribution delta
-  if(stationary) {
+  if(nbStates==1)
+    delta = 1; // no distribution if only one state
+  else if(stationary) {
+    // compute stationary distribution delta
+
     arma::mat diag(nbStates,nbStates);
     diag.eye(); // diagonal of ones
     arma::mat Gamma = trMat.slice(0); // all slices are identical if stationary
@@ -135,7 +143,12 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
       k++;
       alpha = delta%allProbs.row(i);
     }
-    Gamma = trMat.slice(i);
+
+    if(nbStates>1)
+      Gamma = trMat.slice(i);
+    else
+      Gamma = 1; // no transition if only one state
+
     alpha = alpha*Gamma%allProbs.row(i);
 
     lscale = lscale + log(sum(alpha));

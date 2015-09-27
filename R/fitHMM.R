@@ -190,12 +190,15 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     stop("stationary can't be set to TRUE if there are covariates.")
 
   # generate initial values for beta and delta
-  if(is.null(beta0))
+  if(is.null(beta0) & nbStates>1) {
     beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
-                             nrow=nbCovs+1,byrow=TRUE)
+                    nrow=nbCovs+1,byrow=TRUE)
+  }
 
-  if(is.null(delta0)) delta0 <- rep(1,nbStates)/nbStates
-  if(stationary) delta0 <- NULL
+  if(is.null(delta0))
+    delta0 <- rep(1,nbStates)/nbStates
+  if(stationary)
+    delta0 <- NULL
 
   estAngleMean <- (is.null(angleMean) & angleDist!="none")
 
@@ -236,7 +239,7 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   }
 
   # compute t.p.m. if no covariates
-  if(nbCovs==0) {
+  if(nbCovs==0 & nbStates>1) {
     trMat <- trMatrix_rcpp(nbStates,mle$beta,covs)
     mle$gamma <- trMat[,,1]
   }

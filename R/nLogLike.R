@@ -95,6 +95,12 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     par$anglePar <- matrix(NA)
   if(stationary)
     par$delta <- c(NA)
+  if(nbStates==1) {
+    par$beta <- matrix(NA)
+    par$delta <- c(NA)
+    par$stepPar <- as.matrix(par$stepPar)
+    par$anglePar <- as.matrix(par$anglePar)
+  }
 
   nllk <- nLogLike_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
                         par$anglePar,par$delta,aInd,zeroInflation,stationary)

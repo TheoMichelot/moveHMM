@@ -71,7 +71,7 @@ n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
     wpar[foo:length(wpar)] <- y
   }
 
-  wbeta <- as.vector(beta)
+  wbeta <- as.vector(beta) # if beta is NULL, wbeta is NULL as well
   wdelta <- log(delta[-1]/delta[1]) # if delta is NULL, wdelta is NULL as well
   return(c(wpar,wbeta,wdelta))
 }

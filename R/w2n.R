@@ -40,7 +40,7 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
     stop("Number of states must be 1 at least.")
 
   # identify initial distribution parameters
-  if(!stationary) {
+  if(!stationary & nbStates>1) {
     foo <- length(wpar)-nbStates+2
     delta <- wpar[foo:length(wpar)]
     delta <- exp(c(0,delta))
@@ -50,10 +50,13 @@ w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   else delta <- NULL
 
   # identify regression coefficients for the transition probabilities
-  foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
-  beta <- wpar[foo:length(wpar)]
-  beta <- matrix(beta,nrow=nbCovs+1)
-  wpar <- wpar[-(foo:length(wpar))]
+  if(nbStates>1) {
+    foo <- length(wpar)-(nbCovs+1)*nbStates*(nbStates-1)+1
+    beta <- wpar[foo:length(wpar)]
+    beta <- matrix(beta,nrow=nbCovs+1)
+    wpar <- wpar[-(foo:length(wpar))]
+  }
+  else beta <- NULL
 
   if(estAngleMean) {
     # identify working parameters for the angle distribution (x and y)
