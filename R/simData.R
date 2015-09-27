@@ -185,24 +185,27 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     }
 
     # generate state sequence Z
-    Z <- rep(NA,nbObs)
-    Z[1] <- sample(1:nbStates,size=1,prob=delta)
-    for (k in 2:nbObs) {
-      gamma <- diag(nbStates)
+    if(nbStates>1) {
+      Z <- rep(NA,nbObs)
+      Z[1] <- sample(1:nbStates,size=1,prob=delta)
+      for (k in 2:nbObs) {
+        gamma <- diag(nbStates)
 
-      g <- beta[1,]
-      if(nbCovs==1) g <- g + beta[2,]*subCovs[k,1]
-      if(nbCovs>1) {
-        for(j in 1:nbCovs)
-          g <- g + beta[j+1,]*subCovs[k,j]
+        g <- beta[1,]
+        if(nbCovs==1) g <- g + beta[2,]*subCovs[k,1]
+        if(nbCovs>1) {
+          for(j in 1:nbCovs)
+            g <- g + beta[j+1,]*subCovs[k,j]
+        }
+
+        gamma[!gamma] <- exp(g)
+        gamma <- t(gamma)
+        gamma <- gamma/apply(gamma,1,sum)
+        Z[k] <- sample(1:nbStates,size=1,prob=gamma[Z[k-1],])
       }
-
-      gamma[!gamma] <- exp(g)
-      gamma <- t(gamma)
-      gamma <- gamma/apply(gamma,1,sum)
-      Z[k] <- sample(1:nbStates,size=1,prob=gamma[Z[k-1],])
-    }
-    allStates <- c(allStates,Z)
+      allStates <- c(allStates,Z)
+    } else
+      Z <- rep(1,nbObs)
 
     X <- matrix(nbObs,nrow=nbObs,ncol=2)
     X[1,] <- c(0,0) # initial position of animal
