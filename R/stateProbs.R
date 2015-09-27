@@ -24,6 +24,10 @@ stateProbs.moveHMM <- function(m)
 {
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
+
+  if(nbStates==1)
+    stop("No states to decode (nbStates=1)")
+
   nbObs <- nrow(data)
   la <- logAlpha(m) # forward log-probabilities
   lb <- logBeta(m) # backward log-probabilities

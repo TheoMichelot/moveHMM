@@ -36,6 +36,9 @@ viterbi.moveHMM <- function(m)
   anglePar <- m$mle$anglePar
   zeroInflation <- m$conditions$zeroInflation
 
+  if(nbStates==1)
+    stop("No states to decode (nbStates=1)")
+
   # identify covariates
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
