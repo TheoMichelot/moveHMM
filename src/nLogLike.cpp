@@ -6,8 +6,6 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                      arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false,
                      bool stationary=false)
 {
-  Rcout << "1" << endl;
-
   // 1. Computation of transition probability matrix trMat
   int nbObs = data.nrows();
   arma::cube trMat(nbStates,nbStates,nbObs);
