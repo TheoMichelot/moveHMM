@@ -66,7 +66,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     vitStates <- viterbi(m)
     cat("DONE\n")
   } else
-    vitStates <- rep(0,nrow(m$data))
+    vitStates <- rep(1,nrow(m$data))
 
   if(sepStates | nbStates==1)
     w <- rep(1,nbStates)
@@ -177,14 +177,16 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         y <- m$data$y[ind]
         states <- vitStates[ind]
 
-        # Map of the track, colored by states
-        plot(x[1],y[1],xlim=c(min(x,na.rm=T),max(x,na.rm=T)),ylim=c(min(y,na.rm=T),max(y,na.rm=T)),
-             pch=18,xlab="x",ylab="y")
-        for(i in 2:length(x)) {
-          points(x[i],y[i],pch=16,col=states[i-1]+1,cex=0.6)
-          segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+1,lwd=1.3)
+        if(nbStates>1) { # no need to plot the map if only one state
+          # Map of the track, colored by states
+          plot(x[1],y[1],xlim=c(min(x,na.rm=T),max(x,na.rm=T)),ylim=c(min(y,na.rm=T),max(y,na.rm=T)),
+               pch=18,xlab="x",ylab="y")
+          for(i in 2:length(x)) {
+            points(x[i],y[i],pch=16,col=states[i-1]+1,cex=0.6)
+            segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+1,lwd=1.3)
+          }
+          mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
         }
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
       }
 
       # Histogram of step lengths
@@ -211,6 +213,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
           if(is.null(hist.ylim)) { # default
             ymin <- 0
+
             h <- hist(m$data$step[stateInd],plot=F,breaks=breaks)
             ymax <- 1.3*max(h$density)
           }
