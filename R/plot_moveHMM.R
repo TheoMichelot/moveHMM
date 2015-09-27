@@ -61,11 +61,14 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
   # compute most probable states sequence using Viterbi
-  cat("Decoding states sequence... ")
-  vitStates <- viterbi(m)
-  cat("DONE\n")
+  if(nbStates>1) {
+    cat("Decoding states sequence... ")
+    vitStates <- viterbi(m)
+    cat("DONE\n")
+  } else
+    vitStates <- rep(0,nrow(m$data))
 
-  if(sepStates)
+  if(sepStates | nbStates==1)
     w <- rep(1,nbStates)
   else {
     # proportion of each state in the states sequence returned by the Viterbi algorithm
@@ -296,7 +299,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
   }
 
   # plot the transition probabilities as functions of the covariates
-  if(!compactHist) {
+  if(!compactHist & nbStates>1) {
     par(mfrow=c(nbStates,nbStates))
     par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
 

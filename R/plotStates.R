@@ -24,6 +24,9 @@ plotStates.moveHMM <- function(m,animals=NULL)
   nbAnimals <- length(unique(m$data$ID))
   nbStates <- ncol(m$mle$stepPar)
 
+  if(nbStates==1)
+    stop("Only one state.")
+
   cat("Decoding states sequence... ")
   states <- viterbi(m)
   cat("DONE\n")
