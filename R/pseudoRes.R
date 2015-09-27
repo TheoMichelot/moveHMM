@@ -112,7 +112,10 @@ pseudoRes.moveHMM <- function(m)
                      names(data)!="step" & names(data)!="angle")
   covs <- data[,covsCol]
 
-  trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
+  if(nbStates>1)
+    trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
+  else
+    trMat <- array(1,dim=c(1,1,nbObs))
 
   for(i in 2:nbObs) {
     gamma <- trMat[,,i]

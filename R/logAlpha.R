@@ -25,7 +25,11 @@ logAlpha <- function(m)
 
   allProbs <- allProbs(data,nbStates,m$stepDist,m$angleDist,m$mle$stepPar,m$mle$anglePar,
                        m$conditions$zeroInflation)
-  trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
+
+  if(nbStates>1)
+    trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
+  else
+    trMat <- array(1,dim=c(1,1,nbObs))
 
   lscale <- 0
   foo <- m$mle$delta*allProbs[1,]
