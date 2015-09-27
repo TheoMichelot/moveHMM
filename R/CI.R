@@ -56,9 +56,15 @@ CI.moveHMM <- function(m,alpha=0.95,nbSims=10^6)
   i2 <- sum(p$parSize)*nbStates+1
   i3 <- i2+nbStates*(nbStates-1)*(nbCovs+1)-1
 
-  est <- c(m$mod$estimate[1:i1],m$mod$estimate[i2:i3])
-
-  var <- c(var[1:i1],var[i2:i3])
+  if(nbStates>1) {
+    # select step parameters and "beta" parameters
+    est <- c(m$mod$estimate[1:i1],m$mod$estimate[i2:i3])
+    var <- c(var[1:i1],var[i2:i3])
+  } else {
+    # only select step parameters
+    est <- m$mod$estimate[1:i1]
+    var <- var[1:i1]
+  }
 
   # define appropriate quantile
   quantSup <- qnorm(1-(1-alpha)/2)
