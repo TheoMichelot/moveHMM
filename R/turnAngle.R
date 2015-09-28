@@ -14,6 +14,8 @@
 #' y <- c(4,6)
 #' z <- c(10,7)
 #' turnAngle(x,y,z)
+#'
+#' @export
 
 turnAngle <- function(x,y,z)
 {

@@ -9,6 +9,8 @@
 #' m <- ex$m # moveHMM object (returned by fitHMM)
 #'
 #' print(m)
+#'
+#' @export
 
 print.moveHMM <- function(x,...)
 {

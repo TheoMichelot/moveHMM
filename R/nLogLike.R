@@ -40,6 +40,8 @@
 #' l <- nLogLike(wpar=wpar,nbStates=simPar$nbStates,bounds=bounds,parSize=parSize,data=data,
 #'              stepDist=simPar$stepDist,angleDist=simPar$angleDist,angleMean=simPar$angleMean,
 #'              zeroInflation=simPar$zeroInflation)
+#'
+#' @export
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","lnorm","exp"),
                      angleDist=c("vm","wrpcauchy","none"),angleMean=NULL,zeroInflation=FALSE,

@@ -1,7 +1,9 @@
 
 #' Generic plotPR method
 #' @param m Fitted model
-plotPR <- function(m) UseMethod("plotPR")
+#' @export
+plotPR <- function(m)
+  UseMethod("plotPR")
 
 #' Plot pseudo-residuals
 #'
@@ -15,6 +17,8 @@ plotPR <- function(m) UseMethod("plotPR")
 #' m <- ex$m # moveHMM object (as returned by \code{\link{fitHMM}})
 #'
 #' plotPR(m)
+#'
+#' @export
 
 plotPR.moveHMM <- function(m)
 {

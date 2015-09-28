@@ -30,6 +30,8 @@
 #' P <- allProbs(data=data,nbStates=2,stepDist=stepDist,angleDist=angleDist,
 #'                stepPar=matrix(stepPar,ncol=2,byrow=TRUE),anglePar=matrix(anglePar,ncol=2,
 #'                byrow=TRUE),zeroInflation=TRUE)
+#'
+#' @export
 
 allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE)
 {

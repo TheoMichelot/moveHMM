@@ -1,7 +1,9 @@
 
 #' Generic pseudoRes method
 #' @param m Fitted model
-pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRes
+#' @export
+pseudoRes <- function(m)
+  UseMethod("pseudoRes")
 
 #' Pseudo-residuals
 #' @method pseudoRes moveHMM
@@ -22,6 +24,8 @@ pseudoRes <- function(m) UseMethod("pseudoRes") # define generic method pseudoRe
 #' Zucchini, W. and MacDonald, I.L. 2009.
 #' Hidden Markov Models for Time Series: An Introduction Using R.
 #' Chapman & Hall (London).
+#'
+#' @export
 
 pseudoRes.moveHMM <- function(m)
 {

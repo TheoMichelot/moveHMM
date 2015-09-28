@@ -11,6 +11,8 @@
 #' m <- ex$m # moveHMM object (returned by fitHMM)
 #'
 #' lb <- logBeta(m)
+#'
+#' @export
 
 logBeta <- function(m)
 {

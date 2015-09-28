@@ -1,5 +1,27 @@
 #include "densities.h"
 
+//' Negative log-likelihood
+//'
+//' Computation of the negative log-likelihood (forward algorithm - written in C++)
+//'
+//' @param nbStates Number of states
+//' @param beta Matrix of regression coefficients for the transition probabilities
+//' @param covs Covariates
+//' @param data A \code{\link{moveData}} object of the observations
+//' @param stepDist The name of the step length distribution
+//' @param angleDist The name of the turning angle distribution
+//' @param stepPar State-dependent parameters of the step length distribution
+//' @param anglePar State-dependent parameters of the turning angle distribution
+//' @param delta Stationary distribution
+//' @param aInd Vector of indices of the rows at which the data switches to another animal
+//' @param zeroInflation \code{true} if zero-inflation is included in the step length distribution,
+//' \code{false} otherwise.
+//' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution is considered
+//' equal to the stationary distribution. Default : \code{false}.
+//'
+//' @return Negative log-likelihood
+//'
+//' @export
 // [[Rcpp::export]]
 double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist,
                      std::string angleDist, arma::mat stepPar, arma::mat anglePar,

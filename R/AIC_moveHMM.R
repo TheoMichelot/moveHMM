@@ -15,6 +15,8 @@
 #' @examples
 #' m <- ex$m # moveHMM object, as returned by fitHMM
 #' AIC(m)
+#'
+#' @export
 
 AIC.moveHMM <- function(object,...,k=2)
 {

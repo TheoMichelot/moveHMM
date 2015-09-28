@@ -22,6 +22,10 @@
 #' coord2 <- c(1,1,1,2,2,2,1,1,1,2)
 #' trackData <- data.frame(coord1=coord1,coord2=coord2)
 #' d <- prepData(trackData,type='UTM',coordNames=c("coord1","coord2"))
+#'
+#' @export
+#'
+#' @importFrom sp spDistsN1
 
 prepData <- function(trackData, type=c('LL','UTM'),coordNames=c("x","y"))
 {

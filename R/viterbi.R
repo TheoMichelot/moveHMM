@@ -1,7 +1,9 @@
 
 #' Generic viterbi method
 #' @param m Fitted model
-viterbi <- function(m) UseMethod("viterbi")
+#' @export
+viterbi <- function(m)
+  UseMethod("viterbi")
 
 #' Viterbi algorithm
 #'
@@ -23,6 +25,8 @@ viterbi <- function(m) UseMethod("viterbi")
 #' Zucchini, W. and MacDonald, I.L. 2009.
 #' Hidden Markov Models for Time Series: An Introduction Using R.
 #' Chapman & Hall (London).
+#'
+#' @export
 
 viterbi.moveHMM <- function(m)
 {

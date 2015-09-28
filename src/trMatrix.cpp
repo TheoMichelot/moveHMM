@@ -4,6 +4,19 @@
 using namespace Rcpp;
 using namespace std;
 
+//' Transition probability matrix
+//'
+//' Computation of the transition probability matrix, as a function of the covariates and the regression
+//' parameters. Written in C++. Used in \code{\link{viterbi}}.
+//'
+//' @param nbStates Number of states
+//' @param beta Matrix of regression parameters
+//' @param covs Matrix of covariate values
+//'
+//' @return Three dimensional array \code{trMat}, such that \code{trMat[,,t]} is the transition matrix at
+//' time t.
+//'
+//' @export
 // [[Rcpp::export]]
 arma::cube trMatrix_rcpp(int nbStates, arma::mat beta, arma::mat covs)
 {

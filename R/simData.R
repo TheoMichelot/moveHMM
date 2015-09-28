@@ -58,6 +58,8 @@
 #' stepDist <- "gamma"
 #' data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist="none",stepPar=stepPar,
 #'                nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
+#'
+#' @export
 
 simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
                     angleDist=c("vm","wrpcauchy","none"),stepPar,anglePar=NULL,
@@ -131,6 +133,14 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   # generate regression parameters for transition probabilities
   if(is.null(beta))
     beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
+  else if(nrow(beta)!=nbCovs+1 | ncol(beta)!=nbStates*(nbStates-1)) {
+    if(nbStates>1)
+      stop(paste("beta should have ",nbCovs+1," rows and ",nbStates*(nbStates-1)," columns.",sep=""))
+    else
+      stop("beta should be NULL")
+  }
+
+
   # initial state distribution
   delta <- rep(1,nbStates)/nbStates
 

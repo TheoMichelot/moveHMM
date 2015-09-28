@@ -2,7 +2,9 @@
 #' Generic plotStates method
 #' @param m Fitted model
 #' @param animals Animals to include
-plotStates <- function(m,animals) UseMethod("plotStates")
+#' @export
+plotStates <- function(m,animals)
+  UseMethod("plotStates")
 
 #' Plot states
 #'
@@ -18,6 +20,8 @@ plotStates <- function(m,animals) UseMethod("plotStates")
 #'
 #' # plot states for first and second animals
 #' plotStates(m,animals=c(1,2))
+#'
+#' @export
 
 plotStates.moveHMM <- function(m,animals=NULL)
 {

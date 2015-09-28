@@ -89,6 +89,13 @@
 #' Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M. 2012.
 #' Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions.
 #' Ecology, 93 (11), 2336-2342.
+#'
+#' @export
+#'
+#' @importFrom Rcpp evalCpp
+#' @import CircStats
+#'
+#' @useDynLib moveHMM
 
 fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),

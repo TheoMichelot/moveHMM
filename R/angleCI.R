@@ -11,6 +11,11 @@
 #' @return A list of the following objects :
 #' \item{lower}{Lower bound of the confidence interval for the parameters of the angle distribution}
 #' \item{upper}{Upper bound of the confidence interval for the parameters of the angle distribution}
+#'
+#' @importFrom MASS ginv
+#' @importFrom MASS mvrnorm
+#'
+#' @export
 
 angleCI <- function(m,alpha,nbSims=10^6)
 {

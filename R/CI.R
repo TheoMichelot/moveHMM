@@ -3,6 +3,7 @@
 #' @param m Fitted model
 #' @param alpha Range of the confidence interval.
 #' @param nbSims Number of simulations.
+#' @export
 CI <- function(m,alpha,nbSims) UseMethod("CI")
 
 #' Confidence intervals
@@ -29,6 +30,10 @@ CI <- function(m,alpha,nbSims) UseMethod("CI")
 #' m <- ex$m # moveHMM object, as returned by fitHMM
 #'
 #' CI(m)
+#'
+#' @export
+#'
+#' @importFrom MASS ginv
 
 CI.moveHMM <- function(m,alpha=0.95,nbSims=10^6)
 {

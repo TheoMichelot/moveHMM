@@ -33,6 +33,10 @@
 #' delta <- c(0.6,0.3,0.1)
 #' wpar <- n2w(par,bounds,beta,delta,nbStates,FALSE)
 #' print(w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean=FALSE,stationary=FALSE))
+#'
+#' @importFrom boot inv.logit
+#'
+#' @export
 
 w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 {

@@ -7,7 +7,17 @@
 using namespace Rcpp;
 using namespace std;
 
-// Probability density function of the Gamma distribution
+//' Gamma density function
+//'
+//' Probability density function of the Gamma distribution (written in C++)
+//'
+//' @param x Vector of quantiles
+//' @param mu Mean
+//' @param sigma Standard deviation
+//'
+//' @return Vector of densities
+//'
+//' @export
 // [[Rcpp::export]]
 arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 {
@@ -27,7 +37,17 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
   return res;
 }
 
-// Probability density function of the Weibull distribution
+//' Weibull density function
+//'
+//' Probability density function of the Weibull distribution (written in C++)
+//'
+//' @param x Vector of quantiles
+//' @param shape Shape
+//' @param scale Scale
+//'
+//' @return Vector of densities
+//'
+//' @export
 // [[Rcpp::export]]
 arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 {
@@ -43,7 +63,17 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
   return res;
 }
 
-// Probability density function of the log-normal distribution
+//' Log-normal density function
+//'
+//' Probability density function of the log-normal distribution (written in C++)
+//'
+//' @param x Vector of quantiles
+//' @param meanlog Mean of the distribution on the log-scale
+//' @param sdlog Standard deviation of the distribution on the log-scale
+//'
+//' @return Vector of densities
+//'
+//' @export
 // [[Rcpp::export]]
 arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 {
@@ -59,7 +89,17 @@ arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
   return res;
 }
 
-// Probability density function of the exponential distribution
+//' Exponential density function
+//'
+//' Probability density function of the exponential distribution (written in C++)
+//'
+//' @param x Vector of quantiles
+//' @param rate Rate
+//' @param foo Unused (for compatibility with template)
+//'
+//' @return Vector of densities
+//'
+//' @export
 // [[Rcpp::export]]
 arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 {
@@ -75,8 +115,18 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
   return res;
 }
 
-// Probability density function of the Von Mises distribution
-// (defined as a function of the modified Bessel function of order 0
+//' Von Mises density function
+//'
+//' Probability density function of the Von Mises distribution, defined as a function
+//' of the modified Bessel function of order 0 (written in C++)
+//'
+//' @param x Vector of quantiles
+//' @param mu Mean
+//' @param kappa Concentration
+//'
+//' @return Vector of densities
+//'
+//' @export
 // [[Rcpp::export]]
 arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 {
@@ -93,7 +143,17 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
   return res;
 }
 
-// Probability density function of the wrapped Cauchy distribution
+//' Wrapped Cauchy density function
+//'
+//' Probability density function of the wrapped Cauchy distribution (written in C++)
+//'
+//' @param x Vector of quantiles
+//' @param mu Mean
+//' @param rho Concentration
+//'
+//' @return Vector of densities
+//'
+//' @export
 // [[Rcpp::export]]
 arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
 {

@@ -30,6 +30,10 @@
 #' # vector of working parameters
 #' wpar <- n2w(par=par,bounds=bounds,beta=beta,delta=delta,nbStates=nbStates,
 #'            estAngleMean=FALSE)
+#'
+#' @importFrom boot logit
+#'
+#' @export
 
 n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
 {

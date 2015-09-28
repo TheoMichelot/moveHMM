@@ -15,6 +15,8 @@
 #' data <- ex$data # moveData object, as returned by prepData or simData
 #'
 #' plot(data,compact=TRUE,breaks=20,ask=FALSE)
+#'
+#' @export
 
 plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges",...)
 {

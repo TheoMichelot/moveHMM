@@ -6,6 +6,8 @@
 #' \code{y} (either norting or latitude), and covariates, if any.
 #'
 #' @return An object \code{moveData}.
+#'
+#' @export
 
 moveData <- function(data)
 {

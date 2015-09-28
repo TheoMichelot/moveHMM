@@ -11,6 +11,8 @@
 #' data <- ex$data # moveData object (returned by prepData or simData)
 #'
 #' summary(data)
+#'
+#' @export
 
 summary.moveData <- function(object,details=FALSE,...)
 {

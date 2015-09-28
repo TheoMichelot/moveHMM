@@ -9,6 +9,8 @@
 #' \code{rawCovs} (optional -- only if there are covariates in the data).
 #'
 #' @return An object \code{moveHMM}.
+#'
+#' @export
 
 moveHMM <- function(m)
 {

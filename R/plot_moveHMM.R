@@ -18,6 +18,8 @@
 #' m <- ex$m # moveHMM object, as returned by fitHMM
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
+#'
+#' @export
 
 plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,compactHist=FALSE,
                          sepStates=FALSE,...)
