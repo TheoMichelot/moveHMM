@@ -28,7 +28,10 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                      arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false,
                      bool stationary=false)
 {
-  // 1. Computation of transition probability matrix trMat
+  //=======================================================//
+  // 1. Computation of transition probability matrix trMat //
+  //=======================================================//
+
   int nbObs = data.nrows();
   arma::cube trMat(nbStates,nbStates,nbObs);
   trMat.zeros();
@@ -54,14 +57,16 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
       }
     }
 
-  // normalization
-  for(int k=0;k<nbObs;k++)
-    for(int i=0;i<nbStates;i++)
-      for(int j=0;j<nbStates;j++)
-        trMat(i,j,k) = trMat(i,j,k)/rowSums(i,k);
+    // normalization
+    for(int k=0;k<nbObs;k++)
+      for(int i=0;i<nbStates;i++)
+        for(int j=0;j<nbStates;j++)
+          trMat(i,j,k) = trMat(i,j,k)/rowSums(i,k);
   }
 
-  // 2. Computation of matrix of joint probabilities allProbs
+  //==========================================================//
+  // 2. Computation of matrix of joint probabilities allProbs //
+  //==========================================================//
 
   // map the functions names with the actual functions
   // (the type FunPtr and the density functions are defined in densities.h)
@@ -90,11 +95,11 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
   allProbs.ones();
 
   arma::colvec stepProb(nbObs);
-  NumericVector stepArgs(2);
+  NumericVector stepArgs(2); // step parameters
   NumericVector step = data["step"];
 
   arma::colvec angleProb(nbObs);
-  NumericVector angleArgs(2);
+  NumericVector angleArgs(2); // angle parameters
   NumericVector angle(nbObs);
 
   if(angleDist!="none") {
@@ -103,6 +108,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 
   arma::rowvec zeromass(nbStates);
 
+  // extract zero-mass parameters from step parameters if necessary
   if(zeroInflation) {
     zeromass = stepPar.row(stepPar.n_rows-1);
     arma::mat stepPar2 = stepPar.submat(0,0,stepPar.n_rows-2,stepPar.n_cols-1);
@@ -111,9 +117,12 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 
   for(int state=0;state<nbStates;state++)
   {
+    // compute probabilities of steps
+
     for(unsigned int i=0;i<stepPar.n_rows;i++)
       stepArgs(i) = stepPar(i,state);
 
+    // if zeroInflation, the probability of zero and non-zero steps must be computed separately
     if(zeroInflation) {
       // remove the NAs from step (impossible to subset a vector with NAs)
       for(int i=0;i<nbObs;i++) {
@@ -142,24 +151,31 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     else
       stepProb = funMap[stepDist](step,stepArgs(0),stepArgs(1));
 
-      if(angleDist!="none") {
-        for(unsigned int i=0;i<anglePar.n_rows;i++)
-          angleArgs(i) = anglePar(i,state);
+    if(angleDist!="none") {
+      // compute probabilites of angles
+      for(unsigned int i=0;i<anglePar.n_rows;i++)
+        angleArgs(i) = anglePar(i,state);
 
-        angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
-        allProbs.col(state) = stepProb%angleProb;
-      }
-      else allProbs.col(state) = stepProb;
+      angleProb = funMap[angleDist](angle,angleArgs(0),angleArgs(1));
+
+      // compute joint probabilities of steps and angles
+      allProbs.col(state) = stepProb%angleProb;
+    }
+    else allProbs.col(state) = stepProb;
   }
 
-  // 3. Forward algorithm
-  arma::mat Gamma(nbStates,nbStates);
-  double lscale = 0;
-  int k=1;
+  //======================//
+  // 3. Forward algorithm //
+  //======================//
+
+  arma::mat Gamma(nbStates,nbStates); // transition probability matrix
+  double lscale = 0; // scaled log-likelihood
+  int k=1; // animal index
   arma::rowvec alpha = delta%allProbs.row(0);
 
   for(unsigned int i=1;i<allProbs.n_rows;i++) {
     if(k<aInd.size() && i==(unsigned)(aInd(k)-1)) {
+      // if 'i' is the 'k'-th element of 'aInd', switch to the next animal
       k++;
       alpha = delta%allProbs.row(i);
     }
@@ -177,4 +193,3 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
 
   return -lscale;
 }
-
