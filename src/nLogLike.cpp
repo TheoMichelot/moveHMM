@@ -28,11 +28,12 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                      arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false,
                      bool stationary=false)
 {
+  int nbObs = data.nrows();
+  
   //=======================================================//
   // 1. Computation of transition probability matrix trMat //
   //=======================================================//
 
-  int nbObs = data.nrows();
   arma::cube trMat(nbStates,nbStates,nbObs);
   trMat.zeros();
   arma::mat rowSums(nbStates,nbObs);
@@ -44,14 +45,18 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     g = covs*beta;
 
     for(int k=0;k<nbObs;k++) {
-      int cpt=0;
+      int cpt=0; // counter for diagonal elements
       for(int i=0;i<nbStates;i++) {
         for(int j=0;j<nbStates;j++) {
           if(i==j) {
+            // if diagonal element, set to one and increment counter
             trMat(i,j,k)=1;
             cpt++;
           }
-          else trMat(i,j,k) = exp(g(k,i*nbStates+j-cpt));
+          else 
+            trMat(i,j,k) = exp(g(k,i*nbStates+j-cpt));
+          
+          // keep track of row sums, to normalize in the end
           rowSums(i,k)=rowSums(i,k)+trMat(i,j,k);
         }
       }
