@@ -178,9 +178,8 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     # generate covariate values
     if(nbCovs>0) {
       if(is.null(covs)) {
-        if(nbCovs==1) subCovs <- data.frame(cov1=rnorm(nbObs))
+        subCovs <- data.frame(cov1=rnorm(nbObs))
         if(nbCovs>1) {
-          subCovs <- data.frame(cov1=rnorm(nbObs))
           for(j in 2:nbCovs) {
             c <- data.frame(rnorm(nbObs))
             colnames(c) <- paste("cov",j,sep="")
@@ -189,7 +188,9 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
         }
       } else {
         # select covariate values which concern the current animal
-        subCovs <- covs[((zoo-1)*obsPerAnimal[1]+1):(zoo*obsPerAnimal[1]),]
+        subCovs <- data.frame(covs[((zoo-1)*obsPerAnimal[1]+1):(zoo*obsPerAnimal[1]),])
+        if(!is.null(covs))
+          colnames(subCovs) <- colnames(covs) # keep covariates names from input
       }
       allCovs <- rbind(allCovs,subCovs)
     }
