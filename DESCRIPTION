@@ -1,8 +1,8 @@
 Package: moveHMM
 Type: Package
-Title: Animal movement modelling using hidden Markov models
+Title: Animal Movement Modelling using Hidden Markov Models
 Version: 0.1
-Date: 2015-07-14
+Date: 2015-10-15
 Author: Theo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
 Maintainer: Theo Michelot <theo.michelot@gmail.com>
 Description: Animal movement modelling using hidden Markov models. Pre-processing of tracking data, fitting HMMs to movement data, visualization of data and fitted model...
