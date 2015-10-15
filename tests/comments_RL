@@ -1,0 +1,63 @@
+
+Roland's comments:
+
+1. You have a habit of including a space at the end of sentences (before . or , or ? or : etc.). What's that about? (This is just a minor point of course...)
+
+2. The ordering of the betas in the fitted model object is unclear (i.e. which column corresponds to which transition probability?). For example, for a three-state model with one covariate, I get this beta matrix:
+
+Transition probabilities parameters :
+-----------------------------------
+              [,1]          [,2]      [,3]      [,4]         [,5]      [,6]
+[1,] -3.7003659639 -1.1746899915  1.920550 -1.874243 -2.222483030 -2.861793
+[2,] -0.0004190589 -0.0003197096 -2.516041 -1.363843  0.001613644 -4.384022
+
+More clear, I think, would be something like the following:
+
+Parameters determining the state transition probabilities:
+-----------------------------------
+intercept
+             [,1]           [,2]          [,3]
+[1,]            /  -3.7003659639 -1.1746899915
+[2,]     1.920550              /     -1.874243 
+[3,] -2.222483030      -2.861793             /
+
+dist_water slope coefficient
+              [,1]          [,2]          [,3]
+[1,]             / -0.0004190589 -0.0003197096 
+[2,]     -2.516041             /     -1.363843
+[3,]   0.001613644     -4.384022             /
+
+What do you think? I guess the latter would create all sorts of problems with CIs etc. In that case forget about it – but we have to make sure users will know how to read the output.
+
+3. I fitted a couple of models, and found the following curiosity when looking at the AICs:
+> AIC(m0)
+[1] 4107.374
+> AIC(m1)
+[1] 3820.472
+> AIC(m2)
+[1] 3817.489
+> AIC(m3)
+[1] 3822.771
+> AIC(m4)
+[1] 3733.588
+> AIC(m0,m1,m2,m3,m4)
+  Model      AIC
+1    m1 3820.472
+2    m2 3820.472
+3    m3 3820.472
+4    m4 3820.472
+5    m0 4107.374
+
+There seems to be some problem with the function AIC when more than two models are considered at once.
+
+4. Do we need more documentation for the viterbi and stateProbs functions? (I guess not, just wanted to ask.)
+
+5. In ?simData, should we add an example where we provide the covariate values? I couldn't get the syntax right. This is my attempt (which obviously doesn't work):
+> covs<-data.frame(dist_city=rpois(10000,5))
+> simData(10,2,stepDist="gamma",angleDist="vm",c(1,5,0.5,3),anglePar=c(pi,0,1,1),beta=matrix(c(-2,-2,0.1,0.1),nrow=2,byrow=2),covs=covs)
+Error in subCovs[k, 1] : incorrect number of dimensions
+
+6. Also in ?simData the existing examples might be confusing. For example, in the first one, you have:
+stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
+anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
+Here you seem to have high turning angles in the state with long steps - not what you see in real movement data, so not what people expect.
