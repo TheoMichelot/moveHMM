@@ -1,0 +1,87 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Example code}
+-->
+
+# Example code
+
+This is the complete code of the elks example described in the main vignette of the package.
+
+```{r}
+
+# load package
+library(moveHMM)
+
+# read data from URL
+trackData <- read.table("http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
+                        sep="\t",header=TRUE)[(1:735),c(1,2,3,7)]
+
+# format data
+colnames(trackData)[1] <- "ID"
+colnames(trackData)[4] <- "dist_water"
+trackData$Easting <- trackData$Easting/1000
+trackData$Northing <- trackData$Northing/1000
+
+# pre-process data
+data <- prepData(trackData,type="UTM",coordNames=c("Easting","Northing"))
+
+# plot data
+plot(data,compact=T)
+
+# summarize data
+summary(data,details=T)
+
+#######################
+## Fit a 2-state HMM ##
+#######################
+# initial parameters
+mu0 <- c(0.1,1)
+sigma0 <- c(0.1,1)
+zeromass0 <- c(0.05,0)
+stepPar0 <- c(mu0,sigma0,zeromass0)
+angleMean0 <- c(pi,0)
+kappa0 <- c(1,1)
+anglePar0 <- c(angleMean0,kappa0)
+
+m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,
+             formula=~dist_water)
+
+
+# compute the confidence intervals
+conf <- CI(m)
+
+# plot the fitted model for the first animal
+plot(m,animals="elk-115")
+# alternatively: plot(m,animals=1)
+
+# compute the states sequence
+states <- viterbi(m)
+
+# compute the states probabilities
+sp <- stateProbs(m)
+
+# plot states sequence, and states probabilities for first elk
+plotStates(m,animals="elk-115")
+
+# compute and plot the pseudo-residuals
+pr <- pseudoRes(m)
+plotPR(m)
+
+#######################
+## Fit a 3-state HMM ##
+#######################
+# initial parameters
+mu0 <- c(0.1,0.5,3)
+sigma0 <- c(0.05,0.5,1)
+zeromass0 <- c(0.05,0.0001,0.0001)
+stepPar0 <- c(mu0,sigma0,zeromass0)
+angleMean0 <- c(pi,pi,0)
+kappa0 <- c(1,1,1)
+anglePar0 <- c(angleMean0,kappa0)
+
+m3 <- fitHMM(data=data,nbStates=3,stepPar0=stepPar0,anglePar0=anglePar0,
+             formula=~dist_water)
+
+# compare the AIC of the models
+print(AIC(m,m3))
+```
