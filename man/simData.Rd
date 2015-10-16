@@ -30,7 +30,7 @@ not be estimated. Default : vm.}
 \item{covs}{Covariate values to include in the model, as a dataframe. The number of rows of \code{covs}
 needs to be a multiple of the number of animals, and the same number of observations will be
 simulated for each animal. Default : \code{NULL}. Covariates can also be simulated according to a standard
-normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code{nbCovs}.}
+normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code{nbCovs>0}.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default). Does not need to be specified of
 \code{covs} is specified.}
@@ -61,7 +61,7 @@ Simulates movement data from an HMM.
 }
 \examples{
 stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
-anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
+anglePar <- c(pi,0,0.5,2) # mean1, mean2, k1, k2
 stepDist <- "gamma"
 angleDist <- "vm"
 obsPerAnimal=c(100,150)
@@ -69,7 +69,7 @@ data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,ste
                anglePar=anglePar,nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
 
 stepPar <- c(1,10,1,5) # mean1, mean2, sd1, sd2
-anglePar <- c(0,pi,0.5,0.7) # mean1, mean2, k1, k2
+anglePar <- c(pi,0,0.5,0.7) # mean1, mean2, k1, k2
 stepDist <- "weibull"
 angleDist <- "wrpcauchy"
 data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,stepPar=stepPar,
@@ -80,5 +80,16 @@ stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 stepDist <- "gamma"
 data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist="none",stepPar=stepPar,
                nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
+
+# include covariates
+# (note that it is useless to specify "nbCovs" and "obsPerAnimal", which are respectively determined
+# by the number of columns and number of rows of "cov")
+cov <- data.frame(temp=rnorm(500,20,5))
+stepPar <- c(1,10,1,5) # mean1, mean2, sd1, sd2
+anglePar <- c(pi,0,0.5,2) # mean1, mean2, k1, k2
+stepDist <- "gamma"
+angleDist <- "vm"
+data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,stepPar=stepPar,
+                anglePar=anglePar,covs=cov)
 }
 
