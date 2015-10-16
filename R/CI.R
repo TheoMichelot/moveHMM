@@ -19,12 +19,9 @@ CI <- function(m,alpha,nbSims) UseMethod("CI")
 #' Default: 10^6.
 #'
 #' @return A list of the following objects:
-#' \item{lower}{Lower bound of the confidence interval for the parameters of the step lengths
-#' distribution, for the parameters of the turning angle distribution, and for the transition
-#' probabilities regression parameters}
-#' \item{upper}{Upper bound of the confidence interval for the parameters of the step lengths
-#' distribution, for the parameters of the turning angle distribution, and for the transition
-#' probabilities regression parameters}
+#' \item{stepPar}{Confidence intervals for the parameters of the step lengths distribution}
+#' \item{anglePar}{Confidence intervals for the parameters of the turning angles distribution}
+#' \item{beta}{Confidence intervals for the regression coefficients of the transition probabilities.}
 #'
 #' @examples
 #' m <- ex$m # moveHMM object, as returned by fitHMM
@@ -83,11 +80,11 @@ CI.moveHMM <- function(m,alpha=0.95,nbSims=10^6)
   upper <- w2n(wupper,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
 
   # CIs for angle parameters
-  aCI <- angleCI(m,alpha,nbSims)
+  anglePar <- angleCI(m,alpha,nbSims)
 
-  # group CIs for step parameters, angle parameters, and t.p. coefficients
-  lower <- list(stepPar=lower$stepPar,anglePar=aCI$lower,beta=lower$beta)
-  upper <- list(stepPar=upper$stepPar,anglePar=aCI$upper,beta=upper$beta)
+  # group CIs for step parameters and t.p. coefficients
+  stepPar <- list(lower=lower$stepPar,upper=upper$stepPar)
+  beta <- list(lower=lower$beta,upper=upper$beta)
 
-  return(list(lower=lower,upper=upper))
+  return(list(stepPar=stepPar,anglePar=anglePar,beta=beta))
 }
