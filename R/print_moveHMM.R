@@ -38,10 +38,25 @@ print.moveHMM <- function(x,...)
     }
   }
 
-  cat("\n")
-  cat("Transition probabilities parameters :\n")
-  cat("-----------------------------------\n")
-  print(m$mle$beta)
+  if(!is.null(m$mle$beta)) {
+    cat("\n")
+    cat("Transition probabilities parameters :\n")
+    cat("-----------------------------------\n")
+
+    beta <- m$mle$beta
+    f <- m$conditions$formula
+    rownames(beta) <- c("intercept",attr(terms(f),"term.labels"))
+    columns <- NULL
+    for(i in 1:nbStates)
+      for(j in 1:nbStates) {
+        if(i<j)
+          columns[(i-1)*nbStates+j-i] <- paste(i,"->",j)
+        if(j<i)
+          columns[(i-1)*(nbStates-1)+j] <- paste(i,"->",j)
+      }
+    colnames(beta) <- columns
+    print(beta)
+  }
 
   if(!is.null(m$mle$gamma)) {
     cat("\n")
