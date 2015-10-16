@@ -61,3 +61,58 @@ Error in subCovs[k, 1] : incorrect number of dimensions
 stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
 Here you seem to have high turning angles in the state with long steps - not what you see in real movement data, so not what people expect.
+
+7. I'm a bit confused by results I'm getting when playing around with the zero mass initial values. 
+See the AIC comparisons below for some examples (high sensitivity when dist_water is included, no sensitivity when it isn't included).
+What exactly happens when I specify a zero mass initial value to be exactly equal to 0?
+> # initial parameters for Gamma and Von Mises distributions
+> mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
+> sigma0 <- c(0.1,1) # step SD
+> angleMean0 <- c(pi,0) # angle mean
+> kappa0 <- c(1,1) # angle concentration
+> anglePar0 <- c(angleMean0,kappa0)
+> 
+> zeromass0 <- c(0.05,0)
+> stepPar0 <- c(mu0,sigma0,zeromass0)
+> # call to fitting function
+> m1 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
+> 
+> zeromass0 <- c(0.05,0.001)
+> stepPar0 <- c(mu0,sigma0,zeromass0)
+> m2 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
+> 
+> zeromass0 <- c(0.05,0.05)
+> stepPar0 <- c(mu0,sigma0,zeromass0)
+> m3 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
+> 
+> AIC(m1,m2,m3)
+  Model      AIC
+1    m1 3816.185
+2    m2 3816.533
+3    m3 3817.489
+> 
+> # initial parameters for Gamma and Von Mises distributions
+> mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
+> sigma0 <- c(0.1,1) # step SD
+> angleMean0 <- c(pi,0) # angle mean
+> kappa0 <- c(1,1) # angle concentration
+> anglePar0 <- c(angleMean0,kappa0)
+> 
+> zeromass0 <- c(0.05,0)
+> stepPar0 <- c(mu0,sigma0,zeromass0)
+> # call to fitting function
+> m1 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
+> 
+> zeromass0 <- c(0.05,0.001)
+> stepPar0 <- c(mu0,sigma0,zeromass0)
+> m2 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
+> 
+> zeromass0 <- c(0.05,0.05)
+> stepPar0 <- c(mu0,sigma0,zeromass0)
+> m3 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
+> 
+> AIC(m1,m2,m3)
+  Model      AIC
+1    m3 3828.434
+2    m1 3828.434
+3    m2 3828.434
