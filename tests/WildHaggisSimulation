@@ -1,0 +1,54 @@
+
+install.packages(c("CircStats","sp","Rcpp","RcppArmadillo","devtools"))
+
+library(CircStats)
+library(sp)
+library(Rcpp)
+library(RcppArmadillo)
+library(devtools)
+
+install_github("TheoMichelot/moveHMM")
+library(moveHMM)
+
+# simulate covariate values (slopes in degrees, ranging between 0 and 40, and temperatures, fluctuating around 10 degrees - the latter won't affect the state switching)
+# the model will be such that the Haggis animals are most likely to be in the exploratory state (state 2) when at slopes of around 20 degrees (the slope that perfectly matches the difference in their leg lengths)
+# for slopes close to 0 and slopes close to 40 the animals become essentially immobile (due to their leg lengths) and hence need to slowly crawl back (state 1) to slope levels better suited for them 
+# I'm using a quadratic predictor to achieve this setup
+set.seed(1)
+arsim<-rep(NA,6000)
+arsim[1]<-runif(1,2,4)
+for (k in 2:6000){
+  arsim[k]<-0.9*(arsim[k-1]-0.4)+0.4+rnorm(1,0,0.4)
+}
+slope<-40*plogis(arsim)
+plot(slope[1:500],type="l",xlab="time",ylab="slope in degrees",main="First 500 simulated covariate values")
+
+arsim2<-rep(NA,6000)
+arsim2[1]<-runif(1,15,25)
+for (k in 2:6000){
+  arsim2[k]<-0.95*(arsim2[k-1]-10)+10+rnorm(1,0,2)
+}
+
+# simulate Wild Haggis movement data (6 animals)
+covs<-data.frame(slope=slope,slope2=slope^2,temp=arsim2)
+data<-simData(6,2,stepDist="gamma",angleDist="vm",c(1,5,0.5,3),
+anglePar=c(pi,0.3,1,8),beta=matrix(c(-3.5,0.8,0.35,-0.4,-0.01,0.01,0,0),nrow=4,byrow=TRUE),covs=covs,states=TRUE)
+
+# fit models with different sets of covariate variables to the simulated data
+mu0 <- c(1,4) # step mean (two parameters: one for each state)
+sigma0 <- c(0.4,2) # step SD
+stepPar0 <- c(mu0,sigma0)
+angleMean0 <- c(pi,0) # angle mean
+kappa0 <- c(1,1) # angle concentration
+anglePar0 <- c(angleMean0,kappa0)
+
+# call to fitting function
+m1 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
+m2 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~slope)
+m3 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~slope+I(slope^2))
+m4 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~slope+I(slope^2)+temp)
+
+AIC(m1,m2,m3,m4)
+
+plot(m3)
+
