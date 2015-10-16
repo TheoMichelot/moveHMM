@@ -10,10 +10,11 @@
 \item{m}{A \code{moveHMM} object.}
 }
 \value{
-The matrix of state probabilities.
+The matrix of state probabilities, with element [i,j] the probability
+of being in state j in observation i.
 }
 \description{
-State probabilities
+Computes the probability of being in each state in each observation.
 }
 \examples{
 m <- ex$m # moveHMM object (returned by fitHMM)

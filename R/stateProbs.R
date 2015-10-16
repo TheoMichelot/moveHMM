@@ -6,11 +6,15 @@ stateProbs <- function(m)
   UseMethod("stateProbs")
 
 #' State probabilities
+#'
+#' Computes the probability of being in each state in each observation.
+#'
 #' @method stateProbs moveHMM
 #'
 #' @param m A \code{moveHMM} object.
 #'
-#' @return The matrix of state probabilities.
+#' @return The matrix of state probabilities, with element [i,j] the probability
+#' of being in state j in observation i.
 #'
 #' @examples
 #' m <- ex$m # moveHMM object (returned by fitHMM)
