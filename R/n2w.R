@@ -1,5 +1,5 @@
 
-#' Scaling function : natural to working parameters.
+#' Scaling function: natural to working parameters.
 #'
 #' Scales each parameter from its natural interval to the set of real numbers, to allow for
 #' unconstrained optimization. Used during the optimization of the log-likelihood.
@@ -8,7 +8,7 @@
 #' @param bounds Matrix with 2 columns and as many rows as there are elements in \code{par}. Each row
 #' contains the lower and upper bound for the correponding parameter.
 #' @param beta Matrix of regression coefficients for the transition probabilities.
-#' @param delta Initial distribution. Default : \code{NULL} ; if the initial distribution is not estimated.
+#' @param delta Initial distribution. Default: \code{NULL} ; if the initial distribution is not estimated.
 #' @param nbStates The number of states of the HMM.
 #' @param estAngleMean \code{TRUE} if the angle mean is estimated, \code{FALSE} otherwise.
 #'

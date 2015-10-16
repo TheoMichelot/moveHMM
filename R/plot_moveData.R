@@ -4,7 +4,7 @@
 #'
 #' @param x An object \code{moveData}
 #' @param animals Vector of indices or IDs of animals for which information will be plotted.
-#' Default : \code{NULL} ; all animals are plotted.
+#' Default: \code{NULL} ; all animals are plotted.
 #' @param compact \code{TRUE} for a compact plot (all individuals at once), \code{FALSE} otherwise
 #' (default -- one individual at a time).
 #' @param ask If \code{TRUE}, the execution pauses between each plot.
@@ -64,7 +64,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
            ylim=c(0,max(step,na.rm=T)))
       # step length histogram
       hist(step,xlab="step length",main="",col="lightblue",border="white",breaks=breaks)
-      mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+      mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
     }
   }
   else # step length and turning angle are provided
@@ -80,7 +80,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
         par(mfrow=c(1,1))
         # map of the animal's track
         plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20)
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
 
         # step and angle time series
         par(mfrow=c(2,2))
@@ -102,7 +102,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
         axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
              labels = expression(-pi, -pi/2, 0, pi/2, pi))
 
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
     }
     else { # tracks are plotted on a single map for all animals
@@ -170,7 +170,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
         axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
              labels = expression(-pi, -pi/2, 0, pi/2, pi))
 
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
     }
   }

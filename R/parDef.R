@@ -9,8 +9,8 @@
 #' \code{FALSE} otherwise.
 #' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
 #'
-#' @return A list of :
-#' \item{parSize}{Vector of two values : number of parameters of the step length distribution,
+#' @return A list of:
+#' \item{parSize}{Vector of two values: number of parameters of the step length distribution,
 #' number of parameters of the turning angle distribution}
 #' \item{bounds}{Matrix with 2 columns and \code{sum(parSize)} rows - each row contains the lower and upper
 #' bound for the correponding parameter)}

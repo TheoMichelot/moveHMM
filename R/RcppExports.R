@@ -109,7 +109,7 @@ dwrpcauchy_rcpp <- function(x, mu, rho) {
 #' @param zeroInflation \code{true} if zero-inflation is included in the step length distribution,
 #' \code{false} otherwise.
 #' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution is considered
-#' equal to the stationary distribution. Default : \code{false}.
+#' equal to the stationary distribution. Default: \code{false}.
 #'
 #' @return Negative log-likelihood
 #'

@@ -17,7 +17,7 @@
 //' @param zeroInflation \code{true} if zero-inflation is included in the step length distribution,
 //' \code{false} otherwise.
 //' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution is considered
-//' equal to the stationary distribution. Default : \code{false}.
+//' equal to the stationary distribution. Default: \code{false}.
 //'
 //' @return Negative log-likelihood
 //'
@@ -29,7 +29,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
                      bool stationary=false)
 {
   int nbObs = data.nrows();
-  
+
   //=======================================================//
   // 1. Computation of transition probability matrix trMat //
   //=======================================================//
@@ -53,9 +53,9 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
             trMat(i,j,k)=1;
             cpt++;
           }
-          else 
+          else
             trMat(i,j,k) = exp(g(k,i*nbStates+j-cpt));
-          
+
           // keep track of row sums, to normalize in the end
           rowSums(i,k)=rowSums(i,k)+trMat(i,j,k);
         }

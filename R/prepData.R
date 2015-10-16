@@ -7,9 +7,9 @@
 #' Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
 #' should specified.
 #' @param type \code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.
-#' @param coordNames Names of the columns of coordinates in the data frame. Default : \code{c("x","y")}.
+#' @param coordNames Names of the columns of coordinates in the data frame. Default: \code{c("x","y")}.
 #'
-#' @return An object \code{moveData}, i.e. a dataframe of :
+#' @return An object \code{moveData}, i.e. a dataframe of:
 #' \item{ID}{The ID(s) of the observed animal(s)}
 #' \item{step}{The step lengths}
 #' \item{angle}{The turning angles (if any)}

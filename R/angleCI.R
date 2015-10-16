@@ -5,10 +5,10 @@
 #' Used in \code{\link{CI.moveHMM}}.
 #'
 #' @param m A \code{moveHMM} object
-#' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
-#' @param nbSims Number of simulations. Default : 10^6.
+#' @param alpha Range of the confidence intervals. Default: 0.95 (i.e. 95\% CIs).
+#' @param nbSims Number of simulations. Default: 10^6.
 #'
-#' @return A list of the following objects :
+#' @return A list of the following objects:
 #' \item{lower}{Lower bound of the confidence interval for the parameters of the angle distribution}
 #' \item{upper}{Upper bound of the confidence interval for the parameters of the angle distribution}
 #'

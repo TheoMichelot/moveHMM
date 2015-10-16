@@ -10,7 +10,7 @@ pseudoRes <- function(m)
 #'
 #' @param m A \code{moveHMM} object.
 #'
-#' @return A list of :
+#' @return A list of:
 #' \item{stepRes}{The pseudo-residuals for the step lengths}
 #' \item{angleRes}{The pseudo-residuals for the turning angles}
 #'

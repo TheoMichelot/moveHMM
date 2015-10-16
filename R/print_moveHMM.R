@@ -19,9 +19,9 @@ print.moveHMM <- function(x,...)
   p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$conditions$zeroInflation)
 
   if(length(m$mod)>1)
-    cat("Value of the maximum log-likelihood :",-m$mod$minimum,"\n\n")
+    cat("Value of the maximum log-likelihood:",-m$mod$minimum,"\n\n")
 
-  cat("Step length parameters :\n")
+  cat("Step length parameters:\n")
   cat("----------------------\n")
   for(i in 1:nrow(m$mle$stepPar)) {
     cat(p$parNames[i],"\n")
@@ -30,7 +30,7 @@ print.moveHMM <- function(x,...)
 
   cat("\n")
   if(m$angleDist!="none") {
-    cat("Turning angle parameters :\n")
+    cat("Turning angle parameters:\n")
     cat("------------------------\n")
     for(i in 1:nrow(m$mle$anglePar)) {
       cat(p$parNames[nrow(m$mle$stepPar)+i],"\n")
@@ -40,7 +40,7 @@ print.moveHMM <- function(x,...)
 
   if(!is.null(m$mle$beta)) {
     cat("\n")
-    cat("Transition probabilities parameters :\n")
+    cat("Transition probabilities parameters:\n")
     cat("-----------------------------------\n")
 
     beta <- m$mle$beta
@@ -60,13 +60,13 @@ print.moveHMM <- function(x,...)
 
   if(!is.null(m$mle$gamma)) {
     cat("\n")
-    cat("Transition probability matrix :\n")
+    cat("Transition probability matrix:\n")
     cat("-----------------------------\n")
     print(m$mle$gamma)
   }
 
   cat("\n")
-  cat("Initial distribution :\n")
+  cat("Initial distribution:\n")
   cat("--------------------\n")
   print(m$mle$delta)
 }

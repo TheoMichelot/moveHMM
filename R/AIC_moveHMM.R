@@ -7,7 +7,7 @@
 #'
 #' @param object A \code{moveHMM} object.
 #' @param ... Optional additional \code{moveHMM} objects, to compare AICs of the different models.
-#' @param k Penalty per parameter. Default : 2 ; for classical AIC.
+#' @param k Penalty per parameter. Default: 2 ; for classical AIC.
 #'
 #' @return The AIC of the model(s) provided. If several models are provided, the AICs are output
 #' in ascending order.

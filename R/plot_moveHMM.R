@@ -4,14 +4,14 @@
 #'
 #' @param x Object \code{moveHMM}
 #' @param animals Vector of indices or IDs of animals for which information will be plotted.
-#' Default : \code{NULL} ; all animals are plotted.
+#' Default: \code{NULL} ; all animals are plotted.
 #' @param ask If \code{TRUE}, the execution pauses between each plot.
 #' @param breaks Histogram parameter. See \code{hist} documentation.
 #' @param hist.ylim Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
-#' Default : \code{NULL} ; the function sets default values.
+#' Default: \code{NULL} ; the function sets default values.
 #' @param compactHist If \code{TRUE}, the function only plots histograms of all observations for steps
-#' and angles, with the fitted densities (no map, and no individual-specific plot). Default : \code{FALSE}.
-#' @param sepStates If TRUE, the data is split by states in the histograms. Default : \code{FALSE}.
+#' and angles, with the fitted densities (no map, and no individual-specific plot). Default: \code{FALSE}.
+#' @param sepStates If TRUE, the data is split by states in the histograms. Default: \code{FALSE}.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
@@ -117,7 +117,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
              col="lightgrey",border="white",breaks=breaks)
 
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
 
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
@@ -138,7 +138,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           hist(m$data$step[stateInd],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
                col="lightgrey",border="white",breaks=breaks)
 
-          mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
+          mtext(paste("Animal ID:",ID," -- State",state),side=3,outer=TRUE,padj=2)
         }
 
         # Constitute the lists of state-dependent parameters for the step
@@ -187,7 +187,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
             points(x[i],y[i],pch=16,col=states[i-1]+1,cex=0.6)
             segments(x0=x[i-1],y0=y[i-1],x1=x[i],y1=y[i],col=states[i-1]+1,lwd=1.3)
           }
-          mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+          mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
         }
       }
 
@@ -205,7 +205,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
         hist(m$data$step[ind],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
              col="lightgrey",border="white",breaks=breaks)
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
 
       grid <- seq(0,max(m$data$step[ind],na.rm=T),length=1000)
@@ -227,7 +227,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
           hist(m$data$step[stateInd],prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
                col="lightgrey",border="white",breaks=breaks)
 
-          mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
+          mtext(paste("Animal ID:",ID," -- State",state),side=3,outer=TRUE,padj=2)
         }
 
         # Constitute the lists of state-dependent parameters for the step
@@ -264,7 +264,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
              col="lightgrey",border="white",breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
         axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
              labels = expression(-pi, -pi/2, 0, pi/2, pi))
-        mtext(paste("Animal ID :",ID),side=3,outer=TRUE,padj=2)
+        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
 
       grid <- seq(-pi,pi,length=1000)
@@ -280,7 +280,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
                col="lightgrey",border="white",breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
           axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
                labels = expression(-pi, -pi/2, 0, pi/2, pi))
-          mtext(paste("Animal ID :",ID," -- State",state),side=3,outer=TRUE,padj=2)
+          mtext(paste("Animal ID:",ID," -- State",state),side=3,outer=TRUE,padj=2)
         }
 
         # Constitute the lists of state-dependent parameters for the angle

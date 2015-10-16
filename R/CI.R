@@ -14,11 +14,11 @@ CI <- function(m,alpha,nbSims) UseMethod("CI")
 #' @method CI moveHMM
 #'
 #' @param m A \code{moveHMM} object
-#' @param alpha Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).
+#' @param alpha Range of the confidence intervals. Default: 0.95 (i.e. 95\% CIs).
 #' @param nbSims Number of simulations in the computation of the CIs for the angle parameters.
-#' Default : 10^6.
+#' Default: 10^6.
 #'
-#' @return A list of the following objects :
+#' @return A list of the following objects:
 #' \item{lower}{Lower bound of the confidence interval for the parameters of the step lengths
 #' distribution, for the parameters of the turning angle distribution, and for the transition
 #' probabilities regression parameters}
