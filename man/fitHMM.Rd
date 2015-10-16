@@ -27,7 +27,8 @@ The parameters should be in the order expected by the pdf of \code{angleDist}. F
 model using the Von Mises (vm) distribution, the vector of initial parameters would be something like:
 \code{c(mu1,mu2,kappa1,kappa2)}.}
 
-\item{beta0}{Initial matrix of regression coefficients for the transition probabilities.
+\item{beta0}{Initial matrix of regression coefficients for the transition probabilities (more
+information in "Details").
 Default: \code{NULL}. If not specified, \code{beta0} is initialized such that the diagonal elements
 of the transition probability matrix are dominant.}
 
@@ -58,7 +59,10 @@ input (can be used to assess the initial parameters). Default: \code{TRUE}.}
 }
 \value{
 A \code{moveHMM} object, i.e. a list of:
-\item{mle}{The maximum likelihood estimates of the parameters of the model}
+\item{mle}{The maximum likelihood estimates of the parameters of the model, which is a list
+of: \code{stepPar} (step distribution parameters), \code{anglePar} (angle distribution
+parameters), \code{beta} (transition probabilities regression coefficients - more information
+in "Details"), and \code{delta} (initial distribution).}
 \item{data}{The movement data}
 \item{stepDist}{The step length distribution name}
 \item{angleDist}{The turning angle distribution name}
@@ -70,6 +74,14 @@ A \code{moveHMM} object, i.e. a list of:
 \description{
 Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
 function.
+}
+\details{
+The matrix \code{beta} of regression coefficients for the transition probabilities has
+one row for the intercept, plus one row for each covariate, and one column for
+each non-diagonal element of the transition probability matrix. For example, in a 3-state
+HMM with 2 covariates, the matrix \code{beta} has three rows (intercept + two covariates)
+and six columns (six non-diagonal elements in the 3x3 transition probability matrix).
+In a covariate-free model (default), \code{beta} has one row, for the intercept.
 }
 \examples{
 ### 1. simulate data
