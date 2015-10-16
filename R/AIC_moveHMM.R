@@ -26,9 +26,11 @@ AIC.moveHMM <- function(object,...,k=2)
     modNames <- all.vars(match.call()) # store the names of the models given as arguments
 
     # include "object" in "models"
+    modcopy <- list()
+    modcopy[[1]] <- object
     for(i in 1:length(models))
-      models[[i+1]] <- models[[i]]
-    models[[1]] <- object
+      modcopy[[i+1]] <- models[[i]]
+    models <- modcopy
 
     # compute AICs of models
     AIC <- rep(NA,length(models))
