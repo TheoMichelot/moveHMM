@@ -25,7 +25,8 @@ not be estimated. Default: vm.}
 
 \item{anglePar}{Parameters of the turning angle distribution.}
 
-\item{beta}{Matrix of regression parameters for the transition probabilities.}
+\item{beta}{Matrix of regression parameters for the transition probabilities (more information
+in "Details").}
 
 \item{covs}{Covariate values to include in the model, as a dataframe. The number of rows of \code{covs}
 needs to be a multiple of the number of animals, and the same number of observations will be
@@ -58,6 +59,14 @@ An object moveData, i.e. a dataframe of:
 }
 \description{
 Simulates movement data from an HMM.
+}
+\details{
+The matrix \code{beta} of regression coefficients for the transition probabilities has
+one row for the intercept, plus one row for each covariate, and one column for
+each non-diagonal element of the transition probability matrix. For example, in a 3-state
+HMM with 2 covariates, the matrix \code{beta} has three rows (intercept + two covariates)
+and six columns (six non-diagonal elements in the 3x3 transition probability matrix).
+In a covariate-free model (default), \code{beta} has one row, for the intercept.
 }
 \examples{
 stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
