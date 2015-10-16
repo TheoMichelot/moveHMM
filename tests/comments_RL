@@ -62,57 +62,76 @@ stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 anglePar <- c(0,pi,0.5,2) # mean1, mean2, k1, k2
 Here you seem to have high turning angles in the state with long steps - not what you see in real movement data, so not what people expect.
 
-7. I'm a bit confused by results I'm getting when playing around with the zero mass initial values. 
-See the AIC comparisons below for some examples (high sensitivity when dist_water is included, no sensitivity when it isn't included).
-What exactly happens when I specify a zero mass initial value to be exactly equal to 0?
-> # initial parameters for Gamma and Von Mises distributions
-> mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
-> sigma0 <- c(0.1,1) # step SD
-> angleMean0 <- c(pi,0) # angle mean
-> kappa0 <- c(1,1) # angle concentration
-> anglePar0 <- c(angleMean0,kappa0)
-> 
-> zeromass0 <- c(0.05,0)
-> stepPar0 <- c(mu0,sigma0,zeromass0)
-> # call to fitting function
-> m1 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
-> 
-> zeromass0 <- c(0.05,0.001)
-> stepPar0 <- c(mu0,sigma0,zeromass0)
-> m2 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
-> 
-> zeromass0 <- c(0.05,0.05)
-> stepPar0 <- c(mu0,sigma0,zeromass0)
-> m3 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
-> 
-> AIC(m1,m2,m3)
-  Model      AIC
-1    m1 3816.185
-2    m2 3816.533
-3    m3 3817.489
-> 
-> # initial parameters for Gamma and Von Mises distributions
-> mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
-> sigma0 <- c(0.1,1) # step SD
-> angleMean0 <- c(pi,0) # angle mean
-> kappa0 <- c(1,1) # angle concentration
-> anglePar0 <- c(angleMean0,kappa0)
-> 
-> zeromass0 <- c(0.05,0)
-> stepPar0 <- c(mu0,sigma0,zeromass0)
-> # call to fitting function
-> m1 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
-> 
-> zeromass0 <- c(0.05,0.001)
-> stepPar0 <- c(mu0,sigma0,zeromass0)
-> m2 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
-> 
-> zeromass0 <- c(0.05,0.05)
-> stepPar0 <- c(mu0,sigma0,zeromass0)
-> m3 <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
-> 
-> AIC(m1,m2,m3)
-  Model      AIC
-1    m3 3828.434
-2    m1 3828.434
-3    m2 3828.434
+7. The numerical maximization is highly unstable for the elk data when dist_water is included. For example:
+
+> for (zoo in 1:5){
++   mu0 <- c(runif(1,0.04,0.2),runif(1,0.8,3))
++   sigma0 <- c(runif(1,0.04,0.2),runif(1,0.5,2))
++   zeromass0 <- runif(2,0,0.1)
++   stepPar0 <- c(mu0,sigma0,zeromass0)
++   angleMean0 <- c(pi,0) # angle mean
++   kappa0 <- runif(2,0.1,2)
++   anglePar0 <- c(angleMean0,kappa0)
++   m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~1)
++   print(AIC(m))
++ }
+[1] 3828.434
+[1] 3828.434
+[1] 3828.434
+[1] 3828.434
+[1] 3828.434
+
+... works fine, but when I include dist_water things start to go wrong:
+
+> for (zoo in 1:5){
++   mu0 <- c(runif(1,0.04,0.2),runif(1,0.8,3))
++   sigma0 <- c(runif(1,0.04,0.2),runif(1,0.5,2))
++   zeromass0 <- runif(2,0,0.1)
++   stepPar0 <- c(mu0,sigma0,zeromass0)
++   angleMean0 <- c(pi,0) # angle mean
++   kappa0 <- runif(2,0.1,2)
++   anglePar0 <- c(angleMean0,kappa0)
++   m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
++   print(AIC(m))
++ }
+[1] 3816.886
+[1] 3815.974
+Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  : 
+  non-finite value supplied by 'nlm'
+  
+This is due to the high values of this covariate 
+(such that tiny changes in the beta values make a huge difference, which presumably also leads to the error above). 
+If the covariate values are divided by 1000, i.e.
+> trackData$dist_water <- trackData$dist_water/1000
+then the maximization is stable and returns the correct MLE:
+
+> for (zoo in 1:5){
++   mu0 <- c(runif(1,0.04,0.2),runif(1,2,3))
++   sigma0 <- c(runif(1,0.04,0.2),runif(1,0.5,2))
++   zeromass0 <- runif(2,0,0.1)
++   stepPar0 <- c(mu0,sigma0,zeromass0)
++   angleMean0 <- c(pi,0) # angle mean
++   kappa0 <- runif(2,0.1,2)
++   anglePar0 <- c(angleMean0,kappa0)
++   m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
++   print(AIC(m))
++ }
+[1] 3815.899
+[1] 3815.899
+[1] 3815.899
+[1] 3815.899
+[1] 3815.899
+
+So I suggest that we do this in the vignette and talk about it. 
+Although, in fact, the standard approach to this sort of numerical problem is to standardize the covariate values, 
+so we should perhaps do that instead:
+> trackData$dist_water <- (trackData$dist_water-mean(trackData$dist_water))/sd(trackData$dist_water)
+This also returns the correct MLEs with high reliability. Note it's exactly the same likelihood value at the maximum, 
+since we are considering a simple linear transformation of the covariate values. The beta values change, the likelihood doesn't.
+
+8. I see that you set iterlim=1000 in nlm. 
+The user should be able to increse this value if necessary (it can happen that you need more than 1000 iterations!).
+Alternatively, just set it to some outrageously high value like 100000.
+
+9. In case of numerical instability, it sometimes helps to play around with the stepmax option within nlm. 
+Can you add an option to the fitHMM function such that the user can change this? (Hardly anybody will ever use this - but I would.)
