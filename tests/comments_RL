@@ -135,3 +135,33 @@ Alternatively, just set it to some outrageously high value like 100000.
 
 9. In case of numerical instability, it sometimes helps to play around with the stepmax option within nlm. 
 Can you add an option to the fitHMM function such that the user can change this? (Hardly anybody will ever use this - but I would.)
+
+10. I noticed that when plotting a fitted model object, it can happen that the limits of the y-axis (ylim) are such that 
+for some of the states not the entire density is visible ('cause density values are higher than the upper limit of ylim.
+
+11. Also regarding visualization, I noticed that the plotted tracks can sometimes look a bit odd, namely when the
+range of movement is much wider in one dimension than in the other (but still plotted in a quadratic plot). For example,
+xlim=c(50,250) and ylim=c(-500,500) makes a quadratic plot look very stretched. Would it make sense to first identify the 
+wider range, then plotting accordingly in both dimensions – i.e., ylim=c(-500,500) and xlim=c(-350,650) in the above example?
+
+12. Plus one more visualization issue. When I call plot(m) where m is a model fitted to say 6 (Wild Haggis) animals, then 
+I get the following sequence of plots:
+- track animal 1
+- step length distributions
+- turning angle distributions
+- track animal 2
+- step length distributions
+- turning angles distributions
+...
+- transition probs functions
+Why do we repeatedly show the steps and turns distributions when they are the same for all animals?
+I'd have expected this sequence:
+- step length distributions
+- turning angle distributions
+- transition probs functions
+- track animal 1
+- track animal 2
+...
+- track animal 6
+
+
