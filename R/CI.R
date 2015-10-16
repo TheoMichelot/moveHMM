@@ -86,5 +86,8 @@ CI.moveHMM <- function(m,alpha=0.95,nbSims=10^6)
   stepPar <- list(lower=lower$stepPar,upper=upper$stepPar)
   beta <- list(lower=lower$beta,upper=upper$beta)
 
-  return(list(stepPar=stepPar,anglePar=anglePar,beta=beta))
+  if(!is.null(m$mle$beta))
+    return(list(stepPar=stepPar,anglePar=anglePar,beta=beta))
+  else
+    return(list(stepPar=stepPar,anglePar=anglePar))
 }
