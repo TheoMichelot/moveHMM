@@ -40,8 +40,8 @@ print.moveHMM <- function(x,...)
 
   if(!is.null(m$mle$beta)) {
     cat("\n")
-    cat("Transition probabilities parameters:\n")
-    cat("-----------------------------------\n")
+    cat("Regression coefficients for the transition probability matrix:\n")
+    cat("-------------------------------------------------------------\n")
 
     beta <- m$mle$beta
     f <- m$conditions$formula
