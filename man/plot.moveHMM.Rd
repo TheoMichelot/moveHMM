@@ -11,19 +11,19 @@
 \item{x}{Object \code{moveHMM}}
 
 \item{animals}{Vector of indices or IDs of animals for which information will be plotted.
-Default : \code{NULL} ; all animals are plotted.}
+Default: \code{NULL} ; all animals are plotted.}
 
 \item{ask}{If \code{TRUE}, the execution pauses between each plot.}
 
 \item{breaks}{Histogram parameter. See \code{hist} documentation.}
 
 \item{hist.ylim}{Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
-Default : \code{NULL} ; the function sets default values.}
+Default: \code{NULL} ; the function sets default values.}
 
 \item{compactHist}{If \code{TRUE}, the function only plots histograms of all observations for steps
-and angles, with the fitted densities (no map, and no individual-specific plot). Default : \code{FALSE}.}
+and angles, with the fitted densities (no map, and no individual-specific plot). Default: \code{FALSE}.}
 
-\item{sepStates}{If TRUE, the data is split by states in the histograms. Default : \code{FALSE}.}
+\item{sepStates}{If TRUE, the data is split by states in the histograms. Default: \code{FALSE}.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }

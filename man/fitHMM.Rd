@@ -19,34 +19,34 @@ The parameters should be in the order expected by the pdf of \code{stepDist}, an
 parameter should be the last. Note that zero-mass parameters are mandatory if there are steps of
 length zero in the data.
 For example, for a 2-state model using the Gamma (gamma) distribution and
-including zero-inflation, the vector of initial parameters would be something like :
+including zero-inflation, the vector of initial parameters would be something like:
 \code{c(mu1,mu2,sigma1,sigma2,zeromass1,zeromass2)}.}
 
 \item{anglePar0}{Vector of initial state-dependent turning angle distribution parameters.
 The parameters should be in the order expected by the pdf of \code{angleDist}. For example, for a 2-state
-model using the Von Mises (vm) distribution, the vector of initial parameters would be something like :
+model using the Von Mises (vm) distribution, the vector of initial parameters would be something like:
 \code{c(mu1,mu2,kappa1,kappa2)}.}
 
 \item{beta0}{Initial matrix of regression coefficients for the transition probabilities.
-Default : \code{NULL}. If not specified, \code{beta0} is initialized such that the diagonal elements
+Default: \code{NULL}. If not specified, \code{beta0} is initialized such that the diagonal elements
 of the transition probability matrix are dominant.}
 
-\item{delta0}{Initial value for the initial distribution of the HMM. Default : \code{rep(1/nbStates,nbStates)}.}
+\item{delta0}{Initial value for the initial distribution of the HMM. Default: \code{rep(1/nbStates,nbStates)}.}
 
-\item{formula}{Regression formula for the covariates. Default : \code{~1} (no covariate effect).}
+\item{formula}{Regression formula for the covariates. Default: \code{~1} (no covariate effect).}
 
 \item{stepDist}{Name of the distribution of the step lengths (as a character string).
-Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.}
+Supported distributions are: gamma, weibull, lnorm, exp. Default: gamma.}
 
 \item{angleDist}{Name of the distribution of the turning angles (as a character string).
-Supported distributions are : vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
-not be estimated. Default : vm.}
+Supported distributions are: vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
+not be estimated. Default: vm.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
-Default : \code{NULL} (the angle mean is estimated).}
+Default: \code{NULL} (the angle mean is estimated).}
 
 \item{stationary}{\code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
-equal to the stationary distribution. Default : \code{FALSE}.}
+equal to the stationary distribution. Default: \code{FALSE}.}
 
 \item{verbose}{Determines the print level of the optimizer. The default value of 0 means that no
 printing occurs, a value of 1 means that the first and last iterations of the optimization are
@@ -54,10 +54,10 @@ detailed, and a value of 2 means that each iteration of the optimization is deta
 
 \item{fit}{\code{TRUE} if an HMM should be fitted to the data, \code{FALSE} otherwise.
 If fit=\code{FALSE}, a model is returned with the MLE replaced by the initial parameters given in
-input (can be used to assess the initial parameters). Default : \code{TRUE}.}
+input (can be used to assess the initial parameters). Default: \code{TRUE}.}
 }
 \value{
-A \code{moveHMM} object, i.e. a list of :
+A \code{moveHMM} object, i.e. a list of:
 \item{mle}{The maximum likelihood estimates of the parameters of the model}
 \item{data}{The movement data}
 \item{stepDist}{The step length distribution name}

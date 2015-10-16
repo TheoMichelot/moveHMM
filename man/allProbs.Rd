@@ -23,11 +23,11 @@ and one column for each state.}
 
 \item{anglePar}{Parameters of the turning angle distribution. Must be provided in a
 matrix with one row for each parameter (in the order expected by the pdf of \code{angleDist}),
-and one column for each state. Default : \code{NULL} ; if the turning angles distribution
+and one column for each state. Default: \code{NULL} ; if the turning angles distribution
 is not estimated.}
 
 \item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
-Default : \code{FALSE}.}
+Default: \code{FALSE}.}
 }
 \value{
 Matrix of all probabilities.

@@ -9,19 +9,16 @@
 \arguments{
 \item{m}{A \code{moveHMM} object}
 
-\item{alpha}{Range of the confidence intervals. Default : 0.95 (i.e. 95\% CIs).}
+\item{alpha}{Range of the confidence intervals. Default: 0.95 (i.e. 95\% CIs).}
 
 \item{nbSims}{Number of simulations in the computation of the CIs for the angle parameters.
-Default : 10^6.}
+Default: 10^6.}
 }
 \value{
-A list of the following objects :
-\item{lower}{Lower bound of the confidence interval for the parameters of the step lengths
-distribution, for the parameters of the turning angle distribution, and for the transition
-probabilities regression parameters}
-\item{upper}{Upper bound of the confidence interval for the parameters of the step lengths
-distribution, for the parameters of the turning angle distribution, and for the transition
-probabilities regression parameters}
+A list of the following objects:
+\item{stepPar}{Confidence intervals for the parameters of the step lengths distribution}
+\item{anglePar}{Confidence intervals for the parameters of the turning angles distribution}
+\item{beta}{Confidence intervals for the regression coefficients of the transition probabilities.}
 }
 \description{
 Computes the confidence intervals of the step length and turning angle parameters,

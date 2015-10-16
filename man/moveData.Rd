@@ -7,7 +7,7 @@
 moveData(data)
 }
 \arguments{
-\item{data}{A dataframe containing : \code{ID} (the ID(s) of the observed animal(s)), \code{step}
+\item{data}{A dataframe containing: \code{ID} (the ID(s) of the observed animal(s)), \code{step}
 (the step lengths), \code{angle} (the turning angles, if any), \code{x} (either easting or longitude),
 \code{y} (either norting or latitude), and covariates, if any.}
 }

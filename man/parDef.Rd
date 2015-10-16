@@ -20,8 +20,8 @@ Set to \code{"none"} if the angle distribution should not be estimated.}
 \item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.}
 }
 \value{
-A list of :
-\item{parSize}{Vector of two values : number of parameters of the step length distribution,
+A list of:
+\item{parSize}{Vector of two values: number of parameters of the step length distribution,
 number of parameters of the turning angle distribution}
 \item{bounds}{Matrix with 2 columns and \code{sum(parSize)} rows - each row contains the lower and upper
 bound for the correponding parameter)}

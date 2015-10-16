@@ -10,7 +10,7 @@
 \item{m}{A \code{moveHMM} object.}
 }
 \value{
-A list of :
+A list of:
 \item{stepRes}{The pseudo-residuals for the step lengths}
 \item{angleRes}{The pseudo-residuals for the turning angles}
 }

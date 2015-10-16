@@ -15,10 +15,10 @@ should specified.}
 
 \item{type}{\code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.}
 
-\item{coordNames}{Names of the columns of coordinates in the data frame. Default : \code{c("x","y")}.}
+\item{coordNames}{Names of the columns of coordinates in the data frame. Default: \code{c("x","y")}.}
 }
 \value{
-An object \code{moveData}, i.e. a dataframe of :
+An object \code{moveData}, i.e. a dataframe of:
 \item{ID}{The ID(s) of the observed animal(s)}
 \item{step}{The step lengths}
 \item{angle}{The turning angles (if any)}

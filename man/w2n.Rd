@@ -2,7 +2,7 @@
 % Please edit documentation in R/w2n.R
 \name{w2n}
 \alias{w2n}
-\title{Scaling function : working to natural parameters}
+\title{Scaling function: working to natural parameters}
 \usage{
 w2n(wpar, bounds, parSize, nbStates, nbCovs, estAngleMean, stationary)
 }
@@ -12,7 +12,7 @@ w2n(wpar, bounds, parSize, nbStates, nbCovs, estAngleMean, stationary)
 \item{bounds}{Matrix with 2 columns and as many rows as there are elements in \code{wpar}. Each row
 contains the lower and upper bound for the correponding parameter.}
 
-\item{parSize}{Vector of two values : number of parameters of the step length distribution,
+\item{parSize}{Vector of two values: number of parameters of the step length distribution,
 number of parameters of the turning angle distribution.}
 
 \item{nbStates}{The number of states of the HMM.}
@@ -22,10 +22,10 @@ number of parameters of the turning angle distribution.}
 \item{estAngleMean}{\code{TRUE} if the angle mean is estimated, \code{FALSE} otherwise.}
 
 \item{stationary}{\code{FALSE} if there are covariates. If TRUE, the initial distribution is considered
-equal to the stationary distribution. Default : \code{FALSE}.}
+equal to the stationary distribution. Default: \code{FALSE}.}
 }
 \value{
-A list of :
+A list of:
 \item{stepPar}{Matrix of natural parameters of the step length distribution}
 \item{anglePar}{Matrix of natural parameters of the turning angle distribution}
 \item{beta}{Matrix of regression coefficients of the transition probabilities}

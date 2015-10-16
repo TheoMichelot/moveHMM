@@ -11,7 +11,7 @@
 \item{x}{An object \code{moveData}}
 
 \item{animals}{Vector of indices or IDs of animals for which information will be plotted.
-Default : \code{NULL} ; all animals are plotted.}
+Default: \code{NULL} ; all animals are plotted.}
 
 \item{compact}{\code{TRUE} for a compact plot (all individuals at once), \code{FALSE} otherwise
 (default -- one individual at a time).}

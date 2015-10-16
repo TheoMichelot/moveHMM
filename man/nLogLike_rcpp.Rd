@@ -32,7 +32,7 @@ nLogLike_rcpp(nbStates, beta, covs, data, stepDist, angleDist, stepPar,
 \code{false} otherwise.}
 
 \item{stationary}{\code{false} if there are covariates. If \code{true}, the initial distribution is considered
-equal to the stationary distribution. Default : \code{false}.}
+equal to the stationary distribution. Default: \code{false}.}
 }
 \value{
 Negative log-likelihood

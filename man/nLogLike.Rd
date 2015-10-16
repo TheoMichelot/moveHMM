@@ -16,27 +16,27 @@ nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
 \item{bounds}{Matrix with 2 columns and as many rows as there are elements in \code{wpar}. Each row
 contains the lower and upper bound for the correponding parameter.}
 
-\item{parSize}{Vector of two values : number of parameters of the step length distribution,
+\item{parSize}{Vector of two values: number of parameters of the step length distribution,
 number of parameters of the turning angle distribution.}
 
 \item{data}{An object \code{moveData}.}
 
 \item{stepDist}{Name of the distribution of the step lengths (as a character string).
-Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.}
+Supported distributions are: gamma, weibull, lnorm, exp. Default: gamma.}
 
 \item{angleDist}{Name of the distribution of the turning angles (as a character string).
-Supported distributions are : vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
-not be estimated. Default : vm.}
+Supported distributions are: vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
+not be estimated. Default: vm.}
 
 \item{angleMean}{Vector of means of turning angles if not estimated (one for each state).
-Default : \code{NULL} (the angle mean is estimated).}
+Default: \code{NULL} (the angle mean is estimated).}
 
 \item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
-Default : \code{FALSE}. If \code{TRUE}, initial values for the zero-mass parameters should be
+Default: \code{FALSE}. If \code{TRUE}, initial values for the zero-mass parameters should be
 included in \code{stepPar0}.}
 
 \item{stationary}{\code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
-equal to the stationary distribution. Default : \code{FALSE}.}
+equal to the stationary distribution. Default: \code{FALSE}.}
 }
 \value{
 The negative log-likelihood of the parameters given the data.

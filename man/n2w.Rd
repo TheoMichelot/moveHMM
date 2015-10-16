@@ -2,7 +2,7 @@
 % Please edit documentation in R/n2w.R
 \name{n2w}
 \alias{n2w}
-\title{Scaling function : natural to working parameters.}
+\title{Scaling function: natural to working parameters.}
 \usage{
 n2w(par, bounds, beta, delta = NULL, nbStates, estAngleMean)
 }
@@ -14,7 +14,7 @@ contains the lower and upper bound for the correponding parameter.}
 
 \item{beta}{Matrix of regression coefficients for the transition probabilities.}
 
-\item{delta}{Initial distribution. Default : \code{NULL} ; if the initial distribution is not estimated.}
+\item{delta}{Initial distribution. Default: \code{NULL} ; if the initial distribution is not estimated.}
 
 \item{nbStates}{The number of states of the HMM.}
 

@@ -15,11 +15,11 @@ simData(nbAnimals, nbStates, stepDist = c("gamma", "weibull", "lnorm", "exp"),
 \item{nbStates}{Number of behavioural states to simulate.}
 
 \item{stepDist}{Name of the distribution of the step lengths (as a character string).
-Supported distributions are : gamma, weibull, lnorm, exp. Default : gamma.}
+Supported distributions are: gamma, weibull, lnorm, exp. Default: gamma.}
 
 \item{angleDist}{Name of the distribution of the turning angles (as a character string).
-Supported distributions are : vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
-not be estimated. Default : vm.}
+Supported distributions are: vm, wrpcauchy. Set to \code{"none"} if the angle distribution should
+not be estimated. Default: vm.}
 
 \item{stepPar}{Parameters of the step length distribution.}
 
@@ -29,26 +29,26 @@ not be estimated. Default : vm.}
 
 \item{covs}{Covariate values to include in the model, as a dataframe. The number of rows of \code{covs}
 needs to be a multiple of the number of animals, and the same number of observations will be
-simulated for each animal. Default : \code{NULL}. Covariates can also be simulated according to a standard
+simulated for each animal. Default: \code{NULL}. Covariates can also be simulated according to a standard
 normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code{nbCovs>0}.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default). Does not need to be specified of
 \code{covs} is specified.}
 
 \item{zeroInflation}{\code{TRUE} if the step length distribution is inflated in zero.
-Default : \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
+Default: \code{FALSE}. If \code{TRUE}, values for the zero-mass parameters should be
 included in \code{stepPar}.}
 
 \item{obsPerAnimal}{Either the number of the number of observations per animal (if single value),
 or the bounds of the number of observations per animal (if vector of two values). In the latter case,
 the numbers of obervations generated for each animal are uniformously picked from this interval.
-Default : \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
+Default: \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
 specified.}
 
 \item{states}{\code{TRUE} if the simulated states should be returned, \code{FALSE} otherwise (default).}
 }
 \value{
-An object moveData, i.e. a dataframe of :
+An object moveData, i.e. a dataframe of:
 \item{ID}{The ID(s) of the observed animal(s)}
 \item{step}{The step lengths}
 \item{angle}{The turning angles (if any)}
