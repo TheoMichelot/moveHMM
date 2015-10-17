@@ -164,4 +164,10 @@ I'd have expected this sequence:
 ...
 - track animal 6
 
+13. I just saw this text in ?simData>
+"For example, in a 3-state HMM with 2 covariates, the matrix beta has three rows (intercept + two covariates) 
+and six columns (six non-diagonal elements in the 3x3 transition probability matrix)."
+(Almost) perfect, I'd just add information on how the matrix is filled:
+"For example, in a 3-state HMM with 2 covariates, the matrix beta has three rows (intercept + two covariates) 
+and six columns (six non-diagonal elements in the 3x3 transition probability matrix, filled in row-wise)."
 
