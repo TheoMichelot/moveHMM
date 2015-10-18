@@ -5,7 +5,7 @@
 \title{Plot \code{moveHMM}}
 \usage{
 \method{plot}{moveHMM}(x, animals = NULL, ask = TRUE, breaks = "Sturges",
-  hist.ylim = NULL, compactHist = FALSE, sepStates = FALSE, ...)
+  hist.ylim = NULL, sepAnimals = FALSE, sepStates = FALSE, ...)
 }
 \arguments{
 \item{x}{Object \code{moveHMM}}
@@ -17,18 +17,20 @@ Default: \code{NULL} ; all animals are plotted.}
 
 \item{breaks}{Histogram parameter. See \code{hist} documentation.}
 
-\item{hist.ylim}{Parameter \code{ylim} for the step length histograms. See \code{hist} documentation.
-Default: \code{NULL} ; the function sets default values.}
+\item{hist.ylim}{Parameter \code{ylim} for the step length histograms.
+See \code{hist} documentation. Default: \code{NULL} ; the function sets default values.}
 
-\item{compactHist}{If \code{TRUE}, the function only plots histograms of all observations for steps
-and angles, with the fitted densities (no map, and no individual-specific plot). Default: \code{FALSE}.}
+\item{sepAnimals}{If \code{TRUE}, the data is split by individuals in the histograms.
+Default: \code{FALSE}.}
 
-\item{sepStates}{If TRUE, the data is split by states in the histograms. Default: \code{FALSE}.}
+\item{sepStates}{If \code{TRUE}, the data is split by states in the histograms.
+Default: \code{FALSE}.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
 \description{
-Plot \code{moveHMM}
+Plot the fitted step and angle densities over histograms of the data, transition probabilities
+as functions of the covariates, and maps of the animals' tracks colored by the decoded states.
 }
 \examples{
 m <- ex$m # moveHMM object, as returned by fitHMM
