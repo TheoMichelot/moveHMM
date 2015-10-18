@@ -76,13 +76,18 @@ Fit an hidden Markov model to the data provided, using numerical optimization of
 function.
 }
 \details{
-The matrix \code{beta} of regression coefficients for the transition probabilities has
+\itemize{
+\item The matrix \code{beta} of regression coefficients for the transition probabilities has
 one row for the intercept, plus one row for each covariate, and one column for
 each non-diagonal element of the transition probability matrix. For example, in a 3-state
 HMM with 2 covariates, the matrix \code{beta} has three rows (intercept + two covariates)
 and six columns (six non-diagonal elements in the 3x3 transition probability matrix -
 filled in row-wise).
 In a covariate-free model (default), \code{beta} has one row, for the intercept.
+
+\item The choice of initial parameters is crucial to fit a model. The algorithm might not find
+the global optimum of the likelihood function if the initial parameters are poorly chosen.
+}
 }
 \examples{
 ### 1. simulate data
