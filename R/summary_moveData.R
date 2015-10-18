@@ -3,8 +3,8 @@
 #' @method summary moveData
 #'
 #' @param object A \code{moveData} object.
-#' @param details \code{TRUE} if quantiles of the covariate values should be printed,
-#' \code{FALSE} otherwise (default).
+#' @param details \code{TRUE} if quantiles of the covariate values should be printed (default),
+#' \code{FALSE} otherwise.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
@@ -14,7 +14,7 @@
 #'
 #' @export
 
-summary.moveData <- function(object,details=FALSE,...)
+summary.moveData <- function(object,details=TRUE,...)
 {
   data <- object
 

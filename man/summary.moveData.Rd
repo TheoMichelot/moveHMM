@@ -4,13 +4,13 @@
 \alias{summary.moveData}
 \title{Summary \code{moveData}}
 \usage{
-\method{summary}{moveData}(object, details = FALSE, ...)
+\method{summary}{moveData}(object, details = TRUE, ...)
 }
 \arguments{
 \item{object}{A \code{moveData} object.}
 
-\item{details}{\code{TRUE} if quantiles of the covariate values should be printed,
-\code{FALSE} otherwise (default).}
+\item{details}{\code{TRUE} if quantiles of the covariate values should be printed (default),
+\code{FALSE} otherwise.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
