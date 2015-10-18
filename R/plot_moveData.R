@@ -28,7 +28,9 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
 
   nbAnimals <- length(unique(data$ID))
 
-  # define animals to be plotted
+  ##################################
+  ## Define animals to be plotted ##
+  ##################################
   if(is.null(animals)) # all animals are plotted
     animalsInd <- 1:nbAnimals
   else {
@@ -50,11 +52,15 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
     }
   }
 
+  # graphical parameters
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=ask)
 
   if(is.null(data$angle) | length(which(!is.na(data$angle)))==0) # only step length is provided
   {
+    ##########################################
+    ## Plot steps time series and histogram ##
+    ##########################################
     par(mfrow=c(1,2))
     for(zoo in animalsInd) {
       ID <- unique(data$ID)[zoo]
@@ -63,66 +69,33 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
       plot(step,type="l",xlab="t",ylab="step length",
            ylim=c(0,max(step,na.rm=T)))
       # step length histogram
-      hist(step,xlab="step length",main="",col="lightblue",border="white",breaks=breaks)
+      hist(step,xlab="step length",main="",col="grey",border=FALSE,breaks=breaks)
       mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
     }
   }
   else # step length and turning angle are provided
   {
-    if(!compact) { # tracks are plotted on a separate map for each animal
-      for(zoo in animalsInd) {
-        ID <- unique(data$ID)[zoo]
-        x <- data$x[which(data$ID==ID)]
-        y <- data$y[which(data$ID==ID)]
-        step <- data$step[which(data$ID==ID)]
-        angle <- data$angle[which(data$ID==ID)]
-
-        par(mfrow=c(1,1))
-        # map of the animal's track
-        plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20)
-        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
-
-        # step and angle time series
-        par(mfrow=c(2,2))
-        plot(step,type="l",xlab="t",ylab="step length",
-             ylim=c(0,max(step,na.rm=T)))
-        plot(angle,type="l",xlab="t",ylab="turning angle (radians)",
-             ylim=c(-pi,pi),yaxt="n")
-        axis(2, at = c(-pi, -pi/2, 0, pi/2, pi),
-             labels = expression(-pi, -pi/2, 0, pi/2, pi))
-        abline(h=c(-pi,0,pi),lty=2)
-
-        # step and angle histograms
-        hist(step,xlab="step length",main="", col="lightgrey",border="white",breaks=breaks)
-
-        h <- hist(angle,breaks=breaks,plot=FALSE) # to define the breaks
-
-        hist(angle,xlab="turning angle (radians)",main="", col="lightgrey",border="white",
-             breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
-        axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
-             labels = expression(-pi, -pi/2, 0, pi/2, pi))
-
-        mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
-      }
-    }
-    else { # tracks are plotted on a single map for all animals
+    if(compact) {
+      ################################
+      ## Map of all animals' tracks ##
+      ################################
       par(mfrow = c(1,1))
-      xmin <- Inf; xmax <- -Inf
-      ymin <- Inf; ymax <- -Inf
-      stepmax <- -Inf; nbObs <- -Inf
-      for(zoo in animalsInd) {
-        # compute the x and y bounds to draw the map
-        ID <- unique(data$ID)[zoo]
-        x <- data$x[which(data$ID==ID)]
-        y <- data$y[which(data$ID==ID)]
-        step <- data$step[which(data$ID==ID)]
 
-        if(min(x,na.rm=T)<xmin) xmin <- min(x,na.rm=T) # na.rm=T to ignore the NAs
-        if(min(y,na.rm=T)<ymin) ymin <- min(y,na.rm=T)
-        if(max(x,na.rm=T)>xmax) xmax <- max(x,na.rm=T)
-        if(max(y,na.rm=T)>ymax) ymax <- max(y,na.rm=T)
-        if(max(step,na.rm=T)>stepmax) stepmax <- max(step,na.rm=T)
-        if(length(x)>nbObs) nbObs <- length(x)
+      # determine bounds
+      ind <- which(data$ID %in% unique(data$ID)[animalsInd])
+      xmin <- min(data$x[ind],na.rm=T)
+      xmax <- max(data$x[ind],na.rm=T)
+      ymin <- min(data$y[ind],na.rm=T)
+      ymax <- max(data$y[ind],na.rm=T)
+      # make sure that x and y have same scale
+      if(xmax-xmin>ymax-ymin) {
+        ymid <- (ymax+ymin)/2
+        ymax <- ymid+(xmax-xmin)/2
+        ymin <- ymid-(xmax-xmin)/2
+      } else {
+        xmid <- (xmax+xmin)/2
+        xmax <- xmid+(ymax-ymin)/2
+        xmin <- xmid-(ymax-ymin)/2
       }
 
       if(length(animalsInd)>6)
@@ -144,34 +117,66 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
         y <- data$y[which(data$ID==ID)]
         points(x,y,type="o",pch=20,lwd=1.3,col=colors[zoo],cex=0.5)
       }
+    }
 
-      par(mfrow=c(2,2))
-      for(zoo in animalsInd) {
-        ID <- unique(data$ID)[zoo]
-        step <- data$step[which(data$ID==ID)]
-        angle <- data$angle[which(data$ID==ID)]
+    for(zoo in animalsInd) {
+      ID <- unique(data$ID)[zoo]
+      x <- data$x[which(data$ID==ID)]
+      y <- data$y[which(data$ID==ID)]
+      step <- data$step[which(data$ID==ID)]
+      angle <- data$angle[which(data$ID==ID)]
 
-        # step and angle time series
-        plot(step,type="l",xlab="t",ylab="step length",
-             ylim=c(0,max(step,na.rm=T)))
-        plot(angle,type="l",xlab="t",ylab="turning angle (radians)",
-             ylim=c(-pi,pi),yaxt="n")
-        axis(2, at = c(-pi, -pi/2, 0, pi/2, pi),
-             labels = expression(-pi, -pi/2, 0, pi/2, pi))
-        abline(h=c(-pi,0,pi),lty=2)
-
-        # step and angle histograms
-        hist(step,xlab="step length",main="", col="lightgrey",border="white",breaks=breaks)
-
-        h <- hist(angle,breaks=breaks,plot=FALSE) # to define the breaks
-
-        hist(angle,xlab="turning angle (radians)",main="", col="lightgrey",border="white",
-             breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
-        axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
-             labels = expression(-pi, -pi/2, 0, pi/2, pi))
-
+      if(!compact) {
+        ################################
+        ## Map of each animal's track ##
+        ################################
+        par(mfrow=c(1,1))
+        # determine bounds
+        ind <- which(data$ID %in% unique(data$ID)[animalsInd])
+        xmin <- min(x,na.rm=T)
+        xmax <- max(x,na.rm=T)
+        ymin <- min(y,na.rm=T)
+        ymax <- max(y,na.rm=T)
+        # make sure that x and y have same scale
+        if(xmax-xmin>ymax-ymin) {
+          ymid <- (ymax+ymin)/2
+          ymax <- ymid+(xmax-xmin)/2
+          ymin <- ymid-(xmax-xmin)/2
+        } else {
+          xmid <- (xmax+xmin)/2
+          xmax <- xmid+(ymax-ymin)/2
+          xmin <- xmid-(ymax-ymin)/2
+        }
+        # map of the animal's track
+        plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20,xlim=c(xmin,xmax),ylim=c(ymin,ymax))
         mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
+
+      ##################################
+      ## Steps and angles time series ##
+      ##################################
+      par(mfrow=c(2,2))
+      plot(step,type="l",xlab="t",ylab="step length",
+           ylim=c(0,max(step,na.rm=T)))
+      plot(angle,type="l",xlab="t",ylab="turning angle (radians)",
+           ylim=c(-pi,pi),yaxt="n")
+      axis(2, at = c(-pi, -pi/2, 0, pi/2, pi),
+           labels = expression(-pi, -pi/2, 0, pi/2, pi))
+      abline(h=c(-pi,0,pi),lty=2)
+
+      #################################
+      ## Steps and angles histograms ##
+      #################################
+      hist(step,xlab="step length",main="", col="grey",border=FALSE,breaks=breaks)
+
+      h <- hist(angle,breaks=breaks,plot=FALSE) # to define the breaks
+
+      hist(angle,xlab="turning angle (radians)",main="", col="grey",border=FALSE,
+           breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
+      axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+           labels = expression(-pi, -pi/2, 0, pi/2, pi))
+
+      mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
     }
   }
 
