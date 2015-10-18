@@ -283,7 +283,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       xmax <- max(x[[zoo]],na.rm=T)
       ymin <- min(y[[zoo]],na.rm=T)
       ymax <- max(y[[zoo]],na.rm=T)
-
+      # make sure that x and y have same scale
       if(xmax-xmin>ymax-ymin) {
         ymid <- (ymax+ymin)/2
         ymax <- ymid+(xmax-xmin)/2
