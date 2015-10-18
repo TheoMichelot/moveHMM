@@ -12,8 +12,8 @@
 #' @return An object \code{moveData}, i.e. a dataframe of:
 #' \item{ID}{The ID(s) of the observed animal(s)}
 #' \item{step}{The step lengths - in kilometers if longitude/latitude provided, and in the metrics of
-#' the data otherwise.}
-#' \item{angle}{The turning angles (if any)}
+#' the data otherwise}
+#' \item{angle}{The turning angles (if any) - in radians}
 #' \item{x}{Either easting or longitude}
 #' \item{y}{Either norting or latitude}
 #' \item{...}{Covariates (if any)}
