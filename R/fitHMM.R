@@ -35,6 +35,9 @@
 #' @param verbose Determines the print level of the optimizer. The default value of 0 means that no
 #' printing occurs, a value of 1 means that the first and last iterations of the optimization are
 #' detailed, and a value of 2 means that each iteration of the optimization is detailed.
+#' @param nlmPar List of parameters to pass to the optimization function \code{nlm} (which should be either
+#' '\code{gradtol}', '\code{stepmax}', '\code{steptol}', or '\code{iterlim}' -- see \code{nlm}'s documentation
+#' for more detail)
 #' @param fit \code{TRUE} if an HMM should be fitted to the data, \code{FALSE} otherwise.
 #' If fit=\code{FALSE}, a model is returned with the MLE replaced by the initial parameters given in
 #' input (can be used to assess the initial parameters). Default: \code{TRUE}.
@@ -117,7 +120,7 @@
 
 fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formula=~1,
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
-                   angleMean=NULL,stationary=FALSE,verbose=0,fit=TRUE)
+                   angleMean=NULL,stationary=FALSE,verbose=0,nlmPar=NULL,fit=TRUE)
 {
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
@@ -149,7 +152,9 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     stepPar0[(length(stepPar0)-nbStates+1):length(stepPar0)] <- zm0
   }
 
-  # check arguments
+  #####################
+  ## Check arguments ##
+  #####################
   stepDist <- match.arg(stepDist)
   angleDist <- match.arg(angleDist)
   if(nbStates<0)
@@ -214,7 +219,15 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   if(nbCovs>0 & stationary==TRUE)
     stop("stationary can't be set to TRUE if there are covariates.")
 
-  # generate initial values for beta and delta
+  # check elements of nlmPar
+  lsPars <- c("gradtol","stepmax","steptol","iterlim")
+  if(length(which(!(names(nlmPar) %in% lsPars)))>0)
+    stop("Check the names of the element of 'nlmPar'; they should be in
+         ('gradtol','stepmax','steptol','iterlim')")
+
+  ####################################
+  ## Prepare initial values for nlm ##
+  ####################################
   if(is.null(beta0) & nbStates>1) {
     beta0 <- matrix(c(rep(-1.5,nbStates*(nbStates-1)),rep(0,nbStates*(nbStates-1)*nbCovs)),
                     nrow=nbCovs+1,byrow=TRUE)
@@ -227,9 +240,12 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   estAngleMean <- (is.null(angleMean) & angleDist!="none")
 
-  # build the vector of working parameters
+  # build the vector of initial working parameters
   wpar <- n2w(par0,bounds,beta0,delta0,nbStates,estAngleMean)
 
+  ##################
+  ## Optimization ##
+  ##################
   # this function is used to muffle the warning "NA/Inf replaced by maximum positive value" in nlm
   h <- function(w) {
     if(any(grepl("NA/Inf replaced by maximum positive value",w)))
@@ -237,12 +253,20 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   }
 
   if(fit) {
+    # check additional parameters for nlm
+    gradtol <- ifelse(is.null(nlmPar$gradtol),1e-6,nlmPar$gradtol)
+    typsize = rep(1, length(wpar))
+    defStepmax <- max(1000 * sqrt(sum((wpar/typsize)^2)),1000)
+    stepmax <- ifelse(is.null(nlmPar$stepmax),defStepmax,nlmPar$stepmax)
+    steptol <- ifelse(is.null(nlmPar$steptol),1e-6,nlmPar$steptol)
+    iterlim <- ifelse(is.null(nlmPar$iterlim),1000,nlmPar$iterlim)
+
     # call to optimizer nlm
     withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
                                    angleDist,angleMean,zeroInflation,stationary,
-                                   print.level=verbose,
-                                   iterlim=1000,
-                                   hessian=TRUE),
+                                   print.level=verbose,gradtol=gradtol,
+                                   stepmax=stepmax,steptol=steptol,
+                                   iterlim=iterlim,hessian=TRUE),
                         warning=h) # filter warnings using function h
 
     # convert the parameters back to their natural scale
@@ -253,6 +277,9 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
     mle <- w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
   }
 
+  ####################
+  ## Prepare output ##
+  ####################
   # compute stationary distribution
   if(stationary) {
     gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]

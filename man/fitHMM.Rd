@@ -7,7 +7,7 @@
 fitHMM(data, nbStates, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
   formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
-  stationary = FALSE, verbose = 0, fit = TRUE)
+  stationary = FALSE, verbose = 0, nlmPar = NULL, fit = TRUE)
 }
 \arguments{
 \item{data}{An object \code{moveData}.}
@@ -52,6 +52,10 @@ equal to the stationary distribution. Default: \code{FALSE}.}
 \item{verbose}{Determines the print level of the optimizer. The default value of 0 means that no
 printing occurs, a value of 1 means that the first and last iterations of the optimization are
 detailed, and a value of 2 means that each iteration of the optimization is detailed.}
+
+\item{nlmPar}{List of parameters to pass to the optimization function \code{nlm} (which should be either
+'\code{gradtol}', '\code{stepmax}', '\code{steptol}', or '\code{iterlim}' -- see \code{nlm}'s documentation
+for more detail)}
 
 \item{fit}{\code{TRUE} if an HMM should be fitted to the data, \code{FALSE} otherwise.
 If fit=\code{FALSE}, a model is returned with the MLE replaced by the initial parameters given in
