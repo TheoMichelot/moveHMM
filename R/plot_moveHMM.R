@@ -356,6 +356,22 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
   if(is.null(hist.ylim)) { # default
     h <- hist(step,plot=F,breaks=breaks)
     ymax <- 1.3*max(h$density)
+
+    # find the maximum of the step densit-y-ies, and take it as ymax if necessary
+    if(sepStates) {
+      maxdens <- max(stepDensities[[state]][,2])
+      if(maxdens>ymax & maxdens<2*max(h$density))
+        ymax <- maxdens
+
+    } else {
+      maxdens <- max(stepDensities[[1]][,2])
+      for(state in 2:nbStates) {
+        if(max(stepDensities[[state]][,2])>maxdens)
+          maxdens <- max(stepDensities[[state]][,2])
+      }
+      if(maxdens>ymax & maxdens<2*max(h$density))
+        ymax <- maxdens
+    }
   }
 
   # plot step histogram
@@ -375,12 +391,15 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
   }
 
   if(!is.null(angle))  {
-    h <- hist(angle,plot=F,breaks=breaks) # to determine ylim
+    h <- hist(angle,plot=F,breaks=breaks) # to determine 'breaks'
+    breaks <- seq(-pi,pi,length=length(h$breaks))
+
+    h <- hist(angle,plot=F,breaks=breaks) # to determine 'ymax'
     ymax <- 1.3*max(h$density)
 
     # plot angle histogram
     hist(angle,prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
-         col="grey",border=FALSE,breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
+         col="grey",border=FALSE,breaks=breaks,xaxt="n")
     axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
          labels = expression(-pi, -pi/2, 0, pi/2, pi))
 
