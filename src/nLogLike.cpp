@@ -93,7 +93,15 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
     arma::mat Gamma = trMat.slice(0); // all slices are identical if stationary
     arma::colvec v(nbStates);
     v.ones(); // vector of ones
-    delta = arma::solve(diag-Gamma+1,v).t();
+    try {
+      delta = arma::solve(diag-Gamma+1,v).t();
+    }
+    catch(...) {
+      throw std::runtime_error("A problem occurred in the calculation of"
+                                 "the stationary distribution. You may want to"
+                                 "try different initial values and/or the option"
+                                 "stationary=FALSE");
+    }
   }
 
   arma::mat allProbs(nbObs,nbStates);

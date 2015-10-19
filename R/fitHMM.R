@@ -283,7 +283,16 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   # compute stationary distribution
   if(stationary) {
     gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]
-    mle$delta <- solve(t(diag(nbStates)-gamma+1),rep(1,nbStates))
+
+    # error if singular system
+    tryCatch(
+      mle$delta <- solve(t(diag(nbStates)-gamma+1),rep(1,nbStates)),
+      error = function(e) {
+        stop(paste("A problem occurred in the calculation of the stationary",
+                   "distribution. You may want to try different initial values",
+                   "and/or the option stationary=FALSE."))
+      }
+    )
   }
 
   if(nbStates==1)
