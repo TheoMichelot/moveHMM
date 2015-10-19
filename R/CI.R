@@ -47,6 +47,33 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
 
   p <- parDef(m$stepDist,m$angleDist,nbStates,m$conditions$estAngleMean,m$conditions$zeroInflation)
 
+  # check if some parameters are close to their bounds
+  check <- FALSE
+  stepBounds <- p$bounds[1:(p$parSize[1]*nbStates),]
+  stepPar <- as.vector(t(m$mle$stepPar))
+  # are step parameters close to their lower bounds?
+  if(length(which(round(abs(stepPar-stepBounds[,1]),5)==0))>0)
+    check <- TRUE
+  # are step parameters close to their upper bounds?
+  if(length(which(round(abs(stepPar-stepBounds[,2]),5)==0))>0)
+    check <- TRUE
+
+  if(m$angleDist!="none") {
+    angleBounds <- p$bounds[(p$parSize[1]*nbStates+1):nrow(p$bounds),]
+    anglePar <- as.vector(t(m$mle$anglePar))
+    # are angle parameters close to their lower bounds?
+    if(length(which(round(abs(anglePar-angleBounds[,1]),5)==0))>0)
+      check <- TRUE
+    # are angle parameters close to their upper bounds?
+    if(length(which(round(abs(anglePar-angleBounds[,2]),5)==0))>0)
+      check <- TRUE
+  }
+
+  if(check)
+    message(paste("Some of the parameter estimates seem to lie close to the boundaries of",
+                  "their parameter space. The associated CIs are probably unreliable",
+                  "(or might not be computable)."))
+
   # identify parameters of interest
   i1 <- p$parSize[1]*nbStates
   i2 <- sum(p$parSize)*nbStates+1
