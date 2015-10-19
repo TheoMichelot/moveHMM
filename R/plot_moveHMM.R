@@ -19,10 +19,17 @@
 #' Default: \code{FALSE}.
 #' @param ... Currently unused. For compatibility with generic method.
 #'
+#' @details The state-dependent densities are weighted by the frequency of each state in the most
+#' probable state sequence (decoded with the function \code{\link{viterbi}}). For example, if the
+#' most probable state sequence indicates that one third of observations correspond to the first
+#' state, and two thirds to the second state, the plots of the densities in the first state are
+#' weighted by a factor 1/3, and in the second state by a factor 2/3.
+#'
 #' @examples
 #' m <- ex$m # moveHMM object, as returned by fitHMM
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
+#'
 #'
 #' @export
 

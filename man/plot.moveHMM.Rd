@@ -32,6 +32,13 @@ Default: \code{FALSE}.}
 Plot the fitted step and angle densities over histograms of the data, transition probabilities
 as functions of the covariates, and maps of the animals' tracks colored by the decoded states.
 }
+\details{
+The state-dependent densities are weighted by the frequency of each state in the most
+probable state sequence (decoded with the function \code{\link{viterbi}}). For example, if the
+most probable state sequence indicates that one third of observations correspond to the first
+state, and two thirds to the second state, the plots of the densities in the first state are
+weighted by a factor 1/3, and in the second state by a factor 2/3.
+}
 \examples{
 m <- ex$m # moveHMM object, as returned by fitHMM
 
