@@ -6,8 +6,6 @@
 #' \code{y} (either norting or latitude), and covariates, if any.
 #'
 #' @return An object \code{moveData}.
-#'
-#' @export
 
 moveData <- function(data)
 {
@@ -19,3 +17,14 @@ moveData <- function(data)
   class(obj) <- append("moveData",class(obj))
   return(obj)
 }
+
+#' Is moveData
+#'
+#' Check that an object is of class \code{\link{moveData}}. Used in \code{\link{fitHMM}}.
+#'
+#' @param x An R object
+#'
+#' @return \code{TRUE} if \code{x} is of class \code{\link{moveData}}, \code{FALSE} otherwise.
+
+is.moveData <- function(x)
+  inherits(x,"moveData")
