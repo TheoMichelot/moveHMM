@@ -171,3 +171,36 @@ and six columns (six non-diagonal elements in the 3x3 transition probability mat
 "For example, in a 3-state HMM with 2 covariates, the matrix beta has three rows (intercept + two covariates) 
 and six columns (six non-diagonal elements in the 3x3 transition probability matrix, filled in row-wise)."
 
+14. Viterbi help file: 
+I'd change 
+"Reconstructs the most probable states sequence, using the Viterbi algorithm."
+to 
+"For a given model, reconstructs the most probable state sequence using the Viterbi algorithm."
+Also the line
+m <- ex$m # Fitted model, as returned by fitHMM
+in the example is a bit unclear to me. What kind of object is 'ex'?
+
+15. stateProbs help file:
+I'd change
+"Computes the probability of being in each state in each observation."
+to
+"For a given model, computes the probability of the process being in the different states at each time point."
+Plus again the issue with the object 'ex'.
+
+16. Just came across this:
+> plotPR(m)
+Computing pseudo-residuals... Note: Some angles are equal to pi, and the corresponding pseudo-residuals are not included
+Should we perhaps indicate why they are not included? If I recall correctly, it's because they are undefined or equal to -Inf.
+(By the way, I'm quite surprised to see how extremely well the two-state model seems to fit the elk step lengths - quite uncommon!)
+
+17. A slightly more important issue with the residuals:
+It will often be useful to look at the sample ACF function of the residuals. The idea here is that if there's autocorrelation left in the residuals, then the model has failed to capture all the correlation structure in the data - more states might be required, even if the step lengths and turning angles seem to be well described! 
+Thus, I suggest to add two plots to plotPR(m), namely 
+ acf(pseudoRes(m)$stepRes,na.action=na.pass)
+and 
+ acf(pseudoRes(m)$angleRes,na.action=na.pass)
+such that you have a 3 by 2 array of plots. The na.action option is necessary since otherwise an error will be returned if there are missing data.
+
+18. We probably need to add a brief description of summary.moveHMM to the vignette, don't we?
+
+19. I will have some comments on ?fitHMM - this is basically just a memo to myself!
