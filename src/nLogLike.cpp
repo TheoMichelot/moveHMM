@@ -95,9 +95,9 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
       delta = arma::solve(diag-Gamma+1,v).t();
     }
     catch(...) {
-      throw std::runtime_error("A problem occurred in the calculation of"
-                                 "the stationary distribution. You may want to"
-                                 "try different initial values and/or the option"
+      throw std::runtime_error("A problem occurred in the calculation of "
+                                 "the stationary distribution. You may want to "
+                                 "try different initial values and/or the option "
                                  "stationary=FALSE");
     }
   }
