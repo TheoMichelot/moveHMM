@@ -62,6 +62,9 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
     var <- var[1:i1]
   }
 
+  # if negative variance, replace by NA
+  var[which(var<0)] <- NA
+
   # define appropriate quantile
   quantSup <- qnorm(1-(1-alpha)/2)
 
