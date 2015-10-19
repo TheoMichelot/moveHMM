@@ -1,15 +1,7 @@
 
-#' Generic viterbi method
-#' @param m Fitted model
-#' @export
-viterbi <- function(m)
-  UseMethod("viterbi")
-
 #' Viterbi algorithm
 #'
 #' Reconstructs the most probable states sequence, using the Viterbi algorithm.
-#'
-#' @method viterbi moveHMM
 #'
 #' @param m An object \code{moveHMM}
 #'
@@ -28,8 +20,11 @@ viterbi <- function(m)
 #'
 #' @export
 
-viterbi.moveHMM <- function(m)
+viterbi <- function(m)
 {
+  if(!is.moveHMM(m))
+    stop("'m' must be a moveHMM object (as output by fitHMM)")
+
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
   beta <- m$mle$beta

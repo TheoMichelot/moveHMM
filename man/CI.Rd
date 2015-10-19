@@ -2,18 +2,31 @@
 % Please edit documentation in R/CI.R
 \name{CI}
 \alias{CI}
-\title{Generic CI method}
+\title{Confidence intervals}
 \usage{
-CI(m, alpha, nbSims)
+CI(m, alpha = 0.95, nbSims = 10^6)
 }
 \arguments{
-\item{m}{Fitted model}
+\item{m}{A \code{moveHMM} object}
 
-\item{alpha}{Range of the confidence interval.}
+\item{alpha}{Range of the confidence intervals. Default: 0.95 (i.e. 95\% CIs).}
 
-\item{nbSims}{Number of simulations.}
+\item{nbSims}{Number of simulations in the computation of the CIs for the angle parameters.
+Default: 10^6.}
+}
+\value{
+A list of the following objects:
+\item{stepPar}{Confidence intervals for the parameters of the step lengths distribution}
+\item{anglePar}{Confidence intervals for the parameters of the turning angles distribution}
+\item{beta}{Confidence intervals for the regression coefficients of the transition probabilities.}
 }
 \description{
-Generic CI method
+Computes the confidence intervals of the step length and turning angle parameters,
+as well as for the transition probabilities regression parameters.
+}
+\examples{
+m <- ex$m # moveHMM object, as returned by fitHMM
+
+CI(m)
 }
 

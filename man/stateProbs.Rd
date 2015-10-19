@@ -2,14 +2,28 @@
 % Please edit documentation in R/stateProbs.R
 \name{stateProbs}
 \alias{stateProbs}
-\title{Generic stateProbs method}
+\title{State probabilities}
 \usage{
 stateProbs(m)
 }
 \arguments{
-\item{m}{Fitted model}
+\item{m}{A \code{moveHMM} object.}
+}
+\value{
+The matrix of state probabilities, with element [i,j] the probability
+of being in state j in observation i.
 }
 \description{
-Generic stateProbs method
+Computes the probability of being in each state in each observation.
+}
+\examples{
+m <- ex$m # moveHMM object (returned by fitHMM)
+
+sp <- stateProbs(m)
+}
+\references{
+Zucchini, W. and MacDonald, I.L. 2009.
+Hidden Markov Models for Time Series: An Introduction Using R.
+Chapman & Hall (London).
 }
 

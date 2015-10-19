@@ -1,15 +1,7 @@
 
-#' Generic plotPR method
-#' @param m Fitted model
-#' @export
-plotPR <- function(m)
-  UseMethod("plotPR")
-
 #' Plot pseudo-residuals
 #'
 #' Plots qq-plots and time series of the pseudo-residuals
-#'
-#' @method plotPR moveHMM
 #'
 #' @param m A \code{\link{moveHMM}} object
 #'
@@ -20,8 +12,11 @@ plotPR <- function(m)
 #'
 #' @export
 
-plotPR.moveHMM <- function(m)
+plotPR <- function(m)
 {
+  if(!is.moveHMM(m))
+    stop("'m' must be a moveHMM object (as output by fitHMM)")
+
   cat("Computing pseudo-residuals... ")
   pr <- pseudoRes(m)
   cat("DONE\n")

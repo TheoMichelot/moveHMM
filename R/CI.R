@@ -1,17 +1,8 @@
 
-#' Generic CI method
-#' @param m Fitted model
-#' @param alpha Range of the confidence interval.
-#' @param nbSims Number of simulations.
-#' @export
-CI <- function(m,alpha,nbSims) UseMethod("CI")
-
 #' Confidence intervals
 #'
 #' Computes the confidence intervals of the step length and turning angle parameters,
 #' as well as for the transition probabilities regression parameters.
-#'
-#' @method CI moveHMM
 #'
 #' @param m A \code{moveHMM} object
 #' @param alpha Range of the confidence intervals. Default: 0.95 (i.e. 95\% CIs).
@@ -32,8 +23,11 @@ CI <- function(m,alpha,nbSims) UseMethod("CI")
 #'
 #' @importFrom MASS ginv
 
-CI.moveHMM <- function(m,alpha=0.95,nbSims=10^6)
+CI <- function(m,alpha=0.95,nbSims=10^6)
 {
+  if(!is.moveHMM(m))
+    stop("'m' must be a moveHMM object (as output by fitHMM)")
+
   if(length(m$mod)<=1)
     stop("The given model hasn't been fitted.")
 

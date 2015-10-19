@@ -2,16 +2,22 @@
 % Please edit documentation in R/plotStates.R
 \name{plotStates}
 \alias{plotStates}
-\title{Generic plotStates method}
+\title{Plot states}
 \usage{
-plotStates(m, animals)
+plotStates(m, animals = NULL)
 }
 \arguments{
-\item{m}{Fitted model}
+\item{m}{A \code{\link{moveHMM}} object}
 
-\item{animals}{Animals to include}
+\item{animals}{Vector of indices or IDs of animals for which states will be plotted.}
 }
 \description{
-Generic plotStates method
+Plot the states and states probabilities.
+}
+\examples{
+m <- ex$m # moveHMM object, as returned by fitHMM
+
+# plot states for first and second animals
+plotStates(m,animals=c(1,2))
 }
 

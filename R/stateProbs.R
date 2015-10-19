@@ -1,15 +1,7 @@
 
-#' Generic stateProbs method
-#' @param m Fitted model
-#' @export
-stateProbs <- function(m)
-  UseMethod("stateProbs")
-
 #' State probabilities
 #'
 #' Computes the probability of being in each state in each observation.
-#'
-#' @method stateProbs moveHMM
 #'
 #' @param m A \code{moveHMM} object.
 #'
@@ -28,8 +20,11 @@ stateProbs <- function(m)
 #'
 #' @export
 
-stateProbs.moveHMM <- function(m)
+stateProbs <- function(m)
 {
+  if(!is.moveHMM(m))
+    stop("'m' must be a moveHMM object (as output by fitHMM)")
+
   data <- m$data
   nbStates <- ncol(m$mle$stepPar)
 

@@ -2,14 +2,28 @@
 % Please edit documentation in R/viterbi.R
 \name{viterbi}
 \alias{viterbi}
-\title{Generic viterbi method}
+\title{Viterbi algorithm}
 \usage{
 viterbi(m)
 }
 \arguments{
-\item{m}{Fitted model}
+\item{m}{An object \code{moveHMM}}
+}
+\value{
+The sequence of most probable states.
 }
 \description{
-Generic viterbi method
+Reconstructs the most probable states sequence, using the Viterbi algorithm.
+}
+\examples{
+m <- ex$m # Fitted model, as returned by fitHMM
+
+# reconstruction of states sequence
+states <- viterbi(m)
+}
+\references{
+Zucchini, W. and MacDonald, I.L. 2009.
+Hidden Markov Models for Time Series: An Introduction Using R.
+Chapman & Hall (London).
 }
 

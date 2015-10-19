@@ -2,14 +2,19 @@
 % Please edit documentation in R/plotPR.R
 \name{plotPR}
 \alias{plotPR}
-\title{Generic plotPR method}
+\title{Plot pseudo-residuals}
 \usage{
 plotPR(m)
 }
 \arguments{
-\item{m}{Fitted model}
+\item{m}{A \code{\link{moveHMM}} object}
 }
 \description{
-Generic plotPR method
+Plots qq-plots and time series of the pseudo-residuals
+}
+\examples{
+m <- ex$m # moveHMM object (as returned by \\code{\\link{fitHMM}})
+
+plotPR(m)
 }
 

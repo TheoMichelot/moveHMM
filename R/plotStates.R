@@ -1,16 +1,7 @@
 
-#' Generic plotStates method
-#' @param m Fitted model
-#' @param animals Animals to include
-#' @export
-plotStates <- function(m,animals)
-  UseMethod("plotStates")
-
 #' Plot states
 #'
 #' Plot the states and states probabilities.
-#'
-#' @method plotStates moveHMM
 #'
 #' @param m A \code{\link{moveHMM}} object
 #' @param animals Vector of indices or IDs of animals for which states will be plotted.
@@ -23,8 +14,11 @@ plotStates <- function(m,animals)
 #'
 #' @export
 
-plotStates.moveHMM <- function(m,animals=NULL)
+plotStates <- function(m,animals=NULL)
 {
+  if(!is.moveHMM(m))
+    stop("'m' must be a moveHMM object (as output by fitHMM)")
+
   nbAnimals <- length(unique(m$data$ID))
   nbStates <- ncol(m$mle$stepPar)
 

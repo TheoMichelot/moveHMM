@@ -1,12 +1,5 @@
 
-#' Generic pseudoRes method
-#' @param m Fitted model
-#' @export
-pseudoRes <- function(m)
-  UseMethod("pseudoRes")
-
 #' Pseudo-residuals
-#' @method pseudoRes moveHMM
 #'
 #' @param m A \code{moveHMM} object.
 #'
@@ -27,8 +20,11 @@ pseudoRes <- function(m)
 #'
 #' @export
 
-pseudoRes.moveHMM <- function(m)
+pseudoRes <- function(m)
 {
+  if(!is.moveHMM(m))
+    stop("'m' must be a moveHMM object (as output by fitHMM)")
+
   stepFun <- paste("p",m$stepDist,sep="")
 
   angleDist <- m$angleDist

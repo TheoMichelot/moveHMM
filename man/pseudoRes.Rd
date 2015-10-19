@@ -2,14 +2,30 @@
 % Please edit documentation in R/pseudoRes.R
 \name{pseudoRes}
 \alias{pseudoRes}
-\title{Generic pseudoRes method}
+\title{Pseudo-residuals}
 \usage{
 pseudoRes(m)
 }
 \arguments{
-\item{m}{Fitted model}
+\item{m}{A \code{moveHMM} object.}
+}
+\value{
+A list of:
+\item{stepRes}{The pseudo-residuals for the step lengths}
+\item{angleRes}{The pseudo-residuals for the turning angles}
 }
 \description{
-Generic pseudoRes method
+Pseudo-residuals
+}
+\examples{
+m <- ex$m # moveHMM object (returned by fitHMM)
+res <- pseudoRes(m)
+qqnorm(res$stepRes)
+qqnorm(res$angleRes)
+}
+\references{
+Zucchini, W. and MacDonald, I.L. 2009.
+Hidden Markov Models for Time Series: An Introduction Using R.
+Chapman & Hall (London).
 }
 
