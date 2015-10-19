@@ -5,6 +5,7 @@
 #'
 #' @param m A \code{\link{moveHMM}} object
 #' @param animals Vector of indices or IDs of animals for which states will be plotted.
+#' @param ask If \code{TRUE}, the execution pauses between each plot.
 #'
 #' @examples
 #' m <- ex$m # moveHMM object, as returned by fitHMM
@@ -14,7 +15,7 @@
 #'
 #' @export
 
-plotStates <- function(m,animals=NULL)
+plotStates <- function(m,animals=NULL,ask=TRUE)
 {
   if(!is.moveHMM(m))
     stop("'m' must be a moveHMM object (as output by fitHMM)")
@@ -55,6 +56,7 @@ plotStates <- function(m,animals=NULL)
   }
 
   par(mfrow=c(nbStates+1,1))
+  par(ask=ask)
 
   for(zoo in animalsInd) {
     ind <- which(m$data$ID==unique(m$data$ID)[zoo])

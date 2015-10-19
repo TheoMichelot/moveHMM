@@ -4,12 +4,14 @@
 \alias{plotStates}
 \title{Plot states}
 \usage{
-plotStates(m, animals = NULL)
+plotStates(m, animals = NULL, ask = TRUE)
 }
 \arguments{
 \item{m}{A \code{\link{moveHMM}} object}
 
 \item{animals}{Vector of indices or IDs of animals for which states will be plotted.}
+
+\item{ask}{If \code{TRUE}, the execution pauses between each plot.}
 }
 \description{
 Plot the states and states probabilities.
