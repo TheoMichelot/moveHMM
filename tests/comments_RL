@@ -203,4 +203,8 @@ such that you have a 3 by 2 array of plots. The na.action option is necessary si
 
 18. We probably need to add a brief description of summary.moveHMM to the vignette, don't we?
 
-19. I will have some comments on ?fitHMM - this is basically just a memo to myself!
+19.   plotStates(m1,animals=1:4)
+(for the elk data) still doesn't seem to plot all animals' state probs. I only get the plots for elk-363. 
+Also shouldn't the default be to plot all animals?
+
+20. I will have a couple of comments on ?fitHMM - this is basically just a memo to myself!
