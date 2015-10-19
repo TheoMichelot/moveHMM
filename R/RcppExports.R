@@ -10,8 +10,6 @@
 #' @param sigma Standard deviation
 #'
 #' @return Vector of densities
-#'
-#' @export
 dgamma_rcpp <- function(x, mu, sigma) {
     .Call('moveHMM_dgamma_rcpp', PACKAGE = 'moveHMM', x, mu, sigma)
 }
@@ -25,8 +23,6 @@ dgamma_rcpp <- function(x, mu, sigma) {
 #' @param scale Scale
 #'
 #' @return Vector of densities
-#'
-#' @export
 dweibull_rcpp <- function(x, shape, scale) {
     .Call('moveHMM_dweibull_rcpp', PACKAGE = 'moveHMM', x, shape, scale)
 }
@@ -40,8 +36,6 @@ dweibull_rcpp <- function(x, shape, scale) {
 #' @param sdlog Standard deviation of the distribution on the log-scale
 #'
 #' @return Vector of densities
-#'
-#' @export
 dlnorm_rcpp <- function(x, meanlog, sdlog) {
     .Call('moveHMM_dlnorm_rcpp', PACKAGE = 'moveHMM', x, meanlog, sdlog)
 }
@@ -55,8 +49,6 @@ dlnorm_rcpp <- function(x, meanlog, sdlog) {
 #' @param foo Unused (for compatibility with template)
 #'
 #' @return Vector of densities
-#'
-#' @export
 dexp_rcpp <- function(x, rate, foo = 0) {
     .Call('moveHMM_dexp_rcpp', PACKAGE = 'moveHMM', x, rate, foo)
 }
@@ -71,8 +63,6 @@ dexp_rcpp <- function(x, rate, foo = 0) {
 #' @param kappa Concentration
 #'
 #' @return Vector of densities
-#'
-#' @export
 dvm_rcpp <- function(x, mu, kappa) {
     .Call('moveHMM_dvm_rcpp', PACKAGE = 'moveHMM', x, mu, kappa)
 }
@@ -86,8 +76,6 @@ dvm_rcpp <- function(x, mu, kappa) {
 #' @param rho Concentration
 #'
 #' @return Vector of densities
-#'
-#' @export
 dwrpcauchy_rcpp <- function(x, mu, rho) {
     .Call('moveHMM_dwrpcauchy_rcpp', PACKAGE = 'moveHMM', x, mu, rho)
 }
@@ -112,8 +100,6 @@ dwrpcauchy_rcpp <- function(x, mu, rho) {
 #' equal to the stationary distribution. Default: \code{false}.
 #'
 #' @return Negative log-likelihood
-#'
-#' @export
 nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation = FALSE, stationary = FALSE) {
     .Call('moveHMM_nLogLike_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation, stationary)
 }
@@ -129,8 +115,6 @@ nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepP
 #'
 #' @return Three dimensional array \code{trMat}, such that \code{trMat[,,t]} is the transition matrix at
 #' time t.
-#'
-#' @export
 trMatrix_rcpp <- function(nbStates, beta, covs) {
     .Call('moveHMM_trMatrix_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs)
 }

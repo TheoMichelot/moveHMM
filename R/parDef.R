@@ -15,8 +15,6 @@
 #' \item{bounds}{Matrix with 2 columns and \code{sum(parSize)} rows - each row contains the lower and upper
 #' bound for the correponding parameter)}
 #' \item{parNames}{Names of parameters}
-#'
-#' @export
 
 parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
 {

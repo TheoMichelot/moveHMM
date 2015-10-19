@@ -36,6 +36,7 @@ Matrix of all probabilities.
 Used in functions \code{\link{viterbi}}, \code{\link{logAlpha}}, \code{\link{logBeta}}.
 }
 \examples{
+\dontrun{
 stepPar <- c(1,10,1,5,0.2,0.3)
 anglePar <- c(0,pi,0.5,2)
 stepDist <- "gamma"
@@ -45,5 +46,6 @@ data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,ste
 P <- allProbs(data=data,nbStates=2,stepDist=stepDist,angleDist=angleDist,
                stepPar=matrix(stepPar,ncol=2,byrow=TRUE),anglePar=matrix(anglePar,ncol=2,
                byrow=TRUE),zeroInflation=TRUE)
+}
 }
 

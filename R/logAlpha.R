@@ -8,11 +8,11 @@
 #' @return The matrix of forward log-probabilities.
 #'
 #' @examples
+#' \dontrun{
 #' m <- ex$m # moveHMM object (returned by fitHMM)
 #'
 #' la <- logAlpha(m)
-#'
-#' @export
+#' }
 
 logAlpha <- function(m)
 {

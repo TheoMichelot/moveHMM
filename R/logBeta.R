@@ -8,11 +8,11 @@
 #' @return The matrix of backward log-probabilities.
 #'
 #' @examples
+#' \dontrun{
 #' m <- ex$m # moveHMM object (returned by fitHMM)
 #'
 #' lb <- logBeta(m)
-#'
-#' @export
+#' }
 
 logBeta <- function(m)
 {

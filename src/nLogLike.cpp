@@ -20,8 +20,6 @@
 //' equal to the stationary distribution. Default: \code{false}.
 //'
 //' @return Negative log-likelihood
-//'
-//' @export
 // [[Rcpp::export]]
 double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist,
                      std::string angleDist, arma::mat stepPar, arma::mat anglePar,

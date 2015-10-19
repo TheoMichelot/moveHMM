@@ -15,6 +15,7 @@
 #' @return A vector of unconstrained parameters.
 #'
 #' @examples
+#' \dontrun{
 #' nbStates <- 3
 #' par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
 #' bounds <- matrix(c(0,1, # bounds for first parameter
@@ -30,10 +31,9 @@
 #' # vector of working parameters
 #' wpar <- n2w(par=par,bounds=bounds,beta=beta,delta=delta,nbStates=nbStates,
 #'            estAngleMean=FALSE)
+#' }
 #'
 #' @importFrom boot logit
-#'
-#' @export
 
 n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
 {

@@ -16,8 +16,6 @@ using namespace std;
 //' @param sigma Standard deviation
 //'
 //' @return Vector of densities
-//'
-//' @export
 // [[Rcpp::export]]
 arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 {
@@ -46,8 +44,6 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 //' @param scale Scale
 //'
 //' @return Vector of densities
-//'
-//' @export
 // [[Rcpp::export]]
 arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 {
@@ -72,8 +68,6 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 //' @param sdlog Standard deviation of the distribution on the log-scale
 //'
 //' @return Vector of densities
-//'
-//' @export
 // [[Rcpp::export]]
 arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 {
@@ -98,8 +92,6 @@ arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 //' @param foo Unused (for compatibility with template)
 //'
 //' @return Vector of densities
-//'
-//' @export
 // [[Rcpp::export]]
 arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 {
@@ -125,8 +117,6 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 //' @param kappa Concentration
 //'
 //' @return Vector of densities
-//'
-//' @export
 // [[Rcpp::export]]
 arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 {
@@ -152,8 +142,6 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 //' @param rho Concentration
 //'
 //' @return Vector of densities
-//'
-//' @export
 // [[Rcpp::export]]
 arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
 {

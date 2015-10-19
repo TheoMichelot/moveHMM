@@ -28,6 +28,7 @@ Scales each parameter from its natural interval to the set of real numbers, to a
 unconstrained optimization. Used during the optimization of the log-likelihood.
 }
 \examples{
+\dontrun{
 nbStates <- 3
 par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
 bounds <- matrix(c(0,1, # bounds for first parameter
@@ -43,5 +44,6 @@ delta <- c(0.6,0.3,0.1)
 # vector of working parameters
 wpar <- n2w(par=par,bounds=bounds,beta=beta,delta=delta,nbStates=nbStates,
            estAngleMean=FALSE)
+}
 }
 

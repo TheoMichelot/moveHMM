@@ -20,9 +20,11 @@ The angle between vectors (x,y) and (y,z)
 Used in \code{\link{prepData}}.
 }
 \examples{
+\dontrun{
 x <- c(0,0)
 y <- c(4,6)
 z <- c(10,7)
 turnAngle(x,y,z)
+}
 }
 

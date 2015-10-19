@@ -21,6 +21,7 @@
 #' @return Matrix of all probabilities.
 #'
 #' @examples
+#' \dontrun{
 #' stepPar <- c(1,10,1,5,0.2,0.3)
 #' anglePar <- c(0,pi,0.5,2)
 #' stepDist <- "gamma"
@@ -30,8 +31,7 @@
 #' P <- allProbs(data=data,nbStates=2,stepDist=stepDist,angleDist=angleDist,
 #'                stepPar=matrix(stepPar,ncol=2,byrow=TRUE),anglePar=matrix(anglePar,ncol=2,
 #'                byrow=TRUE),zeroInflation=TRUE)
-#'
-#' @export
+#' }
 
 allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE)
 {

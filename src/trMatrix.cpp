@@ -15,8 +15,6 @@ using namespace std;
 //'
 //' @return Three dimensional array \code{trMat}, such that \code{trMat[,,t]} is the transition matrix at
 //' time t.
-//'
-//' @export
 // [[Rcpp::export]]
 arma::cube trMatrix_rcpp(int nbStates, arma::mat beta, arma::mat covs)
 {

@@ -22,6 +22,7 @@
 #' \item{delta}{Initial distribution}
 #'
 #' @examples
+#' \dontrun{
 #' nbStates <- 3
 #' nbCovs <- 2
 #' par <- c(0.001,0.999,0.5,0.001,1500.3,7.1)
@@ -33,10 +34,10 @@
 #' delta <- c(0.6,0.3,0.1)
 #' wpar <- n2w(par,bounds,beta,delta,nbStates,FALSE)
 #' print(w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean=FALSE,stationary=FALSE))
+#' }
+#'
 #'
 #' @importFrom boot inv.logit
-#'
-#' @export
 
 w2n <- function(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
 {
