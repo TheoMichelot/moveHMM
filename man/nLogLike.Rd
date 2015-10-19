@@ -45,6 +45,7 @@ The negative log-likelihood of the parameters given the data.
 Negative log-likelihood function
 }
 \examples{
+\dontrun{
 data <- ex$data # movement data (as returned by prepData or simData)
 simPar <- ex$simPar
 par0 <- ex$par0
@@ -61,5 +62,6 @@ wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,FALSE)
 l <- nLogLike(wpar=wpar,nbStates=simPar$nbStates,bounds=bounds,parSize=parSize,data=data,
              stepDist=simPar$stepDist,angleDist=simPar$angleDist,angleMean=simPar$angleMean,
              zeroInflation=simPar$zeroInflation)
+}
 }
 
