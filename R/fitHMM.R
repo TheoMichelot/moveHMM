@@ -122,6 +122,9 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
                    angleMean=NULL,stationary=FALSE,verbose=0,nlmPar=NULL,fit=TRUE)
 {
+  if(!is.moveData(data))
+    stop("'data' must be a moveData object (as output by prepData or simData)")
+
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
                      names(data)!="step" & names(data)!="angle")
