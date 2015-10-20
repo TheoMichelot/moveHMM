@@ -10,11 +10,22 @@ plotPR(m)
 \item{m}{A \code{\link{moveHMM}} object}
 }
 \description{
-Plots qq-plots and time series of the pseudo-residuals
+Plots time series, qq-plots, and sample ACF functions of the pseudo-residuals
+}
+\details{
+If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
+will not be included. Indeed, given that the turning angles are defined on ]-pi,pi], an angle of pi
+results in a pseudo-residual on +Inf (check Section 6.2 of reference for more information on the
+computation of pseudo-residuals).
 }
 \examples{
-m <- ex$m # moveHMM object (as returned by \\code{\\link{fitHMM}})
+m <- ex$m # moveHMM object (as returned by fitHMM)
 
 plotPR(m)
+}
+\references{
+Zucchini, W. and MacDonald, I.L. 2009.
+Hidden Markov Models for Time Series: An Introduction Using R.
+Chapman & Hall (London).
 }
 

@@ -1,14 +1,24 @@
 
 #' Plot pseudo-residuals
 #'
-#' Plots qq-plots and time series of the pseudo-residuals
+#' Plots time series, qq-plots, and sample ACF functions of the pseudo-residuals
 #'
 #' @param m A \code{\link{moveHMM}} object
 #'
+#' @details If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
+#' will not be included. Indeed, given that the turning angles are defined on ]-pi,pi], an angle of pi
+#' results in a pseudo-residual on +Inf (check Section 6.2 of reference for more information on the
+#' computation of pseudo-residuals).
+#'
 #' @examples
-#' m <- ex$m # moveHMM object (as returned by \code{\link{fitHMM}})
+#' m <- ex$m # moveHMM object (as returned by fitHMM)
 #'
 #' plotPR(m)
+#'
+#' @references
+#' Zucchini, W. and MacDonald, I.L. 2009.
+#' Hidden Markov Models for Time Series: An Introduction Using R.
+#' Chapman & Hall (London).
 #'
 #' @export
 
@@ -21,26 +31,36 @@ plotPR <- function(m)
   pr <- pseudoRes(m)
   cat("DONE\n")
 
-  par(mfrow=c(2,2))
+  par(mfrow=c(3,2))
+
+  # time series
+  plot(pr$stepRes,type="l",xlab="Observation index",ylab="Steps pseudo-residuals",
+       main="Steps pseudo-residuals")
+  plot(pr$angleRes,type="l",xlab="Observation index",ylab="Angles pseudo-residuals",
+       main="Angles pseudo-residuals")
+
+  # reduce top margin
+  par(mar=c(5,4,4,2)-c(0,0,3,0)) # bottom, left, top, right
 
   # steps qq-plot
   qqStep <- qqnorm(pr$stepRes,plot=FALSE)
   limInf <- min(min(qqStep$x,na.rm=T),min(qqStep$y,na.rm=T))
   limSup <- max(max(qqStep$x,na.rm=T),max(qqStep$y,na.rm=T))
-  qqnorm(pr$stepRes,main="Steps pseudo-residuals",col="red",xlim=c(limInf,limSup),ylim=c(limInf,limSup))
+  qqnorm(pr$stepRes,main="",col="red",xlim=c(limInf,limSup),ylim=c(limInf,limSup))
   abline(0,1,lwd=2)
 
   # angles qq-plot
   qqAngle <- qqnorm(pr$angleRes,plot=FALSE)
   limInf <- min(min(qqAngle$x,na.rm=T),min(qqAngle$y,na.rm=T))
   limSup <- max(max(qqAngle$x,na.rm=T),max(qqAngle$y,na.rm=T))
-  qqnorm(pr$angleRes,main="Angles pseudo-residuals",col="red",xlim=c(limInf,limSup),ylim=c(limInf,limSup))
+  qqnorm(pr$angleRes,main="",col="red",xlim=c(limInf,limSup),ylim=c(limInf,limSup))
   abline(0,1,lwd=2)
 
-  # time series
-  plot(pr$stepRes,type="l",xlab="Observation index",ylab="Steps pseudo-residuals")
-  plot(pr$angleRes,type="l",xlab="Observation index",ylab="Angles pseudo-residuals")
+  # ACF functions
+  acf(pr$stepRes,na.action=na.pass,main="")
+  acf(pr$angleRes,na.action=na.pass,main="")
 
   # back to default
   par(mfrow=c(1,1))
+  par(mar=c(5,4,4,2)) # bottom, left, top, right
 }
