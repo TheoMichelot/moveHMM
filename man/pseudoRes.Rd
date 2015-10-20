@@ -17,6 +17,12 @@ A list of:
 \description{
 Pseudo-residuals
 }
+\details{
+If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
+will not be included. Indeed, given that the turning angles are defined on ]-pi,pi], an angle of pi
+results in a pseudo-residual on +Inf (check Section 6.2 of reference for more information on the
+computation of pseudo-residuals).
+}
 \examples{
 m <- ex$m # moveHMM object (returned by fitHMM)
 res <- pseudoRes(m)
