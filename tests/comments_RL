@@ -236,3 +236,14 @@ by
 should be 
 "The maximum likelihood estimates of the parameters of the model (if the numerical algorithm has indeed identified the global maximum of the likelihood function),"
 
+25. Minor issue with the wrapped Cauchy: when using 1 as concentration parameter in simData, I get this error message:
+Error in if (a[k] > pi) a[k] <- a[k] - 2 * pi : 
+  missing value where TRUE/FALSE needed
+whereas with concentration > 1 I get this one:
+Error in simData(15, 2, stepDist = "gamma", angleDist = "wrpcauchy", c(1,  : 
+  Check the turning angle parameters bounds.
+The latter definitely makes sense. I'm not sure about the former case. Should there be an error, or is a value exactly = 1 allowed?
+
+26. Do we somewhere state the range of the different parameters? 
+(gamma mean>0, gamma sd>0, von Mises conc.>0, wrapped Cauchy conc. in [0,1], etc.)
+The obvious place for this seems to be the table in the vignette (just giving the range in brackets).
