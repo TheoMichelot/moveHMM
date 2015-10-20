@@ -70,8 +70,8 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   }
 
   if(check)
-    message(paste("Some of the parameter estimates seem to lie close to the boundaries of",
-                  "their parameter space. The associated CIs are probably unreliable",
+    warning(paste("Some of the parameter estimates seem to lie close to the boundaries of",
+                  "their parameter space.\nThe associated CIs are probably unreliable",
                   "(or might not be computable)."))
 
   # identify parameters of interest
