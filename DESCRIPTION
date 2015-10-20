@@ -8,10 +8,8 @@ Maintainer: Theo Michelot <theo.michelot@gmail.com>
 Description: Animal movement modelling using hidden Markov models. Pre-processing of tracking data, fitting HMMs to movement data, visualization of data and fitted model...
 License: GPL-3
 LazyData: TRUE
-Depends:
-    CircStats, boot, MASS, sp
-Imports:
-    Rcpp (>= 0.11.6)
-LinkingTo:
-    Rcpp, RcppArmadillo
-Suggests: testthat
+Depends: CircStats, boot, MASS, sp
+Imports: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
+Suggests: testthat, R.rsp
+VignetteBuilder: R.rsp
