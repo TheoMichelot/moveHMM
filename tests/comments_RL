@@ -207,4 +207,32 @@ such that you have a 3 by 2 array of plots. The na.action option is necessary si
 (for the elk data) still doesn't seem to plot all animals' state probs. I only get the plots for elk-363. 
 Also shouldn't the default be to plot all animals?
 
-20. I will have a couple of comments on ?fitHMM - this is basically just a memo to myself!
+20. ?plotPR:
+Replace
+"Plots time series, qq-plots, and sample ACF functions of the pseudo-residuals"
+by
+"Plots time series, qq-plots (against the standard normal distribution), and sample ACF functions of the pseudo-residuals."
+In the same help file, I would replace
+"]-pi,pi]"
+by
+"(-pi,pi]"
+(I have seen both notations, but the latter is much more common)
+
+21. You tend to write "Gamma distribution", but it's "gamma distribution". An example is given in ?fitHMM, but I suspect there 
+will be many others...
+
+22. In ?fitHMM, I'd replace
+"If TRUE, the initial distribution is considered equal to the stationary distribution."
+by 
+"If there are no covariates and stationary is set to TRUE, then the initial distribution is taken to be the stationary distribution implied by the transition probability matrix."
+
+23. In ?fitHMM, replace 
+"(can be used to assess the initial parameters)"
+by
+"This option can for example be used to assess the initial parameters."
+
+24. In ?fitHMM,
+"The maximum likelihood estimates of the parameters of the model,"
+should be 
+"The maximum likelihood estimates of the parameters of the model (if the numerical algorithm has indeed identified the global maximum of the likelihood function),"
+
