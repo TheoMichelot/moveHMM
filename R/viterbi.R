@@ -1,7 +1,8 @@
 
 #' Viterbi algorithm
 #'
-#' Reconstructs the most probable states sequence, using the Viterbi algorithm.
+#' For a given model, reconstructs the most probable states sequence,
+#' using the Viterbi algorithm.
 #'
 #' @param m An object \code{moveHMM}
 #'

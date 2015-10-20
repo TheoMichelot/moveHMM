@@ -13,7 +13,8 @@ viterbi(m)
 The sequence of most probable states.
 }
 \description{
-Reconstructs the most probable states sequence, using the Viterbi algorithm.
+For a given model, reconstructs the most probable states sequence,
+using the Viterbi algorithm.
 }
 \examples{
 m <- ex$m # Fitted model, as returned by fitHMM

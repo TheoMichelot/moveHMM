@@ -14,7 +14,8 @@ The matrix of state probabilities, with element [i,j] the probability
 of being in state j in observation i.
 }
 \description{
-Computes the probability of being in each state in each observation.
+For a given model, computes the probability of the process being in the different states
+at each time point.
 }
 \examples{
 m <- ex$m # moveHMM object (returned by fitHMM)

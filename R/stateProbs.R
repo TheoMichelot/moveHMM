@@ -1,7 +1,8 @@
 
 #' State probabilities
 #'
-#' Computes the probability of being in each state in each observation.
+#' For a given model, computes the probability of the process being in the different states
+#' at each time point.
 #'
 #' @param m A \code{moveHMM} object.
 #'
