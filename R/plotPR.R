@@ -11,7 +11,8 @@
 #' computation of pseudo-residuals).
 #'
 #' @examples
-#' m <- ex$m # moveHMM object (as returned by fitHMM)
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
 #'
 #' plotPR(m)
 #'

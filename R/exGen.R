@@ -1,7 +1,7 @@
 
 #' Example data simulation
 #'
-#' Generate the file \code{data/ex.RData}, used in other functions' examples and unit tests.
+#' Generate the file \code{data/example.RData}, used in other functions' examples and unit tests.
 #'
 #' @export
 
@@ -51,11 +51,11 @@ exGen <- function()
                 delta0=delta0,formula=formula,stepDist=stepDist,angleDist=angleDist,
                 angleMean=angleMean)
 
-  ex <- list(data=data,m=m,simPar=simPar,par0=par0)
-  save(ex,file="data/ex.RData")
+  example <- list(data=data,m=m,simPar=simPar,par0=par0)
+  save(example,file="data/example.RData")
 }
 
-# Roxygen documentation for the data file "data/ex.RData"
+# Roxygen documentation for the data file "data/example.RData"
 
 #' Example dataset
 #'
@@ -70,7 +70,7 @@ exGen <- function()
 #' \item \code{par0} The initial parameters in the optimization to fit \code{m}
 #' }
 #'
-#' @name ex
-#' @usage ex
+#' @name example
+#' @usage example
 #' @docType data
 NULL

@@ -9,7 +9,8 @@
 #' @return The sequence of most probable states.
 #'
 #' @examples
-#' m <- ex$m # Fitted model, as returned by fitHMM
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
 #'
 #' # reconstruction of states sequence
 #' states <- viterbi(m)

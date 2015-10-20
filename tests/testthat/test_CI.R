@@ -2,7 +2,7 @@
 context("CI")
 
 test_that("Output has the right format",{
-  m <- ex$m
+  m <- example$m
   c <- CI(m)
 
   expect_equal(length(c),3)

@@ -18,7 +18,8 @@ For a given model, computes the probability of the process being in the differen
 at each time point.
 }
 \examples{
-m <- ex$m # moveHMM object (returned by fitHMM)
+# m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+m <- example$m
 
 sp <- stateProbs(m)
 }

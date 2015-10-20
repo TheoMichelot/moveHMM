@@ -2,9 +2,9 @@
 context("nLogLike")
 
 test_that("Exceptions are thrown",{
-  data <- ex$data
-  simPar <- ex$simPar
-  par0 <- ex$par0
+  data <- example$data
+  simPar <- example$simPar
+  par0 <- example$par0
 
   estAngleMean <- is.null(simPar$angleMean)
   bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
@@ -36,9 +36,9 @@ test_that("Exceptions are thrown",{
 })
 
 test_that("angleMean=NULL, angleDist=NULL, and zeroInflation=TRUE work",{
-  data <- ex$data
-  simPar <- ex$simPar
-  par0 <- ex$par0
+  data <- example$data
+  simPar <- example$simPar
+  par0 <- example$par0
 
   estAngleMean <- TRUE
   bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,

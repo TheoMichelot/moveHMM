@@ -40,7 +40,8 @@ state, and two thirds to the second state, the plots of the densities in the fir
 weighted by a factor 1/3, and in the second state by a factor 2/3.
 }
 \examples{
-m <- ex$m # moveHMM object, as returned by fitHMM
+# m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+m <- example$m
 
 plot(m,ask=TRUE,animals=1,breaks=20)
 }

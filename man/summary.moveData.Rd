@@ -18,7 +18,8 @@
 Summary \code{moveData}
 }
 \examples{
-data <- ex$data # moveData object (returned by prepData or simData)
+# m is a moveData object (as returned by prepData), automatically loaded with the package
+data <- example$data
 
 summary(data)
 }

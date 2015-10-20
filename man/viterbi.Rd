@@ -17,7 +17,8 @@ For a given model, reconstructs the most probable states sequence,
 using the Viterbi algorithm.
 }
 \examples{
-m <- ex$m # Fitted model, as returned by fitHMM
+# m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+m <- example$m
 
 # reconstruction of states sequence
 states <- viterbi(m)

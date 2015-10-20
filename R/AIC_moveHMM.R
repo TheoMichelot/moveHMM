@@ -13,7 +13,8 @@
 #' in ascending order.
 #'
 #' @examples
-#' m <- ex$m # moveHMM object, as returned by fitHMM
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
 #' AIC(m)
 #'
 #' @export

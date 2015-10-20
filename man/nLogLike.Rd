@@ -46,9 +46,10 @@ Negative log-likelihood function
 }
 \examples{
 \dontrun{
-data <- ex$data # movement data (as returned by prepData or simData)
-simPar <- ex$simPar
-par0 <- ex$par0
+# data is a moveData object (as returned by prepData), automatically loaded with the package
+data <- example$data
+simPar <- example$simPar
+par0 <- example$par0
 
 estAngleMean <- is.null(simPar$angleMean)
 bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,

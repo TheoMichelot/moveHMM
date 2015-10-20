@@ -10,7 +10,8 @@
 #' of being in state j in observation i.
 #'
 #' @examples
-#' m <- ex$m # moveHMM object (returned by fitHMM)
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
 #'
 #' sp <- stateProbs(m)
 #'

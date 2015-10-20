@@ -2,9 +2,9 @@
 context("fitHMM")
 
 test_that("Exceptions are thrown",{
-  data <- ex$data
-  simPar <- ex$simPar
-  par0 <- ex$par0
+  data <- example$data
+  simPar <- example$simPar
+  par0 <- example$par0
 
   expect_that(fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
                      beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,
@@ -67,9 +67,9 @@ test_that("Exceptions are thrown",{
 })
 
 test_that("The output has the right class",{
-  data <- ex$data
-  simPar <- ex$simPar
-  par0 <- ex$par0
+  data <- example$data
+  simPar <- example$simPar
+  par0 <- example$par0
 
   m <- fitHMM(data=data,nbStates=simPar$nbStates,stepPar0=par0$stepPar0,anglePar0=par0$anglePar0,
                 beta0=par0$beta0,delta0=par0$delta0,formula=par0$formula,stepDist=simPar$stepDist,

@@ -15,7 +15,8 @@
 #' \item{beta}{Confidence intervals for the regression coefficients of the transition probabilities.}
 #'
 #' @examples
-#' m <- ex$m # moveHMM object, as returned by fitHMM
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
 #'
 #' CI(m)
 #'

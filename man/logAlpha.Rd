@@ -17,7 +17,8 @@ Used in \code{\link{stateProbs}} and \code{\link{pseudoRes}}.
 }
 \examples{
 \dontrun{
-m <- ex$m # moveHMM object (returned by fitHMM)
+# m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+m <- example$m
 
 la <- logAlpha(m)
 }

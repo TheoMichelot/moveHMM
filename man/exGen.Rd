@@ -7,6 +7,6 @@
 exGen()
 }
 \description{
-Generate the file \code{data/ex.RData}, used in other functions' examples and unit tests.
+Generate the file \code{data/example.RData}, used in other functions' examples and unit tests.
 }
 

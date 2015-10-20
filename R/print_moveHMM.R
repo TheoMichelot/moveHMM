@@ -6,7 +6,8 @@
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @examples
-#' m <- ex$m # moveHMM object (returned by fitHMM)
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
 #'
 #' print(m)
 #'

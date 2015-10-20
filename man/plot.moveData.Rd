@@ -26,7 +26,8 @@ Default: \code{NULL} ; all animals are plotted.}
 Plot \code{moveData}
 }
 \examples{
-data <- ex$data # moveData object, as returned by prepData or simData
+# data is a moveData object (as returned by prepData), automatically loaded with the package
+data <- example$data
 
 plot(data,compact=TRUE,breaks=20,ask=FALSE)
 }
