@@ -3,7 +3,7 @@
 
 #' Gamma density function
 #'
-#' Probability density function of the Gamma distribution (written in C++)
+#' Probability density function of the gamma distribution (written in C++)
 #'
 #' @param x Vector of quantiles
 #' @param mu Mean

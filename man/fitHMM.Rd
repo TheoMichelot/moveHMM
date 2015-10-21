@@ -18,7 +18,7 @@ fitHMM(data, nbStates, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
 The parameters should be in the order expected by the pdf of \code{stepDist}, and the zero-mass
 parameter should be the last. Note that zero-mass parameters are mandatory if there are steps of
 length zero in the data.
-For example, for a 2-state model using the Gamma (gamma) distribution and
+For example, for a 2-state model using the gamma distribution and
 including zero-inflation, the vector of initial parameters would be something like:
 \code{c(mu1,mu2,sigma1,sigma2,zeromass1,zeromass2)}.}
 
@@ -59,11 +59,12 @@ for more detail)}
 
 \item{fit}{\code{TRUE} if an HMM should be fitted to the data, \code{FALSE} otherwise.
 If fit=\code{FALSE}, a model is returned with the MLE replaced by the initial parameters given in
-input (can be used to assess the initial parameters). Default: \code{TRUE}.}
+input. This option can be used to assess the initial parameters. Default: \code{TRUE}.}
 }
 \value{
 A \code{moveHMM} object, i.e. a list of:
-\item{mle}{The maximum likelihood estimates of the parameters of the model, which is a list
+\item{mle}{The maximum likelihood estimates of the parameters of the model (if the numerical algorithm
+has indeed identified the global maximum of the likelihood function), which is a list
 of: \code{stepPar} (step distribution parameters), \code{anglePar} (angle distribution
 parameters), \code{beta} (transition probabilities regression coefficients - more information
 in "Details"), and \code{delta} (initial distribution).}

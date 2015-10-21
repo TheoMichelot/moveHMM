@@ -1,12 +1,13 @@
 
 #' Plot pseudo-residuals
 #'
-#' Plots time series, qq-plots, and sample ACF functions of the pseudo-residuals
+#' Plots time series, qq-plots (against the standard normal distribution), and sample
+#' ACF functions of the pseudo-residuals
 #'
 #' @param m A \code{\link{moveHMM}} object
 #'
 #' @details If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
-#' will not be included. Indeed, given that the turning angles are defined on ]-pi,pi], an angle of pi
+#' will not be included. Indeed, given that the turning angles are defined on (-pi,pi], an angle of pi
 #' results in a pseudo-residual on +Inf (check Section 6.2 of reference for more information on the
 #' computation of pseudo-residuals).
 #'

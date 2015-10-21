@@ -10,7 +10,7 @@
 #' The parameters should be in the order expected by the pdf of \code{stepDist}, and the zero-mass
 #' parameter should be the last. Note that zero-mass parameters are mandatory if there are steps of
 #' length zero in the data.
-#' For example, for a 2-state model using the Gamma (gamma) distribution and
+#' For example, for a 2-state model using the gamma distribution and
 #' including zero-inflation, the vector of initial parameters would be something like:
 #' \code{c(mu1,mu2,sigma1,sigma2,zeromass1,zeromass2)}.
 #' @param anglePar0 Vector of initial state-dependent turning angle distribution parameters.
@@ -40,10 +40,11 @@
 #' for more detail)
 #' @param fit \code{TRUE} if an HMM should be fitted to the data, \code{FALSE} otherwise.
 #' If fit=\code{FALSE}, a model is returned with the MLE replaced by the initial parameters given in
-#' input (can be used to assess the initial parameters). Default: \code{TRUE}.
+#' input. This option can be used to assess the initial parameters. Default: \code{TRUE}.
 #'
 #' @return A \code{moveHMM} object, i.e. a list of:
-#' \item{mle}{The maximum likelihood estimates of the parameters of the model, which is a list
+#' \item{mle}{The maximum likelihood estimates of the parameters of the model (if the numerical algorithm
+#' has indeed identified the global maximum of the likelihood function), which is a list
 #' of: \code{stepPar} (step distribution parameters), \code{anglePar} (angle distribution
 #' parameters), \code{beta} (transition probabilities regression coefficients - more information
 #' in "Details"), and \code{delta} (initial distribution).}
@@ -122,8 +123,20 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
                    stepDist=c("gamma","weibull","lnorm","exp"),angleDist=c("vm","wrpcauchy","none"),
                    angleMean=NULL,stationary=FALSE,verbose=0,nlmPar=NULL,fit=TRUE)
 {
+  # check that the data is a moveData object
   if(!is.moveData(data))
     stop("'data' must be a moveData object (as output by prepData or simData)")
+
+  # check that the formula is a formula
+  is.formula <- function(x)
+    tryCatch(inherits(x,"formula"),error= function(e) {FALSE})
+
+  if(!is.formula(formula))
+    stop("Check the argument 'formula'.")
+
+  # check that there is no response varibale in the formula
+  if(attr(terms(formula),"response")!=0)
+    stop("The response variable should not be specified in the formula.")
 
   # build design matrix
   covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &

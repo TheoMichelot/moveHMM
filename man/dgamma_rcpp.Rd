@@ -17,6 +17,6 @@ dgamma_rcpp(x, mu, sigma)
 Vector of densities
 }
 \description{
-Probability density function of the Gamma distribution (written in C++)
+Probability density function of the gamma distribution (written in C++)
 }
 
