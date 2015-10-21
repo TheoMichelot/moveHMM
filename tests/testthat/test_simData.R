@@ -27,13 +27,13 @@ test_that("Exceptions are thrown",{
 
   stepPar <- c(-1,10,1,5,0.2,0.3)
   expect_that(simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE),
-              throws_error("Check the step length parameters bounds."))
+              throws_error())
   stepPar <- c(1,10,1,-0.5,0.2,0.3)
   expect_that(simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE),
-              throws_error("Check the step length parameters bounds."))
+              throws_error())
   stepPar <- c(1,10,1,5,4,0.3)
   expect_that(simData(1,2,"gamma","vm",stepPar,anglePar,nbCovs=2,zeroInflation=TRUE),
-              throws_error("Check the step length parameters bounds."))
+              throws_error())
 })
 
 test_that("The right slots are defined",{

@@ -194,6 +194,8 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
     if(angleDist!="none" & parSize[2]*nbStates!=length(anglePar0))
       error <- paste(error,"-- there should be",parSize[2]*nbStates,"initial angle parameters.")
+    if(angleDist=="none" & length(anglePar0)>0)
+      error <- paste(error,"-- 'anglePar0' should be NULL.")
     stop(error)
   }
 
@@ -211,22 +213,31 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
   if(length(which(stepPar0<=stepBounds[,1] | stepPar0>=stepBounds[,2]))>0)
-    stop(paste("Check the step parameters bounds (initial parameters should be",
+    stop(paste("Check the step parameters bounds (the initial parameters should be",
                "strictly between the bounds of their parameter space)."))
 
   if(angleDist!="none") {
-    angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
-    if(length(which(anglePar0<=angleBounds[,1] | anglePar0>=angleBounds[,2]))>0)
-      stop(paste("Check the angle parameters bounds (initial parameters should be",
-                 "strictly between the bounds of their parameter space)."))
+    # We can't really write distribution-agnostic code here, because the bounds
+    # defined in parDef are not the actual bounds of the parameter space.
+    if(is.null(angleMean)) {
+      m <- anglePar0[1:nbStates] # angle mean
+      k <- anglePar0[(nbStates+1):length(anglePar0)] # angle concentration
+      if(length(which(m<=(-pi) | m>pi))>0)
+        stop("Check the angle parameters bounds. The angle mean should be in (-pi,pi].")
+    } else {
+      k <- anglePar0 # angle concentration
+      if(length(which(angleMean<=-pi | angleMean>pi))>0)
+        stop("The 'angleMean' should be in (-pi,pi].")
+      if(length(angleMean)!=nbStates)
+        stop("The argument 'angleMean' should be of length nbStates.")
+    }
+    if(length(which(k<=0))>0)
+      stop("Check the angle parameters bounds. The concentration should be strictly positive.")
+    if(angleDist=="wrpcauchy" & length(which(k>=1))>0)
+      stop("Check the angle parameters bounds. The concentration should be in (0,1).")
   }
-
-  if(!is.null(angleMean)) {
-    if(length(angleMean)!=nbStates)
-      stop("The argument 'angleMean' should be of length nbStates.")
-    if(length(which(angleMean<=-pi | angleMean>pi))>0)
-      stop("The 'angleMean' should be in (-pi,pi].")
-  }
+  else if(!is.null(angleMean))
+    stop("'angleMean' shouldn't be specified if 'angleDist' is \"none\"")
 
 
   # check that verbose is in {0,1,2}

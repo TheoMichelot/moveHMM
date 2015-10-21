@@ -88,7 +88,9 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
                     beta=NULL,covs=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500),
                     states=FALSE)
 {
-  # check arguments
+  #####################
+  ## Check arguments ##
+  #####################
   stepDist <- match.arg(stepDist)
   stepFun <- paste("r",stepDist,sep="")
   angleDist <- match.arg(angleDist)
@@ -104,14 +106,33 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     error <- paste(error,p$parSize[2]*nbStates,"angle parameters")
     stop(error)
   }
-  stepBounds <- p$bounds[1:(p$parSize[1]*nbStates),]
-  if(length(which(stepPar<stepBounds[,1] | stepPar>stepBounds[,2]))>0)
-    stop("Check the step length parameters bounds.")
-  if(angleDist!="none")
-  {
-    angleBounds <- p$bounds[(p$parSize[1]*nbStates+1):nrow(p$bounds),]
-    if(length(which(anglePar<angleBounds[,1] | anglePar>angleBounds[,2]))>0)
-      stop("Check the turning angle parameters bounds.")
+
+  if(zeroInflation) {
+    stepBounds <- p$bounds[1:((p$parSize[1]-1)*nbStates),]
+    sp <- stepPar[1:(length(stepPar)-nbStates)]
+    zm <- stepPar[(length(stepPar)-nbStates+1):length(stepPar)]
+    if(length(which(zm<0 | zm>1))>0)
+      stop("The zero-mass should be in [0,1].")
+  } else {
+    stepBounds <- p$bounds[1:(p$parSize[1]*nbStates),]
+    sp <- stepPar
+  }
+
+  if(length(which(sp<=stepBounds[,1] | sp>=stepBounds[,2]))>0)
+    stop(paste("Check the step parameters bounds (the parameters should be",
+               "strictly between the bounds of their parameter space)."))
+
+  if(angleDist!="none") {
+    # We can't really write distribution-agnostic code here, because the bounds
+    # defined in parDef are not the actual bounds of the parameter space.
+    m <- anglePar[1:nbStates] # angle mean
+    k <- anglePar[(nbStates+1):length(anglePar)] # angle concentration
+    if(length(which(m<=(-pi) | m>pi))>0)
+      stop("Check the angle parameters bounds. The angle mean should be in (-pi,pi].")
+    if(length(which(k<=0))>0)
+      stop("Check the angle parameters bounds. The concentration should be strictly positive.")
+    if(angleDist=="wrpcauchy" & length(which(k>=1))>0)
+      stop("Check the angle parameters bounds. The concentration should be in (0,1).")
   }
 
   if(length(which(obsPerAnimal<1))>0)
@@ -156,6 +177,9 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   else if(length(obsPerAnimal)!=2)
     stop("obsPerAnimal should be of length 1 or 2.")
 
+  #######################################
+  ## Prepare parameters for simulation ##
+  #######################################
   # generate regression parameters for transition probabilities
   if(is.null(beta))
     beta <- matrix(rnorm(nbStates*(nbStates-1)*(nbCovs+1)),nrow=nbCovs+1)
@@ -165,7 +189,6 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     else
       stop("beta should be NULL")
   }
-
 
   # initial state distribution
   delta <- rep(1,nbStates)/nbStates
@@ -195,13 +218,18 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
                      x=numeric(),
                      y=numeric())
 
+  ###########################
+  ## Loop over the animals ##
+  ###########################
   for (zoo in 1:nbAnimals) {
     if(obsPerAnimal[1]!=obsPerAnimal[2])
       nbObs <- sample(obsPerAnimal[1]:obsPerAnimal[2],1)
     else
       nbObs <- obsPerAnimal[1]
 
-    # generate covariate values
+    ###############################
+    ## Simulate covariate values ##
+    ###############################
     if(nbCovs>0) {
       if(is.null(covs)) {
         subCovs <- data.frame(cov1=rnorm(nbObs))
@@ -221,7 +249,9 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
       allCovs <- rbind(allCovs,subCovs)
     }
 
-    # generate state sequence Z
+    ###############################
+    ## Simulate state sequence Z ##
+    ###############################
     if(nbStates>1) {
       Z <- rep(NA,nbObs)
       Z[1] <- sample(1:nbStates,size=1,prob=delta)
@@ -251,7 +281,9 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
     s <- rep(NA,nbObs)
     a <- rep(NA,nbObs)
 
-    # simulate movement path
+    ############################
+    ## Simulate movement path ##
+    ############################
     for (k in 1:(nbObs-1)){
       # prepare lists of arguments for step and angle distributions
       stepArgs <- list(1) ; angleArgs <- list(1) # first argument = 1 (one random draw)
