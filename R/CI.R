@@ -72,7 +72,7 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
 
   if(check)
     warning(paste("Some of the parameter estimates seem to lie close to the boundaries of",
-                  "their parameter space.\nThe associated CIs are probably unreliable",
+                  "their parameter space.\n  The associated CIs are probably unreliable",
                   "(or might not be computable)."))
 
   # identify parameters of interest
@@ -80,14 +80,26 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   i2 <- sum(p$parSize)*nbStates+1
   i3 <- i2+nbStates*(nbStates-1)*(nbCovs+1)-1
 
-  if(nbStates>1) {
-    # select step parameters and "beta" parameters
-    est <- c(m$mod$estimate[1:i1],m$mod$estimate[i2:i3])
-    var <- c(var[1:i1],var[i2:i3])
+  if(m$conditions$estAngleMean) {
+    if(nbStates>1) {
+      # select step parameters and "beta" parameters
+      est <- c(m$mod$estimate[1:i1],m$mod$estimate[i2:i3])
+      var <- c(var[1:i1],var[i2:i3])
+    } else {
+      # only select step parameters
+      est <- m$mod$estimate[1:i1]
+      var <- var[1:i1]
+    }
   } else {
-    # only select step parameters
-    est <- m$mod$estimate[1:i1]
-    var <- var[1:i1]
+    if(nbStates>1) {
+      # select step parameters, angle parameters, and "beta" parameters
+      est <- c(m$mod$estimate[1:i3])
+      var <- c(var[1:i3])
+    } else {
+      # only select step parameters and angle parameters
+      est <- m$mod$estimate[1:(i2-1)]
+      var <- var[1:(i2-1)]
+    }
   }
 
   # if negative variance, replace by NA
@@ -101,11 +113,25 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   wupper <- est+quantSup*sqrt(var)
 
   # compute lower and upper on natural scale
-  lower <- w2n(wlower,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
-  upper <- w2n(wupper,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
+  if(m$conditions$estAngleMean) {
+    lower <- w2n(wlower,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
+    upper <- w2n(wupper,p$bounds[1:i1,],c(p$parSize[1],0),nbStates,nbCovs,FALSE,TRUE)
+  } else {
+    lower <- w2n(wlower,p$bounds[1:(i2-1),],c(p$parSize[1],1),nbStates,nbCovs,FALSE,TRUE)
+    upper <- w2n(wupper,p$bounds[1:(i2-1),],c(p$parSize[1],1),nbStates,nbCovs,FALSE,TRUE)
+  }
 
   # CIs for angle parameters
-  anglePar <- angleCI(m,alpha,nbSims)
+  if(m$conditions$estAngleMean)
+    anglePar <- angleCI(m,alpha,nbSims)
+  else {
+    angleMean <- m$mle$anglePar[1,] # the angle mean is known, so there is no uncertainty on it
+    low <- rbind(angleMean,lower$anglePar)
+    up <- rbind(angleMean,upper$anglePar)
+    rownames(low) <- NULL
+    rownames(up) <- NULL
+    anglePar <- list(lower=low,upper=up)
+  }
 
   # group CIs for step parameters and t.p. coefficients
   stepPar <- list(lower=lower$stepPar,upper=upper$stepPar)
