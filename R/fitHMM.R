@@ -210,16 +210,24 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
       stop(paste("delta0 has the wrong length: it should have",nbStates,"elements."))
 
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
-  if(length(which(stepPar0<stepBounds[,1] | stepPar0>stepBounds[,2]))>0)
-    stop("Check the step parameters bounds.")
+  if(length(which(stepPar0<=stepBounds[,1] | stepPar0>=stepBounds[,2]))>0)
+    stop(paste("Check the step parameters bounds (initial parameters should be",
+               "strictly between the bounds of their parameter space)."))
 
   if(angleDist!="none") {
     angleBounds <- bounds[(parSize[1]*nbStates+1):nrow(bounds),]
-    if(length(which(anglePar0<angleBounds[,1] | anglePar0>angleBounds[,2]))>0)
-      stop("Check the angle parameters bounds.")
+    if(length(which(anglePar0<=angleBounds[,1] | anglePar0>=angleBounds[,2]))>0)
+      stop(paste("Check the angle parameters bounds (initial parameters should be",
+                 "strictly between the bounds of their parameter space)."))
   }
-  if(!is.null(angleMean) & length(angleMean)!=nbStates)
-    stop("The angleMean argument should be of length nbStates.")
+
+  if(!is.null(angleMean)) {
+    if(length(angleMean)!=nbStates)
+      stop("The argument 'angleMean' should be of length nbStates.")
+    if(length(which(angleMean<=-pi | angleMean>pi))>0)
+      stop("The 'angleMean' should be in (-pi,pi].")
+  }
+
 
   # check that verbose is in {0,1,2}
   if(!(verbose %in% c(0,1,2)))
