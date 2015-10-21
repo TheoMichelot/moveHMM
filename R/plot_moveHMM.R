@@ -373,9 +373,11 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
 
     } else {
       maxdens <- max(stepDensities[[1]][,2])
-      for(state in 2:nbStates) {
-        if(max(stepDensities[[state]][,2])>maxdens)
-          maxdens <- max(stepDensities[[state]][,2])
+      if(nbStates>1) {
+        for(state in 2:nbStates) {
+          if(max(stepDensities[[state]][,2])>maxdens)
+            maxdens <- max(stepDensities[[state]][,2])
+        }
       }
       if(maxdens>ymax & maxdens<2*max(h$density))
         ymax <- maxdens
