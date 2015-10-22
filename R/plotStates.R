@@ -77,4 +77,5 @@ plotStates <- function(m,animals=NULL,ask=TRUE)
   # back to default
   par(mar=c(5,4,4,2)) # bottom, left, top, right
   par(mfrow=c(1,1))
+  par(ask=FALSE)
 }
