@@ -51,7 +51,7 @@
 #' anglePar <- c(pi,0,0.5,2) # mean1, mean2, k1, k2
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
-#' obsPerAnimal=c(100,150)
+#' obsPerAnimal=c(50,100)
 #' data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,stepPar=stepPar,
 #'                anglePar=anglePar,nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
 #'
