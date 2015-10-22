@@ -70,7 +70,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
       plot(step,type="l",xlab="t",ylab="step length",
            ylim=c(0,max(step,na.rm=T)))
       # step length histogram
-      hist(step,xlab="step length",main="",col="grey",border=FALSE,breaks=breaks)
+      hist(step,xlab="step length",main="",col="grey",border="white",breaks=breaks)
       mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
     }
   }
@@ -168,11 +168,11 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
       #################################
       ## Steps and angles histograms ##
       #################################
-      hist(step,xlab="step length",main="", col="grey",border=FALSE,breaks=breaks)
+      hist(step,xlab="step length",main="", col="grey",border="white",breaks=breaks)
 
       h <- hist(angle,breaks=breaks,plot=FALSE) # to define the breaks
 
-      hist(angle,xlab="turning angle (radians)",main="", col="grey",border=FALSE,
+      hist(angle,xlab="turning angle (radians)",main="", col="grey",border="white",
            breaks=seq(-pi,pi,length=length(h$breaks)),xaxt="n")
       axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
            labels = expression(-pi, -pi/2, 0, pi/2, pi))

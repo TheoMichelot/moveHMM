@@ -386,7 +386,7 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
 
   # plot step histogram
   hist(step,prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
-       col="grey",border=FALSE,breaks=breaks)
+       col="grey",border="white",breaks=breaks)
 
   mtext(message,side=3,outer=TRUE,padj=2)
 
@@ -409,7 +409,7 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
 
     # plot angle histogram
     hist(angle,prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
-         col="grey",border=FALSE,breaks=breaks,xaxt="n")
+         col="grey",border="white",breaks=breaks,xaxt="n")
     axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
          labels = expression(-pi, -pi/2, 0, pi/2, pi))
 
