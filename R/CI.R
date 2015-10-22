@@ -125,11 +125,8 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   if(m$conditions$estAngleMean)
     anglePar <- angleCI(m,alpha,nbSims)
   else {
-    angleMean <- m$mle$anglePar[1,] # the angle mean is known, so there is no uncertainty on it
-    low <- rbind(angleMean,lower$anglePar)
-    up <- rbind(angleMean,upper$anglePar)
-    rownames(low) <- NULL
-    rownames(up) <- NULL
+    low <- rbind(rep(NA,nbStates),lower$anglePar)
+    up <- rbind(rep(NA,nbStates),upper$anglePar)
     anglePar <- list(lower=low,upper=up)
   }
 
