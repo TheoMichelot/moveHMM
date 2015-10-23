@@ -14,6 +14,8 @@
 #' summary(data)
 #'
 #' @export
+#'
+#' @importFrom stats quantile
 
 summary.moveData <- function(object,details=TRUE,...)
 {

@@ -80,6 +80,8 @@
 #'                 anglePar=anglePar,covs=cov)
 #'
 #' @export
+#'
+#' @importFrom stats rnorm runif
 
 
 

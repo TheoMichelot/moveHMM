@@ -23,6 +23,8 @@
 #' Chapman & Hall (London).
 #'
 #' @export
+#'
+#' @importFrom stats acf na.pass qqnorm
 
 plotPR <- function(m)
 {

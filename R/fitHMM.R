@@ -115,6 +115,7 @@
 #' @export
 #'
 #' @importFrom Rcpp evalCpp
+#' @importFrom stats model.matrix nlm terms
 #' @import CircStats
 #'
 #' @useDynLib moveHMM

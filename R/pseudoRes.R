@@ -27,6 +27,8 @@
 #' Chapman & Hall (London).
 #'
 #' @export
+#'
+#' @importFrom stats integrate qnorm
 
 pseudoRes <- function(m)
 {

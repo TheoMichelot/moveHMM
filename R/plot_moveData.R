@@ -18,6 +18,9 @@
 #' plot(data,compact=TRUE,breaks=20,ask=FALSE)
 #'
 #' @export
+#'
+#' @importFrom grDevices rainbow
+#' @importFrom graphics abline axis hist mtext par plot points
 
 plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges",...)
 {
