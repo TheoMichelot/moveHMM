@@ -23,12 +23,12 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
   switch(stepDist,
          "gamma"={
            parSize[1] <- 2
-           stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
+           stepBounds <- matrix(rep(c(0,Inf),2*nbStates),ncol=2,byrow=TRUE)
            parNames <- c("mean","sd")
          },
          "weibull"={
            parSize[1] <- 2
-           stepBounds <- matrix(c(0,Inf),ncol=2,nrow=2*nbStates,byrow=TRUE)
+           stepBounds <- matrix(rep(c(0,Inf),2*nbStates),ncol=2,byrow=TRUE)
            parNames <- c("shape","scale")
          },
          "lnorm"={
@@ -39,14 +39,14 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
          },
          "exp"={
            parSize[1] <- 1
-           stepBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
+           stepBounds <- matrix(rep(c(0,Inf),nbStates),ncol=2,byrow=TRUE)
            parNames <- c("rate")
          })
 
   # include zero-mass
   if(zeroInflation) {
     parSize[1] <- parSize[1]+1
-    stepBounds <- rbind(stepBounds,matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE))
+    stepBounds <- rbind(stepBounds,matrix(rep(c(0,1),nbStates),ncol=2,byrow=TRUE))
     parNames <- c(parNames,"zero-mass")
   }
 
@@ -66,7 +66,7 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
            }
            else {
              parSize[2] <- 1
-             angleBounds <- matrix(c(0,Inf),ncol=2,nrow=nbStates,byrow=TRUE)
+             angleBounds <- matrix(rep(c(0,Inf),nbStates),ncol=2,byrow=TRUE)
              parNames <- c(parNames,"concentration")
            }
          },
@@ -81,7 +81,7 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
            }
            else {
              parSize[2] <- 1
-             angleBounds <- matrix(c(0,1),ncol=2,nrow=nbStates,byrow=TRUE)
+             angleBounds <- matrix(rep(c(0,1),nbStates),ncol=2,byrow=TRUE)
              parNames <- c(parNames,"concentration")
            }
          })
