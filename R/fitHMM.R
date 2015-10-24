@@ -101,7 +101,9 @@
 #' formula <- ~cov1+cos(cov2)
 #'
 #' m <- fitHMM(data=data,nbStates=nbStates,stepPar0=stepPar0,anglePar0=anglePar0,formula=formula,
-#'               stepDist=stepDist,angleDist=angleDist,angleMean=angleMean,verbose=2)
+#'               stepDist=stepDist,angleDist=angleDist,angleMean=angleMean)
+#'
+#' print(m)
 #'
 #' @references
 #' Patterson T.A., Basson M., Bravington M.V., Gunn J.S. 2009.
