@@ -115,7 +115,6 @@
 #' Ecology, 93 (11), 2336-2342.
 #'
 #' @export
-#'
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats model.matrix nlm terms
 #' @import CircStats

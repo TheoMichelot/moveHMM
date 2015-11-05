@@ -33,7 +33,6 @@
 #'
 #'
 #' @export
-#'
 #' @importFrom graphics legend lines segments
 
 plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,sepAnimals=FALSE,

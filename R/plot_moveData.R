@@ -18,7 +18,6 @@
 #' plot(data,compact=TRUE,breaks=20,ask=FALSE)
 #'
 #' @export
-#'
 #' @importFrom grDevices rainbow
 #' @importFrom graphics abline axis hist mtext par plot points
 

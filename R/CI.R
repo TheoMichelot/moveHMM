@@ -21,7 +21,6 @@
 #' CI(m)
 #'
 #' @export
-#'
 #' @importFrom MASS ginv
 
 CI <- function(m,alpha=0.95,nbSims=10^6)
