@@ -42,7 +42,7 @@ summary.moveData <- function(object,details=TRUE,...)
         for(i in 1:(length(covsCol)-1))
           cat(names(data)[covsCol[i]],", ",sep="")
       }
-      cat(names(data)[covsCol[length(covsCol)]])
+      cat(names(data)[covsCol[length(covsCol)]],"\n")
     } else {
       # print names and quantiles of the covariates
       for(i in 1:length(covsCol)) {
