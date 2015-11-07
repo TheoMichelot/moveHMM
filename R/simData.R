@@ -28,6 +28,10 @@
 #' the numbers of obervations generated for each animal are uniformously picked from this interval.
 #' Default: \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
 #' specified.
+#' @param model A moveHMM object. This option can be used to simulate from a fitted model. Default: NULL.
+#' Note that, if this argument is specified, most other arguments will be ignored (except for nbAnimals,
+#' obsPerAnimal, states, and covs - if covariate values different from those in the data should be
+#' specified).
 #' @param states \code{TRUE} if the simulated states should be returned, \code{FALSE} otherwise (default).
 #'
 #' @return An object moveData, i.e. a dataframe of:
@@ -84,11 +88,43 @@
 
 
 
-simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp"),
-                    angleDist=c("vm","wrpcauchy","none"),stepPar,anglePar=NULL,
+simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm","exp"),
+                    angleDist=c("vm","wrpcauchy","none"),stepPar=NULL,anglePar=NULL,
                     beta=NULL,covs=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500),
-                    states=FALSE)
+                    model=NULL,states=FALSE)
 {
+  ##############################
+  ## Check if !is.null(model) ##
+  ##############################
+  if(!is.null(model)) {
+    # extract simulation parameters from model
+    nbStates <- ncol(model$mle$stepPar)
+    stepDist <- model$stepDist
+    angleDist <- model$angleDist
+    stepPar <- c(t(model$mle$stepPar))
+    anglePar <- c(t(model$mle$anglePar))
+    beta <- model$mle$beta
+
+    if(is.null(covs)) {
+      covsCol <- which(names(model$data)!="ID" & names(model$data)!="x" &
+                         names(model$data)!="y" & names(model$data)!="step" &
+                         names(model$data)!="angle")
+      covs <- model$data[,covsCol]
+
+      # remove intercept column, which is not expected in 'covs'
+      names <- colnames(covs)
+      covs <- data.frame(covs[,-1]) # data.frame structure is lost when only one column
+      colnames(covs) <- names[-1]
+    }
+    # else, allow user to enter new values for covariates
+
+    zeroInflation <- model$conditions$zeroInflation
+
+  } else {
+    if(is.null(stepPar))
+      stop("'stepPar' needs to be specified")
+  }
+
   #####################
   ## Check arguments ##
   #####################
@@ -97,8 +133,11 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   angleDist <- match.arg(angleDist)
   angleFun <- paste("r",angleDist,sep="")
 
-  if(nbAnimals<1) stop("nbAnimals should be at least 1.")
-  if(nbStates<1) stop("nbStates should be at least 1.")
+  if(nbAnimals<1)
+    stop("nbAnimals should be at least 1.")
+  if(nbStates<1)
+    stop("nbStates should be at least 1.")
+
   p <- parDef(stepDist,angleDist,nbStates,TRUE,zeroInflation)
 
   if(length(stepPar)!=p$parSize[1]*nbStates | length(anglePar)!=p$parSize[2]*nbStates) {
@@ -145,8 +184,10 @@ simData <- function(nbAnimals,nbStates,stepDist=c("gamma","weibull","lnorm","exp
   }
 
   if(!is.null(covs)) {
+    if(!is.data.frame(covs))
+      stop("'covs' should be a data.frame")
     if(nrow(covs)%%nbAnimals!=0)
-      stop("The number of rows in covs should be a multiple of nbAnimals")
+      stop("The number of rows in 'covs' should be a multiple of nbAnimals")
   }
 
   if(!is.null(covs)) {
