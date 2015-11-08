@@ -14,10 +14,15 @@ Plots time series, qq-plots (against the standard normal distribution), and samp
 ACF functions of the pseudo-residuals
 }
 \details{
-If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
+\itemize{
+\item If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
 will not be included. Indeed, given that the turning angles are defined on (-pi,pi], an angle of pi
 results in a pseudo-residual on +Inf (check Section 6.2 of reference for more information on the
 computation of pseudo-residuals).
+\item If some steps are of length zero (i.e. if there is zero-inflation), the corresponding pseudo-
+residuals are shown as segments, because pseudo-residuals for discrete data are defined as
+segments (see Zucchini and MacDonald, 2009, Section 6.2).
+}
 }
 \examples{
 # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package

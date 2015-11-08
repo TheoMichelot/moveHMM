@@ -6,10 +6,15 @@
 #'
 #' @param m A \code{\link{moveHMM}} object
 #'
-#' @details If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
+#' @details \itemize{
+#' \item If some turning angles in the data are equal to pi, the corresponding pseudo-residuals
 #' will not be included. Indeed, given that the turning angles are defined on (-pi,pi], an angle of pi
 #' results in a pseudo-residual on +Inf (check Section 6.2 of reference for more information on the
 #' computation of pseudo-residuals).
+#' \item If some steps are of length zero (i.e. if there is zero-inflation), the corresponding pseudo-
+#' residuals are shown as segments, because pseudo-residuals for discrete data are defined as
+#' segments (see Zucchini and MacDonald, 2009, Section 6.2).
+#' }
 #'
 #' @examples
 #' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
@@ -49,7 +54,16 @@ plotPR <- function(m)
   qqStep <- qqnorm(pr$stepRes,plot=FALSE)
   limInf <- min(min(qqStep$x,na.rm=T),min(qqStep$y,na.rm=T))
   limSup <- max(max(qqStep$x,na.rm=T),max(qqStep$y,na.rm=T))
-  qqnorm(pr$stepRes,main="",col="red",xlim=c(limInf,limSup),ylim=c(limInf,limSup))
+  q <- qqnorm(pr$stepRes,main="",col="red",xlim=c(limInf,limSup),ylim=c(limInf,limSup))
+
+  # add segments for steps of length zero
+  if(m$conditions$zeroInflation) {
+    ind <- which(m$data$step==0)
+    x <- q$x[ind]
+    y <- q$y[ind]
+    segments(x,rep(limInf-5,length(ind)),x,y,col="red")
+  }
+
   abline(0,1,lwd=2)
 
   # angles qq-plot
