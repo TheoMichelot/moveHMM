@@ -370,10 +370,9 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   }
 
   # conditions of the fit
-  conditions <- list(zeroInflation=zeroInflation,estAngleMean=estAngleMean,stationary=stationary,
-                     formula=formula)
+  conditions <- list(stepDist=stepDist,angleDist=angleDist,zeroInflation=zeroInflation,
+                     estAngleMean=estAngleMean,stationary=stationary,formula=formula)
 
-  mh <- list(data=data,mle=mle,stepDist=stepDist,angleDist=angleDist,
-             mod=mod,conditions=conditions,rawCovs=rawCovs)
+  mh <- list(data=data,mle=mle,mod=mod,conditions=conditions,rawCovs=rawCovs)
   return(moveHMM(mh))
 }

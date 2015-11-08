@@ -24,7 +24,8 @@ angleCI <- function(m,alpha,nbSims=10^6)
   lower <- matrix(NA,ncol=nbStates,nrow=2)
   upper <- matrix(NA,ncol=nbStates,nrow=2)
 
-  pdef <- parDef(m$stepDist,m$angleDist,nbStates,estAngleMean=TRUE,m$conditions$zeroInflation)
+  pdef <- parDef(m$conditions$stepDist,m$conditions$angleDist,nbStates,estAngleMean=TRUE,
+                 m$conditions$zeroInflation)
   parSize <- pdef$parSize
   bounds <- pdef$bounds
 

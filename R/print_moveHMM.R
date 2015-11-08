@@ -17,7 +17,8 @@ print.moveHMM <- function(x,...)
 {
   m <- x
   nbStates <- ncol(m$mle$stepPar)
-  p <- parDef(m$stepDist,m$angleDist,nbStates,TRUE,m$conditions$zeroInflation)
+  p <- parDef(m$conditions$stepDist,m$conditions$angleDist,nbStates,TRUE,
+              m$conditions$zeroInflation)
 
   if(length(m$mod)>1)
     cat("Value of the maximum log-likelihood:",-m$mod$minimum,"\n\n")
@@ -27,7 +28,7 @@ print.moveHMM <- function(x,...)
   print(m$mle$stepPar)
 
   cat("\n")
-  if(m$angleDist!="none") {
+  if(m$conditions$angleDist!="none") {
     cat("Turning angle parameters:\n")
     cat("------------------------\n")
     print(m$mle$anglePar)

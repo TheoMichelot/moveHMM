@@ -31,8 +31,8 @@ viterbi <- function(m)
   nbStates <- ncol(m$mle$stepPar)
   beta <- m$mle$beta
   delta <- m$mle$delta
-  stepDist <- m$stepDist
-  angleDist <- m$angleDist
+  stepDist <- m$conditions$stepDist
+  angleDist <- m$conditions$angleDist
   stepPar <- m$mle$stepPar
   anglePar <- m$mle$anglePar
   zeroInflation <- m$conditions$zeroInflation

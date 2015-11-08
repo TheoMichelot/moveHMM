@@ -34,9 +34,9 @@ pseudoRes <- function(m)
   if(!is.moveHMM(m))
     stop("'m' must be a moveHMM object (as output by fitHMM)")
 
-  stepFun <- paste("p",m$stepDist,sep="")
+  stepFun <- paste("p",m$conditions$stepDist,sep="")
 
-  angleDist <- m$angleDist
+  angleDist <- m$conditions$angleDist
   if(angleDist!="none") {
     angleFun <- paste("d",angleDist,sep="") # integrated below
 
@@ -79,7 +79,7 @@ pseudoRes <- function(m)
         zeromass <- m$mle$stepPar[nrow(m$mle$stepPar),state]
     }
 
-    if(m$stepDist=="gamma") {
+    if(m$conditions$stepDist=="gamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
       scale <- stepArgs[[3]]^2/stepArgs[[2]]
       stepArgs[[2]] <- shape

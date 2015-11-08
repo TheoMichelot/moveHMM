@@ -45,7 +45,8 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   Sigma <- ginv(m$mod$hessian)
   var <- diag(Sigma)
 
-  p <- parDef(m$stepDist,m$angleDist,nbStates,m$conditions$estAngleMean,m$conditions$zeroInflation)
+  p <- parDef(m$conditions$stepDist,m$conditions$angleDist,nbStates,m$conditions$estAngleMean,
+              m$conditions$zeroInflation)
 
   # check if some parameters are close to their bounds
   check <- FALSE
@@ -58,7 +59,7 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   if(length(which(round(abs(stepPar-stepBounds[,2]),5)==0))>0)
     check <- TRUE
 
-  if(m$angleDist!="none") {
+  if(m$conditions$angleDist!="none") {
     angleBounds <- p$bounds[(p$parSize[1]*nbStates+1):nrow(p$bounds),]
     anglePar <- as.vector(t(m$mle$anglePar))
     # are angle parameters close to their lower bounds?

@@ -42,9 +42,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
   nbAnimals <- length(unique(m$data$ID))
   nbStates <- ncol(m$mle$stepPar)
 
-  stepFun <- paste("d",m$stepDist,sep="")
-  if(m$angleDist!="none")
-    angleFun <- paste("d",m$angleDist,sep="")
+  stepFun <- paste("d",m$conditions$stepDist,sep="")
+  if(m$conditions$angleDist!="none")
+    angleFun <- paste("d",m$conditions$angleDist,sep="")
 
   if(!is.null(hist.ylim) & length(hist.ylim)!=2)
     stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
@@ -92,7 +92,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     angleData <- m$data$angle[ind]
   }
 
-  if(m$angleDist=="none")
+  if(m$conditions$angleDist=="none")
     angleData <- NULL
 
   x <- list()
@@ -140,7 +140,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       stepArgs[[j+1]] <- m$mle$stepPar[j,state]
 
     # conversion between mean/sd and shape/scale if necessary
-    if(m$stepDist=="gamma") {
+    if(m$conditions$stepDist=="gamma") {
       shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
       scale <- stepArgs[[3]]^2/stepArgs[[2]]
       stepArgs[[2]] <- shape
@@ -153,7 +153,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       stepDensities[[state]] <- cbind(grid,w[state]*do.call(stepFun,stepArgs))
   }
 
-  if(m$angleDist!="none") {
+  if(m$conditions$angleDist!="none") {
     angleDensities <- list()
     grid <- seq(-pi,pi,length=1000)
 
