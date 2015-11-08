@@ -24,39 +24,20 @@ print.moveHMM <- function(x,...)
 
   cat("Step length parameters:\n")
   cat("----------------------\n")
-  for(i in 1:nrow(m$mle$stepPar)) {
-    cat(p$parNames[i],"\n")
-    print(m$mle$stepPar[i,])
-  }
+  print(m$mle$stepPar)
 
   cat("\n")
   if(m$angleDist!="none") {
     cat("Turning angle parameters:\n")
     cat("------------------------\n")
-    for(i in 1:nrow(m$mle$anglePar)) {
-      cat(p$parNames[nrow(m$mle$stepPar)+i],"\n")
-      print(m$mle$anglePar[i,])
-    }
+    print(m$mle$anglePar)
   }
 
   if(!is.null(m$mle$beta)) {
     cat("\n")
     cat("Regression coeffs for the transition probabilities:\n")
     cat("--------------------------------------------------\n")
-
-    beta <- m$mle$beta
-    f <- m$conditions$formula
-    rownames(beta) <- c("intercept",attr(terms(f),"term.labels"))
-    columns <- NULL
-    for(i in 1:nbStates)
-      for(j in 1:nbStates) {
-        if(i<j)
-          columns[(i-1)*nbStates+j-i] <- paste(i,"->",j)
-        if(j<i)
-          columns[(i-1)*(nbStates-1)+j] <- paste(i,"->",j)
-      }
-    colnames(beta) <- columns
-    print(beta)
+    print(m$mle$beta)
   }
 
   if(!is.null(m$mle$gamma)) {

@@ -317,6 +317,29 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   ####################
   ## Prepare output ##
   ####################
+  # name columns and rows of MLEs
+  rownames(mle$stepPar) <- p$parNames[1:nrow(mle$stepPar)]
+  columns <- NULL
+  for(i in 1:nbStates)
+    columns[i] <- paste("state",i)
+  colnames(mle$stepPar) <- columns
+
+  if(angleDist!="none") {
+    rownames(mle$anglePar) <- p$parNames[(nrow(mle$stepPar)+1):length(p$parNames)]
+    colnames(mle$anglePar) <- columns
+  }
+
+  rownames(mle$beta) <- c("intercept",attr(terms(formula),"term.labels"))
+  columns <- NULL
+  for(i in 1:nbStates)
+    for(j in 1:nbStates) {
+      if(i<j)
+        columns[(i-1)*nbStates+j-i] <- paste(i,"->",j)
+      if(j<i)
+        columns[(i-1)*(nbStates-1)+j] <- paste(i,"->",j)
+    }
+  colnames(mle$beta) <- columns
+
   # compute stationary distribution
   if(stationary) {
     gamma <- trMatrix_rcpp(nbStates,mle$beta,covs)[,,1]
