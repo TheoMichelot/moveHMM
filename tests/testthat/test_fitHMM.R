@@ -79,6 +79,7 @@ test_that("The output has the right class",{
 })
 
 test_that("Step length only + zero-inflation works",{
+  set.seed(1)
   nbAnimals <- 2
   nbStates <- 2
   nbCovs <- 2
