@@ -17,9 +17,12 @@ Depends:
     sp
 Imports:
     Rcpp
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 Suggests:
     testthat,
-    R.rsp
-VignetteBuilder: R.rsp
+    knitr
+VignetteBuilder:
+    knitr
 RoxygenNote: 5.0.0
