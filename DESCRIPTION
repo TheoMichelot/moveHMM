@@ -5,9 +5,10 @@ Version: 1.0
 Date: 2015-10-23
 Author: Theo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
 Maintainer: Theo Michelot <theo.michelot@insa-rouen.fr>
-Description: Animal movement modelling using hidden Markov models. Pre-
-    processing of tracking data, fitting HMMs to movement data, visualization of
-    data and fitted model...
+Description: The package moveHMM provides tools for animal movement modelling using hidden Markov models.
+	     These include processing of tracking data, fitting HMMs to movement data, visualization of
+    	     data and fitted model, decoding of the state process...
+URL: https://github.com/TheoMichelot/moveHMM, https://cran.r-project.org/package=moveHMM
 License: GPL-3
 LazyData: TRUE
 Depends:
