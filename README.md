@@ -1,7 +1,8 @@
 # moveHMM
 An R package for animal movement modelling using hidden Markov models.
 
-[Vignette](https://cran.r-project.org/web/packages/moveHMM/vignettes/moveHMM-guide.pdf) -
+Get started with the vignette: [Guide to using moveHMM](https://cran.r-project.org/web/packages/moveHMM/vignettes/moveHMM-guide.pdf)
+
 [Wiki](https://github.com/TheoMichelot/moveHMM/wiki)
 
 ## Installation instructions
@@ -21,5 +22,5 @@ To install the latest (**unstable**) version of the package from Github:
 ``` R
 install.packages(c("Rcpp","RcppArmadillo","sp","CircStats","devtools"))
 library(devtools)
-install_github("TheoMichelot/moveHMM")
+install_github("TheoMichelot/moveHMM", build_vignettes=TRUE)
 ```
