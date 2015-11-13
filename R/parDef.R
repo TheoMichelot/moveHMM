@@ -14,7 +14,8 @@
 #' number of parameters of the turning angle distribution}
 #' \item{bounds}{Matrix with 2 columns and \code{sum(parSize)} rows - each row contains the lower and upper
 #' bound for the correponding parameter)}
-#' \item{parNames}{Names of parameters}
+#' \item{parNames}{Names of parameters of step distribution (the names of the parameters of the
+#' angle distribution are always the same).}
 
 parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
 {
@@ -62,12 +63,10 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
              # (already in the right intervals for computing x and y)
              angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,Inf),nbStates)),
                                    ncol=2,byrow=TRUE)
-             parNames <- c(parNames,"mean","concentration")
            }
            else {
              parSize[2] <- 1
              angleBounds <- matrix(rep(c(0,Inf),nbStates),ncol=2,byrow=TRUE)
-             parNames <- c(parNames,"concentration")
            }
          },
          "wrpcauchy"={
@@ -77,12 +76,10 @@ parDef <- function(stepDist,angleDist,nbStates,estAngleMean,zeroInflation)
              # scaled from ]0,1[ to ]0,Inf[ (for computing x and y)
              angleBounds <- matrix(c(rep(c(-Inf,Inf),nbStates),rep(c(-Inf,1),nbStates)),
                                    ncol=2,byrow=TRUE)
-             parNames <- c(parNames,"location","concentration")
            }
            else {
              parSize[2] <- 1
              angleBounds <- matrix(rep(c(0,1),nbStates),ncol=2,byrow=TRUE)
-             parNames <- c(parNames,"concentration")
            }
          })
 

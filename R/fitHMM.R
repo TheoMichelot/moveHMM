@@ -317,6 +317,10 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   ####################
   ## Prepare output ##
   ####################
+  # include angle mean if it wasn't estimated
+  if(!is.null(angleMean) & angleDist!="none")
+    mle$anglePar <- rbind(angleMean,mle$anglePar)
+
   # name columns and rows of MLEs
   rownames(mle$stepPar) <- p$parNames[1:nrow(mle$stepPar)]
   columns <- NULL
@@ -325,7 +329,7 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   colnames(mle$stepPar) <- columns
 
   if(angleDist!="none") {
-    rownames(mle$anglePar) <- p$parNames[(nrow(mle$stepPar)+1):length(p$parNames)]
+    rownames(mle$anglePar) <- c("mean","concentration")
     colnames(mle$anglePar) <- columns
   }
 
@@ -357,11 +361,6 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
 
   if(nbStates==1)
     mle$delta <- 1
-
-  if(!is.null(angleMean) & angleDist!="none") {
-    mle$anglePar <- rbind(angleMean,mle$anglePar)
-    rownames(mle$anglePar) <- NULL # remove rbind row name
-  }
 
   # compute t.p.m. if no covariates
   if(nbCovs==0 & nbStates>1) {

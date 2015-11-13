@@ -25,7 +25,8 @@ A list of:
 number of parameters of the turning angle distribution}
 \item{bounds}{Matrix with 2 columns and \code{sum(parSize)} rows - each row contains the lower and upper
 bound for the correponding parameter)}
-\item{parNames}{Names of parameters}
+\item{parNames}{Names of parameters of step distribution (the names of the parameters of the
+angle distribution are always the same).}
 }
 \description{
 Parameters definition
