@@ -30,8 +30,8 @@
 #' specified.
 #' @param model A moveHMM object. This option can be used to simulate from a fitted model. Default: NULL.
 #' Note that, if this argument is specified, most other arguments will be ignored (except for nbAnimals,
-#' obsPerAnimal, states, and covs - if covariate values different from those in the data should be
-#' specified).
+#' obsPerAnimal, covs (if covariate values different from those in the data should be
+#' specified), and states.
 #' @param states \code{TRUE} if the simulated states should be returned, \code{FALSE} otherwise (default).
 #'
 #' @return An object moveData, i.e. a dataframe of:
@@ -51,11 +51,18 @@
 #' In a covariate-free model (default), \code{beta} has one row, for the intercept.
 #'
 #' @examples
+#' # 1. Pass a fitted model to simulate from
+#' # We choose the default nbAnimals=1.
+#' m <- example$m
+#' obsPerAnimal=c(50,100)
+#' data <- simData(model=m,obsPerAnimal=obsPerAnimal)
+#'
+#' # 2. Pass the parameters of the model to simulate from
+#'
 #' stepPar <- c(1,10,1,5,0.2,0.3) # mean1, mean2, sd1, sd2, z1, z2
 #' anglePar <- c(pi,0,0.5,2) # mean1, mean2, k1, k2
 #' stepDist <- "gamma"
 #' angleDist <- "vm"
-#' obsPerAnimal=c(50,100)
 #' data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,stepPar=stepPar,
 #'                anglePar=anglePar,nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
 #'
@@ -187,7 +194,8 @@ simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm",
     if(!is.data.frame(covs))
       stop("'covs' should be a data.frame")
     if(nrow(covs)%%nbAnimals!=0)
-      stop("The number of rows in 'covs' should be a multiple of nbAnimals")
+      stop(paste("The number of rows in 'covs' (=",nrow(covs),") should be a multiple of nbAnimals (=",
+           nbAnimals,")",sep=""))
   }
 
   if(!is.null(covs)) {
