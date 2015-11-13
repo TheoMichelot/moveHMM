@@ -15,12 +15,12 @@ test_that("The output has the right format",{
   expect_equal(length(p$parSize),2)
   expect_equal(nrow(p$bounds),sum(p$parSize)*nbStates)
   expect_equal(ncol(p$bounds),2)
-  expect_equal(length(p$parNames),sum(p$parSize))
+  expect_equal(length(p$parNames),p$parSize[1])
 
   nbStates <- 3
   p <- parDef("exp","wrpcauchy",nbStates,FALSE,FALSE)
   expect_equal(length(p$parSize),2)
   expect_equal(nrow(p$bounds),sum(p$parSize)*nbStates)
   expect_equal(ncol(p$bounds),2)
-  expect_equal(length(p$parNames),sum(p$parSize))
+  expect_equal(length(p$parNames),p$parSize[1])
 })
