@@ -157,8 +157,8 @@ We load the relevant rows and columns into a data frame using the \texttt{read.t
 
 <<trackData1,size='small'>>=
 trackData <- read.table(
-"http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
-sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
+    "http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
+    sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
 @
 
 The dataframe \texttt{trackData} now has four columns: ``Individual'', ``Easting'', ``Northing'', and ``dist\_water..meters.''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
@@ -219,7 +219,7 @@ Once the data have been preprocessed, they can be plotted using the generic func
 <<plot_moveData1,size='small',eval=FALSE>>=
 plot(data,compact=T)
 @
-<<plot_moveData2,echo=FALSE>>=
+<<plot_moveData2,echo=FALSE,results='hide'>>=
 pdf(file="plot_moveData.pdf")
 plot(data,compact=T,ask=FALSE)
 dev.off()
@@ -266,7 +266,7 @@ anglePar0 <- c(angleMean0,kappa0)
 
 # call to fitting function
 m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,
-anglePar0=anglePar0,formula=~dist_water)
+            anglePar0=anglePar0,formula=~dist_water)
 @
 <<fitHMM2,echo=FALSE,cache=TRUE>>=
 load("model.RData")
@@ -290,7 +290,7 @@ The best way to deal with such numerical problems is to test different sets of i
 During preliminary tests on the elk data, we noticed that, in this example, the numerical search is highly sensitive to the choice of the initial parameters \texttt{beta0}. This is due to the high values of the covariate: a small change in the associated regression coefficients can make a big difference in the likelihood function. In such cases, it is advisable to standardize the covariate values before fitting the model, for example by calling:
 <<normalize,size='small',eval=FALSE>>=
 data$dist_water <- 
-(data$dist_water-mean(data$dist_water))/sd(data$dist_water)
+    (data$dist_water-mean(data$dist_water))/sd(data$dist_water)
 @
 
 This allows for greater numerical stability, with the convergence of the fitting function depending less on the choice of initial values. The value of the maximum log-likelihood is not affected by the standardization of the covariate values, only the maximum likelihood estimate of \texttt{beta} is.
@@ -323,7 +323,7 @@ The fitted model can be plotted, using the generic function \texttt{plot}. A few
 <<plot_moveHMM,size='small',eval=FALSE>>=
 plot(m)
 @
-<<plot_moveHMM2,echo=FALSE>>=
+<<plot_moveHMM2,echo=FALSE,results='hide'>>=
 pdf(file="plot_moveHMM.pdf")
 plot(m,ask=FALSE)
 dev.off()
@@ -400,7 +400,7 @@ anglePar0 <- c(angleMean0,kappa0)
 
 # fit the 3-state model
 m3 <- fitHMM(data=data,nbStates=3,stepPar0=stepPar0,
-anglePar0=anglePar0,formula=~dist_water)
+             anglePar0=anglePar0,formula=~dist_water)
 @
 <<m3,echo=FALSE,cache=TRUE>>=
 load(file="model3.RData")
