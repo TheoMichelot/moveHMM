@@ -25,7 +25,7 @@ summary.moveData <- function(object,details=TRUE,...)
   if(nbAnimals==1)
     cat("Movement data for 1 animal:\n",sep="")
   else
-    cat("Movement data for ",nbAnimals," animals:\n",sep="")
+    cat("Movement data for ",nbAnimals," tracks:\n",sep="")
   for(zoo in 1:nbAnimals)
     cat(as.character(unique(data$ID)[zoo])," -- ",
         length(which(data$ID==unique(data$ID)[zoo]))," observations\n",sep="")
