@@ -1,7 +1,7 @@
 \documentclass{article}
 
-%\VignetteIndexEntry{Guide to using moveHMM}
-%\VignetteEngine{knitr::knitr}
+% \VignetteIndexEntry{Guide to using moveHMM}
+% \VignetteEngine{knitr::knitr}
 
 \usepackage[utf8]{inputenc}
 \usepackage[bf,font={small,sl}]{caption} % for pretty captions
@@ -24,19 +24,19 @@
 \definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
 \definecolor{lightblue}{rgb}{0.5,0.5,1}
 \lstset{
-	backgroundcolor=\color{lightgrey},
-	basicstyle=\footnotesize\ttfamily,
-  	breakatwhitespace=false,
- 	breaklines=true,
-  	keepspaces=true,
-  	language=R,
-  	tabsize=2,
-  	deletekeywords={data,step},
-  	commentstyle=\footnotesize\color{lightblue}\it\ttfamily,
-  	literate={~} {$\sim$}{1}, % for nice tildes in listings
-    framexleftmargin=5pt,
-    frame=tb,
-    framerule=0pt
+  backgroundcolor=\color{lightgrey},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  keepspaces=true,
+  language=R,
+  tabsize=2,
+  deletekeywords={data,step},
+  commentstyle=\footnotesize\color{lightblue}\it\ttfamily,
+  literate={~} {$\sim$}{1}, % for nice tildes in listings
+  framexleftmargin=5pt,
+  frame=tb,
+  framerule=0pt
 }
 
 \title{\texttt{moveHMM}\\ An R package for animal movement modelling}
@@ -78,56 +78,56 @@ The standard HMM approach to model an individual animal's movement considers biv
 
 % for arrow head in the middle of edges
 \tikzset{->-/.style={decoration={
-  markings,
-  mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
+      markings,
+      mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
 
 \begin{figure}[ht]
-\centering
-\resizebox{0.44\textwidth}{!}{ % scale the whole tikz picture
-	\begin{tikzpicture}[]
-		
-		\node[circle,scale=0.3,fill,label={270:$(x_{t-1},y_{t-1})$}] at (0,0) (a) {};
-		\node[circle,scale=0.3,fill,label={90:$(x_{t},y_{t})$}] at (2,3) (b) {};
-		\node[circle,scale=0.3,fill,label={180:$(x_{t+1},y_{t+1})$}] at (4,1) (c) {};
-		\node[circle,scale=0.3,fill,label={90:$(x_{t+2},y_{t+2})$}] at (8,4) (d) {};
-		\node[] at (3,4.5) (e) {};
-		\node[] at (5,0) (f) {};				
-		
-		\draw[->-,line width=1pt] (a.center) -- (b.center);
-	    \draw[->-,line width=1pt] (b.center) -- (c.center);
-	    \draw[->-,line width=1pt] (c.center) -- (d.center);
-		
-		\draw[decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=4pt,red] (0,0) -- node [midway,xshift=-15pt,yshift=15pt] {$l_{t-1}$} (2,3);		
-		\draw[decorate,decoration={brace,amplitude=10pt},xshift=4pt,yshift=4pt,red] (2,3) -- node [midway,xshift=15pt,yshift=15pt] {$l_{t}$} (4,1);		
-		\draw[decorate,decoration={brace,amplitude=10pt,mirror},xshift=4pt,yshift=-4pt,red] (4,1) -- node [midway,xshift=15pt,yshift=-15pt] {$l_{t+1}$} (8,4);		
-		
-	\end{tikzpicture}
-}
-\resizebox{0.54\textwidth}{!}{ % scale the whole tikz picture
-	\begin{tikzpicture}[]
-		
-		\node[circle,scale=0.3,fill,label={180:$(x_{t-1},y_{t-1})$}] at (0,0) (a) {};
-		\node[circle,scale=0.3,fill,label={120:$(x_{t},y_{t})$}] at (2,3) (b) {};
-		\node[circle,scale=0.3,fill,label={220:$(x_{t+1},y_{t+1})$}] at (4,1) (c) {};
-		\node[circle,scale=0.3,fill,label={0:$(x_{t+2},y_{t+2})$}] at (8,4) (d) {};
-		\node[] at (3,4.5) (e) {};
-		\node[] at (5,0) (f) {};					
-		
-		\draw[->-,line width=1pt] (a.center) -- (b.center);
-	    \draw[->-,line width=1pt] (b.center) -- (c.center);
-	    \draw[->-,line width=1pt] (c.center) -- (d.center);
-    		
-    	\draw[dashed,->-,line width=1pt] (b.center) -- (e.center);
-  		\draw[dashed,->-,line width=1pt] (c.center) -- (f.center);
-	
-		\path (c) -- (b) -- (e) pic["$\phi_t$",draw,-latex,<->,angle radius=0.5cm,angle eccentricity=1.5,red]
-		{angle=c--b--e};
-		\path (f) -- (c) -- (d) pic["$\phi_{t+1}$",draw,-latex,<->,angle radius=0.5cm,angle eccentricity=2,red]
-		{angle=f--c--d};
+  \centering
+  \resizebox{0.44\textwidth}{!}{ % scale the whole tikz picture
+    \begin{tikzpicture}[]
+      
+      \node[circle,scale=0.3,fill,label={270:$(x_{t-1},y_{t-1})$}] at (0,0) (a) {};
+      \node[circle,scale=0.3,fill,label={90:$(x_{t},y_{t})$}] at (2,3) (b) {};
+      \node[circle,scale=0.3,fill,label={180:$(x_{t+1},y_{t+1})$}] at (4,1) (c) {};
+      \node[circle,scale=0.3,fill,label={90:$(x_{t+2},y_{t+2})$}] at (8,4) (d) {};
+      \node[] at (3,4.5) (e) {};
+      \node[] at (5,0) (f) {};				
+      
+      \draw[->-,line width=1pt] (a.center) -- (b.center);
+      \draw[->-,line width=1pt] (b.center) -- (c.center);
+      \draw[->-,line width=1pt] (c.center) -- (d.center);
+      
+      \draw[decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=4pt,red] (0,0) -- node [midway,xshift=-15pt,yshift=15pt] {$l_{t-1}$} (2,3);		
+      \draw[decorate,decoration={brace,amplitude=10pt},xshift=4pt,yshift=4pt,red] (2,3) -- node [midway,xshift=15pt,yshift=15pt] {$l_{t}$} (4,1);		
+      \draw[decorate,decoration={brace,amplitude=10pt,mirror},xshift=4pt,yshift=-4pt,red] (4,1) -- node [midway,xshift=15pt,yshift=-15pt] {$l_{t+1}$} (8,4);		
+      
+    \end{tikzpicture}
+  }
+  \resizebox{0.54\textwidth}{!}{ % scale the whole tikz picture
+    \begin{tikzpicture}[]
+      
+      \node[circle,scale=0.3,fill,label={180:$(x_{t-1},y_{t-1})$}] at (0,0) (a) {};
+      \node[circle,scale=0.3,fill,label={120:$(x_{t},y_{t})$}] at (2,3) (b) {};
+      \node[circle,scale=0.3,fill,label={220:$(x_{t+1},y_{t+1})$}] at (4,1) (c) {};
+      \node[circle,scale=0.3,fill,label={0:$(x_{t+2},y_{t+2})$}] at (8,4) (d) {};
+      \node[] at (3,4.5) (e) {};
+      \node[] at (5,0) (f) {};					
+      
+      \draw[->-,line width=1pt] (a.center) -- (b.center);
+      \draw[->-,line width=1pt] (b.center) -- (c.center);
+      \draw[->-,line width=1pt] (c.center) -- (d.center);
+      
+      \draw[dashed,->-,line width=1pt] (b.center) -- (e.center);
+      \draw[dashed,->-,line width=1pt] (c.center) -- (f.center);
+      
+      \path (c) -- (b) -- (e) pic["$\phi_t$",draw,-latex,<->,angle radius=0.5cm,angle eccentricity=1.5,red]
+      {angle=c--b--e};
+      \path (f) -- (c) -- (d) pic["$\phi_{t+1}$",draw,-latex,<->,angle radius=0.5cm,angle eccentricity=2,red]
+      {angle=f--c--d};
 
-	\end{tikzpicture}
-}
-    \caption{Illustration of step lengths and turning angles}\label{stepsandturns}
+    \end{tikzpicture}
+  }
+  \caption{Illustration of step lengths and turning angles}\label{stepsandturns}
 \end{figure}
 
 At each time point, the parameters of the step length distribution (e.g., a gamma distribution) and the parameters of the turning angle distribution (e.g., a von Mises distribution) are determined by an underlying unobserved state. There are finitely many states which provide rough classifications of the movement (e.g.\ more active vs.\ less active), often interpreted as proxies for the animal's behavioural states (e.g.\ transiting vs.\ foraging). The sequence of states is assumed to be generated by a Markov chain, usually with a tendency of remaining in a state for some time before switching to another state. The corresponding state transition probabilities, as well as the parameters characterising the state-dependent distributions, are model parameters to be estimated. The number of states (movement modes) is unknown and has to be specified by the user. Typically with movement data one assumes a low number of states (say $\leq$ 4). For example, an animal may be foraging (low speed, high rates of turning) and transiting (high speeds, low rates of turning). Biologically interesting inference often involves modelling the state transition probabilities as functions of environmental covariates. 
@@ -142,8 +142,8 @@ Before we provide a detailed description of the various features of the  \texttt
 
 The input data need to have the correct format for subsequent processing and analysis. The data need to be provided as a \texttt{data.frame}, with two mandatory columns:
 \begin{itemize}
-	\item Easting or longitude (default name: \texttt{x})
-	\item Northing or latitude (default name: \texttt{y})
+\item Easting or longitude (default name: \texttt{x})
+\item Northing or latitude (default name: \texttt{y})
 \end{itemize}
 It is possible to have a column ``ID'', which contains the identifiers of the observed animals. If no column named ``ID'' is provided, all the observations will be considered to belong to a single animal. Additional columns are considered as covariates. Note that, within this package, covariates need to have numerical values (rather than e.g. character values).
 
@@ -151,14 +151,14 @@ It is possible to have a column ``ID'', which contains the identifiers of the ob
 
 The elk data considered in \cite{morales2004} are available online at:
 \begin{center}
-	http://www.esapubs.org/archive/ecol/E085/072/elk\_data.txt
+  http://www.esapubs.org/archive/ecol/E085/072/elk\_data.txt
 \end{center}
 We load the relevant rows and columns into a data frame using the \texttt{read.table} command.
 
 <<trackData1,size='small'>>=
 trackData <- read.table(
-  "http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
-  sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
+"http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
+sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
 @
 
 The dataframe \texttt{trackData} now has four columns: ``Individual'', ``Easting'', ``Northing'', and ``dist\_water..meters.''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
@@ -188,8 +188,8 @@ head(trackData)
 \subsubsection{Use \texttt{prepData}}
 With the data in the proper format, it can be processed using \texttt{prepData} to compute step lengths and angles. We choose the arguments carefully:
 \begin{itemize}
-	\item \texttt{type} specifies whether the coordinates are easting/northing (\texttt{type="UTM"}) or longitude/latitude (\texttt{type="LL"}) values. The latter is the default, so we need to call the function with the argument \texttt{type="UTM"}, to indicate that UTM coordinates are provided.
-	\item \texttt{coordNames} are the names of the coordinates in the input dataframe. The default is ``x'' and ``y'', so we need to call the function with the argument \texttt{coordNames=c("Easting","Northing")}.
+\item \texttt{type} specifies whether the coordinates are easting/northing (\texttt{type="UTM"}) or longitude/latitude (\texttt{type="LL"}) values. The latter is the default, so we need to call the function with the argument \texttt{type="UTM"}, to indicate that UTM coordinates are provided.
+\item \texttt{coordNames} are the names of the coordinates in the input dataframe. The default is ``x'' and ``y'', so we need to call the function with the argument \texttt{coordNames=c("Easting","Northing")}.
 \end{itemize}
 
 \noindent The call to the function for these data is,
@@ -219,14 +219,19 @@ Once the data have been preprocessed, they can be plotted using the generic func
 <<plot_moveData1,size='small',eval=FALSE>>=
 plot(data,compact=T)
 @
+<<plot_moveData2,echo=FALSE>>=
+pdf(file="plot_moveData.pdf")
+plot(data,compact=T,ask=FALSE)
+dev.off()
+@ 
 
 The resulting map, and the steps and angles graphs for the first animal, are displayed in Figure \ref{moveData} (we omit the graphs for the three other animals, which are also displayed when using the above command).
 
 \begin{figure}[ht]
-	\includegraphics[width=0.49\textwidth,page=1]{plot_moveData}
-	\includegraphics[width=0.49\textwidth,page=2]{plot_moveData}
-	\caption{Map of the animals' tracks (left) -- each color represents an animal. Graphs of the step lengths and turning angles for one individual, ``elk-115'' (right).}
-	\label{moveData}
+  \includegraphics[width=0.49\textwidth,page=1]{plot_moveData}
+  \includegraphics[width=0.49\textwidth,page=2]{plot_moveData}
+  \caption{Map of the animals' tracks (left) -- each color represents an animal. Graphs of the step lengths and turning angles for one individual, ``elk-115'' (right).}
+  \label{moveData}
 \end{figure}
 
 The time series of step lengths is one way to check the data for outliers.
@@ -236,13 +241,13 @@ The time series of step lengths is one way to check the data for outliers.
 \subsubsection{fitHMM}
 The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments are described in the documentation. Here are a few choices we make:
 \begin{itemize}
-	\item \texttt{nbStates=2}, i.e. we fit a 2-state HMM to the data;
-	\item \texttt{beta0=NULL} and \texttt{delta0=NULL}, i.e.\ we use the default values for the initial values \texttt{beta0} and \texttt{delta0};
-	\item \texttt{formula=$\sim$dist\_water}, i.e. the transition probabilities are functions of the covariate ``dist\_water'';
-	\item \texttt{stepDist="gamma"}, to model the step lengths with the gamma distribution (note that it is the default, so we do not need to explicitely specify it);
-	\item \texttt{angleDist="vm"}, to model the turning angles with the von Mises distribution (default);
-	\item \texttt{angleMean=NULL}, because we want to estimate the mean of the angle distribution (default);
-	\item \texttt{stationary=FALSE}, as due to the covariates the process is not stationary (default). 
+\item \texttt{nbStates=2}, i.e. we fit a 2-state HMM to the data;
+\item \texttt{beta0=NULL} and \texttt{delta0=NULL}, i.e.\ we use the default values for the initial values \texttt{beta0} and \texttt{delta0};
+\item \texttt{formula=$\sim$dist\_water}, i.e. the transition probabilities are functions of the covariate ``dist\_water'';
+\item \texttt{stepDist="gamma"}, to model the step lengths with the gamma distribution (note that it is the default, so we do not need to explicitely specify it);
+\item \texttt{angleDist="vm"}, to model the turning angles with the von Mises distribution (default);
+\item \texttt{angleMean=NULL}, because we want to estimate the mean of the angle distribution (default);
+\item \texttt{stationary=FALSE}, as due to the covariates the process is not stationary (default). 
 \end{itemize}
 
 We also need to specify initial values for the parameters of the state-dependent distributions, to be used by the optimization function. Note that this choice is crucial, and that \textbf{the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen}. The initial parameters should be specified in two vectors, \texttt{stepPar0} (for the step distribution) and \texttt{anglePar0} (for the angle distribution). The necessary parameters of each distribution are detailed in Section \ref{sec_distrib}.
@@ -261,7 +266,7 @@ anglePar0 <- c(angleMean0,kappa0)
 
 # call to fitting function
 m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,
-			anglePar0=anglePar0,formula=~dist_water)
+anglePar0=anglePar0,formula=~dist_water)
 @
 <<fitHMM2,echo=FALSE,cache=TRUE>>=
 load("model.RData")
@@ -276,7 +281,7 @@ m
 \subsubsection{Dealing with numerical instability}
 As mentioned above, the numerical maximization routine might not identify the global maximum of the likelihood function, or even fail to converge altogether, for poorly chosen initial values of the parameters. In such a case, the optimization routine \texttt{nlm} might produce an error such as:
 \begin{lstlisting}
-Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  : 
+  Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  : 
   non-finite value supplied by 'nlm'
 \end{lstlisting}
 
@@ -285,7 +290,7 @@ The best way to deal with such numerical problems is to test different sets of i
 During preliminary tests on the elk data, we noticed that, in this example, the numerical search is highly sensitive to the choice of the initial parameters \texttt{beta0}. This is due to the high values of the covariate: a small change in the associated regression coefficients can make a big difference in the likelihood function. In such cases, it is advisable to standardize the covariate values before fitting the model, for example by calling:
 <<normalize,size='small',eval=FALSE>>=
 data$dist_water <- 
-	(data$dist_water-mean(data$dist_water))/sd(data$dist_water)
+(data$dist_water-mean(data$dist_water))/sd(data$dist_water)
 @
 
 This allows for greater numerical stability, with the convergence of the fitting function depending less on the choice of initial values. The value of the maximum log-likelihood is not affected by the standardization of the covariate values, only the maximum likelihood estimate of \texttt{beta} is.
@@ -301,11 +306,11 @@ CI(m)
 
 \noindent Note that a warning message is also output:
 \begin{lstlisting}
-Warning message:
-In CI(m) :
-Some of the parameter estimates seem to lie close to the boundaries
-of their parameter space. The associated CIs are probably 
-unreliable (or might not be computable).
+  Warning message:
+  In CI(m) :
+  Some of the parameter estimates seem to lie close to the boundaries
+  of their parameter space. The associated CIs are probably 
+  unreliable (or might not be computable).
 \end{lstlisting}
 
 It here refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and would return \texttt{NA} instead.
@@ -318,24 +323,29 @@ The fitted model can be plotted, using the generic function \texttt{plot}. A few
 <<plot_moveHMM,size='small',eval=FALSE>>=
 plot(m)
 @
+<<plot_moveHMM2,echo=FALSE>>=
+pdf(file="plot_moveHMM.pdf")
+plot(m,ask=FALSE)
+dev.off()
+@ 
 
 \noindent This outputs:
 \begin{itemize}
-	\item an histogram of step lengths of all animals, with the fitted state-dependent densities,
-    \item an histogram of turning angles of all animals, with the fitted state-dependent densities,
-    \item plots of the transition probabilities as functions of the covariate considered,
-    \item a map of each animal's track, colored by states.
+\item an histogram of step lengths of all animals, with the fitted state-dependent densities,
+\item an histogram of turning angles of all animals, with the fitted state-dependent densities,
+\item plots of the transition probabilities as functions of the covariate considered,
+\item a map of each animal's track, colored by states.
 \end{itemize}
 
 Figure \ref{moveHMM} displays those plots, but showing only one of the plotted maps, namely the one corresponding to the first animal, ``elk-115''. The state-dependent densities are weighted by the relative frequency of each state in the most probable state sequence (decoded with the Viterbi algorithm, see Section \ref{sec_statedec}). For example, if according to the most probable state sequence one third of the observations is allocated to the first state, and two thirds to the second state, the plots of the densities in the first state are weighted with a factor 1/3, and in the second state with a factor 2/3.
 
 \begin{figure}[!htb]
-	\includegraphics[width=0.49\textwidth,page=1]{plot_moveHMM}
-	\includegraphics[width=0.49\textwidth,page=2]{plot_moveHMM} \\
- 	\includegraphics[width=0.49\textwidth,page=3]{plot_moveHMM}
-	\includegraphics[width=0.49\textwidth,page=4]{plot_moveHMM}
-	\caption{Output of \texttt{plot.moveHMM}. Histogram of step lengths with fitted distributions (top-left), histogram of turning angles with fitted distributions (top-right), transition probabilities as functions of ``dist\_water'' (bottom-left), and map of decoded track for the first animal (bottom-right).}
-	\label{moveHMM}
+  \includegraphics[width=0.49\textwidth,page=1]{plot_moveHMM}
+  \includegraphics[width=0.49\textwidth,page=2]{plot_moveHMM} \\
+  \includegraphics[width=0.49\textwidth,page=3]{plot_moveHMM}
+  \includegraphics[width=0.49\textwidth,page=4]{plot_moveHMM}
+  \caption{Output of \texttt{plot.moveHMM}. Histogram of step lengths with fitted distributions (top-left), histogram of turning angles with fitted distributions (top-right), transition probabilities as functions of ``dist\_water'' (bottom-left), and map of decoded track for the first animal (bottom-right).}
+  \label{moveHMM}
 \end{figure}
 
 The first state (in red on the plots) corresponds to short steps, and angles centered around $\pi$, and the second state (in green on the plots) corresponds to longer steps, and angles centered around $0$.
@@ -354,7 +364,7 @@ states[1:25]
 
 \paragraph{State probabilities} To get more accurate information on the state process, it is possible to compute the state probabilities for each observation, using \texttt{stateProbs}. This returns a matrix with as many columns as there are states in the model, and as many rows as there are observations (stacking all animals' observations). The elements of the matrix are defined as
 \begin{center}
-	\texttt{stateProbs(m)[t,j]} = $\Pr(S_t=j)$
+  \texttt{stateProbs(m)[t,j]} = $\Pr(S_t=j)$
 \end{center}
 where $\{S_t\}$ is the state process.\\
 
@@ -390,7 +400,7 @@ anglePar0 <- c(angleMean0,kappa0)
 
 # fit the 3-state model
 m3 <- fitHMM(data=data,nbStates=3,stepPar0=stepPar0,
-			anglePar0=anglePar0,formula=~dist_water)
+anglePar0=anglePar0,formula=~dist_water)
 @
 <<m3,echo=FALSE,cache=TRUE>>=
 load(file="model3.RData")
@@ -429,10 +439,10 @@ To create a \texttt{moveData} object, the function \texttt{prepData} is called o
 Both classes can be used through their methods (e.g. \texttt{plot.moveData}, \texttt{AIC.moveHMM}), and a variety of other functions can be called on \texttt{moveHMM} objects. All functions are described in more detail in Section \ref{sec_main_functions} and their use is explained on an example in Section \ref{sec_application}. Figure \ref{struct} illustrates the links between the main components of the package.
 
 \begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.5\textwidth]{struct}
-	\caption{Structure of the main components of the package. The blue boxes are S3 classes, and the green boxes are functions. The arrows indicate input and output of data.}
-	\label{struct}
+  \centering
+  \includegraphics[width=0.5\textwidth]{struct}
+  \caption{Structure of the main components of the package. The blue boxes are S3 classes, and the green boxes are functions. The arrows indicate input and output of data.}
+  \label{struct}
 \end{figure}
 
 Note we will occasionally omit the class to which a method belongs, if the context makes it clear. Besides, as illustrated in the example in Section \ref{sec_application}, it is not necessary to specify the class when calling the R function (e.g. calling \texttt{plot} on a \texttt{moveHMM} object automatically refers to \texttt{plot.moveHMM}).
@@ -442,30 +452,30 @@ Note we will occasionally omit the class to which a method belongs, if the conte
 \subsubsection{Distributions} \label{sec_distrib}
 Here is the list of distributions included, with the names they have in the package.
 \begin{itemize}
-	\item Step length: gamma (``gamma''), Weibull (``weibull''), exponential (``exp'') and log-normal (``lnorm'').
-	\item Turning angle: von Mises (``vm'') and wrapped-Cauchy (``wrpcauchy''). It is also possible to specify \texttt{angleDist="none"}, if the angles are not modelled.
+\item Step length: gamma (``gamma''), Weibull (``weibull''), exponential (``exp'') and log-normal (``lnorm'').
+\item Turning angle: von Mises (``vm'') and wrapped-Cauchy (``wrpcauchy''). It is also possible to specify \texttt{angleDist="none"}, if the angles are not modelled.
 \end{itemize}
 
 The parameters depend on the distribution used. The gamma distribution expects the mean and standard deviation, and all other distributions expect the same parameters as the corresponding R density function, i.e.
 \begin{center}
-\begin{tabular}{lcll}
-	Distribution & & Parameters & \\
-	\hline
-	gamma & & mean $\in (0,+\infty)$ & standard deviation $\in (0,+\infty)$\\
-	Weibull & & shape $\in (0,+\infty) $ & scale $\in (0,+\infty)$ \\
-	log-normal & & location $\in \mathbb{R}$ & scale $\in (0,+\infty)$\\
-	exponential & & rate $\in (0,+\infty)$ & \\
-	\hline
-	von Mises & & mean $\in (-\pi,\pi]$ & concentration $\in (0,+\infty)$ \\
-	wrapped Cauchy & & mean $\in (-\pi,\pi]$ & concentration $\in (0,1)$\\
-	\hline	
-\end{tabular}
+  \begin{tabular}{lcll}
+    Distribution & & Parameters & \\
+    \hline
+    gamma & & mean $\in (0,+\infty)$ & standard deviation $\in (0,+\infty)$\\
+    Weibull & & shape $\in (0,+\infty) $ & scale $\in (0,+\infty)$ \\
+    log-normal & & location $\in \mathbb{R}$ & scale $\in (0,+\infty)$\\
+    exponential & & rate $\in (0,+\infty)$ & \\
+    \hline
+    von Mises & & mean $\in (-\pi,\pi]$ & concentration $\in (0,+\infty)$ \\
+    wrapped Cauchy & & mean $\in (-\pi,\pi]$ & concentration $\in (0,1)$\\
+    \hline	
+  \end{tabular}
 \end{center}
 
 For the gamma distribution, the link between the mean/standard deviation (expected by \texttt{fitHMM}) and shape/scale (expected by \texttt{dgamma}) is given by:
 \begin{align*}
-	shape & = \dfrac{mean^2}{sd^2}\\
-	scale & = \dfrac{sd^2}{mean}
+  shape & = \dfrac{mean^2}{sd^2}\\
+  scale & = \dfrac{sd^2}{mean}
 \end{align*}
 
 
@@ -482,47 +492,47 @@ In practice it is often of interest to model the state transition probabilities 
 where
 $$ \eta_{ij} = 
 \begin{cases}
-\beta_{0}^{(ij)} + \sum_{l=1}^p \beta_{l}^{(ij)} w_{lt} & \text{ if } i\neq j, \\
-0 & \text{otherwise,}
+  \beta_{0}^{(ij)} + \sum_{l=1}^p \beta_{l}^{(ij)} w_{lt} & \text{ if } i\neq j, \\
+  0 & \text{otherwise,}
 \end{cases}
 $$
 for $i,j=1,\ldots,N$. Here $\{ S_t \}$ is the state process, $w_{lt}$ is the $l$-th covariate at time $t$ and $p$ is the number of covariates considered. The $\beta$ parameters directly affect the off-diagonal elements in $\boldsymbol{\Gamma}^{(t)}$ --- with an increase in the linear predictor $\eta_{ij}$ resulting in an increase in $\gamma_{ij}^{(t)}$ --- and hence also the diagonal entries due to the row constraints (with the entries in each row summing to one). Note in particular that we have to fix $\eta_{ii}=0$ for all $i$ since otherwise the model would be overparameterized (not identifiable).
 
 Within \texttt{moveHMM}, the $\beta$ coefficients for the off-diagonal transition probabilities are stored in an $(p+1) \times (n\cdot(n-1))$ matrix. For example, for a 3-state HMM with two covariates, the matrix \texttt{beta} is
 \begin{equation*}
-	\begin{pmatrix}
-	\beta_0^{(12)} & \beta_0^{(13)} & \beta_0^{(21)} & \beta_0^{(23)} & \beta_0^{(31)} & \beta_0^{(32)}\\
-	\beta_1^{(12)} & \beta_1^{(13)} & \beta_1^{(21)} & \beta_1^{(23)} & \beta_1^{(31)} & \beta_1^{(32)}\\
-	\beta_2^{(12)} & \beta_2^{(13)} & \beta_2^{(21)} & \beta_2^{(23)} & \beta_2^{(31)} & \beta_2^{(32)}\\		
-	\end{pmatrix}
+  \begin{pmatrix}
+    \beta_0^{(12)} & \beta_0^{(13)} & \beta_0^{(21)} & \beta_0^{(23)} & \beta_0^{(31)} & \beta_0^{(32)}\\
+    \beta_1^{(12)} & \beta_1^{(13)} & \beta_1^{(21)} & \beta_1^{(23)} & \beta_1^{(31)} & \beta_1^{(32)}\\
+    \beta_2^{(12)} & \beta_2^{(13)} & \beta_2^{(21)} & \beta_2^{(23)} & \beta_2^{(31)} & \beta_2^{(32)}\\		
+  \end{pmatrix}
 \end{equation*}
 Here the first row corresponds to the intercept terms and the other two rows to the slope coefficients associated with the two covariates. There are as many columns as there are off-diagonal entries in the $3 \times 3$ transition probability matrix, and that matrix is filled row-wise (i.e.\ column 1 in \texttt{beta} is linked to $\gamma_{12}^{(t)}$, column 2 is linked to $\gamma_{13}^{(t)}$, column 3 is linked to $\gamma_{21}^{(t)}$, etc.).\\
 
 In practice, many movement models involve only two states, in which case the above equations boil down to
 \begin{align*}
- \boldsymbol{\Gamma}^{(t)}  & = 
-\begin{pmatrix}
-	\dfrac{1}{1+\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)} &
-    \dfrac{\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)}{1+\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)} \\[20pt]
-	\dfrac{\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)}{1+\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)} &
-    \dfrac{1}{1+\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)}
-\end{pmatrix} \\[20pt]
- = & 
-\begin{pmatrix}
+  \boldsymbol{\Gamma}^{(t)}  & = 
+                               \begin{pmatrix}
+                                 \dfrac{1}{1+\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)} &
+                                 \dfrac{\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)}{1+\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)} \\[20pt]
+                                 \dfrac{\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)}{1+\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)} &
+                                 \dfrac{1}{1+\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)}
+                               \end{pmatrix} \\[20pt]
+  = & 
+      \begin{pmatrix}
 	1-\text{logit}^{-1} \left( \beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt} \right) & 
-    \text{logit}^{-1} \left( \beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt} \right) \\[10pt]
+        \text{logit}^{-1} \left( \beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt} \right) \\[10pt]
 	\text{logit}^{-1} \left( \beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt} \right)  & 
-    1- \text{logit}^{-1} \left( \beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt} \right)
-\end{pmatrix}
+        1- \text{logit}^{-1} \left( \beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt} \right)
+      \end{pmatrix}
 \end{align*}
 The inverse logit link function is applied in order to map the real-valued predictor onto the interval $[0,1]$ (with the above multinomial logit link representing a generalization of this approach to the case of $N>2$ states). In the case of two states, the matrix $\beta$ in \texttt{moveHMM} is structured as follows:
 \begin{equation*}
-	\begin{pmatrix}
-	\beta_0^{(12)} & \beta_0^{(21)} \\
-	\beta_1^{(12)} & \beta_1^{(21)} \\
+  \begin{pmatrix}
+    \beta_0^{(12)} & \beta_0^{(21)} \\
+    \beta_1^{(12)} & \beta_1^{(21)} \\
     \vdots         &   \vdots       \\
-	\beta_p^{(12)} & \beta_p^{(21)} 
-	\end{pmatrix}.
+    \beta_p^{(12)} & \beta_p^{(21)} 
+  \end{pmatrix}.
 \end{equation*}
 
 
@@ -546,30 +556,30 @@ Using the function \texttt{fitHMM}, an HMM can be fitted to an object of class \
 
 This function outputs a list of information about the model. Most elements of that list are only meant to be used by the \texttt{moveHMM} functions (see Sections \ref{sec_methods} and \ref{sec_functions}), but a few can be informative \textit{per se}:
 \begin{itemize}
-	\item \texttt{mle} contains the estimates of the parameters of the model;
-	\item \texttt{mod} contains the output of the optimization function \texttt{nlm}, including \texttt{mod\$minimum} (minimum of the negative log-likelihood) and \texttt{mod\$hessian}, the Hessian of the negative log-likelihood function at its minimum.
+\item \texttt{mle} contains the estimates of the parameters of the model;
+\item \texttt{mod} contains the output of the optimization function \texttt{nlm}, including \texttt{mod\$minimum} (minimum of the negative log-likelihood) and \texttt{mod\$hessian}, the Hessian of the negative log-likelihood function at its minimum.
 \end{itemize}
 
 \subsubsection{Generic methods} \label{sec_methods}
 Methods (i.e.\ class functions) are available for both \texttt{moveData} and \texttt{moveHMM} objects, to operate on them. For details on the options see the documentation, and for an example of their use, see Section \ref{sec_application}.
 
 \begin{itemize}
-	\item \texttt{plot.moveData} plots a few graphs to illustrate the data: a map of each animal's track, time series of the steps and angles, histograms of the steps and angles.
-    \item \texttt{summary.moveData} outputs some summary information about a \texttt{moveData} object: the number of animals, the number of observations for each animal, and quantiles of the covariate values.
-	\item \texttt{plot.moveHMM} plots a few graphs to illustrate the fitted model: a map of each animal's track, colored by states, plots of the estimated density functions, plots of the transition probabilities as functions of the covariates.
-    \item \texttt{print.moveHMM} prints the value of the maximum log-likelihood, and the maximum likelihood estimates of the parameters of the model.
-    \item \texttt{AIC.moveHMM} returns the AIC of one or several fitted models.
+\item \texttt{plot.moveData} plots a few graphs to illustrate the data: a map of each animal's track, time series of the steps and angles, histograms of the steps and angles.
+\item \texttt{summary.moveData} outputs some summary information about a \texttt{moveData} object: the number of animals, the number of observations for each animal, and quantiles of the covariate values.
+\item \texttt{plot.moveHMM} plots a few graphs to illustrate the fitted model: a map of each animal's track, colored by states, plots of the estimated density functions, plots of the transition probabilities as functions of the covariates.
+\item \texttt{print.moveHMM} prints the value of the maximum log-likelihood, and the maximum likelihood estimates of the parameters of the model.
+\item \texttt{AIC.moveHMM} returns the AIC of one or several fitted models.
 \end{itemize}
 
 \subsubsection{Other operations on \texttt{moveHMM}} \label{sec_functions}
 Other functions can be called on a \texttt{moveHMM} object, for further analysis.
 \begin{itemize}
-	\item \texttt{CI} computes confidence intervals for the step length distribution parameters, for the turning angle distribution parameters, and for the regression coefficients of the transition probabilities.
-	\item \texttt{pseudoRes} computes the pseudo-residuals of the model. These can be used to assess the goodness of fit. If the model is the true data-generating process, then the pseudo-residuals follow a standard normal distribution \citep{zucchini2009}.
-    \item \texttt{stateProbs} computes the probabilities of the underlying Markov chain being in the different states, at each observation, under the fitted model.
-    \item \texttt{viterbi} computes the sequence of most probable states, under the fitted model, using the Viterbi algorithm \citep{zucchini2009}.
-    \item \texttt{plotStates} plots the most probable state sequence (as decoded with \texttt{viterbi}), and the state probabilities (as computed with \texttt{stateProbs}).
- 	\item \texttt{plotPR} plots time series, qq-plots, and the sample autocorrelation (ACF) functions of the pseudo-residuals of the fitted model \citep{zucchini2009}. The qq-plots can be used to visually assess whether or not the pseudo-residuals are standard normally distributed. The points in the qq-plot will be close to the straight line if the model fits the data well. If the sample ACFs display a residual autocorrelation, then this is an indication that the model might not have captured all relevant correlation structure in the data. 
+\item \texttt{CI} computes confidence intervals for the step length distribution parameters, for the turning angle distribution parameters, and for the regression coefficients of the transition probabilities.
+\item \texttt{pseudoRes} computes the pseudo-residuals of the model. These can be used to assess the goodness of fit. If the model is the true data-generating process, then the pseudo-residuals follow a standard normal distribution \citep{zucchini2009}.
+\item \texttt{stateProbs} computes the probabilities of the underlying Markov chain being in the different states, at each observation, under the fitted model.
+\item \texttt{viterbi} computes the sequence of most probable states, under the fitted model, using the Viterbi algorithm \citep{zucchini2009}.
+\item \texttt{plotStates} plots the most probable state sequence (as decoded with \texttt{viterbi}), and the state probabilities (as computed with \texttt{stateProbs}).
+\item \texttt{plotPR} plots time series, qq-plots, and the sample autocorrelation (ACF) functions of the pseudo-residuals of the fitted model \citep{zucchini2009}. The qq-plots can be used to visually assess whether or not the pseudo-residuals are standard normally distributed. The points in the qq-plot will be close to the straight line if the model fits the data well. If the sample ACFs display a residual autocorrelation, then this is an indication that the model might not have captured all relevant correlation structure in the data. 
 \end{itemize} 
 
 \subsubsection{simData}
@@ -582,39 +592,39 @@ It is possible to call \texttt{simData} on a fitted model directly, to simulate 
 \begin{thebibliography}{}
 
 \bibitem[\protect\citeauthoryear{Jonsen et al.}{2005}]{jonsen2005}
-\textsc{Jonsen, I.D., Flemming, J.M., Myers, R.A.} (2005),
-``Robust state-space modeling of animal movement data'',
-\textit{Ecology}, 86 (11), 2874--2880.
+  \textsc{Jonsen, I.D., Flemming, J.M., Myers, R.A.} (2005),
+  ``Robust state-space modeling of animal movement data'',
+  \textit{Ecology}, 86 (11), 2874--2880.
 
 \bibitem[\protect\citeauthoryear{Langrock et al.}{2012}]{langrock2012}
-\textsc{Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M.} (2012),
-``Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions''
-\textit{Ecology}, 93 (11), 2336--2342.
+  \textsc{Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M.} (2012),
+  ``Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions''
+  \textit{Ecology}, 93 (11), 2336--2342.
 
 \bibitem[\protect\citeauthoryear{McClintock et al.}{2012}]{mcclintock2012}
-\textsc{McClintock, B.T., King, R., Thomas, L., Matthiopoulos, J., McConnell, B.J., Morales, J.M.} (2012),
-``A general discrete-time modeling framework for animal movement using multistate random walks'',
-\textit{Ecological Monographs}, 82 (3), 335--349.
+  \textsc{McClintock, B.T., King, R., Thomas, L., Matthiopoulos, J., McConnell, B.J., Morales, J.M.} (2012),
+  ``A general discrete-time modeling framework for animal movement using multistate random walks'',
+  \textit{Ecological Monographs}, 82 (3), 335--349.
 
 \bibitem[\protect\citeauthoryear{Morales et al.}{2004}]{morales2004}
-\textsc{Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M.} (2004),
-``Extracting more out of relocation data: building movement models as mixtures of random walks'',
-\textit{Ecology}, 85 (9), 2436--2445.
+  \textsc{Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M.} (2004),
+  ``Extracting more out of relocation data: building movement models as mixtures of random walks'',
+  \textit{Ecology}, 85 (9), 2436--2445.
 
 \bibitem[\protect\citeauthoryear{Patterson et al.}{2009}]{patterson2009}
-\textsc{Patterson T.A., Basson M., Bravington M.V., Gunn J.S.} (2009),
-``Classifying movement behaviour in relation to environmental conditions using hidden Markov models''
-\textit{Journal of Animal Ecology}, 78 (6), 1113--1123.
+  \textsc{Patterson T.A., Basson M., Bravington M.V., Gunn J.S.} (2009),
+  ``Classifying movement behaviour in relation to environmental conditions using hidden Markov models''
+  \textit{Journal of Animal Ecology}, 78 (6), 1113--1123.
 
 \bibitem[\protect\citeauthoryear{Patterson et al.}{2015}]{pat15}
-\textsc{Patterson T.A., Langrock, R., Blackwell, P.G., Thomas, L., Parton, A.} (2015),
-``Statistical modelling of animal movement: a myopic review and a discussion of good practice''
-\textit{Preprint}.
+  \textsc{Patterson T.A., Langrock, R., Blackwell, P.G., Thomas, L., Parton, A.} (2015),
+  ``Statistical modelling of animal movement: a myopic review and a discussion of good practice''
+  \textit{Preprint}.
 
 \bibitem[\protect\citeauthoryear{Zucchini and MacDonald}{2009}]{zucchini2009}
-\textsc{Zucchini, W.\ and MacDonald, I.L.} (2009).
-{\em Hidden Markov Models for Time Series: An Introduction Using R.}
-Chapman \& Hall (London).
+  \textsc{Zucchini, W.\ and MacDonald, I.L.} (2009).
+  {\em Hidden Markov Models for Time Series: An Introduction Using R.}
+  Chapman \& Hall (London).
 \end{thebibliography}
 
 \end{document}
