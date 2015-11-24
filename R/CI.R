@@ -134,6 +134,24 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
   stepPar <- list(lower=lower$stepPar,upper=upper$stepPar)
   beta <- list(lower=lower$beta,upper=upper$beta)
 
+  # name the rows and columns of the CIs
+  rownames(stepPar$lower) <- rownames(m$mle$stepPar)
+  rownames(stepPar$upper) <- rownames(m$mle$stepPar)
+  colnames(stepPar$lower) <- colnames(m$mle$stepPar)
+  colnames(stepPar$upper) <- colnames(m$mle$stepPar)
+  if(m$conditions$angleDist!="none") {
+    rownames(anglePar$lower) <- rownames(m$mle$anglePar)
+    rownames(anglePar$upper) <- rownames(m$mle$anglePar)
+    colnames(anglePar$lower) <- colnames(m$mle$anglePar)
+    colnames(anglePar$upper) <- colnames(m$mle$anglePar)
+  }
+  if(!is.null(m$mle$beta)) {
+    rownames(beta$lower) <- rownames(m$mle$beta)
+    rownames(beta$upper) <- rownames(m$mle$beta)
+    colnames(beta$lower) <- colnames(m$mle$beta)
+    colnames(beta$upper) <- colnames(m$mle$beta)
+  }
+
   if(!is.null(m$mle$beta))
     return(list(stepPar=stepPar,anglePar=anglePar,beta=beta))
   else
