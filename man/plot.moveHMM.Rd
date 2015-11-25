@@ -5,7 +5,8 @@
 \title{Plot \code{moveHMM}}
 \usage{
 \method{plot}{moveHMM}(x, animals = NULL, ask = TRUE, breaks = "Sturges",
-  hist.ylim = NULL, sepAnimals = FALSE, sepStates = FALSE, ...)
+  hist.ylim = NULL, sepAnimals = FALSE, sepStates = FALSE, col = NULL,
+  ...)
 }
 \arguments{
 \item{x}{Object \code{moveHMM}}
@@ -25,6 +26,8 @@ Default: \code{FALSE}.}
 
 \item{sepStates}{If \code{TRUE}, the data is split by states in the histograms.
 Default: \code{FALSE}.}
+
+\item{col}{Vector or colors for the states (one color per state).}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
