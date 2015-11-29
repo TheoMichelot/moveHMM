@@ -29,10 +29,9 @@ not be estimated. Default: vm.}
 \item{beta}{Matrix of regression parameters for the transition probabilities (more information
 in "Details").}
 
-\item{covs}{Covariate values to include in the model, as a dataframe. The number of rows of \code{covs}
-needs to be a multiple of the number of animals, and the same number of observations will be
-simulated for each animal. Default: \code{NULL}. Covariates can also be simulated according to a standard
-normal distribution, by setting \code{covs} to \code{NULL}, and specifying \code{nbCovs>0}.}
+\item{covs}{Covariate values to include in the model, as a dataframe. Default: \code{NULL}.
+Covariates can also be simulated according to a standard normal distribution, by setting
+\code{covs} to \code{NULL}, and specifying \code{nbCovs>0}.}
 
 \item{nbCovs}{Number of covariates to simulate (0 by default). Does not need to be specified of
 \code{covs} is specified.}
@@ -44,13 +43,12 @@ included in \code{stepPar}.}
 \item{obsPerAnimal}{Either the number of the number of observations per animal (if single value),
 or the bounds of the number of observations per animal (if vector of two values). In the latter case,
 the numbers of obervations generated for each animal are uniformously picked from this interval.
-Default: \code{c(500,1500)}. \code{obsPerAnimal} does not need to be specified if \code{covs} is
-specified.}
+Default: \code{c(500,1500)}.}
 
-\item{model}{A moveHMM object. This option can be used to simulate from a fitted model. Default: NULL.
-Note that, if this argument is specified, most other arguments will be ignored (except for nbAnimals,
-obsPerAnimal, covs (if covariate values different from those in the data should be
-specified), and states.}
+\item{model}{A moveHMM object. This option can be used to simulate from a fitted model.  Default: NULL.
+Note that, if this argument is specified, most other arguments will be ignored -- except for nbAnimals,
+obsPerAnimal, covs (if covariate values different from those in the data should be specified),
+and states.}
 
 \item{states}{\code{TRUE} if the simulated states should be returned, \code{FALSE} otherwise (default).}
 }
@@ -67,13 +65,20 @@ An object moveData, i.e. a dataframe of:
 Simulates movement data from an HMM.
 }
 \details{
-The matrix \code{beta} of regression coefficients for the transition probabilities has
+\itemize{
+\item The matrix \code{beta} of regression coefficients for the transition probabilities has
 one row for the intercept, plus one row for each covariate, and one column for
 each non-diagonal element of the transition probability matrix. For example, in a 3-state
 HMM with 2 covariates, the matrix \code{beta} has three rows (intercept + two covariates)
 and six columns (six non-diagonal elements in the 3x3 transition probability matrix - filled in
 row-wise).
 In a covariate-free model (default), \code{beta} has one row, for the intercept.
+
+\item If the length of covariate values passed (either through 'covs', or 'model') is not the same
+as the number of observations suggested by 'nbAnimals' and 'obsPerAnimal', then the series of
+covariates is either shortened (removing last values - if too long) or extended (starting
+over from the first values - if too short).
+}
 }
 \examples{
 # 1. Pass a fitted model to simulate from
@@ -105,8 +110,8 @@ data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist="none",stepPa
                nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
 
 # include covariates
-# (note that it is useless to specify "nbCovs" and "obsPerAnimal", which are respectively determined
-# by the number of columns and number of rows of "cov")
+# (note that it is useless to specify "nbCovs", which respectively determined
+# by the number of columns of "cov")
 cov <- data.frame(temp=rnorm(500,20,5))
 stepPar <- c(1,10,1,5) # mean1, mean2, sd1, sd2
 anglePar <- c(pi,0,0.5,2) # mean1, mean2, k1, k2
