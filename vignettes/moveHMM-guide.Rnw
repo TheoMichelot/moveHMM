@@ -10,6 +10,7 @@
 \usepackage{amsfonts} % for mathbb...
 \usepackage{listings} % for lstlisting
 \usepackage{color} % for lstlisting background color
+\usepackage{booktabs}
 
 % for graphs
 \usepackage{tikz}
@@ -230,7 +231,7 @@ The resulting map, and the steps and angles graphs for the first animal, are dis
 \begin{figure}[ht]
   \includegraphics[width=0.49\textwidth,page=1]{plot_moveData}
   \includegraphics[width=0.49\textwidth,page=2]{plot_moveData}
-  \caption{Map of the animals' tracks (left) -- each color represents an animal. Graphs of the step lengths and turning angles for one individual, ``elk-115'' (right).}
+  \caption{Map of the animals' tracks (left) -- each color represents an animal. Time series and histograms of the step lengths and turning angles for one individual, ``elk-115'' (right).}
   \label{moveData}
 \end{figure}
 
@@ -252,8 +253,11 @@ The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments ar
 
 We also need to specify initial values for the parameters of the state-dependent distributions, to be used by the optimization function. Note that this choice is crucial, and that \textbf{the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen}. The initial parameters should be specified in two vectors, \texttt{stepPar0} (for the step distribution) and \texttt{anglePar0} (for the angle distribution). The necessary parameters of each distribution are detailed in Section \ref{sec_distrib}.
 
-Zero-inflation must be included in the step length distribution if some steps are of length exactly zero (which is the case for the elk data). To do so, another parameter is added to the step distribution: its mass on zero.
+Zero-inflation (as described in Section \ref{sec:zeroinflation}) must be included in the step length distribution if some steps are of length exactly zero (which is the case for the elk data). To do so, another parameter is added to the step distribution: its mass on zero.
 
+To choose initial values for the parameters, in the elk example, we consider that we want to identify two states corresponding to two levels of activity. In the first state, the animal moves slowly (i.e. the step lengths are short) and tends to stay in an area (i.e. the turning angles are centred around $\pi$). In the second state, the animal moves faster (i.e. the step lengths are longer) and tends to have a more directed movement (i.e. the turning angles are centred around $0$). Thus, in state 1, we choose a gamma(0.1,0.1) distribution with 5\% zero-inflation for the initial step distribution, and a vonMises($\pi$,1) distribution as the initial angle distribution. In state 2, we choose a gamma(1,1) distribution without zero-inflation for the steps, and a vonMises(0,1) distribution for the angles.
+
+To declare the initial parameters, and fit the model to the elk data, we use:
 <<fitHMM,size='small',eval=FALSE>>=
 # initial parameters for gamma and von Mises distributions
 mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
@@ -459,16 +463,17 @@ Here is the list of distributions included, with the names they have in the pack
 The parameters depend on the distribution used. The gamma distribution expects the mean and standard deviation, and all other distributions expect the same parameters as the corresponding R density function, i.e.
 \begin{center}
   \begin{tabular}{lcll}
+    \toprule
     Distribution & & Parameters & \\
-    \hline
+    \midrule
     gamma & & mean $\in (0,+\infty)$ & standard deviation $\in (0,+\infty)$\\
     Weibull & & shape $\in (0,+\infty) $ & scale $\in (0,+\infty)$ \\
     log-normal & & location $\in \mathbb{R}$ & scale $\in (0,+\infty)$\\
     exponential & & rate $\in (0,+\infty)$ & \\
-    \hline
+    \midrule
     von Mises & & mean $\in (-\pi,\pi]$ & concentration $\in (0,+\infty)$ \\
     wrapped Cauchy & & mean $\in (-\pi,\pi]$ & concentration $\in (0,1)$\\
-    \hline	
+    \bottomrule	
   \end{tabular}
 \end{center}
 
@@ -479,10 +484,9 @@ For the gamma distribution, the link between the mean/standard deviation (expect
 \end{align*}
 
 
-\subsubsection{Zero-inflation}
+\subsubsection{Zero-inflation} \label{sec:zeroinflation}
 
-If some steps are exactly equal to zero, then strictly positive distributions such as the gamma are inadequate. In such cases, zero-inflated distributions can be considered. %With $l_t$ denoting the random variable giving the step length of an individual at time $t$, 
-A zero-inflated step length distribution simply assumes that there is a probability $z$ of observing a 0 and a probability of $1-z$ of observing a positive value distributed according to a standard positive distribution (e.g.\ a gamma). Within the package \texttt{moveHMM}, zero-inflation will automatically be included if there are zero steps. In that case the (state-dependent) values $z$ will be estimated, with the remaining positive distribution, weighted by $1-z$, specified as one of the available standard step length distributions, listed in Section \ref{sec_distrib}.
+If some steps are exactly equal to zero, then strictly positive distributions such as the gamma are inadequate. In such cases, zero-inflated distributions can be considered. A zero-inflated step length distribution simply assumes that there is a probability $z$ of observing a 0 and a probability of $1-z$ of observing a positive value distributed according to a standard positive distribution (e.g.\ a gamma). Within the package \texttt{moveHMM}, zero-inflation will automatically be included if there are zero steps. In that case the (state-dependent) values $z$ will be estimated, with the remaining positive distribution, weighted by $1-z$, specified as one of the available standard step length distributions, listed in Section \ref{sec_distrib}.
 
 \subsubsection{Covariates}
 
