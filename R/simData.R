@@ -98,8 +98,6 @@
 #' @export
 #' @importFrom stats rnorm runif
 
-
-
 simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm","exp"),
                     angleDist=c("vm","wrpcauchy","none"),stepPar=NULL,anglePar=NULL,
                     beta=NULL,covs=NULL,nbCovs=0,zeroInflation=FALSE,obsPerAnimal=c(500,1500),
