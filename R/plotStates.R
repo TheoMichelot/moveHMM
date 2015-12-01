@@ -70,8 +70,10 @@ plotStates <- function(m,animals=NULL,ask=TRUE)
 
     # plot the states probabilities
     par(mar=c(5,4,4,2)-c(0,0,2,0))
-    for(i in 1:nbStates)
+    for(i in 1:nbStates) {
       plot(sp[ind,i],type="l",xlab="Observation index",ylab=paste("Pr(State=",i,")",sep=""))
+      abline(h=0.5,lty=2,col="darkgrey")
+    }
   }
 
   # back to default
