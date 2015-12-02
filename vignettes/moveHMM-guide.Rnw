@@ -6,20 +6,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[bf,font={small,sl}]{caption} % for pretty captions
 \usepackage{natbib} % for the bibliography
-\usepackage{amsmath} % for align and cases
+\usepackage{amsmath} % for align, cases...
 \usepackage{amsfonts} % for mathbb...
 \usepackage{listings} % for lstlisting
 \usepackage{color} % for lstlisting background color
-\usepackage{booktabs}
-
-% for graphs
-\usepackage{tikz}
-\usetikzlibrary{arrows,automata,decorations}
-\usetikzlibrary{decorations.pathreplacing}
-% decorations.markings for arrow heads in the middle of edges
-\usetikzlibrary{decorations.markings}
-% angles to draw angle arcs, quotes to label them
-\usetikzlibrary{angles, quotes}
+\usepackage{booktabs} % pretty tables
 
 % listing style
 \definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
@@ -77,57 +68,9 @@ For full details of the HMM approach in the context of animal movement modelling
 
 The standard HMM approach to model an individual animal's movement considers bivariate time series comprising the step length and the turning angle at each time point (see illustration in Figure \ref{stepsandturns}). The associated locations need to be {\em sampled at equally spaced points in time} (though missing data on an otherwise regular grid can easily be handled) and are assumed to be {\em observed with no or only negligible error}. The \texttt{moveHMM} package is restricted to such discrete time data and involves the assumption that the locations are observed with zero, or at least negligible error. 
 
-% for arrow head in the middle of edges
-\tikzset{->-/.style={decoration={
-      markings,
-      mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
-
 \begin{figure}[ht]
   \centering
-  \resizebox{0.44\textwidth}{!}{ % scale the whole tikz picture
-    \begin{tikzpicture}[]
-      
-      \node[circle,scale=0.3,fill,label={270:$(x_{t-1},y_{t-1})$}] at (0,0) (a) {};
-      \node[circle,scale=0.3,fill,label={90:$(x_{t},y_{t})$}] at (2,3) (b) {};
-      \node[circle,scale=0.3,fill,label={180:$(x_{t+1},y_{t+1})$}] at (4,1) (c) {};
-      \node[circle,scale=0.3,fill,label={90:$(x_{t+2},y_{t+2})$}] at (8,4) (d) {};
-      \node[] at (3,4.5) (e) {};
-      \node[] at (5,0) (f) {};				
-      
-      \draw[->-,line width=1pt] (a.center) -- (b.center);
-      \draw[->-,line width=1pt] (b.center) -- (c.center);
-      \draw[->-,line width=1pt] (c.center) -- (d.center);
-      
-      \draw[decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=4pt,red] (0,0) -- node [midway,xshift=-15pt,yshift=15pt] {$l_{t-1}$} (2,3);		
-      \draw[decorate,decoration={brace,amplitude=10pt},xshift=4pt,yshift=4pt,red] (2,3) -- node [midway,xshift=15pt,yshift=15pt] {$l_{t}$} (4,1);		
-      \draw[decorate,decoration={brace,amplitude=10pt,mirror},xshift=4pt,yshift=-4pt,red] (4,1) -- node [midway,xshift=15pt,yshift=-15pt] {$l_{t+1}$} (8,4);		
-      
-    \end{tikzpicture}
-  }
-  \resizebox{0.54\textwidth}{!}{ % scale the whole tikz picture
-    \begin{tikzpicture}[]
-      
-      \node[circle,scale=0.3,fill,label={180:$(x_{t-1},y_{t-1})$}] at (0,0) (a) {};
-      \node[circle,scale=0.3,fill,label={120:$(x_{t},y_{t})$}] at (2,3) (b) {};
-      \node[circle,scale=0.3,fill,label={220:$(x_{t+1},y_{t+1})$}] at (4,1) (c) {};
-      \node[circle,scale=0.3,fill,label={0:$(x_{t+2},y_{t+2})$}] at (8,4) (d) {};
-      \node[] at (3,4.5) (e) {};
-      \node[] at (5,0) (f) {};					
-      
-      \draw[->-,line width=1pt] (a.center) -- (b.center);
-      \draw[->-,line width=1pt] (b.center) -- (c.center);
-      \draw[->-,line width=1pt] (c.center) -- (d.center);
-      
-      \draw[dashed,->-,line width=1pt] (b.center) -- (e.center);
-      \draw[dashed,->-,line width=1pt] (c.center) -- (f.center);
-      
-      \path (c) -- (b) -- (e) pic["$\phi_t$",draw,-latex,<->,angle radius=0.5cm,angle eccentricity=1.5,red]
-      {angle=c--b--e};
-      \path (f) -- (c) -- (d) pic["$\phi_{t+1}$",draw,-latex,<->,angle radius=0.5cm,angle eccentricity=2,red]
-      {angle=f--c--d};
-
-    \end{tikzpicture}
-  }
+  \includegraphics[width=\textwidth]{step_angle_figure}
   \caption{Illustration of step lengths and turning angles}\label{stepsandturns}
 \end{figure}
 
