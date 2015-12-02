@@ -187,7 +187,7 @@ head(trackData)
 @
 
 \subsubsection{Use \texttt{prepData}}
-With the data in the proper format, it can be processed using \texttt{prepData} to compute step lengths and angles. We choose the arguments carefully:
+The data is in the proper format, and can be processed using \texttt{prepData} to compute step lengths and angles. We choose the arguments carefully:
 \begin{itemize}
 \item \texttt{type} specifies whether the coordinates are easting/northing (\texttt{type="UTM"}) or longitude/latitude (\texttt{type="LL"}) values. The latter is the default, so we need to call the function with the argument \texttt{type="UTM"}, to indicate that UTM coordinates are provided.
 \item \texttt{coordNames} are the names of the coordinates in the input dataframe. The default is ``x'' and ``y'', so we need to call the function with the argument \texttt{coordNames=c("Easting","Northing")}.
@@ -255,25 +255,70 @@ We also need to specify initial values for the parameters of the state-dependent
 
 Zero-inflation (as described in Section \ref{sec:zeroinflation}) must be included in the step length distribution if some steps are of length exactly zero (which is the case for the elk data). To do so, another parameter is added to the step distribution: its mass on zero.
 
-To choose initial values for the parameters, in the elk example, we consider that we want to identify two states corresponding to two levels of activity. In the first state, the animal moves slowly (i.e. the step lengths are short) and tends to stay in an area (i.e. the turning angles are centred around $\pi$). In the second state, the animal moves faster (i.e. the step lengths are longer) and tends to have a more directed movement (i.e. the turning angles are centred around $0$). Thus, in state 1, we choose a gamma(0.1,0.1) distribution with 5\% zero-inflation for the initial step distribution, and a vonMises($\pi$,1) distribution as the initial angle distribution. In state 2, we choose a gamma(1,1) distribution without zero-inflation for the steps, and a vonMises(0,1) distribution for the angles.
+Here, the initial values are chosen such that they correspond to the commonly observed pattern in two-state HMMs for animal movement data, with state 1 involving relatively short steps and many turnings (hence the choice of a small initial value for the mean of the gamma step length distribution and an initial value of pi for the mean turning angle) and state 2 involving longer steps and fewer turnings (hence the choice of a larger initial value for the mean of the gamma step length distribution and an initial value of 0 for the mean turning angle).
 
-To declare the initial parameters, and fit the model to the elk data, we use:
+For numerical stability, we decide to standardize the covariate values before fitting the model (explanations in Section \ref{sec:instability}).
+
 <<fitHMM,size='small',eval=FALSE>>=
-# initial parameters for gamma and von Mises distributions
+## standardize covariate values
+data$dist_water <- 
+    (data$dist_water-mean(data$dist_water))/sd(data$dist_water)
+                                        
+## initial parameters for gamma and von Mises distributions
 mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
 sigma0 <- c(0.1,1) # step SD
-zeromass0 <- c(0.05,0) # step zero-mass
+zeromass0 <- c(0.1,0.05) # step zero-mass
 stepPar0 <- c(mu0,sigma0,zeromass0)
 angleMean0 <- c(pi,0) # angle mean
 kappa0 <- c(1,1) # angle concentration
 anglePar0 <- c(angleMean0,kappa0)
 
-# call to fitting function
+## call to fitting function
 m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,
             anglePar0=anglePar0,formula=~dist_water)
 @
+
+<<savemodels,echo=FALSE,eval=FALSE>>=
+## code to fit and save the 2 and 3-state models loaded below
+library(moveHMM)
+trackData <- read.table("http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
+                        sep="\t",header=TRUE)[(1:735),c(1,2,3,7)]
+colnames(trackData)[1] <- "ID"
+colnames(trackData)[4] <- "dist_water"
+trackData$Easting <- trackData$Easting/1000
+trackData$Northing <- trackData$Northing/1000
+
+data <- prepData(trackData,type="UTM",coordNames=c("Easting","Northing"))
+data$dist_water <- (data$dist_water-mean(data$dist_water))/sd(data$dist_water)
+
+## Fit a 2-state HMM
+mu0 <- c(0.1,1)
+sigma0 <- c(0.1,1)
+zeromass0 <- c(0.05,0.01)
+stepPar0 <- c(mu0,sigma0,zeromass0)
+angleMean0 <- c(pi,0)
+kappa0 <- c(1,1)
+anglePar0 <- c(angleMean0,kappa0)
+
+m <- fitHMM(data=data,nbStates=2,stepPar0=stepPar0,anglePar0=anglePar0,formula=~dist_water)
+
+## Fit a 3-state HMM
+mu0 <- c(0.1,0.5,3)
+sigma0 <- c(0.05,0.5,1)
+zeromass0 <- c(0.05,0.01,0.01)
+stepPar0 <- c(mu0,sigma0,zeromass0)
+angleMean0 <- c(pi,pi,0)
+kappa0 <- c(1,1,1)
+anglePar0 <- c(angleMean0,kappa0)
+
+m3 <- fitHMM(data=data,nbStates=3,stepPar0=stepPar0,anglePar0=anglePar0,
+             formula=~dist_water)
+
+save(m,m3,file="models.RData")
+@ 
+
 <<fitHMM2,echo=FALSE,cache=TRUE>>=
-load("model.RData")
+load("models.RData")
 @
 
 The returned object, \texttt{m}, is of the class \texttt{moveHMM}. It can be printed in order to obtain the maximum likelihood estimates of all model parameters.
@@ -282,7 +327,7 @@ The returned object, \texttt{m}, is of the class \texttt{moveHMM}. It can be pri
 m
 @
 
-\subsubsection{Dealing with numerical instability}
+\subsubsection{Dealing with numerical instability} \label{sec:instability}
 As mentioned above, the numerical maximization routine might not identify the global maximum of the likelihood function, or even fail to converge altogether, for poorly chosen initial values of the parameters. In such a case, the optimization routine \texttt{nlm} might produce an error such as:
 \begin{lstlisting}
   Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  : 
@@ -312,12 +357,12 @@ CI(m)
 \begin{lstlisting}
   Warning message:
   In CI(m) :
-  Some of the parameter estimates seem to lie close to the boundaries
-  of their parameter space. The associated CIs are probably 
-  unreliable (or might not be computable).
+  Some of the parameter estimates seem to lie close to 
+  the boundaries of their parameter space. The associated 
+  CIs are probably unreliable (or might not be computable).
 \end{lstlisting}
 
-It here refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and would return \texttt{NA} instead.
+It here refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and returns \texttt{NA} instead, as in this example.
 
 \subsection{Further inference tools and visualization of the model}
 Various options are available for the class \texttt{moveHMM}, and here we explain how to use them in the elk example.
@@ -341,7 +386,7 @@ dev.off()
 \item a map of each animal's track, colored by states.
 \end{itemize}
 
-Figure \ref{moveHMM} displays those plots, but showing only one of the plotted maps, namely the one corresponding to the first animal, ``elk-115''. The state-dependent densities are weighted by the relative frequency of each state in the most probable state sequence (decoded with the Viterbi algorithm, see Section \ref{sec_statedec}). For example, if according to the most probable state sequence one third of the observations is allocated to the first state, and two thirds to the second state, the plots of the densities in the first state are weighted with a factor 1/3, and in the second state with a factor 2/3.
+Figure \ref{moveHMM} displays those plots, but showing only one of the plotted maps, namely the one corresponding to the first animal, ``elk-115''. The state-dependent densities are weighted by the relative frequency of each state in the most probable state sequence (decoded with the Viterbi algorithm, see Section \ref{sec_statedec}). For example, if according to the most probable state sequence, one third of the observations is allocated to the first state, and two thirds to the second state, the plots of the densities in the first state are weighted with a factor 1/3, and in the second state with a factor 2/3.
 
 \begin{figure}[!htb]
   \includegraphics[width=0.49\textwidth,page=1]{plot_moveHMM}
@@ -406,16 +451,13 @@ anglePar0 <- c(angleMean0,kappa0)
 m3 <- fitHMM(data=data,nbStates=3,stepPar0=stepPar0,
              anglePar0=anglePar0,formula=~dist_water)
 @
-<<m3,echo=FALSE,cache=TRUE>>=
-load(file="model3.RData")
-@
 
 \noindent And, to compare them:
 <<AIC2,size='small'>>=
 AIC(m,m3)
 @
 
-In terms of AIC, the 3-state model seems to largely outperform the 2-state model in this example.
+In terms of AIC, the 3-state model is favoured over the 2-state model in this example.
 
 \subsubsection{Model checking}
 The pseudo-residuals (a.k.a.\ quantile residuals) of the model can be computed with \texttt{pseudoRes}. These follow a standard normal distribution if the fitted model is the true data-generating process. In other words, a deviation from normality indicates a lack of fit. For more theoretical background on pseudo-residuals, see \cite{zucchini2009}. The pseudo-residuals of the 2-state model fitted to the elk data are displayed in Figure \ref{fig:plotPR}. They can be computed and plotted with the following commands.
