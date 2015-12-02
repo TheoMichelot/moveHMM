@@ -3,8 +3,6 @@ An R package for animal movement modelling using hidden Markov models.
 
 Get started with the vignette: [Guide to using moveHMM](https://cran.r-project.org/web/packages/moveHMM/vignettes/moveHMM-guide.pdf)
 
-[Wiki](https://github.com/TheoMichelot/moveHMM/wiki)
-
 ## Installation instructions
 
 ### Stable release
