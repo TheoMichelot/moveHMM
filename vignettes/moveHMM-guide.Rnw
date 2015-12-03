@@ -487,7 +487,7 @@ $$ \eta_{ij} =
 $$
 for $i,j=1,\ldots,N$. Here $\{ S_t \}$ is the state process, $w_{lt}$ is the $l$-th covariate at time $t$ and $p$ is the number of covariates considered. The $\beta$ parameters directly affect the off-diagonal elements in $\boldsymbol{\Gamma}^{(t)}$ --- with an increase in the linear predictor $\eta_{ij}$ resulting in an increase in $\gamma_{ij}^{(t)}$ --- and hence also the diagonal entries due to the row constraints (with the entries in each row summing to one). Note in particular that we have to fix $\eta_{ii}=0$ for all $i$ since otherwise the model would be overparameterized (not identifiable).
 
-Within \texttt{moveHMM}, the $\beta$ coefficients for the off-diagonal transition probabilities are stored in an $(p+1) \times (n\cdot(n-1))$ matrix. For example, for a 3-state HMM with two covariates, the matrix \texttt{beta} is
+Within \texttt{moveHMM}, the $\beta$ coefficients for the off-diagonal transition probabilities are stored in an $(p+1) \times (N\cdot(N-1))$ matrix. For example, for a 3-state HMM with two covariates, the matrix \texttt{beta} is
 \begin{equation*}
   \begin{pmatrix}
     \beta_0^{(12)} & \beta_0^{(13)} & \beta_0^{(21)} & \beta_0^{(23)} & \beta_0^{(31)} & \beta_0^{(32)}\\
