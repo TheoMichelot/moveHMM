@@ -46,8 +46,15 @@ angleCI <- function(m,alpha,nbSims=10^6)
     ind <- c(state,state+nbStates)
     Sigma <- Sigma[ind,ind]
 
-    # simulated working parameters
-    wSims <- mvrnorm(nbSims, mu=c(x[state],y[state]), Sigma=Sigma)
+    tryCatch(
+      # simulated working parameters
+      wSims <- mvrnorm(nbSims, mu=c(x[state],y[state]), Sigma=Sigma),
+      error = function(e) {
+        # error if Sigma is not positive definite
+        warning("Inverse Hessian not positive definite for angle parameters. CIs cannot be computed.")
+        return(list(lower=NA,upper=NA))
+      }
+    )
 
     # check whether some angles are close to -pi and others to pi
     theta <- Arg(wSims[,1]+1i*wSims[,2])
