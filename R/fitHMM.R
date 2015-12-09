@@ -214,6 +214,8 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
       stop(paste("delta0 has the wrong length: it should have",nbStates,"elements."))
 
   stepBounds <- bounds[1:(parSize[1]*nbStates),]
+  if(!is.matrix(stepBounds)) # if collapsed
+    stepBounds <- matrix(stepBounds,ncol=2)
   if(length(which(stepPar0<=stepBounds[,1] | stepPar0>=stepBounds[,2]))>0)
     stop(paste("Check the step parameters bounds (the initial parameters should be",
                "strictly between the bounds of their parameter space)."))

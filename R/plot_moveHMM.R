@@ -133,7 +133,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
   if(m$conditions$zeroInflation) {
     zeromass <- m$mle$stepPar[nrow(m$mle$stepPar),]
-    m$mle$stepPar <- m$mle$stepPar[-nrow(m$mle$stepPar),]
+    m$mle$stepPar <- as.matrix(m$mle$stepPar[-nrow(m$mle$stepPar),])
   }
 
   ###########################################
