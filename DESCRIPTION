@@ -4,7 +4,7 @@ Title: Animal Movement Modelling using Hidden Markov Models
 Version: 1.1
 Date: 2015-12-02
 Author: Théo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
-Maintainer: Théo Michelot <theo.michelot@insa-rouen.fr>
+Maintainer: Théo Michelot <tmichelot1@sheffield.ac.uk>
 Description: Provides tools for animal movement modelling using hidden Markov models.
 	     These include processing of tracking data, fitting HMMs to movement data, visualization of
     	     data and fitted model, decoding of the state process...
