@@ -79,7 +79,7 @@ prepData <- function(trackData, type=c('LL','UTM'),coordNames=c("x","y"))
                                    c(x[i+1],y[i+1]))
       }
     }
-    step[i2-i1] <- sqrt((x[i2]-x[i2-1])^2+(y[i2]-y[i2-1])^2)
+    step[i2-i1] <- spDistsN1(pts = matrix(c(x[i2-1],y[i2-1]),ncol=2),pt = c(x[i2],y[i2]),longlat = (type=='LL')) # TRUE if 'LL', FALSE otherwise
 
     # d = data for one individual
     d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
