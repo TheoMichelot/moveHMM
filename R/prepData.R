@@ -59,17 +59,20 @@ prepData <- function(trackData, type=c('LL','UTM'),coordNames=c("x","y"))
   }
 
   for(zoo in 1:nbAnimals) {
-    nbObs <- length(which(ID==unique(ID)[zoo]))
+    nbObs <- length(which(ID==unique(ID)[zoo])) # number of observations for animal zoo
     step <- rep(NA,nbObs)
     angle <- rep(NA,nbObs)
-    i1 <- which(ID==unique(ID)[zoo])[1]
-    i2 <- i1+nbObs-1
+    i1 <- which(ID==unique(ID)[zoo])[1] # index of 1st obs for animal zoo
+    i2 <- i1+nbObs-1 # index of last obs for animal zoo
+
     for(i in (i1+1):(i2-1)) {
+      # for each observation, compute step and angle
+
       if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(y[i-1]) & !is.na(y[i])) {
         # step length
         step[i-i1] <- spDistsN1(pts = matrix(c(x[i-1],y[i-1]),ncol=2),
-                                  pt = c(x[i],y[i]),
-                                  longlat = (type=='LL')) # TRUE if 'LL', FALSE otherwise
+                                pt = c(x[i],y[i]),
+                                longlat = (type=='LL')) # TRUE if 'LL', FALSE otherwise
       }
 
       if(!is.na(x[i-1]) & !is.na(x[i]) & !is.na(x[i+1]) & !is.na(y[i-1]) & !is.na(y[i]) & !is.na(y[i+1])) {
@@ -79,7 +82,11 @@ prepData <- function(trackData, type=c('LL','UTM'),coordNames=c("x","y"))
                                    c(x[i+1],y[i+1]))
       }
     }
-    step[i2-i1] <- spDistsN1(pts = matrix(c(x[i2-1],y[i2-1]),ncol=2),pt = c(x[i2],y[i2]),longlat = (type=='LL')) # TRUE if 'LL', FALSE otherwise
+
+    # compute last step (last angle = NA)
+    step[i2-i1] <- spDistsN1(pts = matrix(c(x[i2-1],y[i2-1]),ncol=2),
+                             pt = c(x[i2],y[i2]),
+                             longlat = (type=='LL')) # TRUE if 'LL', FALSE otherwise
 
     # d = data for one individual
     d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
