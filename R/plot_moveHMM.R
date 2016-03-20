@@ -55,8 +55,14 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     warning("Length of 'col' should be equal to number of states - argument ignored")
     col <- 2:(nbStates+1)
   }
-  if(is.null(col))
-    col <- 2:(nbStates+1)
+  if(is.null(col) & nbStates<8) {
+    # color-blind friendly palette
+    pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+    col <- pal[1:nbStates]
+  }
+  if(is.null(col) & nbStates>=8)
+    col <- rainbow(nbStates) # to make sure that all colors are distinct (but, really? eight states?)
+
 
   ######################
   ## Prepare the data ##
