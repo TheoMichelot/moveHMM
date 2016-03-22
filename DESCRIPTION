@@ -1,13 +1,16 @@
 Package: moveHMM
 Type: Package
 Title: Animal Movement Modelling using Hidden Markov Models
-Version: 1.1
-Date: 2015-12-02
-Author: Théo Michelot, Roland Langrock, Toby Patterson, Eric Rexstad
-Maintainer: Théo Michelot <tmichelot1@sheffield.ac.uk>
-Description: Provides tools for animal movement modelling using hidden Markov models.
-	     These include processing of tracking data, fitting HMMs to movement data, visualization of
-    	     data and fitted model, decoding of the state process...
+Version: 1.2
+Date: 2016-03-22
+Author: c(person("Theo","Michelot",email = "tmichelot1@sheffield.ac.uk",role = c("aut", "cre")),
+    person("Roland", "Langrock",role = c("aut","cre")),
+    person("Toby", "Patterson",role = c("aut","cre")),
+    person("Eric","Rexstad",role=c("ctb")))
+Maintainer: Theo Michelot <tmichelot1@sheffield.ac.uk>
+Description: Provides tools for animal movement modelling using hidden Markov
+    models. These include processing of tracking data, fitting HMMs to movement
+    data, visualization of data and fitted model, decoding of the state process...
 URL: https://github.com/TheoMichelot/moveHMM, https://cran.r-project.org/package=moveHMM
 License: GPL-3
 LazyData: TRUE
@@ -18,12 +21,10 @@ Depends:
     sp
 Imports:
     Rcpp
-LinkingTo:
-    Rcpp,
+LinkingTo: Rcpp,
     RcppArmadillo
 Suggests:
     testthat,
     knitr
-VignetteBuilder:
-    knitr
-RoxygenNote: 5.0.0
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
