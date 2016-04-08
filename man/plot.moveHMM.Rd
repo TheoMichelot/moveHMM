@@ -12,7 +12,7 @@
 \item{x}{Object \code{moveHMM}}
 
 \item{animals}{Vector of indices or IDs of animals for which information will be plotted.
-Default: \code{NULL} ; all animals are plotted.}
+Default: \code{NULL}; all animals are plotted.}
 
 \item{ask}{If \code{TRUE}, the execution pauses between each plot.}
 

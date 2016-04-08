@@ -8,7 +8,7 @@
 #'
 #' @param x Object \code{moveHMM}
 #' @param animals Vector of indices or IDs of animals for which information will be plotted.
-#' Default: \code{NULL} ; all animals are plotted.
+#' Default: \code{NULL}; all animals are plotted.
 #' @param ask If \code{TRUE}, the execution pauses between each plot.
 #' @param breaks Histogram parameter. See \code{hist} documentation.
 #' @param hist.ylim Parameter \code{ylim} for the step length histograms.
