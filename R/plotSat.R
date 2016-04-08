@@ -92,13 +92,21 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
   #################
   # select subset of data to be plotted
   if(!is.null(animals)) {
-    if(is.character(animals)) # animals' IDs provided
+    if(is.character(animals)) { # animals' IDs provided
+      if(length(col)==nrow(data))
+        col <- col[which(data$ID%in%animals)]
+
       data <- data[which(data$ID%in%animals),]
+    }
+
 
     if(is.numeric(animals)) { # animals' indices provided
       nbAnimals <- length(unique(data$ID))
       if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
         stop("Check 'animals' argument, index out of bounds")
+
+      if(length(col)==nrow(data))
+        col <- col[which(data$ID%in%unique(data$ID)[animals])]
 
       data <- data[which(data$ID%in%unique(data$ID)[animals]),]
     }
