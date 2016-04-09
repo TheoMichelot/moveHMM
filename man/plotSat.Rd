@@ -5,7 +5,8 @@
 \title{Plot observations on satellite image}
 \usage{
 plotSat(data, zoom = NULL, location = NULL, segments = TRUE,
-  compact = TRUE, col = 1, states = NULL, animals = NULL, ask = TRUE)
+  compact = TRUE, col = 1, alpha = 1, states = NULL, animals = NULL,
+  ask = TRUE)
 }
 \arguments{
 \item{data}{Data frame of the data, with necessary fields 'x' (longitude values) and
@@ -24,6 +25,8 @@ otherwise (default).}
 
 \item{col}{Color(s) of the dots and segments. Should be either of length 1, or of
 the length of the data.}
+
+\item{alpha}{Transparency argument for \code{\link{geom_point}}.}
 
 \item{states}{A sequence of integers, corresponding to the decoded states for these data
 (such that the observations are colored by states). If 'states' if specified, the

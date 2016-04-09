@@ -16,6 +16,7 @@
 #' otherwise (default).
 #' @param col Color(s) of the dots and segments. Should be either of length 1, or of
 #' the length of the data.
+#' @param alpha Transparency argument for \code{\link{geom_point}}.
 #' @param states A sequence of integers, corresponding to the decoded states for these data
 #' (such that the observations are colored by states). If 'states' if specified, the
 #' argument 'col' gives the colors correponding to each state.
@@ -39,7 +40,7 @@
 #' @importFrom ggplot2 aes
 #' @export
 
-plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=1,
+plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=1,alpha=1,
                     states=NULL,animals=NULL,ask=TRUE)
 {
   #####################
@@ -86,6 +87,9 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
       col <- col[states]
     }
   }
+
+  if(length(alpha)>1)
+    stop("'alpha' should be of length 1")
 
   #################
   ## Plot tracks ##
@@ -150,7 +154,8 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
                    source="google")
 
     # define map with dots
-    mapMove <- ggmap(map) + geom_point(aes_string(x="x", y="y"), data=subData, col=subCol)
+    mapMove <- ggmap(map) + geom_point(aes_string(x="x", y="y"), data=subData, col=subCol,
+                                       alpha=alpha)
 
     if(segments) {
       # define segments to plot
@@ -166,7 +171,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
 
       # add segments to map
       mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
-                                        col=subCol)
+                                        col=subCol,alpha=alpha)
     }
 
     # plot map
