@@ -96,12 +96,16 @@ dwrpcauchy_rcpp <- function(x, mu, rho) {
 #' @param aInd Vector of indices of the rows at which the data switches to another animal
 #' @param zeroInflation \code{true} if zero-inflation is included in the step length distribution,
 #' \code{false} otherwise.
-#' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution is considered
-#' equal to the stationary distribution. Default: \code{false}.
+#' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution
+#' is considered equal to the stationary distribution.
+#' @param knownStates Vector of values of the state process which are known prior to fitting the
+#' model (if any). Default: NULL (states are not known). This should be a vector with length the number
+#' of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+#' the state is not known.
 #'
 #' @return Negative log-likelihood
-nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation = FALSE, stationary = FALSE) {
-    .Call('moveHMM_nLogLike_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation, stationary)
+nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation, stationary, knownStates) {
+    .Call('moveHMM_nLogLike_rcpp', PACKAGE = 'moveHMM', nbStates, beta, covs, data, stepDist, angleDist, stepPar, anglePar, delta, aInd, zeroInflation, stationary, knownStates)
 }
 
 #' Transition probability matrix

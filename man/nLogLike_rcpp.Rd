@@ -5,7 +5,7 @@
 \title{Negative log-likelihood}
 \usage{
 nLogLike_rcpp(nbStates, beta, covs, data, stepDist, angleDist, stepPar,
-  anglePar, delta, aInd, zeroInflation = FALSE, stationary = FALSE)
+  anglePar, delta, aInd, zeroInflation, stationary, knownStates)
 }
 \arguments{
 \item{nbStates}{Number of states}
@@ -31,8 +31,13 @@ nLogLike_rcpp(nbStates, beta, covs, data, stepDist, angleDist, stepPar,
 \item{zeroInflation}{\code{true} if zero-inflation is included in the step length distribution,
 \code{false} otherwise.}
 
-\item{stationary}{\code{false} if there are covariates. If \code{true}, the initial distribution is considered
-equal to the stationary distribution. Default: \code{false}.}
+\item{stationary}{\code{false} if there are covariates. If \code{true}, the initial distribution
+is considered equal to the stationary distribution.}
+
+\item{knownStates}{Vector of values of the state process which are known prior to fitting the
+model (if any). Default: NULL (states are not known). This should be a vector with length the number
+of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+the state is not known.}
 }
 \value{
 Negative log-likelihood

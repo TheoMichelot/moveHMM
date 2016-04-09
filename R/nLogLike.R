@@ -20,6 +20,10 @@
 #' included in \code{stepPar0}.
 #' @param stationary \code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
 #' equal to the stationary distribution. Default: \code{FALSE}.
+#' @param knownStates Vector of values of the state process which are known prior to fitting the
+#' model (if any). Default: NULL (states are not known). This should be a vector with length the number
+#' of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+#' the state is not known.
 #'
 #' @return The negative log-likelihood of the parameters given the data.
 #'
@@ -48,7 +52,7 @@
 
 nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","lnorm","exp"),
                      angleDist=c("vm","wrpcauchy","none"),angleMean=NULL,zeroInflation=FALSE,
-                     stationary=FALSE)
+                     stationary=FALSE,knownStates=NULL)
 {
   # check arguments
   stepDist <- match.arg(stepDist)
@@ -95,6 +99,10 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   for(i in 1:nbAnimals)
     aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
 
+  # easier to deal with in C++ function
+  if(is.null(knownStates))
+    knownStates <- -1
+
   # NULL arguments don't suit C++
   if(angleDist=="none")
     par$anglePar <- matrix(NA)
@@ -108,7 +116,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   }
 
   nllk <- nLogLike_rcpp(nbStates,par$beta,as.matrix(covs),data,stepDist,angleDist,par$stepPar,
-                        par$anglePar,par$delta,aInd,zeroInflation,stationary)
+                        par$anglePar,par$delta,aInd,zeroInflation,stationary,knownStates)
 
   return(nllk)
 }

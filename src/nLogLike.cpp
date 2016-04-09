@@ -16,15 +16,18 @@
 //' @param aInd Vector of indices of the rows at which the data switches to another animal
 //' @param zeroInflation \code{true} if zero-inflation is included in the step length distribution,
 //' \code{false} otherwise.
-//' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution is considered
-//' equal to the stationary distribution. Default: \code{false}.
+//' @param stationary \code{false} if there are covariates. If \code{true}, the initial distribution
+//' is considered equal to the stationary distribution.
+//' @param knownStates Vector of values of the state process which are known prior to fitting the
+//' model (if any). Default: NULL (states are not known). This should be a vector with length the number
+//' of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+//' the state is not known.
 //'
 //' @return Negative log-likelihood
 // [[Rcpp::export]]
 double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame data, std::string stepDist,
-                     std::string angleDist, arma::mat stepPar, arma::mat anglePar,
-                     arma::rowvec delta, IntegerVector aInd, bool zeroInflation=false,
-                     bool stationary=false)
+                     std::string angleDist, arma::mat stepPar, arma::mat anglePar, arma::rowvec delta,
+                     IntegerVector aInd, bool zeroInflation, bool stationary, IntegerVector knownStates)
 {
   int nbObs = data.nrows();
 
@@ -144,7 +147,8 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
       }
 
       // compute probability of non-zero observations
-      stepProb.elem(arma::find(as<arma::vec>(step)>0)) = (1-zeromass(state))*funMap[stepDist](step[step>0],stepArgs(0),stepArgs(1));
+      stepProb.elem(arma::find(as<arma::vec>(step)>0)) =
+        (1-zeromass(state))*funMap[stepDist](step[step>0],stepArgs(0),stepArgs(1));
 
       // compute probability of zero observations
       int nbZeros = as<NumericVector>(step[step==0]).size();
@@ -173,6 +177,19 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
       allProbs.col(state) = stepProb%angleProb;
     }
     else allProbs.col(state) = stepProb;
+  }
+
+  // deal with states known a priori
+  double prob = 0;
+  if(knownStates(0) != -1) {
+    // loop over rows
+    for(int i=0 ; i<allProbs.n_rows ; i++) {
+      if(!R_IsNA(knownStates(i))) {
+        prob = allProbs(i,knownStates(i)-1); // save non-zero probability
+        allProbs.row(i).zeros(); // set other probabilities to zero
+        allProbs(i,knownStates(i)-1) = prob;
+      }
+    }
   }
 
   //======================//
