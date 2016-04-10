@@ -88,16 +88,31 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
     }
   }
 
-  if(length(alpha)>1)
+  if(length(alpha)!=1)
     stop("'alpha' should be of length 1")
 
   #################
   ## Plot tracks ##
   #################
+  # color by track if several tracks plotted on a single map
+  if(is.null(states) & compact & !is.null(data$ID) & col==1) {
+    if(length(unique(data$ID))<8)
+      pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+    else
+      pal <- rainbow(length(unique(data$ID)))
+
+    col <- rep(NA,nrow(data))
+    for(i in 1:length(unique(data$ID)))
+      col[which(data$ID==unique(data$ID)[i])] <- pal[i]
+  }
+
+  # is there one color value per point? used later
+  manyCols <- length(col)==nrow(data)
+
   # select subset of data to be plotted
   if(!is.null(animals)) {
     if(is.character(animals)) { # animals' IDs provided
-      if(length(col)==nrow(data))
+      if(manyCols)
         col <- col[which(data$ID%in%animals)]
 
       data <- data[which(data$ID%in%animals),]
@@ -109,7 +124,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
       if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
         stop("Check 'animals' argument, index out of bounds")
 
-      if(length(col)==nrow(data))
+      if(manyCols)
         col <- col[which(data$ID%in%unique(data$ID)[animals])]
 
       data <- data[which(data$ID%in%unique(data$ID)[animals]),]
@@ -134,7 +149,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
       subData <- data[which(data$ID==unique(data$ID)[zoo]),]
 
       # select colors for track 'zoo'
-      if(length(col)==nrow(data))
+      if(manyCols)
         subCol <- col[which(data$ID==unique(data$ID)[zoo])]
       else
         subCol <- col
@@ -158,20 +173,43 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
                                        alpha=alpha)
 
     if(segments) {
-      # define segments to plot
-      xto <- subData$x[-1]
-      yto <- subData$y[-1]
-      xfrom <- subData$x[-nrow(subData)]
-      yfrom <- subData$y[-nrow(subData)]
-      seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
+      # if several tracks on one map
+      if(compact & !is.null(data$ID)) {
+        # loop over tracks
+        for(id in unique(data$ID)) {
+          ind <- which(data$ID==id)
 
-      # remove last color, because there is one fewer segment
-      if(length(subCol)==nrow(subData))
-        subCol <- subCol[-length(subCol)]
+          xto <- subData$x[ind[-1]]
+          yto <- subData$y[ind[-1]]
+          xfrom <- subData$x[ind[-length(ind)]]
+          yfrom <- subData$y[ind[-length(ind)]]
 
-      # add segments to map
-      mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
-                                        col=subCol,alpha=alpha)
+          if(manyCols)
+            subCol <- col[ind[-length(ind)]]
+
+          seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
+
+          # add segments to map
+          mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
+                                            col=subCol, alpha=alpha)
+        }
+      } else {
+        # define segments to plot
+        xto <- subData$x[-1]
+        yto <- subData$y[-1]
+        xfrom <- subData$x[-nrow(subData)]
+        yfrom <- subData$y[-nrow(subData)]
+
+        # remove last color, because there is one fewer segment
+        if(manyCols)
+          subCol <- subCol[-length(subCol)]
+
+        seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
+
+        # add segments to map
+        mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
+                                          col=subCol, alpha=alpha)
+      }
     }
 
     # plot map
