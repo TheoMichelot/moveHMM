@@ -40,7 +40,8 @@ Default: \code{NULL}; all animals are plotted.}
 \description{
 Plot tracking data on a satellite map. This function only works with longitude
 and latitude values (not with UTM coordinates), and uses the package \code{ggmap}
-to fetch a satellite image from Google.
+to fetch a satellite image from Google. An Internet connection is required to use
+this function.
 }
 \details{
 If the plot displays the message "Sorry, we have no imagery here", try a
