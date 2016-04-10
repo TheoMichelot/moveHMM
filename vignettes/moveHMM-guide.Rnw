@@ -422,7 +422,7 @@ If some steps are of length zero (i.e. if the step distribution is zero-inflated
 
 \subsection{Use \texttt{plotSat}}
 The function \texttt{plotSat} plots the tracking data on a satellite image, with the help of the package ggmap \citep{kahle13}. Il only works with longitude and latitude values, so we need to convert the UTM coordinates first. We can do this e.g.\ with the help of the packages sp \citep{pebesma05} and rgdal \citep{bivand16} (more information can be found in the documentations of those packages).
-<<plotSat1, size='small', message=FALSE>>=
+<<plotSat1, size='small', eval=FALSE>>=
 library(rgdal)
 utmcoord <- SpatialPoints(cbind(data$x*1000,data$y*1000), 
                           proj4string=CRS("+proj=utm +zone=18"))
@@ -433,10 +433,17 @@ lldata <- data.frame(ID=data$ID,x=attr(llcoord,"coords")[,1],
 
 In the code above, we need to multiply the UTM coordinates by 1000, as we had divided them by 1000 earlier to work with distances in kilometres. In the function \texttt{SpatialPoints}, we indicate \texttt{+zone=18}, because the data come from the UTM zone 18.
 
-The data frame \texttt{lldata} contains the converted longitude and latitude coordinates of the observations. We can plot it with \texttt{plotSat}; the result is shown in Figure \ref{fig:plotSat2}. As the satellite image is fetched from Google, an Internet connection is required to use \texttt{plotSat}.
-<<plotSat2, size='small', fig.width='4in', fig.height='4in', out.width='4in', out.height='4in', fig.pos='ht', fig.align='center', fig.cap="Plot of the elk data obtained with plotSat.", message=FALSE, cache=TRUE>>=
+The data frame \texttt{lldata} contains the converted longitude and latitude coordinates of the observations. We can plot it with \texttt{plotSat}; the result is shown in Figure \ref{fig:plotSat}. As the satellite image is fetched from Google, an Internet connection is required to use \texttt{plotSat}.
+<<plotSat2, eval=FALSE>>=
 plotSat(lldata,zoom=8)
 @
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.9\textwidth]{plotSat}
+	\caption{Plot of the elk data, obtained with plotSat.}
+	\label{fig:plotSat}
+\end{figure}
 
 \section{Package features}
 In this section, we describe the global structure of the package, and then describe in more detail the main functions required to fit an HMM to movement data.
