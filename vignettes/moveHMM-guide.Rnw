@@ -182,7 +182,6 @@ The resulting map, and the steps and angles graphs for the first animal, are dis
 The time series of step lengths is one way to check the data for outliers.
 
 \subsection{Fitting the model}
-
 \subsubsection{fitHMM}
 The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments are described in the documentation. Here are a few choices we make:
 \begin{itemize}
@@ -415,11 +414,29 @@ pr <- pseudoRes(m)
 plotPR(m)
 @
 
-<<plotPR, fig.width='4in', fig.height='5in', out.width='4in', out.height='5in', fig.pos='ht', fig.align='center', fig.cap="Time series, qq-plots, and autocorrelation functions of the pseudo-residuals of the 2-state model.", cache=TRUE, echo=FALSE, results='hide', message=FALSE>>=
+<<plotPR, fig.width='4in', fig.height='5in', out.width='4in', out.height='5in', fig.pos='ht!', fig.align='center', fig.cap="Time series, qq-plots, and autocorrelation functions of the pseudo-residuals of the 2-state model.", cache=TRUE, echo=FALSE, results='hide', message=FALSE>>=
 plotPR(m)
 @
 
 If some steps are of length zero (i.e. if the step distribution is zero-inflated), the corresponding pseudo-residuals are plotted as segments on the qq-plot. It is the case for the smallest step pseudo-residual located in the bottom-left corner of the step qq-plot in Figure \ref{fig:plotPR}. The pseudo-residuals of discrete data are defined as segments, and in this case, the segments start in $-\infty$.
+
+\subsection{Use \texttt{plotSat}}
+The function \texttt{plotSat} plots the tracking data on a satellite image, with the help of the package ggmap \citep{kahle13}. Il only works with longitude and latitude values, so we need to convert the UTM coordinates first. We can do this e.g.\ with the help of the packages sp \citep{pebesma05} and rgdal \citep{bivand16} (more information can be found in the documentations of those packages).
+<<plotSat1, size='small', message=FALSE>>=
+library(rgdal)
+utmcoord <- SpatialPoints(cbind(data$x*1000,data$y*1000), 
+                          proj4string=CRS("+proj=utm +zone=18"))
+llcoord <- spTransform(utmcoord,CRS("+proj=longlat"))
+lldata <- data.frame(ID=data$ID,x=attr(llcoord,"coords")[,1],
+                     y=attr(llcoord,"coords")[,2])
+@
+
+In the code above, we need to multiply the UTM coordinates by 1000, as we had divided them by 1000 earlier to work with distances in kilometres. In the function \texttt{SpatialPoints}, we indicate \texttt{+zone=18}, because the data come from the UTM zone 18.
+
+The data frame \texttt{lldata} contains the converted longitude and latitude coordinates of the observations. We can plot it with \texttt{plotSat}; the result is shown in Figure \ref{fig:plotSat2}. As the satellite image is fetched from Google, an Internet connection is required to use \texttt{plotSat}.
+<<plotSat2, size='small', fig.width='4in', fig.height='4in', out.width='4in', out.height='4in', fig.pos='ht', fig.align='center', fig.cap="Plot of the elk data obtained with plotSat.", message=FALSE, cache=TRUE>>=
+plotSat(lldata,zoom=8)
+@
 
 \section{Package features}
 In this section, we describe the global structure of the package, and then describe in more detail the main functions required to fit an HMM to movement data.
@@ -580,10 +597,16 @@ The function \texttt{simData} simulates movement data from an HMM, given its par
 It is possible to call \texttt{simData} on a fitted model directly, to simulate data from it. This can be used to assess the fit, by checking that the simulated data displays the same features as the real data.
 
 \subsubsection{plotSat}
-Based on functions provided by the package ggmap \citep{kahle13}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,\dots,21 \rbrace$. Other arguments are optional, and are described in the documentation.
+Based on functions provided by the package ggmap \citep{kahle13}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,4,5,\dots,20,21 \rbrace$. Other arguments are optional, and are described in the documentation.
 
 \newpage
 \begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Bivand et al.}{2016}]{bivand16}
+\textsc{Bivand, R., Keitt, T., and Rowlingson, B.} (2016) 
+``rgdal: Bindings for the Geospatial Data Abstraction Library'',
+\textit{R package version 1.1-8},
+URL: \url{https://CRAN.R-project.org/package=rgdal}
 
 \bibitem[\protect\citeauthoryear{Jonsen et al.}{2005}]{jonsen2005}
   \textsc{Jonsen, I.D., Flemming, J.M., Myers, R.A.} (2005),
@@ -620,6 +643,12 @@ URL: \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
   \textsc{Patterson T.A., Parton, A., Langrock, R., Blackwell, P.G., Thomas, L., King, R.} (2016),
   ``Statistical modelling of animal movement: a myopic review and a discussion of good practice'',
   \textit{arXiv preprint}, arXiv:1603.07511.
+
+\bibitem[\protect\citeauthoryear{Pebesma and Bivand}{2005}]{pebesma05}
+\textsc{Pebesma, E.J., Bivand, R.S.} (2005) 
+``Classes and methods for spatial data in R'',
+\textit{R News}, 5 (2), 144--161. 
+URL: \url{http://cran.r-project.org/doc/Rnews/}
 
 \bibitem[\protect\citeauthoryear{Zucchini et al.}{2016}]{zucchini16}
   \textsc{Zucchini, W.\, MacDonald, I.L., Langrock, R.} (2016).
