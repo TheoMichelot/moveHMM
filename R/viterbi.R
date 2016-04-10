@@ -36,6 +36,7 @@ viterbi <- function(m)
   stepPar <- m$mle$stepPar
   anglePar <- m$mle$anglePar
   zeroInflation <- m$conditions$zeroInflation
+  knownStates <- m$knownStates
 
   if(nbStates==1)
     stop("No states to decode (nbStates=1)")
@@ -46,7 +47,7 @@ viterbi <- function(m)
   nbCovs <- length(covsCol)-1 # substract intercept column
   covs <- data[,covsCol]
 
-  allProbs <- allProbs(data,nbStates,stepDist,angleDist,stepPar,anglePar,zeroInflation)
+  probs <- allProbs(data,nbStates,stepDist,angleDist,stepPar,anglePar,zeroInflation,knownStates)
   trMat <- trMatrix_rcpp(nbStates,beta,as.matrix(covs))
 
   nbAnimals <- length(unique(data$ID))
@@ -60,12 +61,12 @@ viterbi <- function(m)
     obsInd <- which(!is.na(data$step) & !is.na(data$angle))
 
     if(zoo!=nbAnimals) {
-      p <- allProbs[aInd[zoo]:(aInd[zoo+1]-1),]
+      p <- probs[aInd[zoo]:(aInd[zoo+1]-1),]
       tm <- trMat[,,aInd[zoo]:(aInd[zoo+1]-1)]
     }
     else {
-      p <- allProbs[aInd[zoo]:nrow(allProbs),]
-      tm <- trMat[,,aInd[zoo]:nrow(allProbs)]
+      p <- probs[aInd[zoo]:nrow(probs),]
+      tm <- trMat[,,aInd[zoo]:nrow(probs)]
     }
 
     xi <- matrix(NA,nbObs,nbStates)

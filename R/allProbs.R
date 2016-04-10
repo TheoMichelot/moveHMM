@@ -17,6 +17,10 @@
 #' is not estimated.
 #' @param zeroInflation \code{TRUE} if the step length distribution is inflated in zero.
 #' Default: \code{FALSE}.
+#' @param knownStates Vector of values of the state process which are known prior to fitting the
+#' model (if any). Default: NULL (states are not known). This should be a vector with length the number
+#' of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+#' the state is not known.
 #'
 #' @return Matrix of all probabilities.
 #'
@@ -33,7 +37,8 @@
 #'                byrow=TRUE),zeroInflation=TRUE)
 #' }
 
-allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE)
+allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE,
+                     knownStates=NULL)
 {
   stepFun <- paste("d",stepDist,sep="")
   if(angleDist!="none") angleFun <- paste("d",angleDist,sep="")
@@ -86,5 +91,16 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
     }
     else allProbs[,state] <- stepProb # model step length only
   }
+
+  # if some states are known a priori
+  if(!is.null(knownStates)) {
+    for(i in which(!is.na(knownStates))) {
+      # set all probabilities to zero except for known state
+      prob <- allProbs[i,knownStates[i]]
+      allProbs[i,] <- 0
+      allProbs[i,knownStates[i]] <- prob
+    }
+  }
+
   return(allProbs)
 }

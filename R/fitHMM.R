@@ -59,6 +59,8 @@
 #' \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 #' \code{stationary}, and \code{formula})}
 #' \item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
+#' \item{knownStates}{Vector of states known a priori, as provided in input (if any, \code{NULL} otherwise).
+#' Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and \code{\link{logBeta}}}.
 #'
 #' @details
 #' \itemize{
@@ -388,6 +390,6 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0,beta0=NULL,delta0=NULL,formu
   conditions <- list(stepDist=stepDist,angleDist=angleDist,zeroInflation=zeroInflation,
                      estAngleMean=estAngleMean,stationary=stationary,formula=formula)
 
-  mh <- list(data=data,mle=mle,mod=mod,conditions=conditions,rawCovs=rawCovs)
+  mh <- list(data=data,mle=mle,mod=mod,conditions=conditions,rawCovs=rawCovs,knownStates=knownStates)
   return(moveHMM(mh))
 }

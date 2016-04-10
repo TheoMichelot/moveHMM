@@ -81,6 +81,8 @@ in "Details"), and \code{delta} (initial distribution).}
 \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 \code{stationary}, and \code{formula})}
 \item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
+\item{knownStates}{Vector of states known a priori, as provided in input (if any, \code{NULL} otherwise).
+Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and \code{\link{logBeta}}}.
 }
 \description{
 Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood

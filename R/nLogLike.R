@@ -102,6 +102,8 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
   # easier to deal with in C++ function
   if(is.null(knownStates))
     knownStates <- -1
+  else
+    knownStates[which(is.na(knownStates))] <- 0
 
   # NULL arguments don't suit C++
   if(angleDist=="none")

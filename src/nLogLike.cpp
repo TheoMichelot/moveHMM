@@ -184,7 +184,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
   if(knownStates(0) != -1) {
     // loop over rows
     for(int i=0 ; i<allProbs.n_rows ; i++) {
-      if(!R_IsNA(knownStates(i))) {
+      if(knownStates(i)>0) {
         prob = allProbs(i,knownStates(i)-1); // save non-zero probability
         allProbs.row(i).zeros(); // set other probabilities to zero
         allProbs(i,knownStates(i)-1) = prob;

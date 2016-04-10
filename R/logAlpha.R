@@ -26,8 +26,8 @@ logAlpha <- function(m)
                      names(data)!="step" & names(data)!="angle")
   covs <- data[,covsCol]
 
-  allProbs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
-                       m$mle$anglePar,m$conditions$zeroInflation)
+  probs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
+                       m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)
 
   if(nbStates>1)
     trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
@@ -35,12 +35,12 @@ logAlpha <- function(m)
     trMat <- array(1,dim=c(1,1,nbObs))
 
   lscale <- 0
-  foo <- m$mle$delta*allProbs[1,]
+  foo <- m$mle$delta*probs[1,]
   lalpha[1,] <- log(foo)+lscale
 
   for(i in 2:nbObs) {
     gamma <- trMat[,,i]
-    foo <- foo%*%gamma*allProbs[i,]
+    foo <- foo%*%gamma*probs[i,]
     lscale <- lscale+log(sum(foo))
     foo <- foo/sum(foo)
     lalpha[i,] <- log(foo)+lscale
