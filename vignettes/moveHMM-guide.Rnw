@@ -425,13 +425,13 @@ The function \texttt{plotSat} plots the tracking data on a satellite image, with
 <<plotSat1, size='small', eval=FALSE>>=
 library(rgdal)
 utmcoord <- SpatialPoints(cbind(data$x*1000,data$y*1000), 
-                          proj4string=CRS("+proj=utm +zone=18"))
+                          proj4string=CRS("+proj=utm +zone=17"))
 llcoord <- spTransform(utmcoord,CRS("+proj=longlat"))
 lldata <- data.frame(ID=data$ID,x=attr(llcoord,"coords")[,1],
                      y=attr(llcoord,"coords")[,2])
 @
 
-In the code above, we need to multiply the UTM coordinates by 1000, as we had divided them by 1000 earlier to work with distances in kilometres. In the function \texttt{SpatialPoints}, we indicate \texttt{+zone=18}, because the data come from the UTM zone 18.
+In the code above, we need to multiply the UTM coordinates by 1000, as we had divided them by 1000 earlier to work with distances in kilometres. In the function \texttt{SpatialPoints}, we indicate \texttt{+zone=17}, because the data come from the UTM zone 17.
 
 The data frame \texttt{lldata} contains the converted longitude and latitude coordinates of the observations. We can plot it with \texttt{plotSat}; the result is shown in Figure \ref{fig:plotSat}. As the satellite image is fetched from Google, an Internet connection is required to use \texttt{plotSat}.
 <<plotSat2, eval=FALSE>>=
@@ -489,11 +489,12 @@ The parameters depend on the distribution used. The gamma distribution expects t
   \end{tabular}
 \end{center}
 
-For the gamma distribution, the link between the mean/standard deviation (expected by \texttt{fitHMM}) and shape/scale (expected by \texttt{dgamma}) is given by:
-\begin{align*}
-  shape & = \dfrac{mean^2}{sd^2}\\
-  scale & = \dfrac{sd^2}{mean}
-\end{align*}
+For the gamma distribution, the link between the mean/standard deviation (expected by \texttt{fitHMM}) and shape/rate (expected by \texttt{dgamma}) is given by:
+\begin{equation*}
+\text{shape} = \dfrac{\text{mean}^2}{\text{SD}^2},
+\qquad
+\text{rate} = \dfrac{\text{mean}}{\text{SD}^2}
+\end{equation*}
 
 
 \subsubsection{Zero-inflation} \label{sec:zeroinflation}
