@@ -1,13 +1,13 @@
-citHeader("To cite the R package 'moveHMM' in publications, use:")
+citHeader("To cite moveHMM in a publication use:")
 
-year <- sub("-.*","",meta$Date)
-note <- sprintf("R package version %s",meta$Version)
+citEntry(
+	entry="Article",
+	title="moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models",
+	author=personList(as.person("Theo Michelot"), as.person("Roland Langrock"), as.person("Toby A. Patterson")),
+	journal="Methods in Ecology and Evolution",
+	year=2016,
+	volume="in press",
+	textVersion="Michelot, T., Langrock, R., Patterson, T.A. (in press). moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models. Methods in Ecology and Evolution."
+)
 
-bibentry(bibtype = "Manual",
-         title = "{moveHMM}: Animal Movement Modelling using Hidden Markov Models",
-         author = c(person("Theo","Michelot"),
-                    person("Roland","Langrock"),
-                    person("Toby","Patterson"),
-                    person("Eric","Rexstad")),
-         year = year,
-         note = note)
+citFooter("Additions and modifications to moveHMM are frequent, to help with reproducibility of output please cite its version number. Find it with 'help(package=moveHMM)'.")
