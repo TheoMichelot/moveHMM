@@ -32,7 +32,7 @@
   framerule=0pt
 }
 
-\title{\texttt{moveHMM}\\ An R package for animal movement modelling}
+\title{\texttt{moveHMM}\\ An R package for the analysis of animal movement data}
 \author{Michelot T., Langrock R., and Patterson T.}
 
 \begin{document}
