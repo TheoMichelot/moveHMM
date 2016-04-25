@@ -1,6 +1,7 @@
-# moveHMM
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/moveHMM)](http://cran.r-project.org/package=moveHMM)
 [![Downloads](http://cranlogs.r-pkg.org/badges/moveHMM)](http://cran.rstudio.com/package=moveHMM)
+
+# moveHMM
 An R package for modelling animal movement with hidden Markov models.
 
 Get started with the vignette: [Guide to using moveHMM](https://cran.r-project.org/web/packages/moveHMM/vignettes/moveHMM-guide.pdf)
