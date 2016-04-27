@@ -38,7 +38,7 @@
 \begin{document}
 \maketitle
 
-<<init,echo=FALSE>>=
+<<init, echo=FALSE, message=FALSE>>=
 library(MASS)
 library(boot)
 library(CircStats)
@@ -60,6 +60,8 @@ However, for an important subset of movement data, namely highly accurate positi
 \texttt{moveHMM} is an R package which implements HMMs and associated tools for state decoding, model selection etc.\ specifically tailored to animal movement modelling. Particular attention was paid to computational efficiency with the fitting algorithm implemented in C++. The high computational speed makes it feasible to analyze very large data sets --- e.g.\ tens of thousands of positions collected for each of a dozen individual animals --- on standard desktop PCs. The package also allows users to incorporate covariate data into their models, which is particularly useful when inferring the drivers of changes in behaviour.
 
 Our hope is that the \texttt{moveHMM} package will provide users who collect movement data with an interface to sophisticated and adequate methods for a statistical analysis of their data. The package is structured so as to allow the users to prepare their data for analysis, fit a variety of HMMs to their data and perform diagnostics on these fitted models. 
+
+The package is presented in \cite{michelot16}, where its use is illustrated on simulated movement data of wild haggises.
 
 In this vignette, we briefly introduce HMMs in the context of animal movement. We then provide a detailed example of a typical use of the package (preprocessing movement data, fitting an HMM to the data, and analyzing the fitted model). Finally, we describe more technically the structure of the package and its main functions.
 
@@ -611,55 +613,60 @@ Based on functions provided by the package ggmap \citep{kahle13}, \texttt{plotSa
 \begin{thebibliography}{}
 
 \bibitem[\protect\citeauthoryear{Bivand et al.}{2016}]{bivand16}
-\textsc{Bivand, R., Keitt, T., and Rowlingson, B.} (2016) 
+Bivand, R., Keitt, T., and Rowlingson, B. (2016) 
 ``rgdal: Bindings for the Geospatial Data Abstraction Library'',
 \textit{R package version 1.1-8},
 URL: \url{https://CRAN.R-project.org/package=rgdal}
 
 \bibitem[\protect\citeauthoryear{Jonsen et al.}{2005}]{jonsen2005}
-  \textsc{Jonsen, I.D., Flemming, J.M., Myers, R.A.} (2005),
+  Jonsen, I.D., Flemming, J.M., Myers, R.A. (2005),
   ``Robust state-space modeling of animal movement data'',
   \textit{Ecology}, 86 (11), 2874--2880.
 
 \bibitem[\protect\citeauthoryear{Kahle and Wickham}{2013}]{kahle13}
-\textsc{Kahle, D., Wickham, H.} (2013) 
+Kahle, D., Wickham, H. (2013) 
 ``ggmap: Spatial Visualization with ggplot2'',
 \textit{The R Journal}, 5 (1), 144--161. 
 URL: \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 
 \bibitem[\protect\citeauthoryear{Langrock et al.}{2012}]{langrock2012}
-  \textsc{Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M.} (2012),
+  Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M. (2012),
   ``Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions''
   \textit{Ecology}, 93 (11), 2336--2342.
 
 \bibitem[\protect\citeauthoryear{McClintock et al.}{2012}]{mcclintock2012}
-  \textsc{McClintock, B.T., King, R., Thomas, L., Matthiopoulos, J., McConnell, B.J., Morales, J.M.} (2012),
+  McClintock, B.T., King, R., Thomas, L., Matthiopoulos, J., McConnell, B.J., Morales, J.M. (2012),
   ``A general discrete-time modeling framework for animal movement using multistate random walks'',
   \textit{Ecological Monographs}, 82 (3), 335--349.
 
+\bibitem[\protect\citeauthoryear{Michelot et al.}{in press}]{michelot16}
+  Michelot, T., Langrock, R., Patterson, T.A. (in press),
+  ``moveHMM: an R package for analysing animal movement data using hidden Markov models'',
+  \textit{Methods in Ecology and Evolution}. DOI: 10.1111/2041-210X.12578.
+
 \bibitem[\protect\citeauthoryear{Morales et al.}{2004}]{morales2004}
-  \textsc{Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M.} (2004),
+  Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M. (2004),
   ``Extracting more out of relocation data: building movement models as mixtures of random walks'',
   \textit{Ecology}, 85 (9), 2436--2445.
 
 \bibitem[\protect\citeauthoryear{Patterson et al.}{2009}]{patterson2009}
-  \textsc{Patterson T.A., Basson M., Bravington M.V., Gunn J.S.} (2009),
+  Patterson T.A., Basson M., Bravington M.V., Gunn J.S. (2009),
   ``Classifying movement behaviour in relation to environmental conditions using hidden Markov models'',
   \textit{Journal of Animal Ecology}, 78 (6), 1113--1123.
 
 \bibitem[\protect\citeauthoryear{Patterson et al.}{2016}]{patterson16}
-  \textsc{Patterson T.A., Parton, A., Langrock, R., Blackwell, P.G., Thomas, L., King, R.} (2016),
+  Patterson T.A., Parton, A., Langrock, R., Blackwell, P.G., Thomas, L., King, R. (2016),
   ``Statistical modelling of animal movement: a myopic review and a discussion of good practice'',
   \textit{arXiv preprint}, arXiv:1603.07511.
 
 \bibitem[\protect\citeauthoryear{Pebesma and Bivand}{2005}]{pebesma05}
-\textsc{Pebesma, E.J., Bivand, R.S.} (2005) 
+Pebesma, E.J., Bivand, R.S. (2005) 
 ``Classes and methods for spatial data in R'',
 \textit{R News}, 5 (2), 144--161. 
 URL: \url{http://cran.r-project.org/doc/Rnews/}
 
 \bibitem[\protect\citeauthoryear{Zucchini et al.}{2016}]{zucchini16}
-  \textsc{Zucchini, W.\, MacDonald, I.L., Langrock, R.} (2016).
+  Zucchini, W.\, MacDonald, I.L., Langrock, R. (2016).
   {\em Hidden Markov Models for Time Series: An Introduction Using R, Second Edition.}
   Chapman \& Hall/CRC Press, Boca Raton, FL.
 \end{thebibliography}
