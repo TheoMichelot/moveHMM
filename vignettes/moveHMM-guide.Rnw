@@ -108,7 +108,7 @@ trackData <- read.table(
     sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
 @
 
-The dataframe \texttt{trackData} now has four columns: ``Individual'', ``Easting'', ``Northing'', and ``dist\_water..meters.''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
+The data frame \texttt{trackData} now has four columns: ``Individual'', ``Easting'', ``Northing'', and ``dist\_water..meters.''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
 
 <<trackData2,size='small'>>=
 head(trackData)
@@ -127,16 +127,16 @@ trackData$Easting <- trackData$Easting/1000
 trackData$Northing <- trackData$Northing/1000
 @
 
-\noindent As a result, this is what the data looks like:
+\noindent As a result, this is what the data look like:
 <<trackData5,size='small'>>=
 head(trackData)
 @
 
 \subsubsection{Use \texttt{prepData}}
-The data is in the proper format, and can be processed using \texttt{prepData} to compute step lengths and angles. We choose the arguments carefully:
+The data are in the proper format, and can be processed using \texttt{prepData} to compute step lengths and angles. We choose the arguments carefully:
 \begin{itemize}
 \item \texttt{type} specifies whether the coordinates are easting/northing (\texttt{type="UTM"}) or longitude/latitude (\texttt{type="LL"}) values. The latter is the default, so we need to call the function with the argument \texttt{type="UTM"}, to indicate that UTM coordinates are provided.
-\item \texttt{coordNames} are the names of the coordinates in the input dataframe. The default is ``x'' and ``y'', so we need to call the function with the argument \texttt{coordNames=c("Easting","Northing")}.
+\item \texttt{coordNames} are the names of the coordinates in the input data frame. The default is ``x'' and ``y'', so we need to call the function with the argument \texttt{coordNames=c("Easting","Northing")}.
 \end{itemize}
 
 \noindent The call to the function for these data is,
@@ -562,7 +562,7 @@ The function \texttt{fitHMM} includes the option of fitting a stationary model (
 \subsection{Main functions} \label{sec_main_functions}
 
 \subsubsection{prepData}
-Tracking data usually consists of time series of either easting-northing coordinates or longitude-latitude values. However, with the HMM approach the derived quantities step lengths and turning angles are modelled. 
+Tracking data usually consist of time series of either easting-northing coordinates or longitude-latitude values. However, with the HMM approach the derived quantities step lengths and turning angles are modelled. 
 
 The function \texttt{prepData} computes the steps and angles from the coordinates. As input, this function takes an R data frame with columns ``x'' (either easting or longitude) and ``y'' (either northing or latitude). If the names of the coordinates columns are not ``x'' and ``y'', then the argument \texttt{coordNames} should specify them. If several animals were observed, there should also be a column ``ID'' which identifies the animal being observed. If there is no ``ID'' column, all observations will be considered to be associated with a single animal. All additional columns are considered as covariates. In addition to the data frame, \texttt{prepData} takes an argument \texttt{type}, which can either be ``LL'' (longitude-latitude, the default) or ``UTM''. The former indicates that the coordinates are longitude-latitude values, and the latter that they are easting-northing values. 
 
@@ -604,7 +604,7 @@ Other functions can be called on a \texttt{moveHMM} object, for further analysis
 \subsubsection{simData}
 The function \texttt{simData} simulates movement data from an HMM, given its parameters. The returned object is of the class \texttt{moveData}, and can be visualized using \texttt{plot}, or fitted using \texttt{fitHMM}. The arguments of \texttt{simData} are detailed in the documentation.
 
-It is possible to call \texttt{simData} on a fitted model directly, to simulate data from it. This can be used to assess the fit, by checking that the simulated data displays the same features as the real data.
+It is possible to call \texttt{simData} on a fitted model directly, to simulate data from it. This can be used to assess the fit, by checking that the simulated data display the same features as the real data.
 
 \subsubsection{plotSat}
 Based on functions provided by the package ggmap \citep{kahle13}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,4,5,\dots,20,21 \rbrace$. Other arguments are optional, and are described in the documentation.
