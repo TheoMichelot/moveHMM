@@ -96,7 +96,8 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
   ## Plot tracks ##
   #################
   # color by track if several tracks plotted on a single map
-  if(is.null(states) & compact & !is.null(data$ID) & col==1) {
+  # (does not use col==1 to avoid "condition has length > 1" warning message)
+  if(is.null(states) & compact & !is.null(data$ID) & length(col)==1 & col[1]==1) {
     if(length(unique(data$ID))<8)
       pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
     else
