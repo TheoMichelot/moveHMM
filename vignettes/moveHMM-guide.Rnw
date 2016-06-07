@@ -344,7 +344,7 @@ Figure \ref{moveHMM} displays those plots, but showing only one of the plotted m
   \label{moveHMM}
 \end{figure}
 
-The first state (in red on the plots) corresponds to short steps, and angles centered around $\pi$, and the second state (in green on the plots) corresponds to longer steps, and angles centered around $0$.
+The first state (in orange on the plots) corresponds to short steps, and angles centered around $\pi$, and the second state (in blue on the plots) corresponds to longer steps, and angles centered around $0$.
 
 The plots of the transition probabilities as function of the covariate indicate that animals tend to switch from the second state to the first state when they are far from water, whereas they stay in the second state when closer to water.
 
