@@ -302,32 +302,50 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
       # states for animal 'zoo'
       subStates <- states[which(m$data$ID==ID[zoo])]
 
-      # determine the bounds of the plot
-      xmin <- min(x[[zoo]],na.rm=T)
-      xmax <- max(x[[zoo]],na.rm=T)
-      ymin <- min(y[[zoo]],na.rm=T)
-      ymax <- max(y[[zoo]],na.rm=T)
-      # make sure that x and y have same scale
-      if(xmax-xmin>ymax-ymin) {
-        ymid <- (ymax+ymin)/2
-        ymax <- ymid+(xmax-xmin)/2
-        ymin <- ymid-(xmax-xmin)/2
-      } else {
-        xmid <- (xmax+xmin)/2
-        xmax <- xmid+(ymax-ymin)/2
-        xmin <- xmid-(ymax-ymin)/2
+      if(!all(y[[zoo]]==0)) { # if 2D data
+        # determine the bounds of the plot
+        xmin <- min(x[[zoo]],na.rm=T)
+        xmax <- max(x[[zoo]],na.rm=T)
+        ymin <- min(y[[zoo]],na.rm=T)
+        ymax <- max(y[[zoo]],na.rm=T)
+        # make sure that x and y have same scale
+        if(xmax-xmin>ymax-ymin) {
+          ymid <- (ymax+ymin)/2
+          ymax <- ymid+(xmax-xmin)/2
+          ymin <- ymid-(xmax-xmin)/2
+        } else {
+          xmid <- (xmax+xmin)/2
+          xmax <- xmid+(ymax-ymin)/2
+          xmin <- xmid-(ymax-ymin)/2
+        }
+
+        # first point
+        plot(x[[zoo]][1],y[[zoo]][1],xlim=c(xmin,xmax),ylim=c(ymin,ymax),pch=18,
+             xlab="x",ylab="y",col=col[subStates[1]])
+
+        # trajectory
+        for(i in 2:length(x[[zoo]])) {
+          points(x[[zoo]][i],y[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.6)
+          segments(x0=x[[zoo]][i-1],y0=y[[zoo]][i-1],x1=x[[zoo]][i],y1=y[[zoo]][i],
+                   col=col[subStates[i-1]],lwd=1.3)
+        }
+      } else { # if 1D data
+
+        ymin <- min(x[[zoo]],na.rm=T)
+        ymax <- max(x[[zoo]],na.rm=T)
+
+        # first point
+        plot(x[[zoo]][1], lwd=1.3, xlim=c(1,length(x[[zoo]])), ylim=c(ymin,ymax),
+             xlab="time", ylab="x", pch=18, col=col[subStates[1]])
+
+        # trajectory
+        for(i in 2:length(x[[zoo]])) {
+          points(i,x[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.6)
+          segments(x0=i-1,y0=x[[zoo]][i-1],x1=i,y1=x[[zoo]][i],
+                   col=col[subStates[i-1]],lwd=1.3)
+        }
       }
 
-      # first point
-      plot(x[[zoo]][1],y[[zoo]][1],xlim=c(xmin,xmax),ylim=c(ymin,ymax),pch=18,
-           xlab="x",ylab="y",col=col[subStates[1]])
-
-      # trajectory
-      for(i in 2:length(x[[zoo]])) {
-        points(x[[zoo]][i],y[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.6)
-        segments(x0=x[[zoo]][i-1],y0=y[[zoo]][i-1],x1=x[[zoo]][i],y1=y[[zoo]][i],
-                 col=col[subStates[i-1]],lwd=1.3)
-      }
       mtext(paste("Animal ID:",ID[zoo]),side=3,outer=TRUE,padj=2)
     }
   }

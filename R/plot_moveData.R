@@ -31,6 +31,11 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
 
   nbAnimals <- length(unique(data$ID))
 
+  if(all(data$y==0) & compact) {
+    warning("One-dimensional data cannot plotted with the option 'compact'.")
+    compact <- FALSE
+  }
+
   ##################################
   ## Define animals to be plotted ##
   ##################################
@@ -134,24 +139,30 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
         ## Map of each animal's track ##
         ################################
         par(mfrow=c(1,1))
-        # determine bounds
-        ind <- which(data$ID %in% unique(data$ID)[animalsInd])
-        xmin <- min(x,na.rm=T)
-        xmax <- max(x,na.rm=T)
-        ymin <- min(y,na.rm=T)
-        ymax <- max(y,na.rm=T)
-        # make sure that x and y have same scale
-        if(xmax-xmin>ymax-ymin) {
-          ymid <- (ymax+ymin)/2
-          ymax <- ymid+(xmax-xmin)/2
-          ymin <- ymid-(xmax-xmin)/2
-        } else {
-          xmid <- (xmax+xmin)/2
-          xmax <- xmid+(ymax-ymin)/2
-          xmin <- xmid-(ymax-ymin)/2
+
+        if(!all(y==0)) { # if 2D data
+          # determine bounds
+          ind <- which(data$ID %in% unique(data$ID)[animalsInd])
+          xmin <- min(x,na.rm=T)
+          xmax <- max(x,na.rm=T)
+          ymin <- min(y,na.rm=T)
+          ymax <- max(y,na.rm=T)
+          # make sure that x and y have same scale
+          if(xmax-xmin>ymax-ymin) {
+            ymid <- (ymax+ymin)/2
+            ymax <- ymid+(xmax-xmin)/2
+            ymin <- ymid-(xmax-xmin)/2
+          } else {
+            xmid <- (xmax+xmin)/2
+            xmax <- xmid+(ymax-ymin)/2
+            xmin <- xmid-(ymax-ymin)/2
+          }
+          # map of the animal's track
+          plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20,xlim=c(xmin,xmax),ylim=c(ymin,ymax))
+        } else { # if 1D data
+          plot(x, type="o",lwd=1.3, xlab="time", ylab="x", pch=20)
         }
-        # map of the animal's track
-        plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20,xlim=c(xmin,xmax),ylim=c(ymin,ymax))
+
         mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
 
