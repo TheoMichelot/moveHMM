@@ -12,6 +12,7 @@
 \usepackage{color} % for lstlisting background color
 \usepackage{booktabs} % pretty tables
 \usepackage{url}
+\usepackage[margin=3cm]{geometry}
 
 % listing style
 \definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
