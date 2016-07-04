@@ -64,14 +64,20 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
   par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
   par(ask=ask)
 
-  if(is.null(data$angle) | length(which(!is.na(data$angle)))==0) # only step length is provided
+  if(is.null(data$angle) | all(data$y==0)) # only step length is provided
   {
-    ##########################################
-    ## Plot steps time series and histogram ##
-    ##########################################
-    par(mfrow=c(1,2))
     for(zoo in animalsInd) {
+      ################
+      ## Plot track ##
+      ################*
       ID <- unique(data$ID)[zoo]
+      x <- data$x[which(data$ID==ID)]
+      plot(x, type="o",lwd=1.3, xlab="time", ylab="x", pch=20)
+
+      ##########################################
+      ## Plot steps time series and histogram ##
+      ##########################################
+      par(mfrow=c(1,2))
       step <- data$step[which(data$ID==ID)]
       # step length time series
       plot(step,type="l",xlab="t",ylab="step length",
@@ -80,8 +86,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
       hist(step,xlab="step length",main="",col="grey",border="white",breaks=breaks)
       mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
     }
-  }
-  else # step length and turning angle are provided
+  } else # step length and turning angle are provided
   {
     if(compact) {
       ################################
@@ -140,28 +145,24 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
         ################################
         par(mfrow=c(1,1))
 
-        if(!all(y==0)) { # if 2D data
-          # determine bounds
-          ind <- which(data$ID %in% unique(data$ID)[animalsInd])
-          xmin <- min(x,na.rm=T)
-          xmax <- max(x,na.rm=T)
-          ymin <- min(y,na.rm=T)
-          ymax <- max(y,na.rm=T)
-          # make sure that x and y have same scale
-          if(xmax-xmin>ymax-ymin) {
-            ymid <- (ymax+ymin)/2
-            ymax <- ymid+(xmax-xmin)/2
-            ymin <- ymid-(xmax-xmin)/2
-          } else {
-            xmid <- (xmax+xmin)/2
-            xmax <- xmid+(ymax-ymin)/2
-            xmin <- xmid-(ymax-ymin)/2
-          }
-          # map of the animal's track
-          plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20,xlim=c(xmin,xmax),ylim=c(ymin,ymax))
-        } else { # if 1D data
-          plot(x, type="o",lwd=1.3, xlab="time", ylab="x", pch=20)
+        # determine bounds
+        ind <- which(data$ID %in% unique(data$ID)[animalsInd])
+        xmin <- min(x,na.rm=T)
+        xmax <- max(x,na.rm=T)
+        ymin <- min(y,na.rm=T)
+        ymax <- max(y,na.rm=T)
+        # make sure that x and y have same scale
+        if(xmax-xmin>ymax-ymin) {
+          ymid <- (ymax+ymin)/2
+          ymax <- ymid+(xmax-xmin)/2
+          ymin <- ymid-(xmax-xmin)/2
+        } else {
+          xmid <- (xmax+xmin)/2
+          xmax <- xmid+(ymax-ymin)/2
+          xmin <- xmid-(ymax-ymin)/2
         }
+        # map of the animal's track
+        plot(x,y,type="o",lwd=1.3,xlab="x",ylab="y",pch=20,xlim=c(xmin,xmax),ylim=c(ymin,ymax))
 
         mtext(paste("Animal ID:",ID),side=3,outer=TRUE,padj=2)
       }
