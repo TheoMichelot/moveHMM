@@ -24,24 +24,24 @@
 
 stateProbs <- function(m)
 {
-  if(!is.moveHMM(m))
-    stop("'m' must be a moveHMM object (as output by fitHMM)")
+    if(!is.moveHMM(m))
+        stop("'m' must be a moveHMM object (as output by fitHMM)")
 
-  data <- m$data
-  nbStates <- ncol(m$mle$stepPar)
+    data <- m$data
+    nbStates <- ncol(m$mle$stepPar)
 
-  if(nbStates==1)
-    stop("No states to decode (nbStates=1)")
+    if(nbStates==1)
+        stop("No states to decode (nbStates=1)")
 
-  nbObs <- nrow(data)
-  la <- logAlpha(m) # forward log-probabilities
-  lb <- logBeta(m) # backward log-probabilities
-  c <- max(la[nbObs,]) # cancels out below ; prevents numerical errors
-  llk <- c + log(sum(exp(la[nbObs,]-c)))
-  stateProbs <- matrix(NA,nbObs,nbStates)
+    nbObs <- nrow(data)
+    la <- logAlpha(m) # forward log-probabilities
+    lb <- logBeta(m) # backward log-probabilities
+    c <- max(la[nbObs,]) # cancels out below ; prevents numerical errors
+    llk <- c + log(sum(exp(la[nbObs,]-c)))
+    stateProbs <- matrix(NA,nbObs,nbStates)
 
-  for(i in 1:nbObs)
-    stateProbs[i,] <- exp(la[i,]+lb[i,]-llk)
+    for(i in 1:nbObs)
+        stateProbs[i,] <- exp(la[i,]+lb[i,]-llk)
 
-  return(stateProbs)
+    return(stateProbs)
 }

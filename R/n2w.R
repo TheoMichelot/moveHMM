@@ -37,45 +37,45 @@
 
 n2w <- function(par,bounds,beta,delta=NULL,nbStates,estAngleMean)
 {
-  if(length(which(par<bounds[,1] | par>bounds[,2]))>0)
-    stop("Check the parameters bounds.")
+    if(length(which(par<bounds[,1] | par>bounds[,2]))>0)
+        stop("Check the parameters bounds.")
 
-  nbPar <- length(par)/nbStates
-  wpar <- NULL
-  for(i in 1:nbPar) {
-    index <- (i-1)*nbStates+1
-    a <- bounds[index,1]
-    b <- bounds[index,2]
-    p <- par[index:(index+nbStates-1)]
+    nbPar <- length(par)/nbStates
+    wpar <- NULL
+    for(i in 1:nbPar) {
+        index <- (i-1)*nbStates+1
+        a <- bounds[index,1]
+        b <- bounds[index,2]
+        p <- par[index:(index+nbStates-1)]
 
-    if(is.finite(a) & is.finite(b)) { # [a,b] -> R
-      p <- logit((p-a)/(b-a))
+        if(is.finite(a) & is.finite(b)) { # [a,b] -> R
+            p <- logit((p-a)/(b-a))
+        }
+        else if(is.infinite(a) & is.finite(b)) { # ]-Inf,b] -> R
+            p <- -log(-p+b)
+        }
+        else if(is.finite(a) & is.infinite(b)) { # [a,Inf[ -> R
+            p <- log(p-a)
+        }
+
+        wpar <- c(wpar,p)
     }
-    else if(is.infinite(a) & is.finite(b)) { # ]-Inf,b] -> R
-      p <- -log(-p+b)
+
+    if(estAngleMean) {
+        # identify angle distribution parameters
+        foo <- length(wpar)-nbStates+1
+        angleMean <- wpar[(foo-nbStates):(foo-1)]
+        kappa <- wpar[foo:length(wpar)]
+
+        # compute the working parameters for the angle distribution
+        x <- kappa*cos(angleMean)
+        y <- kappa*sin(angleMean)
+
+        wpar[(foo-nbStates):(foo-1)] <- x
+        wpar[foo:length(wpar)] <- y
     }
-    else if(is.finite(a) & is.infinite(b)) { # [a,Inf[ -> R
-      p <- log(p-a)
-    }
 
-    wpar <- c(wpar,p)
-  }
-
-  if(estAngleMean) {
-    # identify angle distribution parameters
-    foo <- length(wpar)-nbStates+1
-    angleMean <- wpar[(foo-nbStates):(foo-1)]
-    kappa <- wpar[foo:length(wpar)]
-
-    # compute the working parameters for the angle distribution
-    x <- kappa*cos(angleMean)
-    y <- kappa*sin(angleMean)
-
-    wpar[(foo-nbStates):(foo-1)] <- x
-    wpar[foo:length(wpar)] <- y
-  }
-
-  wbeta <- as.vector(beta) # if beta is NULL, wbeta is NULL as well
-  wdelta <- log(delta[-1]/delta[1]) # if delta is NULL, wdelta is NULL as well
-  return(c(wpar,wbeta,wdelta))
+    wbeta <- as.vector(beta) # if beta is NULL, wbeta is NULL as well
+    wdelta <- log(delta[-1]/delta[1]) # if delta is NULL, wdelta is NULL as well
+    return(c(wpar,wbeta,wdelta))
 }

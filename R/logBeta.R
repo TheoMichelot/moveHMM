@@ -17,31 +17,31 @@
 
 logBeta <- function(m)
 {
-  data <- m$data
-  nbStates <- ncol(m$mle$stepPar)
-  nbObs <- nrow(data)
-  lbeta <- matrix(NA,nbObs,nbStates)
+    data <- m$data
+    nbStates <- ncol(m$mle$stepPar)
+    nbObs <- nrow(data)
+    lbeta <- matrix(NA,nbObs,nbStates)
 
-  covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                     names(data)!="step" & names(data)!="angle")
-  covs <- data[,covsCol]
+    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
+                         names(data)!="step" & names(data)!="angle")
+    covs <- data[,covsCol]
 
-  probs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
-                       m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)
-  trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
+    probs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
+                      m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)
+    trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
 
-  lscale <- log(nbStates)
-  foo <- rep(1,nbStates)/nbStates
-  lbeta[nbObs,] <- rep(0,nbStates)
+    lscale <- log(nbStates)
+    foo <- rep(1,nbStates)/nbStates
+    lbeta[nbObs,] <- rep(0,nbStates)
 
-  for(i in (nbObs-1):1) {
-    gamma <- trMat[,,(i+1)]
-    foo <- gamma%*%(probs[i+1,]*foo)
-    lbeta[i,] <- log(foo)+lscale
-    sumfoo <- sum(foo)
-    foo <- foo/sumfoo
-    lscale <- lscale+log(sumfoo)
-  }
+    for(i in (nbObs-1):1) {
+        gamma <- trMat[,,(i+1)]
+        foo <- gamma%*%(probs[i+1,]*foo)
+        lbeta[i,] <- log(foo)+lscale
+        sumfoo <- sum(foo)
+        foo <- foo/sumfoo
+        lscale <- lscale+log(sumfoo)
+    }
 
-  return(lbeta)
+    return(lbeta)
 }

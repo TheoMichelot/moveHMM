@@ -44,179 +44,179 @@
 plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=1,alpha=1,
                     states=NULL,animals=NULL,ask=TRUE)
 {
-  #####################
-  ## Check arguments ##
-  #####################
-  if(is.null(data$x) | is.null(data$y))
-    stop("Data should have fields data$x and data$y.")
+    #####################
+    ## Check arguments ##
+    #####################
+    if(is.null(data$x) | is.null(data$y))
+        stop("Data should have fields data$x and data$y.")
 
-  if(min(data$x,na.rm=TRUE) < -180 | max(data$x,na.rm=TRUE) > 180 |
-     min(data$y,na.rm=TRUE) < -90 | max(data$y,na.rm=TRUE) > 90)
-    stop("Coordinates should be longitude/latitude values.")
+    if(min(data$x,na.rm=TRUE) < -180 | max(data$x,na.rm=TRUE) > 180 |
+       min(data$y,na.rm=TRUE) < -90 | max(data$y,na.rm=TRUE) > 90)
+        stop("Coordinates should be longitude/latitude values.")
 
-  if(!is.null(zoom)) {
-    if(zoom<3 | zoom>21)
-      stop("'zoom' should be between 3 (continent) and 21 (building).")
-  } else
-    stop("'zoom' needs to be specified as an integer between 3 (continent) and 21 (building)")
+    if(!is.null(zoom)) {
+        if(zoom<3 | zoom>21)
+            stop("'zoom' should be between 3 (continent) and 21 (building).")
+    } else
+        stop("'zoom' needs to be specified as an integer between 3 (continent) and 21 (building)")
 
-  if(!is.null(location)) {
-    if(length(location)!=2)
-      stop("'location' should be a vector of two values (longitude,latitude).")
+    if(!is.null(location)) {
+        if(length(location)!=2)
+            stop("'location' should be a vector of two values (longitude,latitude).")
 
-    if(location[1] < -180 | location[1] > 180 | location[2] < -90 | location[2] > 90)
-      stop("'location' should be a vector of a longitude value and a latitude value.")
-  }
+        if(location[1] < -180 | location[1] > 180 | location[2] < -90 | location[2] > 90)
+            stop("'location' should be a vector of a longitude value and a latitude value.")
+    }
 
-  if(is.null(states)) {
-    if(length(col)!=1 & length(col)!=nrow(data))
-      stop("'col' should be of length 1, or length of the data")
-  } else {
-    if(length(states)!=nrow(data))
-      stop("'states' should have the same length as 'data'")
-
-    # number of states
-    nbStates <- length(unique(states))
-
-    if(length(col)!=nbStates) {
-      if(nbStates<8) {
-        pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-        col <- pal[states]
-      } else
-        col <- rainbow(nbStates)[states] # to make sure that all colors are distinct
+    if(is.null(states)) {
+        if(length(col)!=1 & length(col)!=nrow(data))
+            stop("'col' should be of length 1, or length of the data")
     } else {
-      col <- col[states]
-    }
-  }
+        if(length(states)!=nrow(data))
+            stop("'states' should have the same length as 'data'")
 
-  if(length(alpha)!=1)
-    stop("'alpha' should be of length 1")
+        # number of states
+        nbStates <- length(unique(states))
 
-  #################
-  ## Plot tracks ##
-  #################
-  # color by track if several tracks plotted on a single map
-  # (does not use col==1 to avoid "condition has length > 1" warning message)
-  if(is.null(states) & compact & !is.null(data$ID) & length(col)==1 & col[1]==1) {
-    if(length(unique(data$ID))<8)
-      pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-    else
-      pal <- rainbow(length(unique(data$ID)))
-
-    col <- rep(NA,nrow(data))
-    for(i in 1:length(unique(data$ID)))
-      col[which(data$ID==unique(data$ID)[i])] <- pal[i]
-  }
-
-  # is there one color value per point? used later
-  manyCols <- length(col)==nrow(data)
-
-  # select subset of data to be plotted
-  if(!is.null(animals)) {
-    if(is.character(animals)) { # animals' IDs provided
-      if(manyCols)
-        col <- col[which(data$ID%in%animals)]
-
-      data <- data[which(data$ID%in%animals),]
-    }
-
-
-    if(is.numeric(animals)) { # animals' indices provided
-      nbAnimals <- length(unique(data$ID))
-      if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
-        stop("Check 'animals' argument, index out of bounds")
-
-      if(manyCols)
-        col <- col[which(data$ID%in%unique(data$ID)[animals])]
-
-      data <- data[which(data$ID%in%unique(data$ID)[animals]),]
-    }
-  }
-
-  # define number of tracks to be plotted
-  if(is.null(data$ID) | compact)
-    nbTracks <- 1
-  else
-    nbTracks <- length(unique(data$ID))
-
-  # loop over tracks
-  for(zoo in 1:nbTracks) {
-    if(nbTracks==1) {
-      subData <- data
-      subCol <- col
-    } else {
-      par(ask=ask)
-
-      # select data for track 'zoo'
-      subData <- data[which(data$ID==unique(data$ID)[zoo]),]
-
-      # select colors for track 'zoo'
-      if(manyCols)
-        subCol <- col[which(data$ID==unique(data$ID)[zoo])]
-      else
-        subCol <- col
-    }
-
-    # define center of map
-    if(is.null(location)) {
-      midLon <- min(subData$x,na.rm=TRUE) + (max(subData$x,na.rm=TRUE)-min(subData$x,na.rm=TRUE))/2
-      midLat <- min(subData$y,na.rm=TRUE) + (max(subData$y,na.rm=TRUE)-min(subData$y,na.rm=TRUE))/2
-    } else {
-      midLon <- location[1]
-      midLat <- location[2]
-    }
-
-    # get map of the study region (from google)
-    map <- get_map(location=c(lon=midLon, lat=midLat), zoom=zoom, maptype="satellite",
-                   source="google")
-
-    # define map with dots
-    mapMove <- ggmap(map) + geom_point(aes_string(x="x", y="y"), data=subData, col=subCol,
-                                       alpha=alpha)
-
-    if(segments) {
-      # if several tracks on one map
-      if(compact & !is.null(data$ID)) {
-        # loop over tracks
-        for(id in unique(data$ID)) {
-          ind <- which(data$ID==id)
-
-          xto <- subData$x[ind[-1]]
-          yto <- subData$y[ind[-1]]
-          xfrom <- subData$x[ind[-length(ind)]]
-          yfrom <- subData$y[ind[-length(ind)]]
-
-          if(manyCols)
-            subCol <- col[ind[-length(ind)]]
-
-          seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
-
-          # add segments to map
-          mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
-                                            col=subCol, alpha=alpha)
+        if(length(col)!=nbStates) {
+            if(nbStates<8) {
+                pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+                col <- pal[states]
+            } else
+                col <- rainbow(nbStates)[states] # to make sure that all colors are distinct
+        } else {
+            col <- col[states]
         }
-      } else {
-        # define segments to plot
-        xto <- subData$x[-1]
-        yto <- subData$y[-1]
-        xfrom <- subData$x[-nrow(subData)]
-        yfrom <- subData$y[-nrow(subData)]
-
-        # remove last color, because there is one fewer segment
-        if(manyCols)
-          subCol <- subCol[-length(subCol)]
-
-        seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
-
-        # add segments to map
-        mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
-                                          col=subCol, alpha=alpha)
-      }
     }
 
-    # plot map
-    plot(mapMove)
-  }
+    if(length(alpha)!=1)
+        stop("'alpha' should be of length 1")
 
-  par(ask=FALSE)
+    #################
+    ## Plot tracks ##
+    #################
+    # color by track if several tracks plotted on a single map
+    # (does not use col==1 to avoid "condition has length > 1" warning message)
+    if(is.null(states) & compact & !is.null(data$ID) & length(col)==1 & col[1]==1) {
+        if(length(unique(data$ID))<8)
+            pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+        else
+            pal <- rainbow(length(unique(data$ID)))
+
+        col <- rep(NA,nrow(data))
+        for(i in 1:length(unique(data$ID)))
+            col[which(data$ID==unique(data$ID)[i])] <- pal[i]
+    }
+
+    # is there one color value per point? used later
+    manyCols <- length(col)==nrow(data)
+
+    # select subset of data to be plotted
+    if(!is.null(animals)) {
+        if(is.character(animals)) { # animals' IDs provided
+            if(manyCols)
+                col <- col[which(data$ID%in%animals)]
+
+            data <- data[which(data$ID%in%animals),]
+        }
+
+
+        if(is.numeric(animals)) { # animals' indices provided
+            nbAnimals <- length(unique(data$ID))
+            if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
+                stop("Check 'animals' argument, index out of bounds")
+
+            if(manyCols)
+                col <- col[which(data$ID%in%unique(data$ID)[animals])]
+
+            data <- data[which(data$ID%in%unique(data$ID)[animals]),]
+        }
+    }
+
+    # define number of tracks to be plotted
+    if(is.null(data$ID) | compact)
+        nbTracks <- 1
+    else
+        nbTracks <- length(unique(data$ID))
+
+    # loop over tracks
+    for(zoo in 1:nbTracks) {
+        if(nbTracks==1) {
+            subData <- data
+            subCol <- col
+        } else {
+            par(ask=ask)
+
+            # select data for track 'zoo'
+            subData <- data[which(data$ID==unique(data$ID)[zoo]),]
+
+            # select colors for track 'zoo'
+            if(manyCols)
+                subCol <- col[which(data$ID==unique(data$ID)[zoo])]
+            else
+                subCol <- col
+        }
+
+        # define center of map
+        if(is.null(location)) {
+            midLon <- min(subData$x,na.rm=TRUE) + (max(subData$x,na.rm=TRUE)-min(subData$x,na.rm=TRUE))/2
+            midLat <- min(subData$y,na.rm=TRUE) + (max(subData$y,na.rm=TRUE)-min(subData$y,na.rm=TRUE))/2
+        } else {
+            midLon <- location[1]
+            midLat <- location[2]
+        }
+
+        # get map of the study region (from google)
+        map <- get_map(location=c(lon=midLon, lat=midLat), zoom=zoom, maptype="satellite",
+                       source="google")
+
+        # define map with dots
+        mapMove <- ggmap(map) + geom_point(aes_string(x="x", y="y"), data=subData, col=subCol,
+                                           alpha=alpha)
+
+        if(segments) {
+            # if several tracks on one map
+            if(compact & !is.null(data$ID)) {
+                # loop over tracks
+                for(id in unique(data$ID)) {
+                    ind <- which(data$ID==id)
+
+                    xto <- subData$x[ind[-1]]
+                    yto <- subData$y[ind[-1]]
+                    xfrom <- subData$x[ind[-length(ind)]]
+                    yfrom <- subData$y[ind[-length(ind)]]
+
+                    if(manyCols)
+                        subCol <- col[ind[-length(ind)]]
+
+                    seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
+
+                    # add segments to map
+                    mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
+                                                      col=subCol, alpha=alpha)
+                }
+            } else {
+                # define segments to plot
+                xto <- subData$x[-1]
+                yto <- subData$y[-1]
+                xfrom <- subData$x[-nrow(subData)]
+                yfrom <- subData$y[-nrow(subData)]
+
+                # remove last color, because there is one fewer segment
+                if(manyCols)
+                    subCol <- subCol[-length(subCol)]
+
+                seg <- data.frame(xfrom=xfrom,yfrom=yfrom,xto=xto,yto=yto)
+
+                # add segments to map
+                mapMove <- mapMove + geom_segment(aes(x=xfrom, y=yfrom, xend=xto, yend=yto), data=seg,
+                                                  col=subCol, alpha=alpha)
+            }
+        }
+
+        # plot map
+        plot(mapMove)
+    }
+
+    par(ask=FALSE)
 }

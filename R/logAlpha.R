@@ -17,34 +17,34 @@
 
 logAlpha <- function(m)
 {
-  data <- m$data
-  nbStates <- ncol(m$mle$stepPar)
-  nbObs <- nrow(data)
-  lalpha <- matrix(NA,nbObs,nbStates)
+    data <- m$data
+    nbStates <- ncol(m$mle$stepPar)
+    nbObs <- nrow(data)
+    lalpha <- matrix(NA,nbObs,nbStates)
 
-  covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                     names(data)!="step" & names(data)!="angle")
-  covs <- data[,covsCol]
+    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
+                         names(data)!="step" & names(data)!="angle")
+    covs <- data[,covsCol]
 
-  probs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
-                       m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)
+    probs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
+                      m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)
 
-  if(nbStates>1)
-    trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
-  else
-    trMat <- array(1,dim=c(1,1,nbObs))
+    if(nbStates>1)
+        trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
+    else
+        trMat <- array(1,dim=c(1,1,nbObs))
 
-  lscale <- 0
-  foo <- m$mle$delta*probs[1,]
-  lalpha[1,] <- log(foo)+lscale
+    lscale <- 0
+    foo <- m$mle$delta*probs[1,]
+    lalpha[1,] <- log(foo)+lscale
 
-  for(i in 2:nbObs) {
-    gamma <- trMat[,,i]
-    foo <- foo%*%gamma*probs[i,]
-    lscale <- lscale+log(sum(foo))
-    foo <- foo/sum(foo)
-    lalpha[i,] <- log(foo)+lscale
-  }
+    for(i in 2:nbObs) {
+        gamma <- trMat[,,i]
+        foo <- foo%*%gamma*probs[i,]
+        lscale <- lscale+log(sum(foo))
+        foo <- foo/sum(foo)
+        lalpha[i,] <- log(foo)+lscale
+    }
 
-  return(lalpha)
+    return(lalpha)
 }

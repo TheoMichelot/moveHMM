@@ -40,67 +40,67 @@
 allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zeroInflation=FALSE,
                      knownStates=NULL)
 {
-  stepFun <- paste("d",stepDist,sep="")
-  if(angleDist!="none") angleFun <- paste("d",angleDist,sep="")
+    stepFun <- paste("d",stepDist,sep="")
+    if(angleDist!="none") angleFun <- paste("d",angleDist,sep="")
 
-  nbObs <- length(data$step)
-  allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)
-  stepInd <- which(!is.na(data$step))
-  if(angleDist!="none") angleInd <- which(!is.na(data$angle))
+    nbObs <- length(data$step)
+    allProbs <- matrix(1,nrow=nbObs,ncol=nbStates)
+    stepInd <- which(!is.na(data$step))
+    if(angleDist!="none") angleInd <- which(!is.na(data$angle))
 
-  sp <- stepPar
+    sp <- stepPar
 
-  for(state in 1:nbStates) {
-    stepPar <- sp
-    stepProb <- rep(1,nbObs)
-    angleProb <- rep(1,nbObs)
+    for(state in 1:nbStates) {
+        stepPar <- sp
+        stepProb <- rep(1,nbObs)
+        angleProb <- rep(1,nbObs)
 
-    # Constitute the lists of state-dependent parameters for the step and angle
-    stepArgs <- list(data$step[stepInd])
-    if(angleDist!="none") angleArgs <- list(data$angle[angleInd])
+        # Constitute the lists of state-dependent parameters for the step and angle
+        stepArgs <- list(data$step[stepInd])
+        if(angleDist!="none") angleArgs <- list(data$angle[angleInd])
 
-    if(zeroInflation) {
-      zeromass <- stepPar[nrow(stepPar),state]
-      stepPar <- stepPar[-nrow(stepPar),]
+        if(zeroInflation) {
+            zeromass <- stepPar[nrow(stepPar),state]
+            stepPar <- stepPar[-nrow(stepPar),]
+        }
+
+        for(j in 1:nrow(stepPar))
+            stepArgs[[j+1]] <- stepPar[j,state]
+
+        # conversion between mean/sd and shape/scale if necessary
+        if(stepDist=="gamma") {
+            shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
+            scale <- stepArgs[[3]]^2/stepArgs[[2]]
+            stepArgs[[2]] <- shape
+            stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
+        }
+        if(zeroInflation) {
+            stepProb[stepInd] <- ifelse(data$step[stepInd]==0,
+                                        zeromass, # if step==0
+                                        (1-zeromass)*do.call(stepFun,stepArgs)) # if step != 0
+        }
+        else stepProb[stepInd] <- do.call(stepFun,stepArgs)
+
+        if(angleDist!="none") {
+            for(j in 1:nrow(anglePar))
+                angleArgs[[j+1]] <- anglePar[j,state]
+
+            angleProb[angleInd] <- do.call(angleFun,angleArgs)
+
+            allProbs[,state] <- stepProb*angleProb
+        }
+        else allProbs[,state] <- stepProb # model step length only
     }
 
-    for(j in 1:nrow(stepPar))
-      stepArgs[[j+1]] <- stepPar[j,state]
-
-    # conversion between mean/sd and shape/scale if necessary
-    if(stepDist=="gamma") {
-      shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
-      scale <- stepArgs[[3]]^2/stepArgs[[2]]
-      stepArgs[[2]] <- shape
-      stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
+    # if some states are known a priori
+    if(!is.null(knownStates)) {
+        for(i in which(!is.na(knownStates))) {
+            # set all probabilities to zero except for known state
+            prob <- allProbs[i,knownStates[i]]
+            allProbs[i,] <- 0
+            allProbs[i,knownStates[i]] <- prob
+        }
     }
-    if(zeroInflation) {
-      stepProb[stepInd] <- ifelse(data$step[stepInd]==0,
-                                  zeromass, # if step==0
-                                  (1-zeromass)*do.call(stepFun,stepArgs)) # if step != 0
-    }
-    else stepProb[stepInd] <- do.call(stepFun,stepArgs)
 
-    if(angleDist!="none") {
-      for(j in 1:nrow(anglePar))
-        angleArgs[[j+1]] <- anglePar[j,state]
-
-      angleProb[angleInd] <- do.call(angleFun,angleArgs)
-
-      allProbs[,state] <- stepProb*angleProb
-    }
-    else allProbs[,state] <- stepProb # model step length only
-  }
-
-  # if some states are known a priori
-  if(!is.null(knownStates)) {
-    for(i in which(!is.na(knownStates))) {
-      # set all probabilities to zero except for known state
-      prob <- allProbs[i,knownStates[i]]
-      allProbs[i,] <- 0
-      allProbs[i,knownStates[i]] <- prob
-    }
-  }
-
-  return(allProbs)
+    return(allProbs)
 }
