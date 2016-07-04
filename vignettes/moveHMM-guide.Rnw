@@ -48,6 +48,8 @@ library(Rcpp)
 library(moveHMM)
 @
 
+\tableofcontents
+
 \section{Introduction}
 
 The analysis of animal movement data has become increasingly important in terrestrial and marine ecology. Improvements in telemetry technology have resulted in an explosion in the volume of high precision data being collected. As a result, there are two challenges which researchers collecting these data regularly face: (1) data volume and (2) employing statistical methods which can accommodate some of the specific features of movement data \citep{patterson2009}. 
@@ -99,7 +101,7 @@ It is possible to have a column ``ID'', which contains the identifiers of the ob
 
 The elk data considered in \cite{morales2004} are available online at:
 \begin{center}
-  \url{http://www.esapubs.org/archive/ecol/E085/072/elk\_data.txt}
+  \url{http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt}
 \end{center}
 We load the relevant rows and columns into a data frame using the \texttt{read.table} command.
 
@@ -447,6 +449,11 @@ plotSat(lldata,zoom=8)
 	\caption{Plot of the elk data, obtained with plotSat.}
 	\label{fig:plotSat}
 \end{figure}
+
+\subsection{Dealing with one-dimensional data}
+It is sometimes of interest to model one-dimensional movement data, like e.g. dive data. This can be done in moveHMM by setting all values of the second coordinate to zero in the data, and use the option \texttt{angleDist="none"}.
+
+In the case where one-dimensional data are provided, the plotting functions for the data and for the model will output plots of the first coordinate as a function of time, instead of a map of the track.
 
 \section{Package features}
 In this section, we describe the global structure of the package, and then describe in more detail the main functions required to fit an HMM to movement data.
