@@ -34,13 +34,10 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
     if(length(which(coordNames %in% names(trackData)))<2)
         stop("Check the columns names of your coordinates.")
 
-    x <- trackData[,coordNames[1]]
-    y <- trackData[,coordNames[2]]
-
     if(!is.null(trackData$ID))
         ID <- as.character(trackData$ID) # homogenization of numeric and string IDs
     else
-        ID <- rep("Animal1",length(x)) # default ID if none provided
+        ID <- rep("Animal1",nrow(trackData)) # default ID if none provided
 
     if(length(which(is.na(ID)))>0)
         stop("Missing IDs")
@@ -48,6 +45,19 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
     data <- data.frame(ID=character(),
                        step=numeric(),
                        angle=numeric())
+
+    # remove tracks with less than two observations
+    for(zoo in unique(ID)) {
+        if(length(which(ID==zoo))<2) {
+            trackData <- trackData[-which(ID==zoo),]
+            ID <- ID[-which(ID==zoo)]
+            warning(paste("Track",zoo,"only contains one observation,",
+                          "and will be removed from the data."))
+        }
+    }
+
+    x <- trackData[,coordNames[1]]
+    y <- trackData[,coordNames[2]]
 
     nbAnimals <- length(unique(ID))
 
@@ -60,6 +70,7 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
 
     for(zoo in 1:nbAnimals) {
         nbObs <- length(which(ID==unique(ID)[zoo])) # number of observations for animal zoo
+
         step <- rep(NA,nbObs)
         angle <- rep(NA,nbObs)
         i1 <- which(ID==unique(ID)[zoo])[1] # index of 1st obs for animal zoo
@@ -94,6 +105,7 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
         d <- data.frame(ID=rep(unique(ID)[zoo],nbObs),
                         step=step,
                         angle=angle)
+
         # append individual data to output
         data <- rbind(data,d)
     }
