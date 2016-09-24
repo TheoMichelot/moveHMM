@@ -18,6 +18,7 @@
 #' @param sepStates If \code{TRUE}, the data is split by states in the histograms.
 #' Default: \code{FALSE}.
 #' @param col Vector or colors for the states (one color per state).
+#' @param cumul If \code{TRUE}, the sum of weighted densities is plotted (default).
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @details The state-dependent densities are weighted by the frequency of each state in the most
@@ -37,7 +38,7 @@
 #' @importFrom graphics legend lines segments
 
 plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,sepAnimals=FALSE,
-                         sepStates=FALSE,col=NULL,...)
+                         sepStates=FALSE,col=NULL,cumul=TRUE,...)
 {
     m <- x # the name "x" is for compatibility with the generic method
     nbAnimals <- length(unique(m$data$ID))
@@ -63,6 +64,8 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     if(is.null(col) & nbStates>=8)
         col <- rainbow(nbStates) # to make sure that all colors are distinct (but, really? eight states?)
 
+    if(sepStates | nbStates<2)
+        cumul <- FALSE
 
     ######################
     ## Prepare the data ##
@@ -207,7 +210,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
                     message <- paste("Animal ID:",ID[zoo]," - State:",state)
 
                     # the function plotHist is defined below
-                    plotHist(step,angle,stepDensities,angleDensities,message,sepStates,breaks,state,hist.ylim,col)
+                    plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
+                             message=message,sepStates=sepStates,breaks=breaks,state=state,
+                             hist.ylim=hist.ylim,col=col,cumul=cumul)
                 }
 
             } else { # if !sepStates
@@ -215,7 +220,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
                 angle <- angleData[[zoo]]
                 message <- paste("Animal ID:",ID[zoo])
 
-                plotHist(step,angle,stepDensities,angleDensities,message,sepStates,breaks,NULL,hist.ylim,col)
+                plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
+                         message=message,sepStates=sepStates,breaks=breaks,state=NULL,
+                         hist.ylim=hist.ylim,col=col,cumul=cumul)
             }
         }
     } else { # if !sepAnimals
@@ -227,7 +234,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
                 angle <- angleData[which(states==state)]
                 message <- paste("All animals - State:",state)
 
-                plotHist(step,angle,stepDensities,angleDensities,message,sepStates,breaks,state,hist.ylim,col)
+                plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
+                         message=message,sepStates=sepStates,breaks=breaks,state=state,
+                         hist.ylim=hist.ylim,col=col,cumul=cumul)
             }
 
         } else { # if !sepStates
@@ -235,7 +244,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
             angle <- angleData
             message <- "All animals"
 
-            plotHist(step,angle,stepDensities,angleDensities,message,sepStates,breaks,NULL,hist.ylim,col)
+            plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
+                     message=message,sepStates=sepStates,breaks=breaks,state=NULL,
+                     hist.ylim=hist.ylim,col=col,cumul=cumul)
         }
     }
 
@@ -375,7 +386,8 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 #  - col: colors of the state-dependent density lines
 
 plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
-                      sepStates,breaks="Sturges",state=NULL,hist.ylim=NULL,col=NULL)
+                      sepStates,breaks="Sturges",state=NULL,hist.ylim=NULL,col=NULL,
+                      cumul=TRUE)
 {
     # vertical limits
     if(!is.null(hist.ylim)) {
@@ -393,6 +405,16 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
         legText <- NULL
         for(i in 1:nbStates)
             legText <- c(legText,paste("State",i))
+
+        lty <- rep(1,nbStates)
+
+        # legend for cumulated density
+        if(cumul) {
+            legText <- c(legText,"Total")
+            col <- c(col,"black")
+            lty <- c(lty,2)
+        }
+
     }
 
     # determine ylim
@@ -432,7 +454,15 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
         for(s in 1:nbStates)
             lines(stepDensities[[s]],col=col[s],lwd=2)
 
-        legend("top",legText,lwd=rep(2,nbStates),col=col,bty="n")
+        # plot cumulated density
+        if(cumul) {
+            total <- stepDensities[[1]]
+            for(s in 2:nbStates)
+                total[,2] <- total[,2] + stepDensities[[s]][,2]
+            lines(total,lwd=2,lty=2)
+        }
+
+        legend("top",legText,lwd=rep(2,nbStates),col=col,lty=lty,bty="n")
     }
 
     if(!is.null(angle))  {
@@ -457,7 +487,15 @@ plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
             for(s in 1:nbStates)
                 lines(angleDensities[[s]],col=col[s],lwd=2)
 
-            legend("top",legText,lwd=rep(2,nbStates),col=col,bty="n")
+            # plot cumulated density
+            if(cumul) {
+                total <- angleDensities[[1]]
+                for(s in 2:nbStates)
+                    total[,2] <- total[,2] + angleDensities[[s]][,2]
+                lines(total,lwd=2,lty=2)
+            }
+
+            legend("top",legText,lwd=rep(2,nbStates),col=col,lty=lty,bty="n")
         }
     }
 }

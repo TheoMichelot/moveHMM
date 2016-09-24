@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{moveHMM}(x, animals = NULL, ask = TRUE, breaks = "Sturges",
   hist.ylim = NULL, sepAnimals = FALSE, sepStates = FALSE, col = NULL,
-  ...)
+  cumul = TRUE, ...)
 }
 \arguments{
 \item{x}{Object \code{moveHMM}}
@@ -28,6 +28,8 @@ Default: \code{FALSE}.}
 Default: \code{FALSE}.}
 
 \item{col}{Vector or colors for the states (one color per state).}
+
+\item{cumul}{If \code{TRUE}, the sum of weighted densities is plotted (default).}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
