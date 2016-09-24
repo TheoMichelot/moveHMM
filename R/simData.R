@@ -37,7 +37,7 @@
 #' \item{step}{The step lengths}
 #' \item{angle}{The turning angles (if any)}
 #' \item{x}{Either easting or longitude}
-#' \item{y}{Either norting or latitude}
+#' \item{y}{Either northing or latitude}
 #' \item{...}{Covariates (if any)}
 #'
 #' @details \itemize{
