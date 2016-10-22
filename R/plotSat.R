@@ -25,6 +25,8 @@
 #' @param animals Vector of indices or IDs of animals/tracks to be plotted.
 #' Default: \code{NULL}; all animals are plotted.
 #' @param ask If \code{TRUE}, the execution pauses between each plot.
+#' @param return If \code{TRUE}, the function returns a ggplot object (which can be edited and
+#' plotted manually). If \code{FALSE}, the function automatically plots the map (default).
 #'
 #' @details If the plot displays the message "Sorry, we have no imagery here", try a
 #' lower level of zoom.
@@ -43,7 +45,7 @@
 #' @export
 
 plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=1,alpha=1,size=1,
-                    states=NULL,animals=NULL,ask=TRUE)
+                    states=NULL,animals=NULL,ask=TRUE,return=FALSE)
 {
     #####################
     ## Check arguments ##
@@ -215,8 +217,10 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
             }
         }
 
-        # plot map
-        plot(mapMove)
+        if(return)
+            return(mapMove) # return map object
+        else
+            plot(mapMove) # plot map
     }
 
     par(ask=FALSE)

@@ -5,8 +5,8 @@
 \title{Plot observations on satellite image}
 \usage{
 plotSat(data, zoom = NULL, location = NULL, segments = TRUE,
-  compact = TRUE, col = 1, alpha = 1, states = NULL, animals = NULL,
-  ask = TRUE)
+  compact = TRUE, col = 1, alpha = 1, size = 1, states = NULL,
+  animals = NULL, ask = TRUE, return = FALSE)
 }
 \arguments{
 \item{data}{Data frame of the data, with necessary fields 'x' (longitude values) and
@@ -28,6 +28,8 @@ the length of the data.}
 
 \item{alpha}{Transparency argument for \code{\link{geom_point}}.}
 
+\item{size}{Size argument for \code{\link{geom_point}}.}
+
 \item{states}{A sequence of integers, corresponding to the decoded states for these data
 (such that the observations are colored by states). If 'states' if specified, the
 argument 'col' gives the colors correponding to each state.}
@@ -36,6 +38,9 @@ argument 'col' gives the colors correponding to each state.}
 Default: \code{NULL}; all animals are plotted.}
 
 \item{ask}{If \code{TRUE}, the execution pauses between each plot.}
+
+\item{return}{If \code{TRUE}, the function returns a ggplot object (which can be edited and
+plotted manually). If \code{FALSE}, the function automatically plots the map (default).}
 }
 \description{
 Plot tracking data on a satellite map. This function only works with longitude
