@@ -19,6 +19,7 @@
 #' Default: \code{FALSE}.
 #' @param col Vector or colors for the states (one color per state).
 #' @param cumul If \code{TRUE}, the sum of weighted densities is plotted (default).
+#' @param plotTracks If \code{TRUE}, the Viterbi-decoded tracks are plotted (default).
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @details The state-dependent densities are weighted by the frequency of each state in the most
@@ -38,7 +39,7 @@
 #' @importFrom graphics legend lines segments
 
 plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,sepAnimals=FALSE,
-                         sepStates=FALSE,col=NULL,cumul=TRUE,...)
+                         sepStates=FALSE,col=NULL,cumul=TRUE,plotTracks=TRUE,...)
 {
     m <- x # the name "x" is for compatibility with the generic method
     nbAnimals <- length(unique(m$data$ID))
@@ -305,7 +306,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     #################################
     ## Plot maps colored by states ##
     #################################
-    if(nbStates>1) { # no need to plot the map if only one state
+    if(nbStates>1 & plotTracks) { # no need to plot the map if only one state
         par(mfrow=c(1,1))
         par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
 
@@ -314,32 +315,12 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
             subStates <- states[which(m$data$ID==ID[zoo])]
 
             if(!all(y[[zoo]]==0)) { # if 2D data
-                # determine the bounds of the plot
-                xmin <- min(x[[zoo]],na.rm=T)
-                xmax <- max(x[[zoo]],na.rm=T)
-                ymin <- min(y[[zoo]],na.rm=T)
-                ymax <- max(y[[zoo]],na.rm=T)
-                # make sure that x and y have same scale
-                if(xmax-xmin>ymax-ymin) {
-                    ymid <- (ymax+ymin)/2
-                    ymax <- ymid+(xmax-xmin)/2
-                    ymin <- ymid-(xmax-xmin)/2
-                } else {
-                    xmid <- (xmax+xmin)/2
-                    xmax <- xmid+(ymax-ymin)/2
-                    xmin <- xmid-(ymax-ymin)/2
-                }
 
-                # first point
-                plot(x[[zoo]][1],y[[zoo]][1],xlim=c(xmin,xmax),ylim=c(ymin,ymax),pch=18,
-                     xlab="x",ylab="y",col=col[subStates[1]])
+                plot(x[[zoo]],y[[zoo]],pch=16,col=col[subStates],cex=0.6,asp=1)
+                segments(x0=x[[zoo]][-length(x[[zoo]])], y0=y[[zoo]][-length(y[[zoo]])],
+                         x1=x[[zoo]][-1], y1=y[[zoo]][-1],
+                         col=col[subStates[-length(subStates)]],lwd=1.3)
 
-                # trajectory
-                for(i in 2:length(x[[zoo]])) {
-                    points(x[[zoo]][i],y[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.6)
-                    segments(x0=x[[zoo]][i-1],y0=y[[zoo]][i-1],x1=x[[zoo]][i],y1=y[[zoo]][i],
-                             col=col[subStates[i-1]],lwd=1.3)
-                }
             } else { # if 1D data
 
                 ymin <- min(x[[zoo]],na.rm=T)
