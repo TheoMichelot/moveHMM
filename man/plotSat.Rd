@@ -7,7 +7,6 @@
 plotSat(data, zoom = NULL, location = NULL, segments = TRUE,
   compact = TRUE, col = 1, alpha = 1, size = 1, states = NULL,
   animals = NULL, ask = TRUE, return = FALSE)
-}
 \arguments{
 \item{data}{Data frame of the data, with necessary fields 'x' (longitude values) and
 'y' (latitude values).}
