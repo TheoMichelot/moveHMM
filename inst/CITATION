@@ -7,8 +7,10 @@ citEntry(
 	journal="Methods in Ecology and Evolution",
 	year=2016,
 	doi="10.1111/2041-210X.12578",
-	volume="in press",
-	textVersion="Michelot, T., Langrock, R., Patterson, T.A. (in press). moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12578."
+	volume="7",
+	number="11",
+	pages="1308-1315",
+	textVersion="Michelot, T., Langrock, R., Patterson, T.A. (2016). moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models. Methods in Ecology and Evolution, 7 (11), pp. 1308-1315."
 )
 
 citFooter("Additions and modifications to moveHMM are frequent, to help with reproducibility of output please cite its version number. Find it with 'help(package=moveHMM)'.")
