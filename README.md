@@ -1,6 +1,6 @@
 
 
-# moveHMM [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/moveHMM)](http://cran.r-project.org/package=moveHMM) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) [![Downloads](http://cranlogs.r-pkg.org/badges/moveHMM)](https://cran.r-project.org/package=moveHMM)
+# moveHMM [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/moveHMM)](https://cran.r-project.org/package=moveHMM) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) [![Downloads](http://cranlogs.r-pkg.org/badges/moveHMM)](https://cran.r-project.org/package=moveHMM)
 
 An R package for modelling animal movement with hidden Markov models.
 
