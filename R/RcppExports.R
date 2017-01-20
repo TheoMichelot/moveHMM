@@ -111,7 +111,8 @@ nLogLike_rcpp <- function(nbStates, beta, covs, data, stepDist, angleDist, stepP
 #' Transition probability matrix
 #'
 #' Computation of the transition probability matrix, as a function of the covariates and the regression
-#' parameters. Written in C++. Used in \code{\link{viterbi}}.
+#' parameters. Written in C++. Used in \code{\link{fitHMM}}, \code{\link{logAlpha}}, \code{\link{logBeta}},
+#' \code{\link{plot.moveHMM}}, \code{\link{pseudoRes}}, and \code{\link{viterbi}}.
 #'
 #' @param nbStates Number of states
 #' @param beta Matrix of regression parameters
