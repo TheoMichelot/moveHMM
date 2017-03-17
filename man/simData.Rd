@@ -58,7 +58,7 @@ An object moveData, i.e. a dataframe of:
 \item{step}{The step lengths}
 \item{angle}{The turning angles (if any)}
 \item{x}{Either easting or longitude}
-\item{y}{Either norting or latitude}
+\item{y}{Either northing or latitude}
 \item{...}{Covariates (if any)}
 }
 \description{
@@ -110,7 +110,7 @@ data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist="none",stepPa
                nbCovs=2,zeroInflation=TRUE,obsPerAnimal=obsPerAnimal)
 
 # include covariates
-# (note that it is useless to specify "nbCovs", which respectively determined
+# (note that it is useless to specify "nbCovs", which is determined
 # by the number of columns of "cov")
 cov <- data.frame(temp=rnorm(500,20,5))
 stepPar <- c(1,10,1,5) # mean1, mean2, sd1, sd2

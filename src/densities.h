@@ -19,20 +19,20 @@ using namespace std;
 // [[Rcpp::export]]
 arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 {
-  arma::colvec res(x.size());
+    arma::colvec res(x.size());
 
-  // convert mean and sd to shape and scale
-  double shape = pow(mu,2)/pow(sigma,2);
-  double scale = pow(sigma,2)/mu;
+    // convert mean and sd to shape and scale
+    double shape = pow(mu,2)/pow(sigma,2);
+    double scale = pow(sigma,2)/mu;
 
-  for(int i=0;i<x.size();i++) {
-    if(!arma::is_finite(x(i)))
-      res(i) = 1; // if missing observation
-    else
-      res(i) = R::dgamma(x(i),shape,scale,0);
-  }
+    for(int i=0;i<x.size();i++) {
+        if(!arma::is_finite(x(i)))
+            res(i) = 1; // if missing observation
+        else
+            res(i) = R::dgamma(x(i),shape,scale,0);
+    }
 
-  return res;
+    return res;
 }
 
 //' Weibull density function
@@ -47,16 +47,16 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
 // [[Rcpp::export]]
 arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 {
-  arma::colvec res(x.size());
+    arma::colvec res(x.size());
 
-  for(int i=0;i<x.size();i++) {
-    if(!arma::is_finite(x(i)))
-      res(i) = 1; // if missing observation
-    else
-      res(i) = R::dweibull(x(i),shape,scale,0);
-  }
+    for(int i=0;i<x.size();i++) {
+        if(!arma::is_finite(x(i)))
+            res(i) = 1; // if missing observation
+        else
+            res(i) = R::dweibull(x(i),shape,scale,0);
+    }
 
-  return res;
+    return res;
 }
 
 //' Log-normal density function
@@ -71,16 +71,16 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
 // [[Rcpp::export]]
 arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 {
-  arma::colvec res(x.size());
+    arma::colvec res(x.size());
 
-  for(int i=0;i<x.size();i++) {
-    if(!arma::is_finite(x(i)))
-      res(i) = 1; // if missing observation
-    else
-      res(i) = R::dlnorm(x(i),meanlog,sdlog,0);
-  }
+    for(int i=0;i<x.size();i++) {
+        if(!arma::is_finite(x(i)))
+            res(i) = 1; // if missing observation
+        else
+            res(i) = R::dlnorm(x(i),meanlog,sdlog,0);
+    }
 
-  return res;
+    return res;
 }
 
 //' Exponential density function
@@ -95,16 +95,16 @@ arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
 // [[Rcpp::export]]
 arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 {
-  arma::colvec res(x.size());
+    arma::colvec res(x.size());
 
-  for(int i=0;i<x.size();i++) {
-    if(!arma::is_finite(x(i)))
-      res(i) = 1; // if missing observation
-    else
-      res(i) = R::dexp(x(i),1/rate,0); // R::dexp expects scale=1/rate
-  }
+    for(int i=0;i<x.size();i++) {
+        if(!arma::is_finite(x(i)))
+            res(i) = 1; // if missing observation
+        else
+            res(i) = R::dexp(x(i),1/rate,0); // R::dexp expects scale=1/rate
+    }
 
-  return res;
+    return res;
 }
 
 //' Von Mises density function
@@ -120,17 +120,17 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 // [[Rcpp::export]]
 arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 {
-  arma::colvec res(x.size());
-  double b = R::bessel_i(kappa,0,2);
+    arma::colvec res(x.size());
+    double b = R::bessel_i(kappa,0,2);
 
-  for(int i=0;i<x.size();i++) {
-    if(!arma::is_finite(x(i)))
-      res(i) = 1; // is missing observation
-    else
-      res(i) = 1/(2*M_PI*b)*pow((exp(cos(x(i)-mu)-1)),kappa);
-  }
+    for(int i=0;i<x.size();i++) {
+        if(!arma::is_finite(x(i)))
+            res(i) = 1; // is missing observation
+        else
+            res(i) = 1/(2*M_PI*b)*pow((exp(cos(x(i)-mu)-1)),kappa);
+    }
 
-  return res;
+    return res;
 }
 
 //' Wrapped Cauchy density function
@@ -145,20 +145,20 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 // [[Rcpp::export]]
 arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
 {
-  arma::colvec res(x.size());
-  double num = 1-rho*rho;
-  double den;
+    arma::colvec res(x.size());
+    double num = 1-rho*rho;
+    double den;
 
-  for(int i=0;i<x.size();i++) {
-    if(!arma::is_finite(x(i)))
-      res(i) = 1; // if missing observation
-    else {
-      den = (2*M_PI)*(1+rho*rho-2*rho*cos(x(i)-mu));
-      res(i) = num/den;
+    for(int i=0;i<x.size();i++) {
+        if(!arma::is_finite(x(i)))
+            res(i) = 1; // if missing observation
+        else {
+            den = (2*M_PI)*(1+rho*rho-2*rho*cos(x(i)-mu));
+            res(i) = num/den;
+        }
     }
-  }
 
-  return res;
+    return res;
 }
 
 // used in nLogLike_rcpp to map the functions' names to the functions

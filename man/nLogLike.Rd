@@ -6,7 +6,8 @@
 \usage{
 nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
   "weibull", "lnorm", "exp"), angleDist = c("vm", "wrpcauchy", "none"),
-  angleMean = NULL, zeroInflation = FALSE, stationary = FALSE)
+  angleMean = NULL, zeroInflation = FALSE, stationary = FALSE,
+  knownStates = NULL)
 }
 \arguments{
 \item{wpar}{Vector of working parameters.}
@@ -37,6 +38,11 @@ included in \code{stepPar0}.}
 
 \item{stationary}{\code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
 equal to the stationary distribution. Default: \code{FALSE}.}
+
+\item{knownStates}{Vector of values of the state process which are known prior to fitting the
+model (if any). Default: NULL (states are not known). This should be a vector with length the number
+of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+the state is not known.}
 }
 \value{
 The negative log-likelihood of the parameters given the data.

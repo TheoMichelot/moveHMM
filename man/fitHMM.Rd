@@ -4,10 +4,11 @@
 \alias{fitHMM}
 \title{Fit an HMM to the data}
 \usage{
-fitHMM(data, nbStates, stepPar0, anglePar0, beta0 = NULL, delta0 = NULL,
-  formula = ~1, stepDist = c("gamma", "weibull", "lnorm", "exp"),
-  angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
-  stationary = FALSE, verbose = 0, nlmPar = NULL, fit = TRUE)
+fitHMM(data, nbStates, stepPar0, anglePar0 = NULL, beta0 = NULL,
+  delta0 = NULL, formula = ~1, stepDist = c("gamma", "weibull", "lnorm",
+  "exp"), angleDist = c("vm", "wrpcauchy", "none"), angleMean = NULL,
+  stationary = FALSE, knownStates = NULL, verbose = 0, nlmPar = NULL,
+  fit = TRUE)
 }
 \arguments{
 \item{data}{An object \code{moveData}.}
@@ -49,6 +50,11 @@ Default: \code{NULL} (the angle mean is estimated).}
 \item{stationary}{\code{FALSE} if there are covariates. If \code{TRUE}, the initial distribution is considered
 equal to the stationary distribution. Default: \code{FALSE}.}
 
+\item{knownStates}{Vector of values of the state process which are known prior to fitting the
+model (if any). Default: NULL (states are not known). This should be a vector with length the number
+of rows of 'data'; each element should either be an integer (the value of the known states) or NA if
+the state is not known.}
+
 \item{verbose}{Determines the print level of the optimizer. The default value of 0 means that no
 printing occurs, a value of 1 means that the first and last iterations of the optimization are
 detailed, and a value of 2 means that each iteration of the optimization is detailed.}
@@ -75,6 +81,8 @@ in "Details"), and \code{delta} (initial distribution).}
 \item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
 \code{stationary}, and \code{formula})}
 \item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
+\item{knownStates}{Vector of states known a priori, as provided in input (if any, \code{NULL} otherwise).
+Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and \code{\link{logBeta}}}.
 }
 \description{
 Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
