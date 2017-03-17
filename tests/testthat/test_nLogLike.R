@@ -54,3 +54,45 @@ test_that("angleMean=NULL, angleDist=NULL, and zeroInflation=TRUE work",{
   expect_that(nLogLike(wpar,simPar$nbStates,bounds,parSize,data,simPar$stepDist,"none",
                        NULL,TRUE),not(throws_error()))
 })
+
+test_that("logAlpha, logBeta, and nLogLike are consistent",{
+    m <- example$m
+    data <- m$data
+    simPar <- example$simPar
+    nbAnimals <- simPar$nbAnimals
+    par <- c(t(c(m$mle$stepPar)),c(t(m$mle$anglePar))[3:4])
+
+    estAngleMean <- m$conditions$estAngleMean
+    bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
+                     estAngleMean,simPar$zeroInflation)$bounds
+    parSize <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
+                      estAngleMean,simPar$zeroInflation)$parSize
+
+    nll <- nLogLike(m$mod$estimate,simPar$nbStates,bounds,parSize,data,simPar$stepDist,simPar$angleDist,
+                    simPar$angleMean,simPar$zeroInflation)
+
+    la<-logAlpha(m)
+    lb<-logBeta(m)
+    ll<-0
+    for(i in 1:nbAnimals){
+        aInd<-max(which(data$ID==i))
+        c <- max(la[aInd,]+lb[aInd,]) # cancels below ; prevents numerical errors
+        ll <- ll + c + log(sum(exp(la[aInd,]+lb[aInd,]-c)))
+    }
+    expect_equal(nll,-ll)
+
+    # random time step from each individual
+    for(i in 1:nbAnimals){
+        data<-example$m$data
+        aInd<-which(data$ID==i)
+
+        data<-data[aInd,]
+        nll<-nLogLike(m$mod$estimate,simPar$nbStates,bounds,parSize,data,simPar$stepDist,simPar$angleDist,
+                      simPar$angleMean,simPar$zeroInflation)
+
+        samp<-sample(aInd,1)
+        c <- max(la[samp,]+lb[samp,]) # cancels below ; prevents numerical errors
+        ll <- c + log(sum(exp(la[samp,]+lb[samp,]-c)))
+        expect_equal(nll,-ll)
+    }
+})

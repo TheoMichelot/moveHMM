@@ -19,6 +19,7 @@ logBeta <- function(m)
 {
     data <- m$data
     nbStates <- ncol(m$mle$stepPar)
+    nbAnimals <- length(unique(data$ID))
     nbObs <- nrow(data)
     lbeta <- matrix(NA,nbObs,nbStates)
 
@@ -30,13 +31,20 @@ logBeta <- function(m)
                       m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)
     trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))
 
-    lscale <- log(nbStates)
-    foo <- rep(1,nbStates)/nbStates
-    lbeta[nbObs,] <- rep(0,nbStates)
+    aInd <- NULL
+    for(i in 1:nbAnimals){
+        aInd <- c(aInd,max(which(data$ID==unique(data$ID)[i])))
+    }
 
-    for(i in (nbObs-1):1) {
-        gamma <- trMat[,,(i+1)]
-        foo <- gamma%*%(probs[i+1,]*foo)
+    for(i in nbObs:1) {
+
+        if(any(i==aInd)){
+            foo <- rep(1,nbStates)
+            lscale <- 0
+        } else {
+            gamma <- trMat[,,i+1]
+            foo <- gamma%*%(probs[i+1,]*foo)
+        }
         lbeta[i,] <- log(foo)+lscale
         sumfoo <- sum(foo)
         foo <- foo/sumfoo
