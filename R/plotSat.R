@@ -15,8 +15,7 @@
 #' \code{FALSE} otherwise.
 #' @param compact \code{FALSE} if tracks should be plotted separately, \code{TRUE}
 #' otherwise (default).
-#' @param col Color(s) of the dots and segments. Should be of length the number of rows
-#' of the data.
+#' @param col Palette of colours to use for the dots and segments. If not specified, uses default palette.
 #' @param alpha Transparency argument for \code{\link{geom_point}}.
 #' @param size Size argument for \code{\link{geom_point}}.
 #' @param states A sequence of integers, corresponding to the decoded states for these data
@@ -26,7 +25,6 @@
 #' @param ask If \code{TRUE}, the execution pauses between each plot.
 #' @param return If \code{TRUE}, the function returns a ggplot object (which can be edited and
 #' plotted manually). If \code{FALSE}, the function automatically plots the map (default).
-#' @param palette Palette of colours to use. If not specified, uses default palette.
 #'
 #' @details If the plot displays the message "Sorry, we have no imagery here", try a
 #' lower level of zoom.
@@ -41,7 +39,7 @@
 #' @export
 
 plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=NULL,alpha=1,size=1,
-                    states=NULL,animals=NULL,ask=TRUE,return=FALSE,palette=NULL)
+                    states=NULL,animals=NULL,ask=TRUE,return=FALSE)
 {
     #####################
     ## Check arguments ##
@@ -80,15 +78,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
     ## Prepare data and colours ##
     ##############################
     # add column for colours
-    if(is.null(states) & !is.null(col)) { # use "col"
-        if(length(col)!=nrow(data))
-            stop("'col' should be of same length as the data")
-
-        nbCol <- length(unique(col)) # number of colours (to define palette)
-        data <- cbind(data,col=as.factor(col)) # add colour column
-        colname <- "" # for the label of the legend
-
-    } else if(!is.null(states)) { # use "states"
+    if(!is.null(states)) { # use "states"
         if(length(states)!=nrow(data))
             stop("'states' should have the same length as 'data'")
 
@@ -111,7 +101,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
     }
 
     # prepare palette
-    if(is.null(palette)) {
+    if(is.null(col)) {
         if(nbCol==1) {
             pal <- "black"
         } else if(nbCol<8) {
@@ -119,10 +109,15 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
         } else
             pal <- rainbow(nbCol) # to make sure that all colours are distinct
     } else {
-        if(length(palette)<nbCol)
-            stop("'palette' should be at least of length the number of colours needed.")
+        # if one color given, duplicate for all tracks or states
+        if(length(col)==1)
+            col <- rep(col,nbCol)
 
-        pal <- palette
+        if(length(col)<nbCol)
+            stop(paste("'col' should be at least of length the number of colors needed (",
+                       nbCol,").",sep=""))
+
+        pal <- col
     }
 
     # subset data to tracks to be plotted
