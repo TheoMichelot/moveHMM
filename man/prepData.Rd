@@ -37,4 +37,3 @@ trackData <- data.frame(coord1=coord1,coord2=coord2)
 d <- prepData(trackData,type='UTM',coordNames=c("coord1","coord2"))
 
 }
-

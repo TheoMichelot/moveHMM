@@ -17,4 +17,3 @@ Check that an object is of class \code{\link{moveHMM}}. Used in \code{\link{CI}}
 \code{\link{plotPR}}, \code{\link{plotStates}}, \code{\link{pseudoRes}}, \code{\link{stateProbs}},
 and \code{\link{viterbi}}.
 }
-

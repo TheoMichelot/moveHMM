@@ -15,4 +15,3 @@ is.moveData(x)
 \description{
 Check that an object is of class \code{\link{moveData}}. Used in \code{\link{fitHMM}}.
 }
-

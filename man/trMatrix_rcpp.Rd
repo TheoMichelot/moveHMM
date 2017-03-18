@@ -22,4 +22,3 @@ Computation of the transition probability matrix, as a function of the covariate
 parameters. Written in C++. Used in \code{\link{fitHMM}}, \code{\link{logAlpha}}, \code{\link{logBeta}},
 \code{\link{plot.moveHMM}}, \code{\link{pseudoRes}}, and \code{\link{viterbi}}.
 }
-

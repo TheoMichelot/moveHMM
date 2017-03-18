@@ -32,4 +32,3 @@ data <- example$data
 plot(data,compact=TRUE,breaks=20,ask=FALSE)
 
 }
-

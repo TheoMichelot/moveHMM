@@ -17,4 +17,3 @@ An object \code{moveData}.
 \description{
 Constructor of \code{moveData} objects
 }
-

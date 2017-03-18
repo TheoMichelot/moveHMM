@@ -20,4 +20,3 @@ An object \code{moveHMM}.
 \description{
 Constructor of \code{moveHMM} objects
 }
-

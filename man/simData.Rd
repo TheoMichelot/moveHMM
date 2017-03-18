@@ -121,4 +121,3 @@ data <- simData(nbAnimals=5,nbStates=2,stepDist=stepDist,angleDist=angleDist,ste
                 anglePar=anglePar,covs=cov)
 
 }
-

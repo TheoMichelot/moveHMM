@@ -24,4 +24,3 @@ data <- example$data
 summary(data)
 
 }
-

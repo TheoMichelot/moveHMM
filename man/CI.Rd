@@ -31,4 +31,3 @@ m <- example$m
 CI(m)
 
 }
-

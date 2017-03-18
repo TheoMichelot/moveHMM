@@ -52,4 +52,3 @@ print(w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean=FALSE,stationary=FALS
 
 
 }
-
