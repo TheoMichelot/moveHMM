@@ -117,7 +117,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
         } else if(nbCol<8) {
             pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
         } else
-            pal <- rainbow(nbCol) # to make sure that all colors are distinct
+            pal <- rainbow(nbCol) # to make sure that all colours are distinct
     } else {
         if(length(palette)<nbCol)
             stop("'palette' should be at least of length the number of colours needed.")
@@ -163,7 +163,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
             mapMove <- ggmap(map) + geom_point(aes(x,y,col=col),subData,size=size,alpha=alpha)
 
             if(segments)
-                mapMove <- mapMove + geom_path(aes(x,y,col=col,group=ID),subData,alpha=alpha)
+                mapMove <- mapMove + geom_path(aes(x,y,col=col),subData,alpha=alpha)
 
             if(nbCol==1) # no legend if only one colour
                 mapMove <- mapMove + scale_color_manual(values=pal) + guides(col=FALSE)
