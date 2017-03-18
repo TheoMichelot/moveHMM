@@ -97,9 +97,9 @@ test_that("Step length only + zero-inflation works",{
                   stepPar=stepPar,anglePar=anglePar,nbCovs=nbCovs,zeroInflation=zeroInflation,
                   obsPerAnimal=nbAnim)
 
-  mu0 <- c(20,50)
-  sigma0 <- c(15,30)
-  zeromass0 <- c(0.2,0.05)
+  mu0 <- c(10,60)
+  sigma0 <- c(10,40)
+  zeromass0 <- c(0.4,0.01)
   stepPar0 <- c(mu0,sigma0,zeromass0)
   anglePar0 <- NULL
   angleMean <- NULL
