@@ -47,6 +47,9 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
     if(is.null(data$x) | is.null(data$y))
         stop("Data should have fields data$x and data$y.")
 
+    if(is.null(data$ID))
+      data$ID <- rep("Animal1",nrow(data))
+  
     if(min(data$x,na.rm=TRUE) < -180 | max(data$x,na.rm=TRUE) > 180 |
        min(data$y,na.rm=TRUE) < -90 | max(data$y,na.rm=TRUE) > 90)
         stop("Coordinates should be longitude/latitude values.")
