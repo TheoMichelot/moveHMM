@@ -316,7 +316,8 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
             if(!all(y[[zoo]]==0)) { # if 2D data
 
-                plot(x[[zoo]],y[[zoo]],pch=16,col=col[subStates],cex=0.6,asp=1)
+                plot(x[[zoo]],y[[zoo]],pch=16,col=col[subStates],cex=0.6,asp=1,
+                     xlab="x",ylab="y")
                 segments(x0=x[[zoo]][-length(x[[zoo]])], y0=y[[zoo]][-length(y[[zoo]])],
                          x1=x[[zoo]][-1], y1=y[[zoo]][-1],
                          col=col[subStates[-length(subStates)]],lwd=1.3)
