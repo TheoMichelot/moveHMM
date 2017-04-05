@@ -35,7 +35,7 @@
 #' URL: http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
 #'
 #' @importFrom ggmap get_map ggmap
-#' @importFrom ggplot2 geom_point geom_path aes guides scale_color_manual
+#' @importFrom ggplot2 geom_point geom_path aes guides scale_color_manual aes_string
 #' @export
 
 plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=NULL,alpha=1,size=1,
@@ -49,7 +49,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
 
     if(is.null(data$ID))
       data$ID <- rep("Animal1",nrow(data))
-  
+
     if(min(data$x,na.rm=TRUE) < -180 | max(data$x,na.rm=TRUE) > 180 |
        min(data$y,na.rm=TRUE) < -90 | max(data$y,na.rm=TRUE) > 90)
         stop("Coordinates should be longitude/latitude values.")
@@ -131,13 +131,13 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
             if(!all(animals%in%unique(data$ID))) # ID not found
                 stop("Check animals argument.")
 
-            data <- subset(data, ID%in%animals)
+            data <- subset(data, data$ID%in%animals)
         }
         if(is.numeric(animals)) { # animals' indices provided
             if(any(animals<1) | any(animals>length(unique(data$ID)))) # index out of bounds
                 stop("Check animals argument.")
 
-            data <- subset(data, ID%in%unique(ID)[animals])
+            data <- subset(data, data$ID%in%unique(data$ID)[animals])
         }
     }
 
@@ -148,7 +148,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
     if(!compact) {
         # loop over tracks
         for(id in unique(data$ID)) {
-            subData <- subset(data, ID==id)
+            subData <- subset(data, data$ID==id)
 
             # define center of map
             if(is.null(location)) {
@@ -160,10 +160,10 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
             map <- get_map(location=c(lon=midLon, lat=midLat), zoom=zoom, maptype="satellite",
                            source="google")
 
-            mapMove <- ggmap(map) + geom_point(aes(x,y,col=col),subData,size=size,alpha=alpha)
+            mapMove <- ggmap(map) + geom_point(aes_string(x="x",y="y",col="col"),subData,size=size,alpha=alpha)
 
             if(segments)
-                mapMove <- mapMove + geom_path(aes(x,y,col=col),subData,alpha=alpha)
+                mapMove <- mapMove + geom_path(aes_string(x="x",y="y",col="col"),subData,alpha=alpha)
 
             if(nbCol==1) # no legend if only one colour
                 mapMove <- mapMove + scale_color_manual(values=pal) + guides(col=FALSE)
@@ -183,10 +183,10 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
         map <- get_map(location=c(lon=midLon, lat=midLat), zoom=zoom, maptype="satellite",
                        source="google")
 
-        mapMove <- ggmap(map) + geom_point(aes(x,y,col=col),data,size=size,alpha=alpha)
+        mapMove <- ggmap(map) + geom_point(aes_string(x="x",y="y",col="col"),data,size=size,alpha=alpha)
 
         if(segments)
-            mapMove <- mapMove + geom_path(aes(x,y,col=col,group=ID),data,alpha=alpha)
+            mapMove <- mapMove + geom_path(aes_string(c="x",y="y",col="col",group="ID"),data,alpha=alpha)
 
         if(nbCol==1) # no legend if only one colour
             mapMove <- mapMove + scale_color_manual(values=pal) + guides(col=FALSE)
