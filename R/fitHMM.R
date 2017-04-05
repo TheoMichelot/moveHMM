@@ -396,3 +396,20 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
     mh <- list(data=data,mle=mle,mod=mod,conditions=conditions,rawCovs=rawCovs,knownStates=knownStates)
     return(moveHMM(mh))
 }
+
+# Roxygen documentation for the data file "data/elk_data.RData"
+
+#' Elk data set from Morales et al. (2004, Ecology)
+#'
+#' It is a data frame with the following columns:
+#' \itemize{
+#' \item \code{ID} Track identifier
+#' \item \code{Easting} Easting coordinate of locations
+#' \item \code{Northing} Northing coordinate of locations
+#' \item \code{dist_water} Distance of elk to water (in metres)
+#' }
+#'
+#' @name elk_data
+#' @usage elk_data
+#' @docType data
+NULL

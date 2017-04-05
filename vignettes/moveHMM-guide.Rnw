@@ -99,40 +99,27 @@ It is possible to have a column ``ID'', which contains the identifiers of the ob
 
 \subsubsection{Load and format the tracking data}
 
-The elk data considered in \cite{morales2004} are available online at:
-\begin{center}
-  \url{http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt}
-\end{center}
-We load the relevant rows and columns into a data frame using the \texttt{read.table} command.
+The elk data considered in \cite{morales2004} are loaded with the package, as the data frame \texttt{elk\_data}.
 
-<<trackData1,size='small'>>=
-trackData <- read.table(
-    "http://www.esapubs.org/archive/ecol/E085/072/elk_data.txt",
-    sep="\t",header=TRUE)[1:735,c(1,2,3,7)]
-@
+<<loadElkData,echo=FALSE>>=
+load("../data/elk_data.RData")
+@ 
 
-The data frame \texttt{trackData} now has four columns: ``Individual'', ``Easting'', ``Northing'', and ``dist\_water..meters.''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
+The data frame has four columns: ``ID'', ``Easting'', ``Northing'', and ``dist\_water''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
 
 <<trackData2,size='small'>>=
-head(trackData)
+head(elk_data)
 @
 
-The animals' identifiers need to be stored in a column named ``ID'', before we can preprocess the data. Thus, we modify it accordingly. We also shorten the name of the covariate.
-
-<<trackData3,size='small'>>=
-colnames(trackData)[1] <- "ID"
-colnames(trackData)[4] <- "dist_water"
-@
-
-Besides, the easting and northing values are expressed in meters in the data, and we decide that we want to deal with distances in kilometers for the step lengths. To achieve this, we transform the coordinates into meters.
+The easting and northing values are expressed in meters in the data, and we decide that we want to deal with distances in kilometers for the step lengths. To achieve this, we transform the coordinates into meters.
 <<trackData4,size='small'>>=
-trackData$Easting <- trackData$Easting/1000
-trackData$Northing <- trackData$Northing/1000
+elk_data$Easting <- elk_data$Easting/1000
+elk_data$Northing <- elk_data$Northing/1000
 @
 
 \noindent As a result, this is what the data look like:
 <<trackData5,size='small'>>=
-head(trackData)
+head(elk_data)
 @
 
 \subsubsection{Use \texttt{prepData}}
@@ -145,7 +132,7 @@ The data are in the proper format, and can be processed using \texttt{prepData} 
 \noindent The call to the function for these data is,
 
 <<prepData,size='small'>>=
-data <- prepData(trackData,type="UTM",coordNames=c("Easting","Northing"))
+data <- prepData(elk_data,type="UTM",coordNames=c("Easting","Northing"))
 @
 
 The step lengths and turning angles are computed, and the returned object is a data frame.
