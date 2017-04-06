@@ -156,9 +156,9 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
             ## Steps and angles time series ##
             ##################################
             par(mfrow=c(2,2))
-            plot(step,type="l",xlab="t",ylab="step length",
+            plot(step,type="h",xlab="t",ylab="step length",
                  ylim=c(0,max(step,na.rm=T)))
-            plot(angle,type="l",xlab="t",ylab="turning angle (radians)",
+            plot(angle,type="h",xlab="t",ylab="turning angle (radians)",
                  ylim=c(-pi,pi),yaxt="n")
             axis(2, at = c(-pi, -pi/2, 0, pi/2, pi),
                  labels = expression(-pi, -pi/2, 0, pi/2, pi))
