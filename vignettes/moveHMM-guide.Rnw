@@ -101,10 +101,6 @@ It is possible to have a column ``ID'', which contains the identifiers of the ob
 
 The elk data considered in \cite{morales2004} are loaded with the package, as the data frame \texttt{elk\_data}.
 
-<<loadElkData,echo=FALSE>>=
-load("../data/elk_data.RData")
-@ 
-
 The data frame has four columns: ``ID'', ``Easting'', ``Northing'', and ``dist\_water''. The last one is the distance of the animal to water, which for illustration purposes we want to include in the model as a covariate.
 
 <<trackData2,size='small'>>=
@@ -368,7 +364,7 @@ plotStates(m,animals="elk-115")
 @
 
 <<plotStates2, fig.width='4in', fig.height='4in', out.width='4in', out.height='4in', fig.pos='ht', fig.align='center', fig.cap="Decoded states sequence (top row), and state probabilities of observations (middle and bottom rows) for elk-115", cache=TRUE, echo=FALSE, results='hide'>>=
-plotStates(m,animals="elk-115")
+plotStates(m,animals="elk-115",ask=FALSE)
 @
 
 \subsubsection{Model selection with AIC}
