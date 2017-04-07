@@ -186,7 +186,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
         mapMove <- ggmap(map) + geom_point(aes_string(x="x",y="y",col="col"),data,size=size,alpha=alpha)
 
         if(segments)
-            mapMove <- mapMove + geom_path(aes_string(c="x",y="y",col="col",group="ID"),data,alpha=alpha)
+            mapMove <- mapMove + geom_path(aes_string(x="x",y="y",col="col",group="ID"),data,alpha=alpha)
 
         if(nbCol==1) # no legend if only one colour
             mapMove <- mapMove + scale_color_manual(values=pal) + guides(col=FALSE)
