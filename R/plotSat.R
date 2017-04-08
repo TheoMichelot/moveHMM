@@ -111,7 +111,7 @@ plotSat <- function(data,zoom=NULL,location=NULL,segments=TRUE,compact=TRUE,col=
             pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
         } else {
             # to make sure that all colours are distinct (emulate ggplot default palette)
-            hues = seq(15, 375, length = nbCol + 1)
+            hues <- seq(15, 375, length = nbCol + 1)
             pal <- hcl(h = hues, l = 65, c = 100)[1:nbCol]
         }
     } else {

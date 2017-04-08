@@ -19,6 +19,7 @@
 #'
 #' @export
 #' @importFrom graphics abline axis hist mtext par plot points
+#' @importFrom grDevices hcl
 
 plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges",...)
 {
@@ -112,7 +113,7 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
 
             if(length(animalsInd)>7) {
                 # to make sure that all colours are distinct (emulate ggplot default palette)
-                hues = seq(15, 375, length = length(animalsInd) + 1)
+                hues <- seq(15, 375, length = length(animalsInd) + 1)
                 colors <- hcl(h = hues, l = 65, c = 100)[1:length(animalsInd)]
             } else # color-blind friendly palette
                 colors <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")

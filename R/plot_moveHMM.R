@@ -64,7 +64,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     }
     if(is.null(col) & nbStates>=8) {
         # to make sure that all colours are distinct (emulate ggplot default palette)
-        hues = seq(15, 375, length = nbStates + 1)
+        hues <- seq(15, 375, length = nbStates + 1)
         col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
     }
 
