@@ -62,8 +62,12 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
         col <- pal[1:nbStates]
     }
-    if(is.null(col) & nbStates>=8)
-        col <- rainbow(nbStates) # to make sure that all colors are distinct (but, really? eight states?)
+    if(is.null(col) & nbStates>=8) {
+        # to make sure that all colours are distinct (emulate ggplot default palette)
+        hues = seq(15, 375, length = nbStates + 1)
+        col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
+    }
+
 
     if(sepStates | nbStates<2)
         cumul <- FALSE

@@ -18,7 +18,6 @@
 #' plot(data,compact=TRUE,breaks=20,ask=FALSE)
 #'
 #' @export
-#' @importFrom grDevices rainbow
 #' @importFrom graphics abline axis hist mtext par plot points
 
 plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges",...)
@@ -111,9 +110,11 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
                 xmin <- xmid-(ymax-ymin)/2
             }
 
-            if(length(animalsInd)>7) # to make sure that all colors are distinct
-                colors <- rainbow(length(animalsInd))
-            else # color-blind friendly palette
+            if(length(animalsInd)>7) {
+                # to make sure that all colours are distinct (emulate ggplot default palette)
+                hues = seq(15, 375, length = length(animalsInd) + 1)
+                colors <- hcl(h = hues, l = 65, c = 100)[1:length(animalsInd)]
+            } else # color-blind friendly palette
                 colors <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
             ID <- unique(data$ID)[animalsInd[1]]
