@@ -320,7 +320,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
             if(!all(y[[zoo]]==0)) { # if 2D data
 
-                plot(x[[zoo]],y[[zoo]],pch=16,col=col[subStates],cex=0.6,asp=1,
+                plot(x[[zoo]],y[[zoo]],pch=16,col=col[subStates],cex=0.5,asp=1,
                      xlab="x",ylab="y")
                 segments(x0=x[[zoo]][-length(x[[zoo]])], y0=y[[zoo]][-length(y[[zoo]])],
                          x1=x[[zoo]][-1], y1=y[[zoo]][-1],
@@ -337,7 +337,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
                 # trajectory
                 for(i in 2:length(x[[zoo]])) {
-                    points(i,x[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.6)
+                    points(i,x[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.5)
                     segments(x0=i-1,y0=x[[zoo]][i-1],x1=i,y1=x[[zoo]][i],
                              col=col[subStates[i-1]],lwd=1.3)
                 }
