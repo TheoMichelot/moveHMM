@@ -303,8 +303,10 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
     ## Optimization ##
     ##################
     # this function is used to muffle the warning "NA/Inf replaced by maximum positive value" in nlm
+    # and "value out of range in 'lgamma'" in nLogLike_rcpp
     h <- function(w) {
-        if(any(grepl("NA/Inf replaced by maximum positive value",w)))
+        if(any(grepl("NA/Inf replaced by maximum positive value",w)) |
+           any(grepl("value out of range in 'lgamma'",w)))
             invokeRestart("muffleWarning")
     }
 
