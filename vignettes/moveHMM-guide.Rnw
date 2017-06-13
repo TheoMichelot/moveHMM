@@ -630,10 +630,10 @@ URL: \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
   ``A general discrete-time modeling framework for animal movement using multistate random walks'',
   \textit{Ecological Monographs}, 82 (3), 335--349.
 
-\bibitem[\protect\citeauthoryear{Michelot et al.}{in press}]{michelot16}
-  Michelot, T., Langrock, R., Patterson, T.A. (in press),
+\bibitem[\protect\citeauthoryear{Michelot et al.}{2016}]{michelot16}
+  Michelot, T., Langrock, R., Patterson, T.A. (2016),
   ``moveHMM: an R package for analysing animal movement data using hidden Markov models'',
-  \textit{Methods in Ecology and Evolution}. DOI: 10.1111/2041-210X.12578.
+  \textit{Methods in Ecology and Evolution}, 7 (11), 1308--1315.
 
 \bibitem[\protect\citeauthoryear{Morales et al.}{2004}]{morales2004}
   Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M. (2004),
