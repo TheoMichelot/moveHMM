@@ -8,6 +8,8 @@
 #' should specified.
 #' @param type \code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.
 #' @param coordNames Names of the columns of coordinates in the data frame. Default: \code{c("x","y")}.
+#' @param LLangle Logical. If TRUE, the turning angle is calculated with \code{geosphere::bearing}
+#' (default), else calculated with \code{atan2}.
 #'
 #' @return An object \code{moveData}, i.e. a dataframe of:
 #' \item{ID}{The ID(s) of the observed animal(s)}
@@ -27,7 +29,7 @@
 #' @export
 #' @importFrom sp spDistsN1
 
-prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
+prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"), LLangle=NULL)
 {
     # check arguments
     type <- match.arg(type)
@@ -41,6 +43,11 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
 
     if(length(which(is.na(ID)))>0)
         stop("Missing IDs")
+
+    if(!is.null(LLangle) & !is.logical(LLangle))
+        stop("'LLangle' must be logical.")
+    if(is.null(LLangle))
+        LLangle <- type=='LL' # TRUE if type=='LL', FALSE otherwise
 
     data <- data.frame(ID=character(),
                        step=numeric(),
@@ -90,7 +97,8 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
                 # turning angle
                 angle[i-i1+1] <- turnAngle(c(x[i-1],y[i-1]),
                                            c(x[i],y[i]),
-                                           c(x[i+1],y[i+1]))
+                                           c(x[i+1],y[i+1]),
+                                           LLangle=LLangle)
             }
         }
 
@@ -128,14 +136,17 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"))
                     while(is.na(covs[k,i])) k <- k+1
                     for(j in k:2) covs[j-1,i] <- covs[j,i]
                 }
-                for(j in 2:nrow(trackData))
-                    if(is.na(covs[j,i])) covs[j,i] <- covs[j-1,i]
+                for(j in 2:nrow(trackData)) {
+                    if(is.na(covs[j,i]))
+                        covs[j,i] <- covs[j-1,i]
+                }
             }
         }
     }
     else covs <- NULL
 
     data <- cbind(data,x=x,y=y)
-    if(!is.null(covs)) data <- cbind(data,covs)
+    if(!is.null(covs))
+        data <- cbind(data,covs)
     return(moveData(data))
 }

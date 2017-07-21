@@ -4,7 +4,7 @@
 \alias{turnAngle}
 \title{Turning angle}
 \usage{
-turnAngle(x, y, z)
+turnAngle(x, y, z, LLangle = TRUE)
 }
 \arguments{
 \item{x}{First point}
@@ -12,6 +12,9 @@ turnAngle(x, y, z)
 \item{y}{Second point}
 
 \item{z}{Third point}
+
+\item{LLangle}{Logical. If TRUE, the turning angle is calculated with
+\code{geosphere::bearing} (default), else calculated with \code{atan2}.}
 }
 \value{
 The angle between vectors (x,y) and (y,z)
@@ -24,6 +27,7 @@ Used in \code{\link{prepData}}.
 x <- c(0,0)
 y <- c(4,6)
 z <- c(10,7)
-turnAngle(x,y,z)
+turnAngle(x,y,z,LLangle=FALSE)
 }
+
 }
