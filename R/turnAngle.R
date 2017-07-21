@@ -7,7 +7,7 @@
 #' @param y Second point
 #' @param z Third point
 #' @param LLangle Logical. If TRUE, the turning angle is calculated with
-#' \code{geosphere::bearing} (default), else calculated with \code{atan2}.
+#' \code{geosphere::bearing}, else calculated with \code{atan2}.
 #'
 #' @return The angle between vectors (x,y) and (y,z)
 #'
@@ -21,12 +21,10 @@
 #'
 #' @importFrom geosphere bearing
 
-turnAngle <- function(x,y,z,LLangle=TRUE)
+turnAngle <- function(x,y,z,LLangle)
 {
     if(LLangle) {
-        b1 <- bearing(x,y)/180*pi
-        b2 <- bearing(y,z)/180*pi
-        angle <- b2-b1
+        angle <- (bearing(x,y)-bearing(y,z))/180*pi
     } else {
         v <- c(y[1]-x[1],y[2]-x[2])
         w <- c(z[1]-y[1],z[2]-y[2])
@@ -36,7 +34,7 @@ turnAngle <- function(x,y,z,LLangle=TRUE)
     while(angle<=(-pi))
         angle <- angle + 2*pi
     while(angle>pi)
-        angle <- angle -2*pi
+        angle <- angle - 2*pi
 
     return(angle)
 }

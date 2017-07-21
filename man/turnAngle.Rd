@@ -4,7 +4,7 @@
 \alias{turnAngle}
 \title{Turning angle}
 \usage{
-turnAngle(x, y, z, LLangle = TRUE)
+turnAngle(x, y, z, LLangle)
 }
 \arguments{
 \item{x}{First point}
@@ -14,7 +14,7 @@ turnAngle(x, y, z, LLangle = TRUE)
 \item{z}{Third point}
 
 \item{LLangle}{Logical. If TRUE, the turning angle is calculated with
-\code{geosphere::bearing} (default), else calculated with \code{atan2}.}
+\code{geosphere::bearing}, else calculated with \code{atan2}.}
 }
 \value{
 The angle between vectors (x,y) and (y,z)
