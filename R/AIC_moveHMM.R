@@ -7,7 +7,7 @@
 #'
 #' @param object A \code{moveHMM} object.
 #' @param ... Optional additional \code{moveHMM} objects, to compare AICs of the different models.
-#' @param k Penalty per parameter. Default: 2 ; for classical AIC.
+#' @param k Penalty per parameter. Default: 2; for classical AIC.
 #'
 #' @return The AIC of the model(s) provided. If several models are provided, the AICs are output
 #' in ascending order.
@@ -38,7 +38,13 @@ AIC.moveHMM <- function(object,...,k=2)
 
         for(i in 1:length(models)) {
             m <- models[[i]]
-            nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)+length(m$mle$delta)-1
+            
+            # do not count delta if stationary
+            if(m$conditions$stationary)
+                nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)
+            else
+                nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)+length(m$mle$delta)-1
+            
             maxLogLike <- -m$mod$minimum
             AIC[i] <- -2*maxLogLike+k*nbPar
         }
@@ -48,7 +54,13 @@ AIC.moveHMM <- function(object,...,k=2)
     }
     else { # if only one model is provided
         m <- object
-        nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)+length(m$mle$delta)-1
+        
+        # do not count delta if stationary
+        if(m$conditions$stationary)
+            nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)
+        else
+            nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)+length(m$mle$delta)-1
+        
         maxLogLike <- -m$mod$minimum
         AIC <- -2*maxLogLike+k*nbPar
 
