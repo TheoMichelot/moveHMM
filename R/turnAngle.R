@@ -23,6 +23,10 @@
 
 turnAngle <- function(x,y,z,LLangle)
 {
+    # NA angle if zero step length
+    if(all(x==y) | all(y==z))
+        return(NA)
+
     if(LLangle) {
         angle <- (bearing(x,y)-bearing(y,z))/180*pi
     } else {
