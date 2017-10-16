@@ -386,15 +386,17 @@ simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm",
                 if(a[k] < -pi) a[k] <- a[k]+2*pi
                 phi <- phi + a[k]
             }
-            else if(s[k]==0) {
-                a[k] <- NA # angle = NA if step = 0
-            }
 
             m <- s[k]*c(Re(exp(1i*phi)),Im(exp(1i*phi)))
             X[k+1,] <- X[k,] + m
         }
 
         a[1] <- NA # the first angle value is arbitrary
+
+        # angle = NA if step = 0
+        step0 <- which(s==0)
+        a[c(step0,step0+1)] <- NA
+
         d <- data.frame(ID=rep(zoo,nbObs),step=s,angle=a,x=X[,1],y=X[,2])
         data <- rbind(data,d)
     }
