@@ -51,7 +51,7 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
     sp <- stepPar
 
     for(state in 1:nbStates) {
-        stepPar <- sp
+        stepPar <- sp[,state]
         stepProb <- rep(1,nbObs)
         angleProb <- rep(1,nbObs)
 
@@ -60,12 +60,12 @@ allProbs <- function(data,nbStates,stepDist,angleDist,stepPar,anglePar=NULL,zero
         if(angleDist!="none") angleArgs <- list(data$angle[angleInd])
 
         if(zeroInflation) {
-            zeromass <- stepPar[nrow(stepPar),state]
-            stepPar <- stepPar[-nrow(stepPar),]
+            zeromass <- stepPar[length(stepPar)]
+            stepPar <- stepPar[-length(stepPar)]
         }
 
-        for(j in 1:nrow(stepPar))
-            stepArgs[[j+1]] <- stepPar[j,state]
+        for(j in 1:length(stepPar))
+            stepArgs[[j+1]] <- stepPar[j]
 
         # conversion between mean/sd and shape/scale if necessary
         if(stepDist=="gamma") {
