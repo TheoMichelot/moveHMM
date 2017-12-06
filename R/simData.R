@@ -268,7 +268,7 @@ simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm",
 
     if(zeroInflation) {
         zeroMass <- par$stepPar[nrow(par$stepPar),]
-        stepPar <- par$stepPar[-(nrow(par$stepPar)),]
+        stepPar <- par$stepPar[-(nrow(par$stepPar)),,drop=FALSE]
     }
     else {
         zeroMass <- rep(0,nbStates)
