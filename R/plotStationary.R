@@ -85,7 +85,7 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE)
                 Sigma <- ginv(m$mod$hessian)
 
                 # indices corresponding to regression coefficients in m$mod$estimate
-                i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) + 1
+                i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) - (!m$conditions$estAngleMean)*nbStates + 1
                 i2 <- i1 + length(m$mle$beta) - 1
                 gamInd <- i1:i2
 
