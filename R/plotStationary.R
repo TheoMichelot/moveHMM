@@ -36,7 +36,7 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE)
 
     # for differentiation in delta method below
     get_stat <- function(beta,covs,nbStates,i) {
-        gamma <- momentuHMM:::trMatrix_rcpp(nbStates,beta,covs)[,,1]
+        gamma <- trMatrix_rcpp(nbStates,beta,covs)[,,1]
         solve(t(diag(nbStates)-gamma+1),rep(1,nbStates))[i]
     }
 
