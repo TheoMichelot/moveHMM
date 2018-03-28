@@ -5,6 +5,12 @@
 #' @param col Vector or colors for the states (one color per state).
 #' @param plotCI Logical. Should 95\% confidence intervals be plotted? (Default: FALSE)
 #'
+#' @examples
+#' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+#' m <- example$m
+#'
+#' plotStationary(m)
+#'
 #' @export
 plotStationary <- function(m, col=NULL, plotCI=FALSE)
 {
@@ -72,7 +78,7 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE)
         }
 
         if(used) {
-            probs <- stationary(m, covMat=desMat)
+            probs <- stationary(m, covs=desMat)
 
             plot(tempCovs[,cov], probs[,1], type="l", ylim=c(0,1), col=col[1],
                  xlab=names(rawCovs)[cov], ylab="Stationary state probabilities")
@@ -85,7 +91,7 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE)
                 Sigma <- ginv(m$mod$hessian)
 
                 # indices corresponding to regression coefficients in m$mod$estimate
-                i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) + 1
+                i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) - (!m$conditions$estAngleMean)*nbStates + 1
                 i2 <- i1 + length(m$mle$beta) - 1
                 gamInd <- i1:i2
 

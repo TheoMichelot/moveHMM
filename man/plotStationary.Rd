@@ -16,3 +16,10 @@ plotStationary(m, col = NULL, plotCI = FALSE)
 \description{
 Plot stationary state probabilities
 }
+\examples{
+# m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
+m <- example$m
+
+plotStationary(m)
+
+}
