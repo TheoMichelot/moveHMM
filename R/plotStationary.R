@@ -4,6 +4,8 @@
 #' @param m An object \code{moveHMM}
 #' @param col Vector or colors for the states (one color per state).
 #' @param plotCI Logical. Should 95\% confidence intervals be plotted? (Default: FALSE)
+#' @param alpha Significance level of the confidence intervals if plotCI=TRUE.
+#' Default: 0.95 (i.e. 95\% CIs).
 #'
 #' @examples
 #' # m is a moveHMM object (as returned by fitHMM), automatically loaded with the package
@@ -12,7 +14,7 @@
 #' plotStationary(m)
 #'
 #' @export
-plotStationary <- function(m, col=NULL, plotCI=FALSE)
+plotStationary <- function(m, col=NULL, plotCI=FALSE, alpha=0.95)
 {
     if(!is.moveHMM(m))
         stop("'m' must be a moveHMM object (as output by fitHMM)")
@@ -48,6 +50,9 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE)
 
     rawCovs <- m$rawCovs
     gridLength <- 100
+
+    # for confidence intervals
+    quantSup <- qnorm(1-(1-alpha)/2)
 
     # loop over covariates
     for(cov in 1:ncol(rawCovs)) {
@@ -106,9 +111,9 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE)
                         suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
 
                     lci[,state] <- 1/(1 + exp(-(log(probs[,state]/(1-probs[,state])) -
-                                                    1.96 * (1/(probs[,state]-probs[,state]^2)) * se)))
+                                                    quantSup * (1/(probs[,state]-probs[,state]^2)) * se)))
                     uci[,state] <- 1/(1 + exp(-(log(probs[,state]/(1-probs[,state])) +
-                                                    1.96 * (1/(probs[,state]-probs[,state]^2)) * se)))
+                                                    quantSup * (1/(probs[,state]-probs[,state]^2)) * se)))
 
                     # plot the confidence intervals
                     arrows(tempCovs[,cov], lci[,state], tempCovs[,cov], uci[,state], length=0.025,
