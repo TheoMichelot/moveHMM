@@ -40,7 +40,10 @@
 #'
 #'
 #' @export
-#' @importFrom graphics legend lines segments
+#' @importFrom graphics legend lines segments arrows
+#' @importFrom grDevices gray
+#' @importFrom stats plogis qlogis
+#' @importFrom numDeriv grad
 
 plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,sepAnimals=FALSE,
                          sepStates=FALSE,col=NULL,cumul=TRUE,plotTracks=TRUE,plotCI=FALSE,alpha=0.95,...)
@@ -324,18 +327,21 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
                             # derive confidence intervals using the delta method
                             if(plotCI) {
                                 dN <- t(apply(desMat, 1, function(x)
-                                    numDeriv::grad(get_gamma,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=i,j=j)))
+                                    grad(get_gamma,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=i,j=j)))
 
                                 se <- t(apply(dN, 1, function(x)
                                     suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
 
-                                lci <- 1/(1 + exp(-(log(trMat[i,j,]/(1-trMat[i,j,])) -
-                                                        quantSup * (1/(trMat[i,j,]-trMat[i,j,]^2)) * se)))
-                                uci <- 1/(1 + exp(-(log(trMat[i,j,]/(1-trMat[i,j,])) +
-                                                        quantSup * (1/(trMat[i,j,]-trMat[i,j,]^2)) * se)))
+                                # transform estimates and standard errors to R, to derive CI on working scale,
+                                # then back-transform to [0,1]
+                                lci <- plogis(qlogis(trMat[i,j,]) - quantSup*se/(trMat[i,j,]-trMat[i,j,]^2))
+                                uci <- plogis(qlogis(trMat[i,j,]) + quantSup*se/(trMat[i,j,]-trMat[i,j,]^2))
 
+                                options(warn = -1) # to muffle "zero-length arrow..." warning
+                                # plot the confidence intervals
                                 arrows(tempCovs[,cov], lci, tempCovs[,cov], uci, length=0.025,
                                        angle=90, code=3, col=gray(0.5), lwd=0.7)
+                                options(warn = 1)
                             }
                         }
                     }

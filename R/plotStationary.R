@@ -105,19 +105,21 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE, alpha=0.95)
 
                 for(state in 1:nbStates) {
                     dN <- t(apply(desMat, 1, function(x)
-                        numDeriv::grad(get_stat,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=state)))
+                        grad(get_stat,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=state)))
 
                     se <- t(apply(dN, 1, function(x)
                         suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
 
-                    lci[,state] <- 1/(1 + exp(-(log(probs[,state]/(1-probs[,state])) -
-                                                    quantSup * (1/(probs[,state]-probs[,state]^2)) * se)))
-                    uci[,state] <- 1/(1 + exp(-(log(probs[,state]/(1-probs[,state])) +
-                                                    quantSup * (1/(probs[,state]-probs[,state]^2)) * se)))
+                    # transform estimates and standard errors to R, to derive CI on working scale,
+                    # then back-transform to [0,1]
+                    lci[,state] <- plogis(qlogis(probs[,state]) - quantSup*se/(probs[,state]-probs[,state]^2))
+                    uci[,state] <- plogis(qlogis(probs[,state]) + quantSup*se/(probs[,state]-probs[,state]^2))
 
+                    options(warn = -1) # to muffle "zero-length arrow..." warning
                     # plot the confidence intervals
                     arrows(tempCovs[,cov], lci[,state], tempCovs[,cov], uci[,state], length=0.025,
                            angle=90, code=3, col=col[state], lwd=0.7)
+                    options(warn = 1)
                 }
             }
         }
