@@ -303,11 +303,11 @@ Various options are available for the class \texttt{moveHMM}, and here we explai
 \subsubsection{Plot the model}
 The fitted model can be plotted, using the generic function \texttt{plot}. A few graphical options are available and listed in the documentation. Here, we call:
 <<plot_moveHMM,size='small',eval=FALSE>>=
-plot(m)
+plot(m, plotCI=TRUE)
 @
 <<plot_moveHMM2,echo=FALSE,results='hide'>>=
 pdf(file="plot_moveHMM.pdf")
-plot(m,ask=FALSE)
+plot(m,ask=FALSE,plotCI=TRUE)
 dev.off()
 @ 
 
@@ -326,7 +326,7 @@ Figure \ref{moveHMM} displays those plots, but showing only one of the plotted m
   \includegraphics[width=0.49\textwidth,page=2]{plot_moveHMM} \\
   \includegraphics[width=0.49\textwidth,page=3]{plot_moveHMM}
   \includegraphics[width=0.49\textwidth,page=4]{plot_moveHMM}
-  \caption{Output of \texttt{plot.moveHMM}. Histogram of step lengths with fitted distributions (top-left), histogram of turning angles with fitted distributions (top-right), transition probabilities as functions of ``dist\_water'' (bottom-left), and map of decoded track for the first animal (bottom-right).}
+  \caption{Output of \texttt{plot.moveHMM}. Histogram of step lengths with fitted distributions (top-left), histogram of turning angles with fitted distributions (top-right), transition probabilities as functions of ``dist\_water'' with 95\% confidence intervals (bottom-left), and map of decoded track for the first animal (bottom-right).}
   \label{moveHMM}
 \end{figure}
 
@@ -366,6 +366,15 @@ plotStates(m,animals="elk-115")
 <<plotStates2, fig.width='4in', fig.height='4in', out.width='4in', out.height='4in', fig.pos='ht', fig.align='center', fig.cap="Decoded states sequence (top row), and state probabilities of observations (middle and bottom rows) for elk-115", cache=TRUE, echo=FALSE, results='hide'>>=
 plotStates(m,animals="elk-115",ask=FALSE)
 @
+
+\subsubsection{Stationary state probabilities}
+For a transition probability matrix $\boldsymbol{\Gamma}$, the stationary distribution is the vector $\boldsymbol{\delta}$ that solves the equation $\boldsymbol\delta=\boldsymbol\delta\boldsymbol\Gamma$, subject to $\sum_{i=1}^N \delta_i = 1$ (see Section \ref{sec:stationarity} for more information). It reflects the long-term proportion of time the model spends in each state.
+
+When the transition probabilities are time-varying (i.e.\ functions of covariates), the stationary distribution does not exist. However, for fixed values of the covariates, we can obtain one transition probability matrix, and thus one stationary distribution. The function \texttt{plotStationary} does this over a grid of values of each covariate, and plots the resulting stationary state probabilites. They can be interpreted as the long-term probabilities of being in each state at different values of the covariate.
+
+<<plotStationary, fig.width='4in', fig.height='4in', out.width='4in', out.height='4in', fig.pos='htbp', fig.align='center', fig.cap='Output of \\texttt{plotStationary}. Stationary state probabilities, as functions of the distance to water, with 95\\% confidence intervals.'>>=
+plotStationary(m, plotCI=TRUE)
+@ 
 
 \subsubsection{Model selection with AIC}
 The generic method \texttt{AIC} is available to compare \texttt{moveHMM} models. For example, we now fit a 3-state HMM to the data, and want to compare the AICs of the 2-state and 3-state models.
@@ -547,6 +556,7 @@ The inverse logit link function is applied in order to map the real-valued predi
 
 
 \subsubsection{Stationarity}
+\label{sec:stationarity}
 
 The function \texttt{fitHMM} includes the option of fitting a stationary model (using the option \texttt{stationary=TRUE}, with the default being \texttt{stationary=FALSE}). This is only possible if no covariates are incorporated into the model. (Otherwise the transition probabilities will be time-dependent, such that the Markov chain is non-homogeneous and in particular cannot be stationary.) When no covariates are considered and the option \texttt{stationary=TRUE} is selected, then the initial state distribution of the Markov chain will automatically be chosen as the stationary  distribution (a.k.a.\ steady-state distribution) implied by the estimated transition probability matrix (as opposed to being estimated when \texttt{stationary=FALSE}). This stationary distribution is the vector $\boldsymbol{\delta}$ that solves the equation $\boldsymbol{\delta}=\boldsymbol{\delta}\boldsymbol{\Gamma}$ subject to $\sum_{i=1}^N \delta_i=1$. In practice, this solution almost always exists.
 
