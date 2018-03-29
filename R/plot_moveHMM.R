@@ -20,6 +20,10 @@
 #' @param col Vector or colors for the states (one color per state).
 #' @param cumul If \code{TRUE}, the sum of weighted densities is plotted (default).
 #' @param plotTracks If \code{TRUE}, the Viterbi-decoded tracks are plotted (default).
+#' @param plotCI If \code{TRUE}, confidence intervals are plotted on the transition
+#' probabilities (default: FALSE).
+#' @param alpha Significance level of the confidence intervals if plotCI=TRUE.
+#' Default: 0.95 (i.e. 95\% CIs).
 #' @param ... Currently unused. For compatibility with generic method.
 #'
 #' @details The state-dependent densities are weighted by the frequency of each state in the most
@@ -39,7 +43,7 @@
 #' @importFrom graphics legend lines segments
 
 plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,sepAnimals=FALSE,
-                         sepStates=FALSE,col=NULL,cumul=TRUE,plotTracks=TRUE,...)
+                         sepStates=FALSE,col=NULL,cumul=TRUE,plotTracks=TRUE,plotCI=FALSE,alpha=0.95,...)
 {
     m <- x # the name "x" is for compatibility with the generic method
     nbAnimals <- length(unique(m$data$ID))
@@ -67,7 +71,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         hues <- seq(15, 375, length = nbStates + 1)
         col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
     }
-
 
     if(sepStates | nbStates<2)
         cumul <- FALSE
@@ -259,13 +262,29 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     ## Plot the t.p. as functions of the covariates ##
     ##################################################
     if(nbStates>1) {
-        par(mfrow=c(nbStates,nbStates))
-        par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
+        beta <- m$mle$beta
 
-        rawCovs <- m$rawCovs
-        gridLength <- 100
+        if(nrow(beta)>1) {
+            par(mfrow=c(nbStates,nbStates))
+            par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
 
-        if(nrow(m$mle$beta)>1) {
+            rawCovs <- m$rawCovs
+            gridLength <- 100
+
+            # covariance matrix of estimates
+            if(!is.null(m$mod$hessian)) {
+                Sigma <- ginv(m$mod$hessian)
+            } else {
+                plotCI <- FALSE
+            }
+
+            # indices corresponding to regression coefficients in m$mod$estimate
+            i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) - (!m$conditions$estAngleMean)*nbStates + 1
+            i2 <- i1 + length(beta) - 1
+            gamInd <- i1:i2
+
+            quantSup <- qnorm(1-(1-alpha)/2)
+
             for(cov in 1:ncol(m$rawCovs)) {
                 inf <- min(rawCovs[,cov],na.rm=T)
                 sup <- max(rawCovs[,cov],na.rm=T)
@@ -294,12 +313,32 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
                 }
 
                 if(used) {
-                    trMat <- trMatrix_rcpp(nbStates,m$mle$beta,desMat)
+                    trMat <- trMatrix_rcpp(nbStates,beta,desMat)
 
-                    for(i in 1:nbStates)
-                        for(j in 1:nbStates)
+                    # loop over entries of the transition probability matrix
+                    for(i in 1:nbStates) {
+                        for(j in 1:nbStates) {
                             plot(tempCovs[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(rawCovs)[cov],
                                  ylab=paste(i,"->",j))
+
+                            # derive confidence intervals using the delta method
+                            if(plotCI) {
+                                dN <- t(apply(desMat, 1, function(x)
+                                    numDeriv::grad(get_gamma,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=i,j=j)))
+
+                                se <- t(apply(dN, 1, function(x)
+                                    suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
+
+                                lci <- 1/(1 + exp(-(log(trMat[i,j,]/(1-trMat[i,j,])) -
+                                                        quantSup * (1/(trMat[i,j,]-trMat[i,j,]^2)) * se)))
+                                uci <- 1/(1 + exp(-(log(trMat[i,j,]/(1-trMat[i,j,])) +
+                                                        quantSup * (1/(trMat[i,j,]-trMat[i,j,]^2)) * se)))
+
+                                arrows(tempCovs[,cov], lci, tempCovs[,cov], uci, length=0.025,
+                                       angle=90, code=3, col=gray(0.5), lwd=0.7)
+                            }
+                        }
+                    }
 
                     mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
                 }
@@ -353,6 +392,12 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     par(ask=FALSE)
 }
 
+# for differentiation to obtain confidence intervals (delta method)
+get_gamma <- function(beta,covs,nbStates,i,j){
+    gamma <- trMatrix_rcpp(nbStates,beta,covs)[,,1]
+    gamma[i,j]
+}
+
 # Plot histograms
 #
 # Plot histograms of steps and angles, and the fitted densities. This function is only
@@ -370,7 +415,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 #  - sepStates, breaks, hist.ylim: see arguments of plot.moveHMM.
 #  - state: if sepStates, this function needs to know which state needs to be plotted.
 #  - col: colors of the state-dependent density lines
-
 plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
                       sepStates,breaks="Sturges",state=NULL,hist.ylim=NULL,col=NULL,
                       cumul=TRUE)

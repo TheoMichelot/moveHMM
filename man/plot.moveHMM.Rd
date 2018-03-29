@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{moveHMM}(x, animals = NULL, ask = TRUE, breaks = "Sturges",
   hist.ylim = NULL, sepAnimals = FALSE, sepStates = FALSE, col = NULL,
-  cumul = TRUE, plotTracks = TRUE, ...)
+  cumul = TRUE, plotTracks = TRUE, plotCI = FALSE, alpha = 0.95, ...)
 }
 \arguments{
 \item{x}{Object \code{moveHMM}}
@@ -32,6 +32,12 @@ Default: \code{FALSE}.}
 \item{cumul}{If \code{TRUE}, the sum of weighted densities is plotted (default).}
 
 \item{plotTracks}{If \code{TRUE}, the Viterbi-decoded tracks are plotted (default).}
+
+\item{plotCI}{If \code{TRUE}, confidence intervals are plotted on the transition
+probabilities (default: FALSE).}
+
+\item{alpha}{Significance level of the confidence intervals if plotCI=TRUE.
+Default: 0.95 (i.e. 95\% CIs).}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
