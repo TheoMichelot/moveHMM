@@ -22,7 +22,8 @@ Imports:
     sp,
     geosphere,
     ggplot2,
-    ggmap
+    ggmap,
+    numDeriv
 LinkingTo: Rcpp,
     RcppArmadillo
 Suggests:
