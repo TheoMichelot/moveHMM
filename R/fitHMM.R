@@ -122,7 +122,7 @@
 #'
 #' @export
 #' @importFrom Rcpp evalCpp
-#' @importFrom stats model.matrix nlm terms
+#' @importFrom stats get_all_vars model.matrix nlm terms
 #' @import CircStats
 #'
 #' @useDynLib moveHMM
@@ -146,19 +146,20 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
     if(attr(terms(formula),"response")!=0)
         stop("The response variable should not be specified in the formula.")
 
-    # build design matrix
-    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                         names(data)!="step" & names(data)!="angle")
+    # matrix of covariates
+    rawCovs <- get_all_vars(formula,data)
+    if(!all(names(rawCovs) %in% names(data))) { # deal with 'pi' in formula
+        rawCovs <- rawCovs[,names(rawCovs) %in% names(data),drop=FALSE]
+    }
+
+    # design matrix
     covs <- model.matrix(formula,data)
 
-    if(length(covsCol)>0) {
-        rawCovs <- data[covsCol]
+    covsCol <- which(!names(data)%in%c("ID","x","y","step","angle"))
+    if(length(covsCol)>0)
         data <- cbind(data[-covsCol],covs)
-    }
-    else {
-        rawCovs <- NULL
+    else
         data <- cbind(data,covs)
-    }
 
     nbCovs <- ncol(covs)-1 # substract intercept column
 

@@ -60,14 +60,12 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     if(nbStates<1)
         stop("nbStates must be at least 1.")
 
-    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                         names(data)!="step" & names(data)!="angle")
+    covsCol <- which(!names(data)%in%c("ID","x","y","step","angle"))
     nbCovs <- length(covsCol)-1 # substract intercept column
 
     if(length(which(names(data)=="(Intercept)"))==0) { # no intercept column, if not called from fitHMM
         data <- cbind(data[,-covsCol],Intercept=rep(1,nrow(data)),data[,covsCol])
-        covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                             names(data)!="step" & names(data)!="angle")
+        covsCol <- which(!names(data)%in%c("ID","x","y","step","angle"))
         nbCovs <- length(covsCol)-1 # substract intercept column
     }
 

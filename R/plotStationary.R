@@ -74,53 +74,43 @@ plotStationary <- function(m, col=NULL, plotCI=FALSE, alpha=0.95)
 
         desMat <- model.matrix(m$conditions$formula,data=tempCovs)
 
-        # check that the current covariate (cov) is included in the model
-        used <- FALSE
-        for(i in 2:ncol(desMat)) {
-            c <- desMat[,i]
-            if(length(which(c!=mean(c)))>0)
-                used <- TRUE
-        }
+        probs <- stationary(m, covs=desMat)
 
-        if(used) {
-            probs <- stationary(m, covs=desMat)
+        plot(tempCovs[,cov], probs[,1], type="l", ylim=c(0,1), col=col[1],
+             xlab=names(rawCovs)[cov], ylab="Stationary state probabilities")
+        for(state in 2:nbStates)
+            points(tempCovs[,cov], probs[,state], type="l", col=col[state])
+        legend("topleft", legend=paste("State",1:nbStates), col=col, lty=1, bty="n")
 
-            plot(tempCovs[,cov], probs[,1], type="l", ylim=c(0,1), col=col[1],
-                 xlab=names(rawCovs)[cov], ylab="Stationary state probabilities")
-            for(state in 2:nbStates)
-                points(tempCovs[,cov], probs[,state], type="l", col=col[state])
-            legend("topleft", legend=paste("State",1:nbStates), col=col, lty=1, bty="n")
+        if(plotCI) {
+            # covariance matrix of estimates
+            Sigma <- ginv(m$mod$hessian)
 
-            if(plotCI) {
-                # covariance matrix of estimates
-                Sigma <- ginv(m$mod$hessian)
+            # indices corresponding to regression coefficients in m$mod$estimate
+            i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) - (!m$conditions$estAngleMean)*nbStates + 1
+            i2 <- i1 + length(m$mle$beta) - 1
+            gamInd <- i1:i2
 
-                # indices corresponding to regression coefficients in m$mod$estimate
-                i1 <- length(m$mle$stepPar) + length(m$mle$anglePar) - (!m$conditions$estAngleMean)*nbStates + 1
-                i2 <- i1 + length(m$mle$beta) - 1
-                gamInd <- i1:i2
+            lci <- matrix(NA,gridLength,nbStates)
+            uci <- matrix(NA,gridLength,nbStates)
 
-                lci <- matrix(NA,gridLength,nbStates)
-                uci <- matrix(NA,gridLength,nbStates)
+            for(state in 1:nbStates) {
+                dN <- t(apply(desMat, 1, function(x)
+                    grad(get_stat,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=state)))
 
-                for(state in 1:nbStates) {
-                    dN <- t(apply(desMat, 1, function(x)
-                        grad(get_stat,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=state)))
+                se <- t(apply(dN, 1, function(x)
+                    suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
 
-                    se <- t(apply(dN, 1, function(x)
-                        suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
+                # transform estimates and standard errors to R, to derive CI on working scale,
+                # then back-transform to [0,1]
+                lci[,state] <- plogis(qlogis(probs[,state]) - quantSup*se/(probs[,state]-probs[,state]^2))
+                uci[,state] <- plogis(qlogis(probs[,state]) + quantSup*se/(probs[,state]-probs[,state]^2))
 
-                    # transform estimates and standard errors to R, to derive CI on working scale,
-                    # then back-transform to [0,1]
-                    lci[,state] <- plogis(qlogis(probs[,state]) - quantSup*se/(probs[,state]-probs[,state]^2))
-                    uci[,state] <- plogis(qlogis(probs[,state]) + quantSup*se/(probs[,state]-probs[,state]^2))
-
-                    options(warn = -1) # to muffle "zero-length arrow..." warning
-                    # plot the confidence intervals
-                    arrows(tempCovs[,cov], lci[,state], tempCovs[,cov], uci[,state], length=0.025,
-                           angle=90, code=3, col=col[state], lwd=0.7)
-                    options(warn = 1)
-                }
+                options(warn = -1) # to muffle "zero-length arrow..." warning
+                # plot the confidence intervals
+                arrows(tempCovs[,cov], lci[,state], tempCovs[,cov], uci[,state], length=0.025,
+                       angle=90, code=3, col=col[state], lwd=0.7)
+                options(warn = 1)
             }
         }
     }

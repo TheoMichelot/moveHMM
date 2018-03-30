@@ -288,6 +288,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
             quantSup <- qnorm(1-(1-alpha)/2)
 
+            # loop over covariates
             for(cov in 1:ncol(m$rawCovs)) {
                 inf <- min(rawCovs[,cov],na.rm=T)
                 sup <- max(rawCovs[,cov],na.rm=T)
@@ -307,47 +308,38 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
                 desMat <- model.matrix(m$conditions$formula,data=tempCovs)
 
-                # check that the current covariate (cov) is included in the model
-                used <- FALSE
-                for(i in 2:ncol(desMat)) {
-                    c <- desMat[,i]
-                    if(length(which(c!=mean(c)))>0)
-                        used <- TRUE
-                }
+                trMat <- trMatrix_rcpp(nbStates,beta,desMat)
 
-                if(used) {
-                    trMat <- trMatrix_rcpp(nbStates,beta,desMat)
+                # loop over entries of the transition probability matrix
+                for(i in 1:nbStates) {
+                    for(j in 1:nbStates) {
+                        plot(tempCovs[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(rawCovs)[cov],
+                             ylab=paste(i,"->",j))
 
-                    # loop over entries of the transition probability matrix
-                    for(i in 1:nbStates) {
-                        for(j in 1:nbStates) {
-                            plot(tempCovs[,cov],trMat[i,j,],type="l",ylim=c(0,1),xlab=names(rawCovs)[cov],
-                                 ylab=paste(i,"->",j))
+                        # derive confidence intervals using the delta method
+                        if(plotCI) {
+                            dN <- t(apply(desMat, 1, function(x)
+                                grad(get_gamma,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=i,j=j)))
 
-                            # derive confidence intervals using the delta method
-                            if(plotCI) {
-                                dN <- t(apply(desMat, 1, function(x)
-                                    grad(get_gamma,beta,covs=matrix(x,nrow=1),nbStates=nbStates,i=i,j=j)))
+                            se <- t(apply(dN, 1, function(x)
+                                suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
 
-                                se <- t(apply(dN, 1, function(x)
-                                    suppressWarnings(sqrt(x%*%Sigma[gamInd,gamInd]%*%x))))
+                            # transform estimates and standard errors to R, to derive CI on working scale,
+                            # then back-transform to [0,1]
+                            lci <- plogis(qlogis(trMat[i,j,]) - quantSup*se/(trMat[i,j,]-trMat[i,j,]^2))
+                            uci <- plogis(qlogis(trMat[i,j,]) + quantSup*se/(trMat[i,j,]-trMat[i,j,]^2))
 
-                                # transform estimates and standard errors to R, to derive CI on working scale,
-                                # then back-transform to [0,1]
-                                lci <- plogis(qlogis(trMat[i,j,]) - quantSup*se/(trMat[i,j,]-trMat[i,j,]^2))
-                                uci <- plogis(qlogis(trMat[i,j,]) + quantSup*se/(trMat[i,j,]-trMat[i,j,]^2))
-
-                                options(warn = -1) # to muffle "zero-length arrow..." warning
-                                # plot the confidence intervals
-                                arrows(tempCovs[,cov], lci, tempCovs[,cov], uci, length=0.025,
-                                       angle=90, code=3, col=gray(0.5), lwd=0.7)
-                                options(warn = 1)
-                            }
+                            options(warn = -1) # to muffle "zero-length arrow..." warning
+                            # plot the confidence intervals
+                            arrows(tempCovs[,cov], lci, tempCovs[,cov], uci, length=0.025,
+                                   angle=90, code=3, col=gray(0.5), lwd=0.7)
+                            options(warn = 1)
                         }
                     }
-
-                    mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
                 }
+
+                mtext("Transition probabilities",side=3,outer=TRUE,padj=2)
+
             }
         }
     }
