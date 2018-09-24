@@ -89,5 +89,5 @@ plotPR <- function(m)
 
     # back to default
     par(mfrow=c(1,1))
-    par(mar=c(5,4,4,2)) # bottom, left, top, right
+    par(mar=c(5,4,4,2)+0.1) # bottom, left, top, right
 }

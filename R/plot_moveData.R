@@ -185,5 +185,5 @@ plot.moveData <- function(x,animals=NULL,compact=FALSE,ask=TRUE,breaks="Sturges"
     # set graphical parameters back to default
     par(ask=FALSE)
     par(mfrow=c(1,1))
-    par(mar=c(5,4,4,2))
+    par(mar=c(5,4,4,2)+0.1)
 }

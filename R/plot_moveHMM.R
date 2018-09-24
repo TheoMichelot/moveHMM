@@ -204,7 +204,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     ## Plot the histograms ##
     #########################
     # set graphical parameters
-    par(mfrow=c(1,1))
     par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
     par(ask=ask)
 
@@ -386,7 +385,7 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
     # set the graphical parameters back to default
     par(mfrow=c(1,1))
-    par(mar=c(5,4,4,2)) # bottom, left, top, right
+    par(mar=c(5,4,4,2)+0.1) # bottom, left, top, right
     par(ask=FALSE)
 }
 
