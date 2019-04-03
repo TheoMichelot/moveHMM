@@ -109,8 +109,8 @@ simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm",
     if(!is.null(model)) {
         # extract simulation parameters from model
         nbStates <- ncol(model$mle$stepPar)
-        stepDist <- model$stepDist
-        angleDist <- model$angleDist
+        stepDist <- model$conditions$stepDist
+        angleDist <- model$conditions$angleDist
         stepPar <- c(t(model$mle$stepPar))
         anglePar <- c(t(model$mle$anglePar))
         beta <- model$mle$beta
@@ -136,14 +136,15 @@ simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm",
     } else {
         if(is.null(stepPar))
             stop("'stepPar' needs to be specified")
+
+        stepDist <- match.arg(stepDist)
+        angleDist <- match.arg(angleDist)
     }
 
     #####################
     ## Check arguments ##
     #####################
-    stepDist <- match.arg(stepDist)
     stepFun <- paste("r",stepDist,sep="")
-    angleDist <- match.arg(angleDist)
     angleFun <- paste("r",angleDist,sep="")
 
     if(nbAnimals<1)
