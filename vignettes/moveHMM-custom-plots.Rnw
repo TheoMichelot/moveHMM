@@ -125,7 +125,7 @@ beta <- m$mle$beta
 
 To plot the transition probability matrix as a function of a covariate (distance to water, say), we need to fix other covariates (temperature, say). By default, moveHMM fixes other covariates to their mean value, but this may not always be a sensible choice.
 
-In the following, we show how the transition probabilities can be plotted as functions of the distance to water, for two different values of the temperature. This is useful to visualise the interaction between the two covariates. We define a grid of distance to water values, over which we will plot the transition probabilities of interest, and we choose two fixed values for the temperature (here, 10° and 20°). Then, we construct two design matrices based on those covariates, one for each value of the temperature.
+In the following, we show how the transition probabilities can be plotted as functions of the distance to water, for two different values of the temperature. This is useful to visualise the interaction between the two covariates. We define a grid of distance to water values, over which we will plot the transition probabilities of interest, and we choose two fixed values for the temperature (here, 10 degrees and 20 degrees). Then, we construct two design matrices based on those covariates, one for each value of the temperature.
 
 <<design-mat>>=
 # Distance values at which the transition probabilities should be plotted
