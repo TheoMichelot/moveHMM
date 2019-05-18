@@ -4,15 +4,16 @@
 % \VignetteEngine{knitr::knitr}
 
 \usepackage[margin=1in]{geometry}
+\usepackage{natbib}
 \renewcommand{\baselinestretch}{1.2}
 
-\title{Custom plots with moveHMM}
+\title{\textbf{Custom plots with moveHMM}}
 \author{Th\'eo Michelot}
 
 \begin{document}
 \maketitle
 
-We consider the elk data set from Morales et al.\ (2004), which is automatically loaded with the package moveHMM. We fit a 2-state model, and we explain how the parameter estimates can be extracted from the fitted model object. We showcase how they can be used to produce custom plots, to illustrate the results of an HMM analysis.
+We consider the elk data set from \cite{morales2004}, which is automatically loaded with the package moveHMM. We fit a 2-state model, and we explain how the parameter estimates can be extracted from the fitted model object. We showcase how they can be used to produce custom plots, to illustrate the results of an HMM analysis.
 
 For more detail about preparing the data, and fitting HMMs in moveHMM, please refer to the package documentation or the main vignette. Here, we use the default distributions for the step lengths (gamma) and turning angles (von Mises), and include the effects of two covariates on the transition probabilities.
 
@@ -207,5 +208,8 @@ points(dist_water_grid, stat[,2], type="l", col = mycols[2])
 legend("topleft", legend = paste("State", 1:2),
        col = mycols, lty = 1, bty = "n")
 @
+
+\bibliographystyle{apalike}
+\bibliography{refs.bib}
 
 \end{document}
