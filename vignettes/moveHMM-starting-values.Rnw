@@ -1,6 +1,6 @@
 \documentclass{article}
 
-% \VignetteIndexEntry{Custom plots with moveHMM}
+% \VignetteIndexEntry{Choosing starting values in moveHMM}
 % \VignetteEngine{knitr::knitr}
 
 \usepackage[margin=1in]{geometry}
@@ -503,7 +503,8 @@ mbest
 
 For complex models or large data sets, the procedure described in Section \ref{sec:random} can be very time-consuming, because the model needs to be fitted many times. The computational cost can be mitigated using parallelised routines in R. In the example of Section \ref{sec:random}, the 25 model fits are independent, and they can be run on separate cores. In the code below, we use the R package parallel to fit 25 models in parallel. 
 
-<<parallel>>=
+% eval = FALSE because R CMD check doesn't seem to like simultaneous processes
+<<parallel, eval = FALSE>>=
 # Package for parallel computations
 library(parallel)
 
@@ -548,17 +549,12 @@ allm_parallel <- parLapply(cl = cl, X = allPar0, fun = function(par0) {
                 anglePar0 = par0$angle)
     return(m)
 })
-@ 
 
-As before, we can verify that most of the model fits converged to the same maximum likelihood. 
-<<parallel2>>=
-# Extract likelihoods of fitted models
-allnllk_parallel <- unlist(lapply(allm_parallel , function(m) m$mod$minimum))
-
-allnllk_parallel
+# Then, we can extract the best-fitting model from allm_parallel
+# as before
 @ 
 
 \bibliographystyle{apalike}
-\bibliography{refs.bib}
+\bibliography{refs}
 
 \end{document}

@@ -3,6 +3,7 @@
 % \VignetteIndexEntry{Guide to using moveHMM}
 % \VignetteEngine{knitr::knitr}
 
+
 \usepackage[utf8]{inputenc}
 \usepackage[bf,font={small,sl}]{caption} % for pretty captions
 \usepackage{natbib} % for the bibliography
@@ -593,6 +594,6 @@ It is possible to call \texttt{simData} on a fitted model directly, to simulate 
 Based on functions provided by the package ggmap \citep{kahle2013}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,4,5,\dots,20,21 \rbrace$. Other arguments are optional, and are described in the documentation.
 
 \bibliographystyle{apalike}
-\bibliography{refs.bib}
+\bibliography{refs}
 
 \end{document}

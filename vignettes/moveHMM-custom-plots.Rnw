@@ -210,6 +210,6 @@ legend("topleft", legend = paste("State", 1:2),
 @
 
 \bibliographystyle{apalike}
-\bibliography{refs.bib}
+\bibliography{refs}
 
 \end{document}
