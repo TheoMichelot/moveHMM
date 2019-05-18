@@ -15,25 +15,6 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
 
-% listing style
-\definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
-\definecolor{lightblue}{rgb}{0.5,0.5,1}
-\lstset{
-  backgroundcolor=\color{lightgrey},
-  basicstyle=\footnotesize\ttfamily,
-  breakatwhitespace=false,
-  breaklines=true,
-  keepspaces=true,
-  language=R,
-  tabsize=2,
-  deletekeywords={data,step},
-  commentstyle=\footnotesize\color{lightblue}\it\ttfamily,
-  literate={~} {$\sim$}{1}, % for nice tildes in listings
-  framexleftmargin=5pt,
-  frame=tb,
-  framerule=0pt
-}
-
 \title{\texttt{moveHMM}\\ An R package for the analysis of animal movement data}
 \author{Michelot T., Langrock R., and Patterson T.}
 
@@ -263,10 +244,10 @@ The argument \texttt{knownStates} of the function \texttt{fitHMM} makes it possi
 
 \subsubsection{Dealing with numerical instability} \label{sec:instability}
 As mentioned above, the numerical maximization routine might not identify the global maximum of the likelihood function, or even fail to converge altogether, for poorly chosen initial values of the parameters. In such a case, the optimization routine \texttt{nlm} might produce an error such as:
-\begin{lstlisting}
+<<nlm-error, eval = FALSE, highlight = FALSE>>=
   Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  : 
   non-finite value supplied by 'nlm'
-\end{lstlisting}
+@ 
 
 The best way to deal with such numerical problems is to test different sets of initial values, possibly chosen randomly. By comparing the resulting estimates for the different initial values used, one usually obtains a good feeling for any potential sensitivity of the numerical search to its chosen starting point. Note, however, that in any case there will usually be no certainty that the global maximum of the likelihood, i.e.\ the maximum likelihood estimate, has been identified.
 
@@ -288,13 +269,13 @@ CI(m)
 @
 
 \noindent Note that a warning message is also output:
-\begin{lstlisting}
+<<ci-warn, eval = FALSE, highlight = FALSE>>=
   Warning message:
   In CI(m) :
   Some of the parameter estimates seem to lie close to 
   the boundaries of their parameter space. The associated 
   CIs are probably unreliable (or might not be computable).
-\end{lstlisting}
+@ 
 
 It here refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and returns \texttt{NA} instead, as in this example.
 
