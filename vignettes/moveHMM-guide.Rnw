@@ -15,8 +15,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
 
-\title{\texttt{moveHMM}\\ An R package for the analysis of animal movement data}
-\author{Michelot T., Langrock R., and Patterson T.}
+\title{\textbf{moveHMM: An R package for the analysis of animal movement data}}
+\author{Th\'eo Michelot, Roland Langrock \& Toby Patterson}
 
 \begin{document}
 \maketitle
