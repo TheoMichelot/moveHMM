@@ -12,7 +12,8 @@
 \usepackage{color} % for lstlisting background color
 \usepackage{booktabs} % pretty tables
 \usepackage{url}
-\usepackage[margin=3cm]{geometry}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
 
 % listing style
 \definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
@@ -56,21 +57,21 @@ The analysis of animal movement data has become increasingly important in terres
 
 A substantial part of the literature on statistical modelling of animal movement data has focused on the intuitive approach of decomposing movement time series into distinct behavioural modes (a.k.a.\ bouts, states), via the use of so-called state-switching models. These approaches typically involve assuming movements of animals to be driven by stochastically evolving states, such as a slow moving state, which may be indicative of resting or foraging, versus faster movement states which might indicate transits between foraging patches. Associated with changes in movement speeds are changes to the distribution of directional changes in the movement (known as the turning angle --- see further description below).  
 
-Bayesian methods which employ MCMC approaches have become very popular tools for the analysis of movement data using state-switching models \citep[e.g.][]{jonsen2005,morales2004}. Typically, these have been implemented using WinBUGS \citep[although see][]{mcclintock2012}. While these models are relatively straightforward to build and hence fit in WinBUGS, the estimation can be painfully slow due to slow mixing of the MCMC samplers. 
+Bayesian methods which employ MCMC approaches have become very popular tools for the analysis of movement data using state-switching models \citep[e.g.][]{jonsen2005, morales2004}. Typically, these have been implemented using WinBUGS \citep[although see][]{mcclintock2012}. While these models are relatively straightforward to build and hence fit in WinBUGS, the estimation can be painfully slow due to slow mixing of the MCMC samplers. 
 
-However, for an important subset of movement data, namely highly accurate position data (e.g.\ from GPS) --- and more generally all time series of locations where the measurement error is negligible relative to the scale of the movement --- the task of statistical classification of behaviour can be done much more efficiently using hidden Markov models (HMMs) and associated frequentist inferential tools. HMMs are increasingly popular in this field, due to their flexibility and to the associated very efficient recursive algorithms available for conducting statistical inference  \citep{patterson2009,langrock2012}. The crucial requirements on movement data in order for HMMs to be suitable are that measurement error in positions is negligible and that there is a regular sampling unit (e.g.\ one positional observation per hour, or per dive, or any other meaningful unit).
+However, for an important subset of movement data, namely highly accurate position data (e.g.\ from GPS) --- and more generally all time series of locations where the measurement error is negligible relative to the scale of the movement --- the task of statistical classification of behaviour can be done much more efficiently using hidden Markov models (HMMs) and associated frequentist inferential tools. HMMs are increasingly popular in this field, due to their flexibility and to the associated very efficient recursive algorithms available for conducting statistical inference  \citep{patterson2009, langrock2012}. The crucial requirements on movement data in order for HMMs to be suitable are that measurement error in positions is negligible and that there is a regular sampling unit (e.g.\ one positional observation per hour, or per dive, or any other meaningful unit).
 
 \texttt{moveHMM} is an R package which implements HMMs and associated tools for state decoding, model selection etc.\ specifically tailored to animal movement modelling. Particular attention was paid to computational efficiency with the fitting algorithm implemented in C++. The high computational speed makes it feasible to analyze very large data sets --- e.g.\ tens of thousands of positions collected for each of a dozen individual animals --- on standard desktop PCs. The package also allows users to incorporate covariate data into their models, which is particularly useful when inferring the drivers of changes in behaviour.
 
 Our hope is that the \texttt{moveHMM} package will provide users who collect movement data with an interface to sophisticated and adequate methods for a statistical analysis of their data. The package is structured so as to allow the users to prepare their data for analysis, fit a variety of HMMs to their data and perform diagnostics on these fitted models. 
 
-The package is presented in \cite{michelot16}, where its use is illustrated on simulated movement data of wild haggises.
+The package is presented in \cite{michelot2016}, where its use is illustrated on simulated movement data of wild haggises.
 
 In this vignette, we briefly introduce HMMs in the context of animal movement. We then provide a detailed example of a typical use of the package (preprocessing movement data, fitting an HMM to the data, and analyzing the fitted model). Finally, we describe more technically the structure of the package and its main functions.
 
 \section{A quick overview of the HMM approach to modelling animal movement}
 
-For full details of the HMM approach in the context of animal movement modelling, the user should refer to the relevant primary publications (see, e.g., \citealp{patterson2009}, \citealp{langrock2012}, \citealp{zucchini16}). Here, we briefly highlight the essential features of the HMM approach. 
+For full details of the HMM approach in the context of animal movement modelling, the user should refer to the relevant primary publications (see, e.g., \citealp{patterson2009}, \citealp{langrock2012}, \citealp{zucchini2016}). Here, we briefly highlight the essential features of the HMM approach. 
 
 The standard HMM approach to model an individual animal's movement considers bivariate time series comprising the step length and the turning angle at each time point (see illustration in Figure \ref{stepsandturns}). The associated locations need to be {\em sampled at equally spaced points in time} (though missing data on an otherwise regular grid can easily be handled) and are assumed to be {\em observed with no or only negligible error}. The \texttt{moveHMM} package is restricted to such discrete time data and involves the assumption that the locations are observed with zero, or at least negligible error. 
 
@@ -82,11 +83,11 @@ The standard HMM approach to model an individual animal's movement considers biv
 
 At each time point, the parameters of the step length distribution (e.g., a gamma distribution) and the parameters of the turning angle distribution (e.g., a von Mises distribution) are determined by an underlying unobserved state. There are finitely many states which provide rough classifications of the movement (e.g.\ more active vs.\ less active), often interpreted as proxies for the animal's behavioural states (e.g.\ transiting vs.\ foraging). The sequence of states is assumed to be generated by a Markov chain, usually with a tendency of remaining in a state for some time before switching to another state. The corresponding state transition probabilities, as well as the parameters characterising the state-dependent distributions, are model parameters to be estimated. The number of states (movement modes) is unknown and has to be specified by the user. Typically with movement data one assumes a low number of states (say $\leq$ 4). For example, an animal may be foraging (low speed, high rates of turning) and transiting (high speeds, low rates of turning). Biologically interesting inference often involves modelling the state transition probabilities as functions of environmental covariates. 
 
-For a given set of model parameters, the likelihood of the data can be calculated using a recursive algorithm (the forward algorithm, cf.\ \citealp{patterson16}), which in a very effective way considers all possible state sequences that might have given rise to the observed time series. This makes numerical maximization of the (log-)likelihood, and hence maximum likelihood estimation, feasible in most cases. Having estimated the model parameters (and examined useful diagnostics of model fit), the user can estimate the most likely sequence of behavioural states. We encourage the user to consult a good primary text such as \cite{zucchini16} to familiarize themselves with the technical details of hidden Markov models. 
+For a given set of model parameters, the likelihood of the data can be calculated using a recursive algorithm (the forward algorithm, cf.\ \citealp{patterson2017}), which in a very effective way considers all possible state sequences that might have given rise to the observed time series. This makes numerical maximization of the (log-)likelihood, and hence maximum likelihood estimation, feasible in most cases. Having estimated the model parameters (and examined useful diagnostics of model fit), the user can estimate the most likely sequence of behavioural states. We encourage the user to consult a good primary text such as \cite{zucchini2016} to familiarize themselves with the technical details of hidden Markov models. 
 
 \section{Example application} \label{sec_application}
 
-Before we provide a detailed description of the various features of the  \texttt{moveHMM} package in the subsequent section, we illustrate a typical HMM-based analysis of movement data using the main functions of the package, via an example. We use the data from \cite{morales2004}, collected on four elk in Canada. 
+Before we provide a detailed description of the various features of the \texttt{moveHMM} package in the subsequent section, we illustrate a typical HMM-based analysis of movement data using the main functions of the package, via an example. We use the data from \cite{morales2004}, collected on four elk in Canada. 
 
 \subsection{Movement data}
 
@@ -182,7 +183,7 @@ The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments ar
 \item \texttt{stationary=FALSE}, as due to the covariates the process is not stationary (default). 
 \end{itemize}
 
-We also need to specify initial values for the parameters of the state-dependent distributions, to be used by the optimization function. Note that this choice is crucial, and that \textbf{the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen}. The initial parameters should be specified in two vectors, \texttt{stepPar0} (for the step distribution) and \texttt{anglePar0} (for the angle distribution). The necessary parameters of each distribution are detailed in Section \ref{sec_distrib}.
+We also need to specify initial values for the parameters of the state-dependent distributions, to be used by the optimization function. Note that this choice is crucial, and that \emph{the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen}. The initial parameters should be specified in two vectors, \texttt{stepPar0} (for the step distribution) and \texttt{anglePar0} (for the angle distribution). The necessary parameters of each distribution are detailed in Section \ref{sec_distrib}.
 
 Zero-inflation (as described in Section \ref{sec:zeroinflation}) must be included in the step length distribution if some steps are of length exactly zero (which is the case for the elk data). To do so, another parameter is added to the step distribution: its mass on zero.
 
@@ -356,7 +357,7 @@ sp <- stateProbs(m)
 head(sp)
 @
 
-The state with highest probability according to \texttt{stateProbs} might not be the same as the state in the most probable sequence returned by the Viterbi algorithm. This is because the Viterbi algorithm performs ``global decoding'', whereas the state probabilities are ``local decoding''. For more details, see \cite{zucchini16}.\\
+The state with highest probability according to \texttt{stateProbs} might not be the same as the state in the most probable sequence returned by the Viterbi algorithm. This is because the Viterbi algorithm performs ``global decoding'', whereas the state probabilities are ``local decoding''. For more details, see \cite{zucchini2016}.\\
 
 The function \texttt{plotStates} can be used to visualize the results of \texttt{viterbi} and \texttt{stateProbs}. Figure \ref{fig:plotStates2} shows the plots of the most likely state sequence decoded by the Viterbi algorithm, as well as both columns of the matrix of state probabilities, for one individual, ``elk-115''. It was obtained with the following command:
 <<plotStates,size='small',eval=FALSE>>=
@@ -402,7 +403,7 @@ AIC(m,m3)
 In terms of AIC, the 3-state model is favoured over the 2-state model in this example.
 
 \subsubsection{Model checking}
-The pseudo-residuals (a.k.a.\ quantile residuals) of the model can be computed with \texttt{pseudoRes}. These follow a standard normal distribution if the fitted model is the true data-generating process. In other words, a deviation from normality indicates a lack of fit. For more theoretical background on pseudo-residuals, see \cite{zucchini16}. The pseudo-residuals of the 2-state model fitted to the elk data are displayed in Figure \ref{fig:plotPR}. They can be computed and plotted with the following commands.
+The pseudo-residuals (a.k.a.\ quantile residuals) of the model can be computed with \texttt{pseudoRes}. These follow a standard normal distribution if the fitted model is the true data-generating process. In other words, a deviation from normality indicates a lack of fit. For more theoretical background on pseudo-residuals, see \cite{zucchini2016}. The pseudo-residuals of the 2-state model fitted to the elk data are displayed in Figure \ref{fig:plotPR}. They can be computed and plotted with the following commands.
 <<pseudoRes,size='small',eval=FALSE>>=
 # compute the pseudo-residuals
 pr <- pseudoRes(m)
@@ -418,7 +419,7 @@ plotPR(m)
 If some steps are of length zero (i.e. if the step distribution is zero-inflated), the corresponding pseudo-residuals are plotted as segments on the qq-plot. It is the case for the smallest step pseudo-residual located in the bottom-left corner of the step qq-plot in Figure \ref{fig:plotPR}. The pseudo-residuals of discrete data are defined as segments, and in this case, the segments start in $-\infty$.
 
 \subsection{Use \texttt{plotSat}}
-The function \texttt{plotSat} plots the tracking data on a satellite image, with the help of the package ggmap \citep{kahle13}. Il only works with longitude and latitude values, so we need to convert the UTM coordinates first. We can do this e.g.\ with the help of the packages sp \citep{pebesma05} and rgdal \citep{bivand16} (more information can be found in the documentations of those packages).
+The function \texttt{plotSat} plots the tracking data on a satellite image, with the help of the package ggmap \citep{kahle2013}. Il only works with longitude and latitude values, so we need to convert the UTM coordinates first. We can do this e.g.\ with the help of the packages sp \citep{pebesma2005} and rgdal \citep{bivand2019} (more information can be found in the documentations of those packages).
 <<plotSat1, size='small', eval=FALSE>>=
 library(rgdal)
 utmcoord <- SpatialPoints(cbind(data$x*1000,data$y*1000), 
@@ -595,11 +596,11 @@ Methods (i.e.\ class functions) are available for both \texttt{moveData} and \te
 Other functions can be called on a \texttt{moveHMM} object, for further analysis.
 \begin{itemize}
 \item \texttt{CI} computes confidence intervals for the step length distribution parameters, for the turning angle distribution parameters, and for the regression coefficients of the transition probabilities.
-\item \texttt{pseudoRes} computes the pseudo-residuals of the model. These can be used to assess the goodness of fit. If the model is the true data-generating process, then the pseudo-residuals follow a standard normal distribution \citep{zucchini16}.
+\item \texttt{pseudoRes} computes the pseudo-residuals of the model. These can be used to assess the goodness of fit. If the model is the true data-generating process, then the pseudo-residuals follow a standard normal distribution \citep{zucchini2016}.
 \item \texttt{stateProbs} computes the probabilities of the underlying Markov chain being in the different states, at each observation, under the fitted model.
-\item \texttt{viterbi} computes the sequence of most probable states, under the fitted model, using the Viterbi algorithm \citep{zucchini16}.
+\item \texttt{viterbi} computes the sequence of most probable states, under the fitted model, using the Viterbi algorithm \citep{zucchini2016}.
 \item \texttt{plotStates} plots the most probable state sequence (as decoded with \texttt{viterbi}), and the state probabilities (as computed with \texttt{stateProbs}).
-\item \texttt{plotPR} plots time series, qq-plots, and the sample autocorrelation (ACF) functions of the pseudo-residuals of the fitted model \citep{zucchini16}. The qq-plots can be used to visually assess whether or not the pseudo-residuals are standard normally distributed. The points in the qq-plot will be close to the straight line if the model fits the data well. If the sample ACFs display a residual autocorrelation, then this is an indication that the model might not have captured all relevant correlation structure in the data. 
+\item \texttt{plotPR} plots time series, qq-plots, and the sample autocorrelation (ACF) functions of the pseudo-residuals of the fitted model \citep{zucchini2016}. The qq-plots can be used to visually assess whether or not the pseudo-residuals are standard normally distributed. The points in the qq-plot will be close to the straight line if the model fits the data well. If the sample ACFs display a residual autocorrelation, then this is an indication that the model might not have captured all relevant correlation structure in the data. 
 \end{itemize} 
 
 \subsubsection{simData}
@@ -608,68 +609,9 @@ The function \texttt{simData} simulates movement data from an HMM, given its par
 It is possible to call \texttt{simData} on a fitted model directly, to simulate data from it. This can be used to assess the fit, by checking that the simulated data display the same features as the real data.
 
 \subsubsection{plotSat}
-Based on functions provided by the package ggmap \citep{kahle13}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,4,5,\dots,20,21 \rbrace$. Other arguments are optional, and are described in the documentation.
+Based on functions provided by the package ggmap \citep{kahle2013}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,4,5,\dots,20,21 \rbrace$. Other arguments are optional, and are described in the documentation.
 
-\newpage
-\begin{thebibliography}{}
-
-\bibitem[\protect\citeauthoryear{Bivand et al.}{2016}]{bivand16}
-Bivand, R., Keitt, T., and Rowlingson, B. (2016) 
-``rgdal: Bindings for the Geospatial Data Abstraction Library'',
-\textit{R package version 1.1-8},
-URL: \url{https://CRAN.R-project.org/package=rgdal}
-
-\bibitem[\protect\citeauthoryear{Jonsen et al.}{2005}]{jonsen2005}
-  Jonsen, I.D., Flemming, J.M., Myers, R.A. (2005),
-  ``Robust state-space modeling of animal movement data'',
-  \textit{Ecology}, 86 (11), 2874--2880.
-
-\bibitem[\protect\citeauthoryear{Kahle and Wickham}{2013}]{kahle13}
-Kahle, D., Wickham, H. (2013) 
-``ggmap: Spatial Visualization with ggplot2'',
-\textit{The R Journal}, 5 (1), 144--161. 
-URL: \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
-
-\bibitem[\protect\citeauthoryear{Langrock et al.}{2012}]{langrock2012}
-  Langrock R., King R., Matthiopoulos J., Thomas L., Fortin D., Morales J.M. (2012),
-  ``Flexible and practical modeling of animal telemetry data: hidden Markov models and extensions''
-  \textit{Ecology}, 93 (11), 2336--2342.
-
-\bibitem[\protect\citeauthoryear{McClintock et al.}{2012}]{mcclintock2012}
-  McClintock, B.T., King, R., Thomas, L., Matthiopoulos, J., McConnell, B.J., Morales, J.M. (2012),
-  ``A general discrete-time modeling framework for animal movement using multistate random walks'',
-  \textit{Ecological Monographs}, 82 (3), 335--349.
-
-\bibitem[\protect\citeauthoryear{Michelot et al.}{2016}]{michelot16}
-  Michelot, T., Langrock, R., Patterson, T.A. (2016),
-  ``moveHMM: an R package for analysing animal movement data using hidden Markov models'',
-  \textit{Methods in Ecology and Evolution}, 7 (11), 1308--1315.
-
-\bibitem[\protect\citeauthoryear{Morales et al.}{2004}]{morales2004}
-  Morales, J.M., Haydon, D.T., Frair, J., Holsinger, K.E., Fryxell, J.M. (2004),
-  ``Extracting more out of relocation data: building movement models as mixtures of random walks'',
-  \textit{Ecology}, 85 (9), 2436--2445.
-
-\bibitem[\protect\citeauthoryear{Patterson et al.}{2009}]{patterson2009}
-  Patterson T.A., Basson M., Bravington M.V., Gunn J.S. (2009),
-  ``Classifying movement behaviour in relation to environmental conditions using hidden Markov models'',
-  \textit{Journal of Animal Ecology}, 78 (6), 1113--1123.
-
-\bibitem[\protect\citeauthoryear{Patterson et al.}{2016}]{patterson16}
-  Patterson T.A., Parton, A., Langrock, R., Blackwell, P.G., Thomas, L., King, R. (2016),
-  ``Statistical modelling of animal movement: a myopic review and a discussion of good practice'',
-  \textit{arXiv preprint}, arXiv:1603.07511.
-
-\bibitem[\protect\citeauthoryear{Pebesma and Bivand}{2005}]{pebesma05}
-Pebesma, E.J., Bivand, R.S. (2005) 
-``Classes and methods for spatial data in R'',
-\textit{R News}, 5 (2), 144--161. 
-URL: \url{http://cran.r-project.org/doc/Rnews/}
-
-\bibitem[\protect\citeauthoryear{Zucchini et al.}{2016}]{zucchini16}
-  Zucchini, W.\, MacDonald, I.L., Langrock, R. (2016).
-  {\em Hidden Markov Models for Time Series: An Introduction Using R, Second Edition.}
-  Chapman \& Hall/CRC Press, Boca Raton, FL.
-\end{thebibliography}
+\bibliographystyle{apalike}
+\bibliography{refs.bib}
 
 \end{document}
