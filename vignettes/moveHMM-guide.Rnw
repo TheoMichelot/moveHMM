@@ -90,7 +90,7 @@ The data frame has four columns: ``ID'', ``Easting'', ``Northing'', and ``dist\_
 head(elk_data)
 @
 
-The easting and northing values are expressed in meters in the data, and we decide that we want to deal with distances in kilometers for the step lengths. To achieve this, we transform the coordinates into meters.
+The easting and northing values are expressed in meters in the data, and we decide that we want to deal with distances in kilometers for the step lengths. To achieve this, we transform the coordinates into kilometers.
 <<trackData4,size='small'>>=
 elk_data$Easting <- elk_data$Easting/1000
 elk_data$Northing <- elk_data$Northing/1000
@@ -278,7 +278,7 @@ CI(m)
   CIs are probably unreliable (or might not be computable).
 @ 
 
-It here refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and returns \texttt{NA} instead, as in this example.
+Here, this message refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and returns \texttt{NA} instead, as in this example.
 
 \subsection{Further inference tools and visualization of the model}
 Various options are available for the class \texttt{moveHMM}, and here we explain how to use them in the elk example.
