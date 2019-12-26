@@ -72,7 +72,7 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"), LLang
     for(i in 1:nbAnimals) {
         ind <- which(ID==unique(ID)[i])
         if(length(ind)!=length(ind[1]:ind[length(ind)]))
-            stop("Each animal's obervations must be contiguous.")
+            stop("Each animal's observations must be contiguous.")
     }
 
     for(zoo in 1:nbAnimals) {
