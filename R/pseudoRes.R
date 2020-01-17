@@ -120,9 +120,8 @@ pseudoRes <- function(m)
     else
         trMat <- array(1,dim=c(1,1,nbObs))
 
-    aInd <- NULL
-    for(i in 1:length(unique(m$data$ID)))
-        aInd <- c(aInd,which(m$data$ID==unique(m$data$ID)[i])[1])
+    # aInd = list of indices of first observation for each animal
+    aInd <- c(1, which(data$ID[-1] != data$ID[-nbObs]) + 1)
 
     for(i in 1:nbObs) {
         if(!is.na(data$step[i])){

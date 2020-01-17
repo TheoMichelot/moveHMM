@@ -51,9 +51,8 @@ viterbi <- function(m)
     trMat <- trMatrix_rcpp(nbStates,beta,as.matrix(covs))
 
     nbAnimals <- length(unique(data$ID))
-    aInd <- NULL
-    for(i in 1:nbAnimals)
-        aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
+    # aInd = list of indices of first observation for each animal
+    aInd <- c(1, which(data$ID[-1] != data$ID[-nbObs]) + 1)
 
     allStates <- NULL
     for(zoo in 1:nbAnimals) {
