@@ -4,8 +4,12 @@
 \alias{prepData}
 \title{Preprocessing of the tracking data}
 \usage{
-prepData(trackData, type = c("LL", "UTM"), coordNames = c("x", "y"),
-  LLangle = NULL)
+prepData(
+  trackData,
+  type = c("LL", "UTM"),
+  coordNames = c("x", "y"),
+  LLangle = NULL
+)
 }
 \arguments{
 \item{trackData}{A dataframe of the tracking data, including at least coordinates

@@ -4,8 +4,16 @@
 \alias{allProbs}
 \title{Matrix of all probabilities}
 \usage{
-allProbs(data, nbStates, stepDist, angleDist, stepPar, anglePar = NULL,
-  zeroInflation = FALSE, knownStates = NULL)
+allProbs(
+  data,
+  nbStates,
+  stepDist,
+  angleDist,
+  stepPar,
+  anglePar = NULL,
+  zeroInflation = FALSE,
+  knownStates = NULL
+)
 }
 \arguments{
 \item{data}{Object \code{moveData}.}

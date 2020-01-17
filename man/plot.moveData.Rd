@@ -4,8 +4,7 @@
 \alias{plot.moveData}
 \title{Plot \code{moveData}}
 \usage{
-\method{plot}{moveData}(x, animals = NULL, compact = FALSE,
-  ask = TRUE, breaks = "Sturges", ...)
+\method{plot}{moveData}(x, animals = NULL, compact = FALSE, ask = TRUE, breaks = "Sturges", ...)
 }
 \arguments{
 \item{x}{An object \code{moveData}}

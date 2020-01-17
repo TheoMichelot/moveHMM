@@ -4,11 +4,23 @@
 \alias{fitHMM}
 \title{Fit an HMM to the data}
 \usage{
-fitHMM(data, nbStates, stepPar0, anglePar0 = NULL, beta0 = NULL,
-  delta0 = NULL, formula = ~1, stepDist = c("gamma", "weibull",
-  "lnorm", "exp"), angleDist = c("vm", "wrpcauchy", "none"),
-  angleMean = NULL, stationary = FALSE, knownStates = NULL,
-  verbose = 0, nlmPar = NULL, fit = TRUE)
+fitHMM(
+  data,
+  nbStates,
+  stepPar0,
+  anglePar0 = NULL,
+  beta0 = NULL,
+  delta0 = NULL,
+  formula = ~1,
+  stepDist = c("gamma", "weibull", "lnorm", "exp"),
+  angleDist = c("vm", "wrpcauchy", "none"),
+  angleMean = NULL,
+  stationary = FALSE,
+  knownStates = NULL,
+  verbose = 0,
+  nlmPar = NULL,
+  fit = TRUE
+)
 }
 \arguments{
 \item{data}{An object \code{moveData}.}

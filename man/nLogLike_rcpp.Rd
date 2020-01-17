@@ -4,8 +4,21 @@
 \alias{nLogLike_rcpp}
 \title{Negative log-likelihood}
 \usage{
-nLogLike_rcpp(nbStates, beta, covs, data, stepDist, angleDist, stepPar,
-  anglePar, delta, aInd, zeroInflation, stationary, knownStates)
+nLogLike_rcpp(
+  nbStates,
+  beta,
+  covs,
+  data,
+  stepDist,
+  angleDist,
+  stepPar,
+  anglePar,
+  delta,
+  aInd,
+  zeroInflation,
+  stationary,
+  knownStates
+)
 }
 \arguments{
 \item{nbStates}{Number of states}

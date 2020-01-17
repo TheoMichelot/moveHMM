@@ -4,9 +4,20 @@
 \alias{plotSat}
 \title{Plot observations on satellite image}
 \usage{
-plotSat(data, zoom = NULL, location = NULL, segments = TRUE,
-  compact = TRUE, col = NULL, alpha = 1, size = 1, states = NULL,
-  animals = NULL, ask = TRUE, return = FALSE)
+plotSat(
+  data,
+  zoom = NULL,
+  location = NULL,
+  segments = TRUE,
+  compact = TRUE,
+  col = NULL,
+  alpha = 1,
+  size = 1,
+  states = NULL,
+  animals = NULL,
+  ask = TRUE,
+  return = FALSE
+)
 }
 \arguments{
 \item{data}{Data frame of the data, with necessary fields 'x' (longitude values) and

@@ -4,10 +4,19 @@
 \alias{nLogLike}
 \title{Negative log-likelihood function}
 \usage{
-nLogLike(wpar, nbStates, bounds, parSize, data, stepDist = c("gamma",
-  "weibull", "lnorm", "exp"), angleDist = c("vm", "wrpcauchy", "none"),
-  angleMean = NULL, zeroInflation = FALSE, stationary = FALSE,
-  knownStates = NULL)
+nLogLike(
+  wpar,
+  nbStates,
+  bounds,
+  parSize,
+  data,
+  stepDist = c("gamma", "weibull", "lnorm", "exp"),
+  angleDist = c("vm", "wrpcauchy", "none"),
+  angleMean = NULL,
+  zeroInflation = FALSE,
+  stationary = FALSE,
+  knownStates = NULL
+)
 }
 \arguments{
 \item{wpar}{Vector of working parameters.}
