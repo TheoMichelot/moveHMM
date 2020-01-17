@@ -93,9 +93,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     nbAnimals <- length(unique(data$ID))
 
     # aInd = list of indices of first observation for each animal
-    aInd <- NULL
-    for(i in 1:nbAnimals)
-        aInd <- c(aInd,which(data$ID==unique(data$ID)[i])[1])
+    aInd <- c(1, which(data$ID[-1] != data$ID[-nbObs]) + 1)
 
     # easier to deal with in C++ function
     if(is.null(knownStates))
