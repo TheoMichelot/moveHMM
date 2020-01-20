@@ -52,7 +52,7 @@ viterbi <- function(m)
 
     nbAnimals <- length(unique(data$ID))
     # aInd = list of indices of first observation for each animal
-    aInd <- c(1, which(data$ID[-1] != data$ID[-nbObs]) + 1)
+    aInd <- c(1, which(data$ID[-1] != data$ID[-nrow(data)]) + 1)
 
     allStates <- NULL
     for(zoo in 1:nbAnimals) {
