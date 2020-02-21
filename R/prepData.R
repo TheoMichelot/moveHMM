@@ -5,7 +5,8 @@
 #' (either longitude/latitude values or cartesian coordinates), and optionnaly a field \code{ID}
 #' (identifiers for the observed individuals). Additionnal fields are considered as covariates.
 #' Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
-#' should specified.
+#' should specified. Tracking data should be structured so that the rows for each track (or each animal) 
+#' are grouped together, and ordered by date, in the data frame.
 #' @param type \code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.
 #' @param coordNames Names of the columns of coordinates in the data frame. Default: \code{c("x","y")}.
 #' @param LLangle Logical. If TRUE, the turning angle is calculated with \code{geosphere::bearing}
