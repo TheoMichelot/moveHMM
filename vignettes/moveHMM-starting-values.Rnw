@@ -317,7 +317,7 @@ legend("topleft", legend = c("Starting value", "Estimate"),
        col = c("seagreen", "royalblue"), pch = "+", bty = "n", pt.cex = 2)
 @
 
-In this document, we provide suggestions to select starting parameter values. We focus on a 2-state model, although the ideas described here can be applied to models with more states. We consider the default distributions for the movement variables: the gamma distribution for the step lengths, and the von Mises distribution for the turning angles. For more details about the model specification and model fitting in moveHMM, please refer to the main vignette of the package. 
+In this document, we provide suggestions to select starting parameter values. We focus on a 2-state model, although the ideas described here can be applied to models with more states. We consider the default distributions for the movement variables: the gamma distribution for the step lengths, and the von Mises distribution for the turning angles. For more details about the model specification and model fitting in moveHMM, please refer to the main vignette of the package.
 
 % These are only suggestions, which may not apply to some applications. In general, many different sets of starting values should be tested, to ensure that the optimiser found the maximum likelihood. We explain how this can be done in Section \ref{sec:random}.
 
@@ -349,7 +349,7 @@ head(hmmdata)
 
 \section{Step length parameters}
 
-We first consider the starting values for the parameters of the gamma distributions of step lengths. In moveHMM, the gamma distribution has two parameters, the mean and the standard deviation. In a 2-state model, we therefore need four starting parameters for the step lengths, two means and two standard deviations. 
+We first consider the starting values for the parameters of the gamma distributions of step lengths. In moveHMM, the gamma distribution has two parameters, the mean and the standard deviation. In a 2-state model, we therefore need four starting parameters for the step lengths, two means and two standard deviations.
 
 The general idea, also applicable for the turning angle distribution, is to select `plausible' values for the starting parameters, given the data. The rationale is that, the closer our starting point is to the optimal point (of the likelihood function), the more likely we are going to find the optimal point. Indeed, as shown in Figure 1, convergence issues can arise when the starting parameter values are too far from the maximum likelihood estimates (in parameter space). We want to choose initial parameter values that are not too far from the estimates, and we can make an educated guess by inspecting the data. A good starting point is often to plot a histogram of the observations.
 
@@ -377,7 +377,7 @@ whichzero <- which(hmmdata$step == 0)
 
 # Proportion of steps of length zero in the data set
 length(whichzero)/nrow(hmmdata)
-@ 
+@
 
 \section{Turning angle parameters}
 
@@ -432,7 +432,7 @@ We can then pass the starting values to the optimiser, in the function \texttt{f
 
 <<fithmm>>=
 m <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, anglePar0 = anglePar0)
-@ 
+@
 
 \section{Try many starting values}
 \label{sec:random}
@@ -456,20 +456,20 @@ for(i in 1:niter) {
     stepMean0 <- runif(2,
                        min = c(0.05, 0.3),
                        max = c(0.3, 1))
-    
+
     # Step length standard deviation
     stepSD0 <- runif(2,
                      min = c(0.05, 0.3),
                      max = c(0.3, 1))
-    
+
     # Turning angle mean
     angleMean0 <- c(0, 0)
-    
+
     # Turning angle concentration
     angleCon0 <- runif(2,
                        min = c(0.1, 1),
                        max = c(1, 5))
-    
+
     # Fit model
     stepPar0 <- c(stepMean0, stepSD0)
     anglePar0 <- c(angleMean0, angleCon0)
@@ -484,7 +484,7 @@ The object `allm' is a list of 25 fitted models, and we want to compare their li
 # Extract likelihoods of fitted models
 allnllk <- unlist(lapply(allm, function(m) m$mod$minimum))
 allnllk
-@ 
+@
 
 We see that, in most experiments, the optimiser converged to the same maximum likelihood value (1350.845). This is usually a sign of numerical stability: regardless of the starting values, the optimiser managed to find the maximum likelihood estimates. However, in two of the experiments, the optimisation failed, and those two fitted models have a smaller likelihood, i.e.\ a larger negative log-likelihood, here 1477.145. (In this example, this local maximum of the likelihood in fact corresponds to a single-state hidden Markov model: the starting values in those instances were such that the optimiser \texttt{nlm} ended up in a region of the parameter space where one state was completely irrelevant and never visited, with the other state explaining \textit{all} the observations.)
 
@@ -497,11 +497,11 @@ whichbest <- which.min(allnllk)
 # Best fitting model
 mbest <- allm[[whichbest]]
 mbest
-@ 
+@
 
 \section{Speed things up with parallel}
 
-For complex models or large data sets, the procedure described in Section \ref{sec:random} can be very time-consuming, because the model needs to be fitted many times. The computational cost can be mitigated using parallelised routines in R. In the example of Section \ref{sec:random}, the 25 model fits are independent, and they can be run on separate cores. In the code below, we use the R package parallel to fit 25 models in parallel. 
+For complex models or large data sets, the procedure described in Section \ref{sec:random} can be very time-consuming, because the model needs to be fitted many times. The computational cost can be mitigated using parallelised routines in R. In the example of Section \ref{sec:random}, the 25 model fits are independent, and they can be run on separate cores. In the code below, we use the R package parallel to fit 25 models in parallel.
 
 % eval = FALSE because R CMD check doesn't seem to like simultaneous processes
 <<parallel, eval = FALSE>>=
@@ -523,20 +523,20 @@ allPar0 <- lapply(as.list(1:niter), function(x) {
     stepMean0 <- runif(2,
                        min = c(0.05, 0.3),
                        max = c(0.3, 1))
-    
+
     # Step length standard deviation
     stepSD0 <- runif(2,
                      min = c(0.05, 0.3),
                      max = c(0.3, 1))
-    
+
     # Turning angle mean
     angleMean0 <- c(0, 0)
-    
+
     # Turning angle concentration
     angleCon0 <- runif(2,
                        min = c(0.1, 1),
                        max = c(1, 5))
-    
+
     # Return vectors of starting values
     stepPar0 <- c(stepMean0, stepSD0)
     anglePar0 <- c(angleMean0, angleCon0)
@@ -552,7 +552,7 @@ allm_parallel <- parLapply(cl = cl, X = allPar0, fun = function(par0) {
 
 # Then, we can extract the best-fitting model from allm_parallel
 # as before
-@ 
+@
 
 \bibliographystyle{apalike}
 \bibliography{refs}
