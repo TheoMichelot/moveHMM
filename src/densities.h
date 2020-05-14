@@ -127,7 +127,7 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
         if(!arma::is_finite(x(i)))
             res(i) = 1; // is missing observation
         else
-            res(i) = 1/(2*M_PI*b)*pow((exp(cos(x(i)-mu)-1)),kappa);
+            res(i) = 1/(2*M_PI*b) * exp(kappa * cos(x(i) - mu));
     }
 
     return res;
