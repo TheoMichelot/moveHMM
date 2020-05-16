@@ -121,13 +121,18 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
 arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
 {
     arma::colvec res(x.size());
-    double b = R::bessel_i(kappa,0,2);
+    double b = R::bessel_i(kappa, 0, 2);
+
+    // In the formula below, there is an additional exp(-kappa) factor
+    // (compared to the standard von Mises pdf), because b is calculated
+    // with the option expon.scaled = TRUE, i.e. multiplied by exp(-kappa).
+    // See the documentation for besselI in R for details.
 
     for(int i=0;i<x.size();i++) {
         if(!arma::is_finite(x(i)))
-            res(i) = 1; // is missing observation
+            res(i) = 1; // if missing observation
         else
-            res(i) = 1/(2*M_PI*b) * exp(kappa * cos(x(i) - mu));
+            res(i) = 1/(2 * M_PI * b) * exp(kappa * cos(x(i) - mu) - kappa);
     }
 
     return res;
