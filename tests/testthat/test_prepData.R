@@ -37,3 +37,13 @@ test_that("The returned object is of the correct class",{
 
     expect_equal(class(data),c("moveData","data.frame"))
 })
+
+test_that("Accepts tibble inputs", {
+    set.seed(10)
+    x <- runif(10)
+    y <- runif(10)
+    tracks_df <- data.frame(x, y)
+    tracks_tbl <- dplyr::tibble(x, y)
+
+    expect_equal(prepData(tracks_tbl), prepData(tracks_df))
+})
