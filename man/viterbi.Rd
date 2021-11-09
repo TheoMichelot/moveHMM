@@ -4,10 +4,12 @@
 \alias{viterbi}
 \title{Viterbi algorithm}
 \usage{
-viterbi(m)
+viterbi(m, newdata = NULL)
 }
 \arguments{
 \item{m}{An object \code{moveHMM}}
+
+\item{newdata}{An object \code{moveData} (optional)}
 }
 \value{
 The sequence of most probable states.
