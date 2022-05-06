@@ -16,7 +16,7 @@ prepData(
 (either longitude/latitude values or cartesian coordinates), and optionnaly a field \code{ID}
 (identifiers for the observed individuals). Additionnal fields are considered as covariates.
 Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
-should specified. Tracking data should be structured so that the rows for each track (or each animal) 
+should specified. Tracking data should be structured so that the rows for each track (or each animal)
 are grouped together, and ordered by date, in the data frame.}
 
 \item{type}{\code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.}
