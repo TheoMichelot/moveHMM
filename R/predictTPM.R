@@ -14,8 +14,9 @@ get_gamma <- function(beta, covs, nbStates, i, j){
 #' @param alpha Confidence level if returnCI = TRUE. Default: 0.95, i.e.,
 #' 95\% confidence intervals.
 #'
-#' @return Array of transition probabilities, where each layer is the
-#' transition probability matrix corresponding to a row of \code{newData}.
+#' @return List with elements 'mle', 'lci', and 'uci' (the last two only if
+#' returnCI = TRUE). Each element is an array, where each layer is a
+#' transition probability matrix corresponding to a row of newData.
 #'
 #' @export
 predictTPM <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
