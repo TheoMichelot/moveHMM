@@ -6,6 +6,8 @@
 #'
 #' @param m Fitted model (as output by \code{\link{fitHMM}}).
 #' @param covs Either a data frame or a design matrix of covariates.
+#' @param beta Optional matrix of regression coefficients for the transition
+#' probability model. By default, uses estimates in \code{m}.
 #'
 #' @return Matrix of stationary state probabilities. Each row corresponds to
 #' a row of covs, and each column corresponds to a state.
@@ -21,13 +23,12 @@
 #' stationary(m, covs = matrix(c(1,0,cos(0)),1,3))
 #'
 #' @export
-stationary <- function(m, covs)
+stationary <- function(m, covs, beta = m$mle$beta)
 {
     if(!is.moveHMM(m))
         stop("'m' must be a moveHMM object (as output by fitHMM)")
 
     nbStates <- ncol(m$mle$stepPar)
-    beta <- m$mle$beta
 
     if(nbStates==1)
         stop("No state probabilities (1-state model).")
