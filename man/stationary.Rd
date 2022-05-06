@@ -4,12 +4,15 @@
 \alias{stationary}
 \title{Stationary state probabilities}
 \usage{
-stationary(m, covs)
+stationary(m, covs, beta = m$mle$beta)
 }
 \arguments{
 \item{m}{Fitted model (as output by \code{\link{fitHMM}}).}
 
 \item{covs}{Either a data frame or a design matrix of covariates.}
+
+\item{beta}{Optional matrix of regression coefficients for the transition
+probability model. By default, uses estimates in \code{m}.}
 }
 \value{
 Matrix of stationary state probabilities. Each row corresponds to

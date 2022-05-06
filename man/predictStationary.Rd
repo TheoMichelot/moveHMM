@@ -4,12 +4,21 @@
 \alias{predictStationary}
 \title{Predict stationary state probabilities}
 \usage{
-predictStationary(m, newData, returnCI = FALSE, alpha = 0.95)
+predictStationary(
+  m,
+  newData,
+  beta = m$mle$beta,
+  returnCI = FALSE,
+  alpha = 0.95
+)
 }
 \arguments{
 \item{m}{Fitted moveHMM object, as returned by \code{\link{fitHMM}}}
 
 \item{newData}{Data frame with columns for the covariates}
+
+\item{beta}{Optional matrix of regression coefficients for the transition
+probability model. By default, uses estimates in \code{m}.}
 
 \item{returnCI}{Logical indicating whether confidence intervals should
 be returned. Default: FALSE.}
