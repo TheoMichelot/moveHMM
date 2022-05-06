@@ -55,6 +55,7 @@ predictTPM <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
         trMat <- trMatrix_rcpp(nbStates, beta, desMat)
         rownames(trMat) <- paste0("fromState", 1:nbStates)
         colnames(trMat) <- paste0("toState", 1:nbStates)
+        out <- list(mle = trMat)
 
         # loop over entries of the transition probability matrix
         if(returnCI) {
@@ -81,9 +82,8 @@ predictTPM <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
                 }
             }
 
-            out <- list(mle = trMat, lci = lci, uci = uci)
-        } else {
-            out <- trMat
+            out$lci <- lci
+            out$uci <- uci
         }
     } else {
         stop("Only 1 state -- no transition probabilities to predict.")
