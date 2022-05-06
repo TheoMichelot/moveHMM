@@ -389,12 +389,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     par(ask=FALSE)
 }
 
-# for differentiation to obtain confidence intervals (delta method)
-get_gamma <- function(beta,covs,nbStates,i,j){
-    gamma <- trMatrix_rcpp(nbStates,beta,covs)[,,1]
-    gamma[i,j]
-}
-
 # Plot histograms
 #
 # Plot histograms of steps and angles, and the fitted densities. This function is only
