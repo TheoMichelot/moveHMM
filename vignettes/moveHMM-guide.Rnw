@@ -1,8 +1,6 @@
 \documentclass{article}
-
 % \VignetteIndexEntry{Guide to using moveHMM}
 % \VignetteEngine{knitr::knitr}
-
 
 \usepackage[utf8]{inputenc}
 \usepackage[bf,font={small,sl}]{caption} % for pretty captions
@@ -15,8 +13,11 @@
 \usepackage{url}
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.3}
+\usepackage{parskip}
 
-\title{\textbf{moveHMM: An R package for the analysis of animal movement data}}
+\title{\textbf{moveHMM: an R package for the analysis of animal movement data}}
 \author{Th\'eo Michelot, Roland Langrock \& Toby Patterson}
 
 \begin{document}
@@ -31,31 +32,23 @@ library(Rcpp)
 library(moveHMM)
 @
 
+\setcounter{tocdepth}{2}    % entries down to \subsubsections in the TOC
 \tableofcontents
 
-\section{Introduction}
+\newpage
+\section{Background}
 
-The analysis of animal movement data has become increasingly important in terrestrial and marine ecology. Improvements in telemetry technology have resulted in an explosion in the volume of high precision data being collected. As a result, there are two challenges which researchers collecting these data regularly face: (1) data volume and (2) employing statistical methods which can accommodate some of the specific features of movement data \citep{patterson2009}. 
+\subsection{Introduction}
 
-A substantial part of the literature on statistical modelling of animal movement data has focused on the intuitive approach of decomposing movement time series into distinct behavioural modes (a.k.a.\ bouts, states), via the use of so-called state-switching models. These approaches typically involve assuming movements of animals to be driven by stochastically evolving states, such as a slow moving state, which may be indicative of resting or foraging, versus faster movement states which might indicate transits between foraging patches. Associated with changes in movement speeds are changes to the distribution of directional changes in the movement (known as the turning angle --- see further description below).  
+The analysis of animal movement data has become increasingly important in terrestrial and marine ecology. A substantial part of the literature on statistical modelling of animal movement data has focused on the intuitive approach of decomposing movement time series into distinct behavioural modes (a.k.a.\ bouts, states), via the use of so-called state-switching models. Some early references on this topic are \cite{blackwell1997}, \cite{morales2004}, and \cite{jonsen2005}. In cases where the position data are highly accurate (e.g., from GPS), and regular in time, hidden Markov models (HMMs) can be used to efficiently classify animal movement data into states. HMMs are increasingly popular in this field, due to their flexibility and to the associated very efficient recursive algorithms available for conducting statistical inference \citep{patterson2009, langrock2012, mcclintock2020}.
 
-Bayesian methods which employ MCMC approaches have become very popular tools for the analysis of movement data using state-switching models \citep[e.g.][]{jonsen2005, morales2004}. Typically, these have been implemented using WinBUGS \citep[although see][]{mcclintock2012}. While these models are relatively straightforward to build and hence fit in WinBUGS, the estimation can be painfully slow due to slow mixing of the MCMC samplers. 
+\texttt{moveHMM} is an R package which implements HMMs and associated tools (state decoding, model selection, model checking, etc.) tailored to animal movement modelling. Particular attention was paid to computational efficiency with the fitting algorithm implemented in C++. The computational speed makes it feasible to very large data sets --- e.g.\ tens of thousands of positions collected for each of a dozen individual animals --- on standard desktop PCs. The package also allows users to incorporate covariate data into their models, which is particularly useful when inferring the drivers of changes in behaviour. Our hope is that the \texttt{moveHMM} package will provide users who collect movement data with an interface to sophisticated and adequate methods for a statistical analysis of their data. The package is structured so as to allow the users to prepare their data for analysis, fit a variety of HMMs to their data, and perform diagnostics on these fitted models. The package is presented in \cite{michelot2016}, where its use is illustrated on simulated movement data of wild haggises.
 
-However, for an important subset of movement data, namely highly accurate position data (e.g.\ from GPS) --- and more generally all time series of locations where the measurement error is negligible relative to the scale of the movement --- the task of statistical classification of behaviour can be done much more efficiently using hidden Markov models (HMMs) and associated frequentist inferential tools. HMMs are increasingly popular in this field, due to their flexibility and to the associated very efficient recursive algorithms available for conducting statistical inference  \citep{patterson2009, langrock2012}. The crucial requirements on movement data in order for HMMs to be suitable are that measurement error in positions is negligible and that there is a regular sampling unit (e.g.\ one positional observation per hour, or per dive, or any other meaningful unit).
+\subsection{HMMs for animal movement}
 
-\texttt{moveHMM} is an R package which implements HMMs and associated tools for state decoding, model selection etc.\ specifically tailored to animal movement modelling. Particular attention was paid to computational efficiency with the fitting algorithm implemented in C++. The high computational speed makes it feasible to analyze very large data sets --- e.g.\ tens of thousands of positions collected for each of a dozen individual animals --- on standard desktop PCs. The package also allows users to incorporate covariate data into their models, which is particularly useful when inferring the drivers of changes in behaviour.
+For full details of the HMM approach in the context of animal movement modelling, the user should refer to the relevant primary publications (see, e.g., \citealp{patterson2009}, \citealp{langrock2012}, \citealp{zucchini2016}). Here, we briefly highlight the essential features of the HMM approach.
 
-Our hope is that the \texttt{moveHMM} package will provide users who collect movement data with an interface to sophisticated and adequate methods for a statistical analysis of their data. The package is structured so as to allow the users to prepare their data for analysis, fit a variety of HMMs to their data and perform diagnostics on these fitted models. 
-
-The package is presented in \cite{michelot2016}, where its use is illustrated on simulated movement data of wild haggises.
-
-In this vignette, we briefly introduce HMMs in the context of animal movement. We then provide a detailed example of a typical use of the package (preprocessing movement data, fitting an HMM to the data, and analyzing the fitted model). Finally, we describe more technically the structure of the package and its main functions.
-
-\section{A quick overview of the HMM approach to modelling animal movement}
-
-For full details of the HMM approach in the context of animal movement modelling, the user should refer to the relevant primary publications (see, e.g., \citealp{patterson2009}, \citealp{langrock2012}, \citealp{zucchini2016}). Here, we briefly highlight the essential features of the HMM approach. 
-
-The standard HMM approach to model an individual animal's movement considers bivariate time series comprising the step length and the turning angle at each time point (see illustration in Figure \ref{stepsandturns}). The associated locations need to be {\em sampled at equally spaced points in time} (though missing data on an otherwise regular grid can easily be handled) and are assumed to be {\em observed with no or only negligible error}. The \texttt{moveHMM} package is restricted to such discrete time data and involves the assumption that the locations are observed with zero, or at least negligible error. 
+The standard HMM approach to model an individual animal's movement considers bivariate time series comprising the step length and the turning angle at each time point (see illustration in Figure \ref{stepsandturns}). The associated locations need to be {\em sampled at equally spaced points in time} (though missing data on an otherwise regular grid can easily be handled) and are assumed to be {\em observed with no or only negligible error}. The \texttt{moveHMM} package is restricted to such discrete time data and involves the assumption that the locations are observed with zero, or at least negligible error.
 
 \begin{figure}[ht]
   \centering
@@ -63,15 +56,34 @@ The standard HMM approach to model an individual animal's movement considers biv
   \caption{Illustration of step lengths and turning angles}\label{stepsandturns}
 \end{figure}
 
-At each time point, the parameters of the step length distribution (e.g., a gamma distribution) and the parameters of the turning angle distribution (e.g., a von Mises distribution) are determined by an underlying unobserved state. There are finitely many states which provide rough classifications of the movement (e.g.\ more active vs.\ less active), often interpreted as proxies for the animal's behavioural states (e.g.\ transiting vs.\ foraging). The sequence of states is assumed to be generated by a Markov chain, usually with a tendency of remaining in a state for some time before switching to another state. The corresponding state transition probabilities, as well as the parameters characterising the state-dependent distributions, are model parameters to be estimated. The number of states (movement modes) is unknown and has to be specified by the user. Typically with movement data one assumes a low number of states (say $\leq$ 4). For example, an animal may be foraging (low speed, high rates of turning) and transiting (high speeds, low rates of turning). Biologically interesting inference often involves modelling the state transition probabilities as functions of environmental covariates. 
+At each time point, the parameters of the step length distribution (e.g., a gamma distribution) and the parameters of the turning angle distribution (e.g., a von Mises distribution) are determined by an underlying unobserved state. There are finitely many states which provide rough classifications of the movement (e.g.\ more active vs.\ less active), often interpreted as proxies for the animal's behavioural states (e.g.\ transiting vs.\ foraging). The sequence of states is assumed to be generated by a Markov chain, usually with a tendency of remaining in a state for some time before switching to another state. The corresponding state transition probabilities, as well as the parameters characterising the state-dependent distributions, are model parameters to be estimated. The number of states (movement modes) is unknown and has to be specified by the user. Typically with movement data one assumes a low number of states (say $\leq$ 4). For example, an animal may be foraging (low speed, high rates of turning) and transiting (high speeds, low rates of turning). Biologically interesting inference often involves modelling the state transition probabilities as functions of environmental covariates.
 
-For a given set of model parameters, the likelihood of the data can be calculated using a recursive algorithm (the forward algorithm, cf.\ \citealp{patterson2017}), which in a very effective way considers all possible state sequences that might have given rise to the observed time series. This makes numerical maximization of the (log-)likelihood, and hence maximum likelihood estimation, feasible in most cases. Having estimated the model parameters (and examined useful diagnostics of model fit), the user can estimate the most likely sequence of behavioural states. We encourage the user to consult a good primary text such as \cite{zucchini2016} to familiarize themselves with the technical details of hidden Markov models. 
+For a given set of model parameters, the likelihood of the data can be calculated using a recursive algorithm (the forward algorithm, cf.\ \citealp{patterson2017}), which in a very effective way considers all possible state sequences that might have given rise to the observed time series. This makes numerical maximization of the (log-)likelihood, and hence maximum likelihood estimation, feasible in most cases. Having estimated the model parameters (and examined useful diagnostics of model fit), the user can estimate the most likely sequence of behavioural states. We encourage the user to consult a good primary text such as \cite{zucchini2016} to familiarize themselves with the technical details of hidden Markov models.
 
-\section{Example application} \label{sec_application}
 
-Before we provide a detailed description of the various features of the \texttt{moveHMM} package in the subsequent section, we illustrate a typical HMM-based analysis of movement data using the main functions of the package, via an example. We use the data from \cite{morales2004}, collected on four elk in Canada. 
+\newpage
+\section{Common challenges and other resources}
 
-\subsection{Movement data}
+Here we briefly outline some common challenges for the analysis of animal movement data using hidden Markov models, and provide references to resources that discuss them. For a 1-hour introduction to analysing animal movement data with HMMs in R, see \href{https://www.youtube.com/watch?v=WELTpbB5BuU}{this webinar organised by the Ecological Forecasting Initiative}.
+
+\subsection{Starting parameter values}
+
+Model fitting in moveHMM requires the numerical optimisation of the likelihood function, which measures how plausible the observed data are given a set of parameter values. The optimiser requires initial parameter values, from where to start exploring the parameter space (to find the optimum), which is done in \texttt{fitHMM}. The choice of initial parameters should be based on exploratory data visualisation, and can be challenging in many applications, especially for complex models (e.g., with many states). The moveHMM vignette ``A short guide to choosing initial parameter values for the estimation in moveHMM'' discusses this challenge, and offers some guidelines to help with the choice of starting values.
+
+\subsection{Choice of the number of states}
+
+In HMMs, the number of states needs to be chosen prior to analysis, rather than estimated as part of model fitting. This choice can be difficult, in particular because standard model selection criteria (AIC, BIC) tend to select very large numbers of states, which are difficult to interpret. AIC behaves this way because adding states greatly increases the flexibility of the model to capture features in the data, but this usually comes at the cost of interpretability and generalisability. \cite{pohle2017} discussed this problem, and suggested that the number of states should be generally be informed by biological expertise and model checking, rather than by following model selection criteria.
+
+\subsection{Noisy or irregular data}
+
+Key assumptions of HMMs is that the data should be observed with negligible measurement error (to obtain reliable step lengths and turning angles), and at regular time intervals (although missing values on a regular grid can be dealt with). Small violations of these assumptions can be accommodated, e.g., GPS measurement error may be treated as negligible is it is small compared to the scale of movement steps. However, in cases with large errors and/or very irregular locations, the framework cannot be applied directly. One common approach has been to first filter and regularise such data using another model, and then apply the HMM approach to the output trajectories. The first step can for example be implemented with the state-space models implemented in the R packages crawl \citep{johnson2008} and foieGras \citep{jonsen2020}. This approach has the crucial flaw of ignoring the uncertainty associated with the preprocessed track. An alternative approach, suggested by \cite{mcclintock2017}, is to generate many plausible tracks from a state-space model, fit an HMM to each one of them, and then combine the results to obtain estimates that account for the uncertainty in the filtering step. This approach is implemented in the package momentuHMM, which extends moveHMM to more general HMMs \citep{mcclintock2018}.
+
+\newpage
+\section{Illustration of moveHMM workflow: elk movement analysis} \label{sec_application}
+
+Before we provide a detailed description of the various features of the \texttt{moveHMM} package in the subsequent section, we illustrate a typical HMM-based analysis of movement data using the main functions of the package, via an example. We use the data from \cite{morales2004}, collected on four elk in Canada.
+
+\subsection{Step 1: movement data preparation}
 
 The input data need to have the correct format for subsequent processing and analysis. The data need to be provided as a \texttt{data.frame}, with two mandatory columns:
 \begin{itemize}
@@ -139,7 +151,7 @@ plot(data,compact=T)
 pdf(file="plot_moveData.pdf")
 plot(data,compact=T,ask=FALSE)
 dev.off()
-@ 
+@
 
 The resulting map, and the steps and angles graphs for the first animal, are displayed in Figure \ref{moveData} (we omit the graphs for the three other animals, which are also displayed when using the above command).
 
@@ -152,7 +164,7 @@ The resulting map, and the steps and angles graphs for the first animal, are dis
 
 The time series of step lengths is one way to check the data for outliers.
 
-\subsection{Fitting the model}
+\subsection{Step 2: model specification and model fitting}
 \subsubsection{fitHMM}
 The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments are described in the documentation. Here are a few choices we make:
 \begin{itemize}
@@ -162,7 +174,7 @@ The function \texttt{fitHMM} is used to fit an HMM to the data. Its arguments ar
 \item \texttt{stepDist="gamma"}, to model the step lengths with the gamma distribution (note that it is the default, so we do not need to explicitely specify it);
 \item \texttt{angleDist="vm"}, to model the turning angles with the von Mises distribution (default);
 \item \texttt{angleMean=NULL}, because we want to estimate the mean of the angle distribution (default);
-\item \texttt{stationary=FALSE}, as due to the covariates the process is not stationary (default). 
+\item \texttt{stationary=FALSE}, as due to the covariates the process is not stationary (default).
 \end{itemize}
 
 We also need to specify initial values for the parameters of the state-dependent distributions, to be used by the optimization function. Note that this choice is crucial, and that \emph{the algorithm might not find the global optimum of the likelihood function if the initial parameters are poorly chosen}. The initial parameters should be specified in two vectors, \texttt{stepPar0} (for the step distribution) and \texttt{anglePar0} (for the angle distribution). The necessary parameters of each distribution are detailed in Section \ref{sec_distrib}.
@@ -175,9 +187,9 @@ For numerical stability, we decide to standardize the covariate values before fi
 
 <<fitHMM,size='small',eval=FALSE>>=
 ## standardize covariate values
-data$dist_water <- 
+data$dist_water <-
     (data$dist_water-mean(data$dist_water))/sd(data$dist_water)
-                                        
+
 ## initial parameters for gamma and von Mises distributions
 mu0 <- c(0.1,1) # step mean (two parameters: one for each state)
 sigma0 <- c(0.1,1) # step SD
@@ -229,7 +241,7 @@ m3 <- fitHMM(data=data,nbStates=3,stepPar0=stepPar0,anglePar0=anglePar0,
              formula=~dist_water)
 
 save(m,m3,file="models.RData")
-@ 
+@
 
 <<fitHMM2,echo=FALSE,cache=TRUE>>=
 load("models.RData")
@@ -246,21 +258,21 @@ The argument \texttt{knownStates} of the function \texttt{fitHMM} makes it possi
 \subsubsection{Dealing with numerical instability} \label{sec:instability}
 As mentioned above, the numerical maximization routine might not identify the global maximum of the likelihood function, or even fail to converge altogether, for poorly chosen initial values of the parameters. In such a case, the optimization routine \texttt{nlm} might produce an error such as:
 <<nlm-error, eval = FALSE, highlight = FALSE>>=
-  Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  : 
+  Error in nlm(nLogLike, wpar, nbStates, bounds, parSize, data, stepDist,  :
   non-finite value supplied by 'nlm'
-@ 
+@
 
 The best way to deal with such numerical problems is to test different sets of initial values, possibly chosen randomly. By comparing the resulting estimates for the different initial values used, one usually obtains a good feeling for any potential sensitivity of the numerical search to its chosen starting point. Note, however, that in any case there will usually be no certainty that the global maximum of the likelihood, i.e.\ the maximum likelihood estimate, has been identified.
 
 During preliminary tests on the elk data, we noticed that, in this example, the numerical search is highly sensitive to the choice of the initial parameters \texttt{beta0}. This is due to the high values of the covariate: a small change in the associated regression coefficients can make a big difference in the likelihood function. In such cases, it is advisable to standardize the covariate values before fitting the model, for example by calling:
 <<normalize,size='small',eval=FALSE>>=
-data$dist_water <- 
+data$dist_water <-
     (data$dist_water-mean(data$dist_water))/sd(data$dist_water)
 @
 
 This allows for greater numerical stability, with the convergence of the fitting function depending less on the choice of initial values. The value of the maximum log-likelihood is not affected by the standardization of the covariate values, only the maximum likelihood estimate of \texttt{beta} is.
 
-\subsubsection{Confidence intervals} 
+\subsubsection{Confidence intervals}
 Confidence intervals for the model parameters can be computed with the function \texttt{CI}, passing as an argument the object created by \texttt{fitHMM}. It is possible to give the significance level of the desired confidence interval as an argument, e.g.\ 0.99 for 99\% confidence intervals. By default, 95\% confidence intervals are returned.
 
 Below we show the 95\% confidence intervals for the parameters of the 2-state model fitted to the elk data. \texttt{CI(m)\$stepPar} corresponds to the bounds of the confidence intervals for the step parameters (\texttt{CI(m)\$stepPar\$lower} and \texttt{CI(m)\$stepPar\$upper}). \texttt{CI(m)\$anglePar} and \texttt{CI(m)\$beta} are respectively the bounds of the confidence intervals for the angle parameters and the regression coefficients of the transition probabilities.
@@ -273,14 +285,14 @@ CI(m)
 <<ci-warn, eval = FALSE, highlight = FALSE>>=
   Warning message:
   In CI(m) :
-  Some of the parameter estimates seem to lie close to 
-  the boundaries of their parameter space. The associated 
+  Some of the parameter estimates seem to lie close to
+  the boundaries of their parameter space. The associated
   CIs are probably unreliable (or might not be computable).
-@ 
+@
 
 Here, this message refers to the zero-inflation parameter in the second state. Its estimate is very close to zero, the inferior boundary of its range (this parameter is in the interval [0,1]), and this causes the corresponding confidence interval to be unreliable. The function can sometimes fail to compute such a confidence interval, and returns \texttt{NA} instead, as in this example.
 
-\subsection{Further inference tools and visualization of the model}
+\subsection{Step 3: further inference and visualisation tools}
 Various options are available for the class \texttt{moveHMM}, and here we explain how to use them in the elk example.
 
 \subsubsection{Plot the model}
@@ -292,7 +304,7 @@ plot(m, plotCI=TRUE)
 pdf(file="plot_moveHMM.pdf")
 plot(m,ask=FALSE,plotCI=TRUE)
 dev.off()
-@ 
+@
 
 \noindent This outputs:
 \begin{itemize}
@@ -318,7 +330,7 @@ The first state (in orange on the plots) corresponds to short steps, and angles 
 The plots of the transition probabilities as function of the covariate indicate that animals tend to switch from the second state to the first state when they are far from water, whereas they stay in the second state when closer to water.
 
 \subsubsection{State decoding} \label{sec_statedec}
-Two functions can be used to decode the state process. 
+Two functions can be used to decode the state process.
 
 \paragraph{Viterbi algorithm} To globally decode the state process, the Viterbi algorithm is implemented in the function \texttt{viterbi}. This function outputs the most likely sequence of states to have generated the observation, under the fitted model. Below are the most probable states for the first 25 observations of the first individual:
 
@@ -357,7 +369,7 @@ When the transition probabilities are time-varying (i.e.\ functions of covariate
 
 <<plotStationary, fig.width='4in', fig.height='4in', out.width='4in', out.height='4in', fig.pos='htbp', fig.align='center', fig.cap='Output of \\texttt{plotStationary}. Stationary state probabilities, as functions of the distance to water, with 95\\% confidence intervals.'>>=
 plotStationary(m, plotCI=TRUE)
-@ 
+@
 
 \subsubsection{Model selection with AIC}
 The generic method \texttt{AIC} is available to compare \texttt{moveHMM} models. For example, we now fit a 3-state HMM to the data, and want to compare the AICs of the 2-state and 3-state models.
@@ -400,36 +412,12 @@ plotPR(m)
 
 If some steps are of length zero (i.e. if the step distribution is zero-inflated), the corresponding pseudo-residuals are plotted as segments on the qq-plot. It is the case for the smallest step pseudo-residual located in the bottom-left corner of the step qq-plot in Figure \ref{fig:plotPR}. The pseudo-residuals of discrete data are defined as segments, and in this case, the segments start in $-\infty$.
 
-\subsection{Use \texttt{plotSat}}
-The function \texttt{plotSat} plots the tracking data on a satellite image, with the help of the package ggmap \citep{kahle2013}. Il only works with longitude and latitude values, so we need to convert the UTM coordinates first. We can do this e.g.\ with the help of the packages sp \citep{pebesma2005} and rgdal \citep{bivand2019} (more information can be found in the documentations of those packages).
-<<plotSat1, size='small', eval=FALSE>>=
-library(rgdal)
-utmcoord <- SpatialPoints(cbind(data$x*1000,data$y*1000), 
-                          proj4string=CRS("+proj=utm +zone=17"))
-llcoord <- spTransform(utmcoord,CRS("+proj=longlat"))
-lldata <- data.frame(ID=data$ID,x=attr(llcoord,"coords")[,1],
-                     y=attr(llcoord,"coords")[,2])
-@
-
-In the code above, we need to multiply the UTM coordinates by 1000, as we had divided them by 1000 earlier to work with distances in kilometres. In the function \texttt{SpatialPoints}, we indicate \texttt{+zone=17}, because the data come from the UTM zone 17.
-
-The data frame \texttt{lldata} contains the converted longitude and latitude coordinates of the observations. We can plot it with \texttt{plotSat}; the result is shown in Figure \ref{fig:plotSat}. As the satellite image is fetched from Google, an Internet connection is required to use \texttt{plotSat}.
-<<plotSat2, eval=FALSE>>=
-plotSat(lldata,zoom=8)
-@
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.9\textwidth]{plotSat}
-	\caption{Plot of the elk data, obtained with plotSat.}
-	\label{fig:plotSat}
-\end{figure}
-
 \subsection{Dealing with one-dimensional data}
 It is sometimes of interest to model one-dimensional movement data, like e.g. dive data. This can be done in moveHMM by setting all values of the second coordinate to zero in the data, and use the option \texttt{angleDist="none"}.
 
 In the case where one-dimensional data are provided, the plotting functions for the data and for the model will output plots of the first coordinate as a function of time, instead of a map of the track.
 
+\newpage
 \section{Package features}
 In this section, we describe the global structure of the package, and then describe in more detail the main functions required to fit an HMM to movement data.
 
@@ -470,7 +458,7 @@ The parameters depend on the distribution used. The gamma distribution expects t
     \midrule
     von Mises & & mean $\in (-\pi,\pi]$ & concentration $\in (0,+\infty)$ \\
     wrapped Cauchy & & mean $\in (-\pi,\pi]$ & concentration $\in (0,1)$\\
-    \bottomrule	
+    \bottomrule
   \end{tabular}
 \end{center}
 
@@ -488,11 +476,11 @@ If some steps are exactly equal to zero, then strictly positive distributions su
 
 \subsubsection{Covariates}
 
-In practice it is often of interest to model the state transition probabilities as functions of time-varying covariates. This can be done by assuming the Markov chain to be time-varying, with transition probability matrix $\boldsymbol{\Gamma}^{(t)}=\left( \gamma_{ij}^{(t)} \right)$, linking the transition probabilities to the covariate(s) via the multinomial logit link. In the general case of $N$ states, 
+In practice it is often of interest to model the state transition probabilities as functions of time-varying covariates. This can be done by assuming the Markov chain to be time-varying, with transition probability matrix $\boldsymbol{\Gamma}^{(t)}=\left( \gamma_{ij}^{(t)} \right)$, linking the transition probabilities to the covariate(s) via the multinomial logit link. In the general case of $N$ states,
 \begin{equation*}\label{covtpm} \gamma_{ij}^{(t)}=\Pr \bigl(S_{t}=j\vert S_{t-1}=i \bigr)=\frac{\exp (\eta_{ij}) }{\sum_{k=1}^N\exp (\eta_{ik})},
 \end{equation*}
 where
-$$ \eta_{ij} = 
+$$ \eta_{ij} =
 \begin{cases}
   \beta_{0}^{(ij)} + \sum_{l=1}^p \beta_{l}^{(ij)} w_{lt} & \text{ if } i\neq j, \\
   0 & \text{otherwise,}
@@ -505,25 +493,25 @@ Within \texttt{moveHMM}, the $\beta$ coefficients for the off-diagonal transitio
   \begin{pmatrix}
     \beta_0^{(12)} & \beta_0^{(13)} & \beta_0^{(21)} & \beta_0^{(23)} & \beta_0^{(31)} & \beta_0^{(32)}\\
     \beta_1^{(12)} & \beta_1^{(13)} & \beta_1^{(21)} & \beta_1^{(23)} & \beta_1^{(31)} & \beta_1^{(32)}\\
-    \beta_2^{(12)} & \beta_2^{(13)} & \beta_2^{(21)} & \beta_2^{(23)} & \beta_2^{(31)} & \beta_2^{(32)}\\		
+    \beta_2^{(12)} & \beta_2^{(13)} & \beta_2^{(21)} & \beta_2^{(23)} & \beta_2^{(31)} & \beta_2^{(32)}\\
   \end{pmatrix}
 \end{equation*}
 Here the first row corresponds to the intercept terms and the other two rows to the slope coefficients associated with the two covariates. There are as many columns as there are off-diagonal entries in the $3 \times 3$ transition probability matrix, and that matrix is filled row-wise (i.e.\ column 1 in \texttt{beta} is linked to $\gamma_{12}^{(t)}$, column 2 is linked to $\gamma_{13}^{(t)}$, column 3 is linked to $\gamma_{21}^{(t)}$, etc.).\\
 
 In practice, many movement models involve only two states, in which case the above equations boil down to
 \begin{align*}
-  \boldsymbol{\Gamma}^{(t)}  & = 
+  \boldsymbol{\Gamma}^{(t)}  & =
                                \begin{pmatrix}
                                  \dfrac{1}{1+\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)} &
                                  \dfrac{\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)}{1+\exp\left(\beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt}\right)} \\[20pt]
                                  \dfrac{\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)}{1+\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)} &
                                  \dfrac{1}{1+\exp\left(\beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt}\right)}
                                \end{pmatrix} \\[20pt]
-  = & 
+  = &
       \begin{pmatrix}
-	1-\text{logit}^{-1} \left( \beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt} \right) & 
+	1-\text{logit}^{-1} \left( \beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt} \right) &
         \text{logit}^{-1} \left( \beta_{0}^{(12)} + \sum_{l=1}^p \beta_{l}^{(12)} w_{lt} \right) \\[10pt]
-	\text{logit}^{-1} \left( \beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt} \right)  & 
+	\text{logit}^{-1} \left( \beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt} \right)  &
         1- \text{logit}^{-1} \left( \beta_{0}^{(21)} + \sum_{l=1}^p \beta_{l}^{(21)} w_{lt} \right)
       \end{pmatrix}
 \end{align*}
@@ -533,7 +521,7 @@ The inverse logit link function is applied in order to map the real-valued predi
     \beta_0^{(12)} & \beta_0^{(21)} \\
     \beta_1^{(12)} & \beta_1^{(21)} \\
     \vdots         &   \vdots       \\
-    \beta_p^{(12)} & \beta_p^{(21)} 
+    \beta_p^{(12)} & \beta_p^{(21)}
   \end{pmatrix}.
 \end{equation*}
 
@@ -546,9 +534,9 @@ The function \texttt{fitHMM} includes the option of fitting a stationary model (
 \subsection{Main functions} \label{sec_main_functions}
 
 \subsubsection{prepData}
-Tracking data usually consist of time series of either easting-northing coordinates or longitude-latitude values. However, with the HMM approach the derived quantities step lengths and turning angles are modelled. 
+Tracking data usually consist of time series of either easting-northing coordinates or longitude-latitude values. However, with the HMM approach the derived quantities step lengths and turning angles are modelled.
 
-The function \texttt{prepData} computes the steps and angles from the coordinates. As input, this function takes an R data frame with columns ``x'' (either easting or longitude) and ``y'' (either northing or latitude). If the names of the coordinates columns are not ``x'' and ``y'', then the argument \texttt{coordNames} should specify them. If several animals were observed, there should also be a column ``ID'' which identifies the animal being observed. If there is no ``ID'' column, all observations will be considered to be associated with a single animal. All additional columns are considered as covariates. In addition to the data frame, \texttt{prepData} takes an argument \texttt{type}, which can either be ``LL'' (longitude-latitude, the default) or ``UTM''. The former indicates that the coordinates are longitude-latitude values, and the latter that they are easting-northing values. 
+The function \texttt{prepData} computes the steps and angles from the coordinates. As input, this function takes an R data frame with columns ``x'' (either easting or longitude) and ``y'' (either northing or latitude). If the names of the coordinates columns are not ``x'' and ``y'', then the argument \texttt{coordNames} should specify them. If several animals were observed, there should also be a column ``ID'' which identifies the animal being observed. If there is no ``ID'' column, all observations will be considered to be associated with a single animal. All additional columns are considered as covariates. In addition to the data frame, \texttt{prepData} takes an argument \texttt{type}, which can either be ``LL'' (longitude-latitude, the default) or ``UTM''. The former indicates that the coordinates are longitude-latitude values, and the latter that they are easting-northing values.
 
 To compute the step lengths, \texttt{prepData} calls the function \texttt{spDistN1} from the package \texttt{sp}. The step lengths are in the unit of the input if easting/northing are provided, and in kilometres if longitude/latitude are provided.
 
@@ -574,7 +562,7 @@ Methods (i.e.\ class functions) are available for both \texttt{moveData} and \te
 \item \texttt{AIC.moveHMM} returns the AIC of one or several fitted models.
 \end{itemize}
 
-\subsubsection{Other operations on \texttt{moveHMM}} \label{sec_functions}
+\subsubsection{Other operations in \texttt{moveHMM}} \label{sec_functions}
 Other functions can be called on a \texttt{moveHMM} object, for further analysis.
 \begin{itemize}
 \item \texttt{CI} computes confidence intervals for the step length distribution parameters, for the turning angle distribution parameters, and for the regression coefficients of the transition probabilities.
@@ -582,16 +570,14 @@ Other functions can be called on a \texttt{moveHMM} object, for further analysis
 \item \texttt{stateProbs} computes the probabilities of the underlying Markov chain being in the different states, at each observation, under the fitted model.
 \item \texttt{viterbi} computes the sequence of most probable states, under the fitted model, using the Viterbi algorithm \citep{zucchini2016}.
 \item \texttt{plotStates} plots the most probable state sequence (as decoded with \texttt{viterbi}), and the state probabilities (as computed with \texttt{stateProbs}).
-\item \texttt{plotPR} plots time series, qq-plots, and the sample autocorrelation (ACF) functions of the pseudo-residuals of the fitted model \citep{zucchini2016}. The qq-plots can be used to visually assess whether or not the pseudo-residuals are standard normally distributed. The points in the qq-plot will be close to the straight line if the model fits the data well. If the sample ACFs display a residual autocorrelation, then this is an indication that the model might not have captured all relevant correlation structure in the data. 
-\end{itemize} 
+\item \texttt{plotPR} plots time series, qq-plots, and the sample autocorrelation (ACF) functions of the pseudo-residuals of the fitted model \citep{zucchini2016}. The qq-plots can be used to visually assess whether or not the pseudo-residuals are standard normally distributed. The points in the qq-plot will be close to the straight line if the model fits the data well. If the sample ACFs display a residual autocorrelation, then this is an indication that the model might not have captured all relevant correlation structure in the data.
+\item \texttt{plotStationary} creates plots of the stationary state probabilities as functions of covariates, possibly with confidence intervals.
+\end{itemize}
 
 \subsubsection{simData}
 The function \texttt{simData} simulates movement data from an HMM, given its parameters. The returned object is of the class \texttt{moveData}, and can be visualized using \texttt{plot}, or fitted using \texttt{fitHMM}. The arguments of \texttt{simData} are detailed in the documentation.
 
 It is possible to call \texttt{simData} on a fitted model directly, to simulate data from it. This can be used to assess the fit, by checking that the simulated data display the same features as the real data.
-
-\subsubsection{plotSat}
-Based on functions provided by the package ggmap \citep{kahle2013}, \texttt{plotSat} plots tracking data on a satellite image retrieved from Google. Note that it only works with longitude and latitude values, and not with easting and northing coordinates. It can be used on any data frame with fields `x' and `y', e.g.\ typically a \texttt{moveData} object. It is necessary to specify manually the zoom level wanted, with the argument \texttt{zoom}, which can take values in $\lbrace 3,4,5,\dots,20,21 \rbrace$. Other arguments are optional, and are described in the documentation.
 
 \bibliographystyle{apalike}
 \bibliography{refs}
