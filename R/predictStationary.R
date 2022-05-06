@@ -3,6 +3,8 @@
 #'
 #' @param m Fitted moveHMM object, as returned by \code{\link{fitHMM}}
 #' @param newData Data frame with columns for the covariates
+#' @param beta Optional matrix of regression coefficients for the transition
+#' probability model. By default, uses estimates in \code{m}.
 #' @param returnCI Logical indicating whether confidence intervals should
 #' be returned. Default: FALSE.
 #' @param alpha Confidence level if returnCI = TRUE. Default: 0.95, i.e.,
@@ -13,13 +15,13 @@
 #' with one row for each row of newData and one column for each state.
 #'
 #' @export
-predictStationary <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
+predictStationary <- function(m, newData, beta = m$mle$beta,
+                              returnCI = FALSE, alpha = 0.95) {
     if(!is.moveHMM(m))
         stop("'m' must be a moveHMM object (as output by fitHMM)")
 
     data <- m$data
     nbStates <- ncol(m$mle$stepPar)
-    beta <- m$mle$beta
 
     # for differentiation in delta method below
     get_stat <- function(beta,covs,nbStates,i) {

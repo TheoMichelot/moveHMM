@@ -1,14 +1,10 @@
 
-# for differentiation to obtain confidence intervals (delta method)
-get_gamma <- function(beta, covs, nbStates, i, j){
-    gamma <- trMatrix_rcpp(nbStates, beta, covs)[,,1]
-    return(gamma[i, j])
-}
-
 #' Predict transition probabilities for new covariate values
 #'
 #' @param m Fitted moveHMM object, as returned by \code{\link{fitHMM}}
 #' @param newData Data frame with columns for the covariates
+#' @param beta Optional matrix of regression coefficients for the transition
+#' probability model. By default, uses estimates in \code{m}.
 #' @param returnCI Logical indicating whether confidence intervals should
 #' be returned. Default: FALSE.
 #' @param alpha Confidence level if returnCI = TRUE. Default: 0.95, i.e.,
@@ -19,7 +15,8 @@ get_gamma <- function(beta, covs, nbStates, i, j){
 #' transition probability matrix corresponding to a row of newData.
 #'
 #' @export
-predictTPM <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
+predictTPM <- function(m, newData, beta = m$mle$beta,
+                       returnCI = FALSE, alpha = 0.95) {
     if(!is.moveHMM(m))
         stop("'m' must be a moveHMM object (as output by fitHMM)")
 
@@ -32,8 +29,6 @@ predictTPM <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
     nbStates <- ncol(m$mle$stepPar)
 
     if(nbStates>1) {
-        beta <- m$mle$beta
-
         # covariance matrix of estimates
         if(!is.null(m$mod$hessian)) {
             Sigma <- ginv(m$mod$hessian)
@@ -60,6 +55,12 @@ predictTPM <- function(m, newData, returnCI = FALSE, alpha = 0.95) {
 
         # loop over entries of the transition probability matrix
         if(returnCI) {
+            # for differentiation to obtain confidence intervals (delta method)
+            get_gamma <- function(beta, covs, nbStates, i, j){
+                gamma <- trMatrix_rcpp(nbStates, beta, covs)[,,1]
+                return(gamma[i, j])
+            }
+
             # Copy structure of trMat for upper/lower CI bounds
             lci <- trMat
             uci <- trMat
