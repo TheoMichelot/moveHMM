@@ -24,6 +24,8 @@
 #'
 #' @return Matrix of all probabilities.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' stepPar <- c(1,10,1,5,0.2,0.3)

@@ -5,6 +5,7 @@
 #' using the Viterbi algorithm.
 #'
 #' @param m An object \code{moveHMM}
+#' @param newdata An object \code{moveData} (optional)
 #'
 #' @return The sequence of most probable states.
 #'
@@ -22,12 +23,14 @@
 #'
 #' @export
 
-viterbi <- function(m)
+viterbi <- function(m, newdata = NULL)
 {
     if(!is.moveHMM(m))
         stop("'m' must be a moveHMM object (as output by fitHMM)")
+    if(!is.null(newdata) && !is.moveData(newdata))
+        stop("'newdata' must be a moveData object (as output by prepData) or NULL")
 
-    data <- m$data
+    data <- if (!is.null(newdata)) newdata else m$data
     nbStates <- ncol(m$mle$stepPar)
     beta <- m$mle$beta
     delta <- m$mle$delta

@@ -61,3 +61,4 @@ P <- allProbs(data=data,nbStates=2,stepDist=stepDist,angleDist=angleDist,
                byrow=TRUE),zeroInflation=TRUE)
 }
 }
+\keyword{internal}

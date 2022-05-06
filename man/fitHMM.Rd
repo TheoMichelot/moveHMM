@@ -81,20 +81,23 @@ input. This option can be used to assess the initial parameters. Default: \code{
 }
 \value{
 A \code{moveHMM} object, i.e. a list of:
-\item{mle}{The maximum likelihood estimates of the parameters of the model (if the numerical algorithm
-has indeed identified the global maximum of the likelihood function), which is a list
-of: \code{stepPar} (step distribution parameters), \code{anglePar} (angle distribution
-parameters), \code{beta} (transition probabilities regression coefficients - more information
-in "Details"), and \code{delta} (initial distribution).}
+\item{mle}{The maximum likelihood estimates of the parameters of the model
+(if the numerical algorithm has indeed identified the global maximum of the
+likelihood function), which is a list of: \code{stepPar} (step distribution
+parameters), \code{anglePar} (angle distribution parameters), \code{beta}
+(transition probabilities regression coefficients - more information in
+"Details"), and \code{delta} (initial distribution).}
 \item{data}{The movement data}
-\item{stepDist}{The step length distribution name}
-\item{angleDist}{The turning angle distribution name}
 \item{mod}{The object returned by the numerical optimizer \code{nlm}}
-\item{conditions}{A few conditions used to fit the model (\code{zeroInflation}, \code{estAngleMean},
+\item{conditions}{A few conditions used to fit the model (\code{stepDist},
+\code{angleDist}, \code{zeroInflation}, \code{estAngleMean},
 \code{stationary}, and \code{formula})}
-\item{rawCovs}{Raw covariate values, as found in the data (if any). Used in \code{\link{plot.moveHMM}}.}
-\item{knownStates}{Vector of states known a priori, as provided in input (if any, \code{NULL} otherwise).
-Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and \code{\link{logBeta}}}.
+\item{rawCovs}{Raw covariate values, as found in the data (if any). Used in
+\code{\link{plot.moveHMM}}.}
+\item{knownStates}{Vector of states known a priori, as provided in input (if
+any, \code{NULL} otherwise).
+Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and
+\code{\link{logBeta}}}.
 }
 \description{
 Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
