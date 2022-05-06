@@ -34,7 +34,7 @@ predictStationary <- function(m, newData, beta = m$mle$beta,
 
     # stationary probs
     desMat <- model.matrix(m$conditions$formula, data = newData)
-    probs <- stationary(m, covs = desMat)
+    probs <- stationary(m, covs = desMat, beta = beta)
     colnames(probs) <- paste0("state", 1:nbStates)
     out <- list(mle = probs)
 
