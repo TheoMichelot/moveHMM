@@ -9,3 +9,10 @@ vignettes/*.aux
 vignettes/*.log
 vignettes/*.gz
 vignettes/*.out
+vignettes/cache/*
+vignettes/figure/*
+vignettes/*.bbl
+vignettes/*.blg
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.toc
