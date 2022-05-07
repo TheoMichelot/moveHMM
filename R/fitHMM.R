@@ -63,7 +63,8 @@
 #' \item{knownStates}{Vector of states known a priori, as provided in input (if
 #' any, \code{NULL} otherwise).
 #' Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and
-#' \code{\link{logBeta}}}.
+#' \code{\link{logBeta}}}
+#' \item{nlmTime}{Computing time for optimisation, obtained with \link{system.time}}
 #'
 #' @details
 #' \itemize{
@@ -324,17 +325,20 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
         iterlim <- ifelse(is.null(nlmPar$iterlim),1000,nlmPar$iterlim)
 
         # call to optimizer nlm
-        withCallingHandlers(mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
-                                       angleDist,angleMean,zeroInflation,stationary,knownStates,
-                                       print.level=verbose,gradtol=gradtol,
-                                       stepmax=stepmax,steptol=steptol,
-                                       iterlim=iterlim,hessian=TRUE),
-                            warning=h) # filter warnings using function h
+        systime <- system.time(
+            withCallingHandlers(
+                mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
+                           angleDist,angleMean,zeroInflation,stationary,knownStates,
+                           print.level=verbose,gradtol=gradtol,
+                           stepmax=stepmax,steptol=steptol,
+                           iterlim=iterlim,hessian=TRUE),
+                warning=h)) # filter warnings using function h
 
         # convert the parameters back to their natural scale
         mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
     }
     else {
+        systime <- 0
         mod <- NA
         mle <- w2n(wpar,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)
     }
@@ -399,7 +403,9 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
     conditions <- list(stepDist=stepDist,angleDist=angleDist,zeroInflation=zeroInflation,
                        estAngleMean=estAngleMean,stationary=stationary,formula=formula)
 
-    mh <- list(data=data,mle=mle,mod=mod,conditions=conditions,rawCovs=rawCovs,knownStates=knownStates)
+    mh <- list(data = data, mle = mle, mod = mod, conditions = conditions,
+               rawCovs = rawCovs, knownStates = knownStates,
+               nlmTime = systime)
     return(moveHMM(mh))
 }
 

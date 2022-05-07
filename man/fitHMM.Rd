@@ -97,7 +97,8 @@ parameters), \code{anglePar} (angle distribution parameters), \code{beta}
 \item{knownStates}{Vector of states known a priori, as provided in input (if
 any, \code{NULL} otherwise).
 Used in \code{\link{viterbi}},\code{\link{logAlpha}}, and
-\code{\link{logBeta}}}.
+\code{\link{logBeta}}}
+\item{nlmTime}{Computing time for optimisation, obtained with \link{system.time}}
 }
 \description{
 Fit an hidden Markov model to the data provided, using numerical optimization of the log-likelihood
