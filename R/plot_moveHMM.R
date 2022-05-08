@@ -199,6 +199,9 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         beta <- m$mle$beta
 
         if(nrow(beta)>1) {
+            par(mfrow = c(nbStates, nbStates))
+            par(mar = c(5, 4, 4, 2) - c(0, 0, 1.5, 1)) # bottom, left, top, right
+
             trProbs <- getPlotData(m, type = "tpm", format = "wide")
 
             # loop over covariates
