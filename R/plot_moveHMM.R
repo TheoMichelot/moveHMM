@@ -42,52 +42,41 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
                          plotTracks = TRUE, plotCI = FALSE, alpha = 0.95, ...)
 {
     m <- x # the name "x" is for compatibility with the generic method
-    nbAnimals <- length(unique(m$data$ID))
     nbStates <- ncol(m$mle$stepPar)
 
-    stepFun <- paste("d",m$conditions$stepDist,sep="")
-    if(m$conditions$angleDist!="none")
-        angleFun <- paste("d",m$conditions$angleDist,sep="")
-
-    # prepare colors for the states (used in the maps and for the densities)
+    # prepare colours for the states (used in the maps and for the densities)
     if(!is.null(col) & length(col)!=nbStates) {
         warning("Length of 'col' should be equal to number of states - argument ignored")
-        col <- 2:(nbStates+1)
+        col <- NULL
     }
-    if(is.null(col) & nbStates<8) {
-        # color-blind friendly palette
-        pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-        col <- pal[1:nbStates]
-    }
-    if(is.null(col) & nbStates>=8) {
-        # to make sure that all colours are distinct (emulate ggplot default palette)
-        hues <- seq(15, 375, length = nbStates + 1)
-        col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
+    if(is.null(col)) {
+        if(nbStates <= 8) {
+            # color-blind friendly palette
+            pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+            col <- pal[1:nbStates]
+        } else {
+            # to make sure that all colours are distinct (emulate ggplot default palette)
+            hues <- seq(15, 375, length = nbStates + 1)
+            col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
+        }
     }
 
     ######################
     ## Prepare the data ##
     ######################
-    # determine indices of animals to be plotted
-    if(is.null(animals)) # all animals are plotted
+    nbAnimals <- length(unique(m$data$ID))
+    if(is.character(animals)) {
+        if(any(!animals %in% unique(m$data$ID))) {
+            stop("Check 'animals' argument, ID not found")
+        }
+        animalsInd <- which(unique(m$data$ID) %in% animals)
+    } else if(is.numeric(animals)) {
+        if(min(animals) < 1 | max(animals) > nbAnimals) {
+            stop("Check 'animals' argument, index out of bounds")
+        }
+        animalsInd <- animals
+    } else {
         animalsInd <- 1:nbAnimals
-    else {
-        if(is.character(animals)) { # animals' IDs provided
-            animalsInd <- NULL
-            for(zoo in 1:length(animals)) {
-                if(length(which(unique(m$data$ID)==animals[zoo]))==0) # ID not found
-                    stop("Check 'animals' argument, ID not found")
-
-                animalsInd <- c(animalsInd,which(unique(m$data$ID)==animals[zoo]))
-            }
-        }
-
-        if(is.numeric(animals)) { # animals' indices provided
-            if(length(which(animals<1))>0 | length(which(animals>nbAnimals))>0) # index out of bounds
-                stop("Check 'animals' argument, index out of bounds")
-
-            animalsInd <- animals
-        }
     }
 
     nbAnimals <- length(animalsInd)
