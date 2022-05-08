@@ -9,13 +9,15 @@
 #' 95\% confidence intervals
 #'
 #' @details
-#' * If type = "dist", the function evaluates each state-dependent
+#' \itemize{
+#' \item{If type = "dist", the function evaluates each state-dependent
 #' distribution over the range of observed variable (step length or
 #' turning angle), and weighs them by the proportion of time spent
-#' in each state (obtained from Viterbi state sequence).
-#' * If type = "tpm", the function returns transition probabilities
+#' in each state (obtained from Viterbi state sequence).}
+#' \item{If type = "tpm", the function returns transition probabilities
 #' estimated over a range of covariate values. Other covariates are
-#' fixed to their mean values.
+#' fixed to their mean values.}
+#' }
 #'
 #' @return Data frame (or list of data frames) containing data in a format
 #' that can easily be plotted. If type = "dist", the output is a list with
