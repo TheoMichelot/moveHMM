@@ -267,49 +267,28 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     ##################################################
     if(nbStates>1) {
         beta <- m$mle$beta
-
         if(nrow(beta)>1) {
-            par(mfrow=c(nbStates,nbStates))
-            par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
-
-            rawCovs <- m$rawCovs
-            gridLength <- 100
+            trProbs <- getPlotData(m, type = "tpm", format = "wide")
 
             # loop over covariates
+            par(mfrow=c(nbStates,nbStates))
+            par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
             for(cov in 1:ncol(m$rawCovs)) {
-                inf <- min(rawCovs[,cov],na.rm=T)
-                sup <- max(rawCovs[,cov],na.rm=T)
-
-                # mean values of each covariate
-                meanCovs <- colSums(rawCovs)/nrow(rawCovs)
-
-                # set all covariates to their mean, except for "cov"
-                # (which takes a grid of values from inf to sup)
-                tempCovs <- data.frame(rep(meanCovs[1],gridLength))
-                if(length(meanCovs)>1)
-                    for(i in 2:length(meanCovs))
-                        tempCovs <- cbind(tempCovs,rep(meanCovs[i],gridLength))
-
-                tempCovs[,cov] <- seq(inf,sup,length=gridLength)
-                colnames(tempCovs) <- colnames(rawCovs)
-
-                # Transition probabilities on covariate grid
-                trMat <- predictTPM(m = m, newData = tempCovs,
-                                    returnCI = plotCI, alpha = alpha)
-
+                trProbsCov <- trProbs[[cov]]
                 # loop over entries of the transition probability matrix
                 for(i in 1:nbStates) {
                     for(j in 1:nbStates) {
-                        plot(tempCovs[,cov], trMat$mle[i,j,], type = "l",
-                             ylim = c(0, 1), xlab = names(rawCovs)[cov],
+                        trName <- paste0("S", i, "toS", j)
+                        plot(trProbsCov[,cov], trProbsCov[,trName], type = "l",
+                             ylim = c(0, 1), xlab = names(trProbs)[cov],
                              ylab = paste(i, "->", j))
 
                         # derive confidence intervals using the delta method
                         if(plotCI) {
                             options(warn = -1) # to muffle "zero-length arrow..." warning
                             # plot the confidence intervals
-                            arrows(tempCovs[,cov], trMat$lci[i,j,],
-                                   tempCovs[,cov], trMat$uci[i,j,],
+                            arrows(trProbsCov[,cov], trProbsCov[,paste0(trName, ".lci")],
+                                   trProbsCov[,cov], trProbsCov[,paste0(trName, ".uci")],
                                    length = 0.025, angle = 90, code = 3,
                                    col = gray(0.5), lwd = 0.7)
                             options(warn = 1)
