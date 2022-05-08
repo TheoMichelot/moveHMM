@@ -75,13 +75,15 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
                     (1-zeromass[state]) * stepDensities[[paste0("state", state)]]
             }
         }
+        stepDensities$total <- rowSums(stepDensities[,-1])
 
-        # base or ggplot format
+        # wide or long format
         out$step <- stepDensities
         if(format == "long") {
-            out$step <- data.frame(step = out$step[,1],
-                                   density = unlist(out$step[,-1]),
-                                   state = rep(1:nbStates, each = nrow(out$step)))
+            out$step <- data.frame(
+                step = out$step[,1],
+                density = unlist(out$step[,-1]),
+                state = rep(c(paste0("state ", 1:nbStates), "total"), each = nrow(out$step)))
         }
 
         ####################
@@ -95,7 +97,6 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
 
             for(state in 1:nbStates) {
                 angleArgs <- list(angleGrid)
-
                 for(j in 1:nrow(m$mle$anglePar)) {
                     angleArgs[[j+1]] <- m$mle$anglePar[j,state]
                 }
@@ -103,14 +104,16 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
                 # (weighted by the proportion of each state in the Viterbi states sequence)
                 angleDensities[[paste0("state", state)]] <- w[state] * do.call(angleFun, angleArgs)
             }
+            angleDensities$total <- rowSums(angleDensities[,-1])
         }
 
-        # base or ggplot format
+        # wide or long format
         out$angle <- angleDensities
         if(format == "long") {
-            out$angle <- data.frame(angle = out$angle[,1],
-                                    density = unlist(out$angle[,-1]),
-                                    state = rep(1:nbStates, each = nrow(out$angle)))
+            out$angle <- data.frame(
+                angle = out$angle[,1],
+                density = unlist(out$angle[,-1]),
+                state = rep(c(paste0("state ", 1:nbStates), "total"), each = nrow(out$angle)))
         }
     } else if(type == "tpm") {
         ##############################
