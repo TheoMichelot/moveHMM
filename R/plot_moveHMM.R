@@ -142,131 +142,62 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     } else
         states <- rep(1,nrow(m$data))
 
-    if(sepStates | nbStates==1)
-        w <- rep(1,nbStates)
-    else {
-        # proportion of each state in the states sequence returned by the Viterbi algorithm
-        w <- rep(NA,nbStates)
-        for(state in 1:nbStates)
-            w[state] <- length(which(states==state))/length(states)
+    ########################################
+    ## Plot state-dependent distributions ##
+    ########################################
+    par(mar=c(5, 4, 4, 2) - c(0, 0, 2, 1)) # bottom, left, top, right
+    par(ask = ask)
+
+    distData <- getPlotData(mod, type = "dist")
+
+    # setup line options
+    legText <- c(paste("state", 1:nbStates), "total")
+    lty <- c(rep(1, nbStates), 2)
+    lwd <- c(rep(1, nbStates), 2)
+    col <- c(pal[1:nbStates], "black")
+
+    # define ymax for step histogram
+    h <- hist(m$data$step, plot = FALSE, breaks = breaks)
+    ymax <- 1.3 * max(h$density)
+    maxdens <- max(distData$step$total)
+    if(maxdens > ymax & maxdens < 1.5 * ymax) {
+        ymax <- maxdens
     }
 
-    if(m$conditions$zeroInflation) {
-        zeromass <- m$mle$stepPar[nrow(m$mle$stepPar),]
-        stepPar <- as.matrix(m$mle$stepPar[-nrow(m$mle$stepPar),])
-    } else {
-        stepPar <- m$mle$stepPar
+    # step length histogram
+    hist(m$data$step, ylim = c(0, ymax), prob = TRUE, main = "",
+         xlab = "step length", col = "lightgrey", border = "white",
+         breaks = breaks)
+    for(i in 1:(nbStates + 1)) {
+        lines(distData$step$step, distData$step[,i+1], col = col[i],
+              lty = lty[i], lwd = lwd[i])
     }
+    legend("top", legText, lwd = lwd, col = col, lty = lty, bty = "n")
 
-    ###########################################
-    ## Compute estimated densities on a grid ##
-    ###########################################
-    stepDensities <- list()
-    grid <- seq(0,max(m$data$step,na.rm=TRUE),length=10000)
+    # define ymax and breaks for angle histogram
+    h1 <- hist(m$data$angle, plot = FALSE, breaks = breaks)
+    breaks <- seq(-pi, pi, length = length(h1$breaks))
+    h2 <- hist(m$data$angle, plot = FALSE, breaks = breaks)
+    ymax <- 1.3 * max(h2$density)
 
-    for(state in 1:nbStates) {
-        stepArgs <- list(grid)
-
-        for(j in 1:nrow(stepPar))
-            stepArgs[[j+1]] <- stepPar[j,state]
-
-        # conversion between mean/sd and shape/scale if necessary
-        if(m$conditions$stepDist=="gamma") {
-            shape <- stepArgs[[2]]^2/stepArgs[[3]]^2
-            scale <- stepArgs[[3]]^2/stepArgs[[2]]
-            stepArgs[[2]] <- shape
-            stepArgs[[3]] <- 1/scale # dgamma expects rate=1/scale
-        }
-        # (weighted by the proportion of each state in the Viterbi states sequence)
-        if(m$conditions$zeroInflation)
-            stepDensities[[state]] <- cbind(grid,(1-zeromass[state])*w[state]*do.call(stepFun,stepArgs))
-        else
-            stepDensities[[state]] <- cbind(grid,w[state]*do.call(stepFun,stepArgs))
+    # turning angle histogram
+    hist(m$data$angle, ylim = c(0, ymax), prob = TRUE, main = "",
+         xlab = "turning angle", col = "lightgrey", border = "white",
+         breaks = breaks, xaxt = "n")
+    axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
+         labels = expression(-pi, -pi/2, 0, pi/2, pi))
+    for(i in 1:(nbStates + 1)) {
+        lines(distData$angle$angle, distData$angle[,i+1], col = col[i],
+              lty = lty[i], lwd = lwd[i])
     }
-
-    if(m$conditions$angleDist!="none") {
-        angleDensities <- list()
-        grid <- seq(-pi,pi,length=1000)
-
-        for(state in 1:nbStates) {
-            angleArgs <- list(grid)
-
-            for(j in 1:nrow(m$mle$anglePar))
-                angleArgs[[j+1]] <- m$mle$anglePar[j,state]
-
-            # (weighted by the proportion of each state in the Viterbi states sequence)
-            if(m$conditions$zeroInflation)
-                angleDensities[[state]] <- cbind(grid,(1-zeromass[state])*w[state]*do.call(angleFun,angleArgs))
-            else
-                angleDensities[[state]] <- cbind(grid,w[state]*do.call(angleFun,angleArgs))
-        }
-    }
-
-    #########################
-    ## Plot the histograms ##
-    #########################
-    # set graphical parameters
-    par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
-    par(ask=ask)
-
-    if(sepAnimals) {
-
-        # loop over the animals
-        for(zoo in 1:nbAnimals) {
-            if(sepStates) {
-
-                # loop over the states
-                for(state in 1:nbStates) {
-                    step <- stepData[[zoo]][which(states[which(m$data$ID==ID[zoo])]==state)]
-                    angle <- angleData[[zoo]][which(states[which(m$data$ID==ID[zoo])]==state)]
-                    message <- paste("Animal ID:",ID[zoo]," - State:",state)
-
-                    # the function plotHist is defined below
-                    plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
-                             message=message,sepStates=sepStates,breaks=breaks,state=state,
-                             hist.ylim=hist.ylim,col=col,cumul=cumul)
-                }
-
-            } else { # if !sepStates
-                step <- stepData[[zoo]]
-                angle <- angleData[[zoo]]
-                message <- paste("Animal ID:",ID[zoo])
-
-                plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
-                         message=message,sepStates=sepStates,breaks=breaks,state=NULL,
-                         hist.ylim=hist.ylim,col=col,cumul=cumul)
-            }
-        }
-    } else { # if !sepAnimals
-        if(sepStates) {
-
-            # loop over the states
-            for(state in 1:nbStates) {
-                step <- stepData[which(states==state)]
-                angle <- angleData[which(states==state)]
-                message <- paste("All animals - State:",state)
-
-                plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
-                         message=message,sepStates=sepStates,breaks=breaks,state=state,
-                         hist.ylim=hist.ylim,col=col,cumul=cumul)
-            }
-
-        } else { # if !sepStates
-            step <- stepData
-            angle <- angleData
-            message <- "All animals"
-
-            plotHist(step=step,angle=angle,stepDensities=stepDensities,angleDensities=angleDensities,
-                     message=message,sepStates=sepStates,breaks=breaks,state=NULL,
-                     hist.ylim=hist.ylim,col=col,cumul=cumul)
-        }
-    }
+    legend("top", legText, lwd = lwd, col = col, lty = lty, bty = "n")
 
     ##################################################
     ## Plot the t.p. as functions of the covariates ##
     ##################################################
     if(nbStates>1) {
         beta <- m$mle$beta
+
         if(nrow(beta)>1) {
             trProbs <- getPlotData(m, type = "tpm", format = "wide")
 
@@ -345,136 +276,4 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     par(mfrow=c(1,1))
     par(mar=c(5,4,4,2)+0.1) # bottom, left, top, right
     par(ask=FALSE)
-}
-
-# Plot histograms
-#
-# Plot histograms of steps and angles, and the fitted densities. This function is only
-# used in the function plot.moveHMM.
-#
-# Parameters:
-#  - step: list of series of steps if several animals, or series of steps otherwise.
-#    (e.g. step[[1]][3] is the 3rd step of the first animal)
-#  - angle: same as step, but for angles
-#  - stepDensities: list of matrices of values of the fitted densities. Each matrix has
-#    two columns, the first being the grid of values on which the density is estimated,
-#    and the second the values of the density.
-#  - angleDensities: same as stepDensities, but for angles.
-#  - message: message to print above the histograms
-#  - sepStates, breaks, hist.ylim: see arguments of plot.moveHMM.
-#  - state: if sepStates, this function needs to know which state needs to be plotted.
-#  - col: colors of the state-dependent density lines
-plotHist <- function (step,angle=NULL,stepDensities,angleDensities=NULL,message,
-                      sepStates,breaks="Sturges",state=NULL,hist.ylim=NULL,col=NULL,
-                      cumul=TRUE)
-{
-    # vertical limits
-    if(!is.null(hist.ylim)) {
-        ymin <- hist.ylim[1]
-        ymax <- hist.ylim[2]
-    } else {
-        ymin <- 0
-        ymax <- NA
-    }
-
-    if(!sepStates) {
-        nbStates <- length(stepDensities)
-
-        # text for legends
-        legText <- NULL
-        for(i in 1:nbStates)
-            legText <- c(legText,paste("State",i))
-
-        lty <- rep(1,nbStates)
-
-        # legend for cumulated density
-        if(cumul) {
-            legText <- c(legText,"Total")
-            col <- c(col,"black")
-            lty <- c(lty,2)
-        }
-
-    }
-
-    # determine ylim
-    if(is.null(hist.ylim)) { # default
-        h <- hist(step,plot=F,breaks=breaks)
-        ymax <- 1.3*max(h$density)
-
-        # find the maximum of the step densit-y-ies, and take it as ymax if necessary
-        if(sepStates) {
-            maxdens <- max(stepDensities[[state]][,2])
-            if(maxdens>ymax & maxdens<2*max(h$density))
-                ymax <- maxdens
-
-        } else {
-            maxdens <- max(stepDensities[[1]][,2])
-            if(nbStates>1) {
-                for(state in 2:nbStates) {
-                    if(max(stepDensities[[state]][,2])>maxdens)
-                        maxdens <- max(stepDensities[[state]][,2])
-                }
-            }
-            if(maxdens>ymax & maxdens<2*max(h$density))
-                ymax <- maxdens
-        }
-    }
-
-    # plot step histogram
-    hist(step,prob=T,main="",ylim=c(ymin,ymax),xlab="step length",
-         col="grey",border="white",breaks=breaks)
-
-    mtext(message,side=3,outer=TRUE,padj=2)
-
-    # plot step density over the histogram
-    if(sepStates)
-        lines(stepDensities[[state]],col=col[state],lwd=2)
-    else {
-        for(s in 1:nbStates)
-            lines(stepDensities[[s]],col=col[s],lwd=2)
-
-        # plot cumulated density
-        if(cumul) {
-            total <- stepDensities[[1]]
-            for(s in 2:nbStates)
-                total[,2] <- total[,2] + stepDensities[[s]][,2]
-            lines(total,lwd=2,lty=2)
-        }
-
-        legend("top",legText,lwd=rep(2,nbStates),col=col,lty=lty,bty="n")
-    }
-
-    if(!is.null(angle))  {
-        h <- hist(angle,plot=F,breaks=breaks) # to determine 'breaks'
-        breaks <- seq(-pi,pi,length=length(h$breaks))
-
-        h <- hist(angle,plot=F,breaks=breaks) # to determine 'ymax'
-        ymax <- 1.3*max(h$density)
-
-        # plot angle histogram
-        hist(angle,prob=T,main="",ylim=c(0,ymax),xlab="turning angle (radians)",
-             col="grey",border="white",breaks=breaks,xaxt="n")
-        axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
-             labels = expression(-pi, -pi/2, 0, pi/2, pi))
-
-        mtext(message,side=3,outer=TRUE,padj=2)
-
-        # plot angle density over the histogram
-        if(sepStates)
-            lines(angleDensities[[state]],col=col[state],lwd=2)
-        else {
-            for(s in 1:nbStates)
-                lines(angleDensities[[s]],col=col[s],lwd=2)
-
-            # plot cumulated density
-            if(cumul) {
-                total <- angleDensities[[1]]
-                for(s in 2:nbStates)
-                    total[,2] <- total[,2] + angleDensities[[s]][,2]
-                lines(total,lwd=2,lty=2)
-            }
-
-            legend("top",legText,lwd=rep(2,nbStates),col=col,lty=lty,bty="n")
-        }
-    }
 }
