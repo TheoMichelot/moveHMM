@@ -82,7 +82,7 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
         if(format == "long") {
             out$step <- data.frame(
                 step = out$step[,1],
-                density = unlist(out$step[,-1]),
+                density = unlist(out$step[,-1], use.names = FALSE),
                 state = rep(c(paste0("state ", 1:nbStates), "total"), each = nrow(out$step)))
         }
 
@@ -112,7 +112,7 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
         if(format == "long") {
             out$angle <- data.frame(
                 angle = out$angle[,1],
-                density = unlist(out$angle[,-1]),
+                density = unlist(out$angle[,-1], use.names = FALSE),
                 state = rep(c(paste0("state ", 1:nbStates), "total"), each = nrow(out$angle)))
         }
     } else if(type == "tpm") {
