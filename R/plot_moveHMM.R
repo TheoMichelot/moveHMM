@@ -11,14 +11,8 @@
 #' Default: \code{NULL}; all animals are plotted.
 #' @param ask If \code{TRUE}, the execution pauses between each plot.
 #' @param breaks Histogram parameter. See \code{hist} documentation.
-#' @param hist.ylim Parameter \code{ylim} for the step length histograms.
 #' See \code{hist} documentation. Default: \code{NULL} ; the function sets default values.
-#' @param sepAnimals If \code{TRUE}, the data is split by individuals in the histograms.
-#' Default: \code{FALSE}.
-#' @param sepStates If \code{TRUE}, the data is split by states in the histograms.
-#' Default: \code{FALSE}.
 #' @param col Vector or colors for the states (one color per state).
-#' @param cumul If \code{TRUE}, the sum of weighted densities is plotted (default).
 #' @param plotTracks If \code{TRUE}, the Viterbi-decoded tracks are plotted (default).
 #' @param plotCI If \code{TRUE}, confidence intervals are plotted on the transition
 #' probabilities (default: FALSE).
@@ -38,15 +32,14 @@
 #'
 #' plot(m,ask=TRUE,animals=1,breaks=20)
 #'
-#'
 #' @export
 #' @importFrom graphics legend lines segments arrows
 #' @importFrom grDevices gray
 #' @importFrom stats plogis qlogis
 #' @importFrom numDeriv grad
 
-plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL,sepAnimals=FALSE,
-                         sepStates=FALSE,col=NULL,cumul=TRUE,plotTracks=TRUE,plotCI=FALSE,alpha=0.95,...)
+plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col = NULL,
+                         plotTracks = TRUE, plotCI = FALSE, alpha = 0.95, ...)
 {
     m <- x # the name "x" is for compatibility with the generic method
     nbAnimals <- length(unique(m$data$ID))
@@ -55,9 +48,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
     stepFun <- paste("d",m$conditions$stepDist,sep="")
     if(m$conditions$angleDist!="none")
         angleFun <- paste("d",m$conditions$angleDist,sep="")
-
-    if(!is.null(hist.ylim) & length(hist.ylim)!=2)
-        stop("hist.ylim needs to be a vector of two values (ymin,ymax)")
 
     # prepare colors for the states (used in the maps and for the densities)
     if(!is.null(col) & length(col)!=nbStates) {
@@ -74,9 +64,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
         hues <- seq(15, 375, length = nbStates + 1)
         col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
     }
-
-    if(sepStates | nbStates<2)
-        cumul <- FALSE
 
     ######################
     ## Prepare the data ##
@@ -105,24 +92,6 @@ plot.moveHMM <- function(x,animals=NULL,ask=TRUE,breaks="Sturges",hist.ylim=NULL
 
     nbAnimals <- length(animalsInd)
     ID <- unique(m$data$ID)[animalsInd]
-
-    # split data by animals if necessary
-    if(sepAnimals) {
-        stepData <- list()
-        angleData <- list()
-        for(zoo in 1:nbAnimals) {
-            ind <- which(m$data$ID==ID[zoo])
-            stepData[[zoo]] <- m$data$step[ind]
-            angleData[[zoo]] <- m$data$angle[ind]
-        }
-    } else {
-        ind <- which(m$data$ID %in% ID)
-        stepData <- m$data$step[ind]
-        angleData <- m$data$angle[ind]
-    }
-
-    if(m$conditions$angleDist=="none")
-        angleData <- NULL
 
     x <- list()
     y <- list()
