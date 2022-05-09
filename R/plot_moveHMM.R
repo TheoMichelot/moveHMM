@@ -125,7 +125,7 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
             for(i in 1:nbStates) {
                 for(j in 1:nbStates) {
                     trName <- paste0("S", i, "toS", j)
-                    plot(trProbsCov[,cov], trProbsCov[,trName], type = "l",
+                    plot(trProbsCov[,1], trProbsCov[,trName], type = "l",
                          ylim = c(0, 1), xlab = names(trProbs)[cov],
                          ylab = paste(i, "->", j))
 
@@ -133,8 +133,8 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
                     if(plotCI) {
                         options(warn = -1) # to muffle "zero-length arrow..." warning
                         # plot the confidence intervals
-                        arrows(trProbsCov[,cov], trProbsCov[,paste0(trName, ".lci")],
-                               trProbsCov[,cov], trProbsCov[,paste0(trName, ".uci")],
+                        arrows(trProbsCov[,1], trProbsCov[,paste0(trName, ".lci")],
+                               trProbsCov[,1], trProbsCov[,paste0(trName, ".uci")],
                                length = 0.025, angle = 90, code = 3,
                                col = gray(0.5), lwd = 0.7)
                         options(warn = 1)
