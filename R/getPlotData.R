@@ -174,7 +174,60 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
             out[[colnames(rawCovs)[cov]]] <- tpmData
         }
     } else if(type == "stat") {
-        stop("the 'stat' option is not implemented yet")
+        ####################################
+        ## Stationary state probabilities ##
+        ####################################
+        beta <- m$mle$beta
+        if(nrow(beta) == 1) {
+            stop("No covariate effects")
+        }
+        rawCovs <- m$rawCovs
+        gridLength <- 100
+
+        # loop over covariates
+        for(cov in 1:ncol(m$rawCovs)) {
+            inf <- min(rawCovs[,cov], na.rm = TRUE)
+            sup <- max(rawCovs[,cov], na.rm = TRUE)
+
+            # mean values of each covariate
+            meanCovs <- colMeans(rawCovs)
+
+            # set all covariates to their mean, except for "cov"
+            # (which takes a grid of values from inf to sup)
+            tempCovs <- as.data.frame(matrix(rep(meanCovs, each = gridLength),
+                                             nrow = gridLength))
+            tempCovs[,cov] <- seq(inf, sup, length = gridLength)
+            colnames(tempCovs) <- colnames(rawCovs)
+
+            # Transition probabilities on covariate grid
+            stat <- predictStationary(m = m, newData = tempCovs,
+                                       returnCI = TRUE, alpha = 0.95)
+
+            # all transition probabilities in the right order for formatting below
+            statVec <- unlist(stat, use.names = FALSE)
+
+            if(format == "wide") {
+                # wide format: one column for covariate, one column for each prob,
+                # one column for each lower bound, one column for each upper bound
+                plotData <- matrix(c(tempCovs[,cov], statVec),
+                                  nrow = nrow(tempCovs))
+                colnames(plotData) <- c(
+                    colnames(rawCovs)[cov],
+                    paste0("S", rep(1:nbStates, 3),
+                           rep(c("", ".lci", ".uci"), each = nbStates)))
+                plotData <- as.data.frame(plotData)
+            } else if(format == "long") {
+                # long format: one column for covariate, one column for mle,
+                # one column for lower bound, one column for upper bound, and
+                # one column for state
+                plotData <- as.data.frame(matrix(
+                    c(rep(tempCovs[,cov], nbStates), statVec), ncol = 4))
+                colnames(plotData) <- c(colnames(rawCovs)[cov], "mle", "lci", "uci")
+                plotData$state <- rep(1:nbStates, each = nrow(tempCovs))
+            }
+
+            out[[colnames(rawCovs)[cov]]] <- plotData
+        }
     }
 
     return(out)
