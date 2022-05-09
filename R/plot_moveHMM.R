@@ -39,42 +39,30 @@
 #' @importFrom numDeriv grad
 
 plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col = NULL,
-                         plotTracks = TRUE, plotCI = FALSE, alpha = 0.95, ...)
-{
+                         plotTracks = TRUE, plotCI = FALSE, alpha = 0.95, ...) {
     m <- x # the name "x" is for compatibility with the generic method
     nbStates <- ncol(m$mle$stepPar)
 
     # prepare colours for the states (used in the maps and for the densities)
-    if(!is.null(col) & length(col)!=nbStates) {
-        warning("Length of 'col' should be equal to number of states - argument ignored")
-        col <- NULL
-    }
-    if(is.null(col)) {
-        if(nbStates <= 8) {
-            # color-blind friendly palette
-            pal <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-            col <- pal[1:nbStates]
-        } else {
-            # to make sure that all colours are distinct (emulate ggplot default palette)
-            hues <- seq(15, 375, length = nbStates + 1)
-            col <- hcl(h = hues, l = 65, c = 100)[1:nbStates]
-        }
+    if(is.null(col) | (!is.null(col) & length(col) != nbStates)) {
+        col <- getPalette(nbStates = nbStates)
     }
 
-    ##################################
-    ## States decoding with Viterbi ##
-    ##################################
-    if(nbStates>1) {
+    #################################
+    ## State decoding with Viterbi ##
+    #################################
+    if(nbStates > 1) {
         cat("Decoding states sequence... ")
         states <- viterbi(m)
         cat("DONE\n")
-    } else
+    } else {
         states <- rep(1,nrow(m$data))
+    }
 
     ########################################
     ## Plot state-dependent distributions ##
     ########################################
-    par(mar=c(5, 4, 4, 2) - c(0, 0, 2, 1)) # bottom, left, top, right
+    par(mar = c(5, 4, 4, 2) - c(0, 0, 2, 1)) # bottom, left, top, right
     par(ask = ask)
 
     distData <- getPlotData(mod, type = "dist")
