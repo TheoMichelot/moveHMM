@@ -65,13 +65,13 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
     par(mar = c(5, 4, 4, 2) - c(0, 0, 2, 1)) # bottom, left, top, right
     par(ask = ask)
 
-    distData <- getPlotData(mod, type = "dist")
+    distData <- getPlotData(m = m, type = "dist")
 
     # setup line options
     legText <- c(paste("state", 1:nbStates), "total")
     lty <- c(rep(1, nbStates), 2)
     lwd <- c(rep(1, nbStates), 2)
-    col <- c(pal[1:nbStates], "black")
+    lineCol <- c(col, "black")
 
     # define ymax for step histogram
     h <- hist(m$data$step, plot = FALSE, breaks = breaks)
@@ -86,10 +86,10 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
          xlab = "step length", col = "lightgrey", border = "white",
          breaks = breaks)
     for(i in 1:(nbStates + 1)) {
-        lines(distData$step$step, distData$step[,i+1], col = col[i],
+        lines(distData$step$step, distData$step[,i+1], col = lineCol[i],
               lty = lty[i], lwd = lwd[i])
     }
-    legend("top", legText, lwd = lwd, col = col, lty = lty, bty = "n")
+    legend("top", legText, lwd = lwd, col = lineCol, lty = lty, bty = "n")
 
     # define ymax and breaks for angle histogram
     h1 <- hist(m$data$angle, plot = FALSE, breaks = breaks)
@@ -104,10 +104,10 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
     axis(1, at = c(-pi, -pi/2, 0, pi/2, pi),
          labels = expression(-pi, -pi/2, 0, pi/2, pi))
     for(i in 1:(nbStates + 1)) {
-        lines(distData$angle$angle, distData$angle[,i+1], col = col[i],
+        lines(distData$angle$angle, distData$angle[,i+1], col = lineCol[i],
               lty = lty[i], lwd = lwd[i])
     }
-    legend("top", legText, lwd = lwd, col = col, lty = lty, bty = "n")
+    legend("top", legText, lwd = lwd, col = lineCol, lty = lty, bty = "n")
 
     ##################################################
     ## Plot the t.p. as functions of the covariates ##
