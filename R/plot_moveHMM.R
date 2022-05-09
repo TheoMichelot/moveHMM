@@ -61,35 +61,6 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
         }
     }
 
-    ######################
-    ## Prepare the data ##
-    ######################
-    nbAnimals <- length(unique(m$data$ID))
-    if(is.character(animals)) {
-        if(any(!animals %in% unique(m$data$ID))) {
-            stop("Check 'animals' argument, ID not found")
-        }
-        animalsInd <- which(unique(m$data$ID) %in% animals)
-    } else if(is.numeric(animals)) {
-        if(min(animals) < 1 | max(animals) > nbAnimals) {
-            stop("Check 'animals' argument, index out of bounds")
-        }
-        animalsInd <- animals
-    } else {
-        animalsInd <- 1:nbAnimals
-    }
-
-    nbAnimals <- length(animalsInd)
-    ID <- unique(m$data$ID)[animalsInd]
-
-    x <- list()
-    y <- list()
-    for(zoo in 1:nbAnimals) {
-        ind <- which(m$data$ID==ID[zoo])
-        x[[zoo]] <- m$data$x[ind]
-        y[[zoo]] <- m$data$y[ind]
-    }
-
     ##################################
     ## States decoding with Viterbi ##
     ##################################
@@ -190,45 +161,56 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
     #################################
     ## Plot maps colored by states ##
     #################################
+    # Prepare the data
+    nbAnimals <- length(unique(m$data$ID))
+    if(is.character(animals)) {
+        if(any(!animals %in% unique(m$data$ID))) {
+            stop("Check 'animals' argument, ID not found")
+        }
+        animalsInd <- which(unique(m$data$ID) %in% animals)
+    } else if(is.numeric(animals)) {
+        if(min(animals) < 1 | max(animals) > nbAnimals) {
+            stop("Check 'animals' argument, index out of bounds")
+        }
+        animalsInd <- animals
+    } else {
+        animalsInd <- 1:nbAnimals
+    }
+    nbAnimals <- length(animalsInd)
+    ID <- unique(m$data$ID)[animalsInd]
+
     if(nbStates>1 & plotTracks) { # no need to plot the map if only one state
-        par(mfrow=c(1,1))
-        par(mar=c(5,4,4,2)-c(0,0,2,1)) # bottom, left, top, right
+        par(mfrow = c(1, 1))
+        par(mar = c(5, 4, 4, 2) - c(0, 0, 2, 1)) # bottom, left, top, right
 
         for(zoo in 1:nbAnimals) {
-            # states for animal 'zoo'
-            subStates <- states[which(m$data$ID==ID[zoo])]
+            # data for this animal
+            ind <- which(m$data$ID == ID[zoo])
+            s <- states[ind]
+            x <- m$data$x[ind]
+            y <- m$data$y[ind]
 
-            if(!all(y[[zoo]]==0)) { # if 2D data
-
-                plot(x[[zoo]],y[[zoo]],pch=16,col=col[subStates],cex=0.5,asp=1,
-                     xlab="x",ylab="y")
-                segments(x0=x[[zoo]][-length(x[[zoo]])], y0=y[[zoo]][-length(y[[zoo]])],
-                         x1=x[[zoo]][-1], y1=y[[zoo]][-1],
-                         col=col[subStates[-length(subStates)]],lwd=1.3)
-
+            # slightly different for 2D and 1D data
+            if(!all(y == 0)) {
+                plot(x, y, pch = 16, col = col[s], cex = 0.5, asp = 1,
+                     xlab = "x", ylab = "y")
+                segments(x0 = x[-length(x)], y0 = y[-length(y)],
+                         x1 = x[-1], y1 = y[-1],
+                         col = col[s[-length(s)]], lwd = 1.3)
             } else { # if 1D data
-
-                ymin <- min(x[[zoo]],na.rm=T)
-                ymax <- max(x[[zoo]],na.rm=T)
-
-                # first point
-                plot(x[[zoo]][1], lwd=1.3, xlim=c(1,length(x[[zoo]])), ylim=c(ymin,ymax),
-                     xlab="time", ylab="x", pch=18, col=col[subStates[1]])
-
-                # trajectory
-                for(i in 2:length(x[[zoo]])) {
-                    points(i,x[[zoo]][i],pch=16,col=col[subStates[i-1]],cex=0.5)
-                    segments(x0=i-1,y0=x[[zoo]][i-1],x1=i,y1=x[[zoo]][i],
-                             col=col[subStates[i-1]],lwd=1.3)
-                }
+                plot(x, xlab = "time", ylab = "x", pch = 16,
+                     cex = 0.5, col = col[s])
+                segments(x0 = 1:(length(x) - 1), y0 = x[-length(x)],
+                         x1 = 2:length(x), y1 = x[-1],
+                         col = col[s[-length(x)]], lwd = 1.3)
             }
 
-            mtext(paste("Animal ID:",ID[zoo]),side=3,outer=TRUE,padj=2)
+            mtext(paste("Animal ID:", ID[zoo]), side = 3, outer = TRUE, padj = 2)
         }
     }
 
     # set the graphical parameters back to default
-    par(mfrow=c(1,1))
-    par(mar=c(5,4,4,2)+0.1) # bottom, left, top, right
-    par(ask=FALSE)
+    par(mfrow = c(1, 1))
+    par(mar = c(5, 4, 4, 2) + 0.1) # bottom, left, top, right
+    par(ask = FALSE)
 }
