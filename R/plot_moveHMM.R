@@ -153,43 +153,37 @@ plot.moveHMM <- function(x, animals = NULL, ask = TRUE, breaks = "Sturges", col 
     ##################################################
     ## Plot the t.p. as functions of the covariates ##
     ##################################################
-    if(nbStates>1) {
-        beta <- m$mle$beta
+    beta <- m$mle$beta
+    if(nbStates > 1 & nrow(beta) > 1) {
+        trProbs <- getPlotData(m, type = "tpm", format = "wide")
 
-        if(nrow(beta)>1) {
-            par(mfrow = c(nbStates, nbStates))
-            par(mar = c(5, 4, 4, 2) - c(0, 0, 1.5, 1)) # bottom, left, top, right
+        # loop over covariates
+        par(mfrow = c(nbStates, nbStates))
+        par(mar = c(5, 4, 4, 2) - c(0, 0, 1.5, 1)) # bottom, left, top, right
+        for(cov in 1:ncol(m$rawCovs)) {
+            trProbsCov <- trProbs[[cov]]
+            # loop over entries of the transition probability matrix
+            for(i in 1:nbStates) {
+                for(j in 1:nbStates) {
+                    trName <- paste0("S", i, "toS", j)
+                    plot(trProbsCov[,cov], trProbsCov[,trName], type = "l",
+                         ylim = c(0, 1), xlab = names(trProbs)[cov],
+                         ylab = paste(i, "->", j))
 
-            trProbs <- getPlotData(m, type = "tpm", format = "wide")
-
-            # loop over covariates
-            par(mfrow=c(nbStates,nbStates))
-            par(mar=c(5,4,4,2)-c(0,0,1.5,1)) # bottom, left, top, right
-            for(cov in 1:ncol(m$rawCovs)) {
-                trProbsCov <- trProbs[[cov]]
-                # loop over entries of the transition probability matrix
-                for(i in 1:nbStates) {
-                    for(j in 1:nbStates) {
-                        trName <- paste0("S", i, "toS", j)
-                        plot(trProbsCov[,cov], trProbsCov[,trName], type = "l",
-                             ylim = c(0, 1), xlab = names(trProbs)[cov],
-                             ylab = paste(i, "->", j))
-
-                        # derive confidence intervals using the delta method
-                        if(plotCI) {
-                            options(warn = -1) # to muffle "zero-length arrow..." warning
-                            # plot the confidence intervals
-                            arrows(trProbsCov[,cov], trProbsCov[,paste0(trName, ".lci")],
-                                   trProbsCov[,cov], trProbsCov[,paste0(trName, ".uci")],
-                                   length = 0.025, angle = 90, code = 3,
-                                   col = gray(0.5), lwd = 0.7)
-                            options(warn = 1)
-                        }
+                    # derive confidence intervals using the delta method
+                    if(plotCI) {
+                        options(warn = -1) # to muffle "zero-length arrow..." warning
+                        # plot the confidence intervals
+                        arrows(trProbsCov[,cov], trProbsCov[,paste0(trName, ".lci")],
+                               trProbsCov[,cov], trProbsCov[,paste0(trName, ".uci")],
+                               length = 0.025, angle = 90, code = 3,
+                               col = gray(0.5), lwd = 0.7)
+                        options(warn = 1)
                     }
                 }
-
-                mtext("Transition probabilities", side = 3, outer = TRUE, padj = 2)
             }
+
+            mtext("Transition probabilities", side = 3, outer = TRUE, padj = 2)
         }
     }
 
