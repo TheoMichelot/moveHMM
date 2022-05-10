@@ -1,0 +1,217 @@
+---
+title: "**moveHMM workflow: wild haggis analysis**"
+author: "Théo Michelot"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    number_sections: yes
+  bookdown::pdf_document2:
+    toc: false
+  html_document:
+    number_sections: yes
+bibliography: refs.bib
+vignette: >
+  %\VignetteIndexEntry{smoothSDE vignette}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+tables: true
+header-includes:
+  \renewcommand{\baselinestretch}{1.2}
+fontsize: 12pt
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, error = FALSE, warning = FALSE,
+  comment = NA
+)
+```
+
+```{r load-package, echo = FALSE}
+library(moveHMM)
+library(ggplot2)
+set.seed(342)
+theme_set(theme_minimal())
+```
+
+This vignette briefly describes the workflow of a typical analysis in moveHMM, including data preparation, model specification, model fitting, and visualisation of results. As an example, we use the data set of 15 wild haggises (\emph{Haggis scoticus}; Figure \ref{fig:haggis}) from @michelot2016. This vignette is only meant to be used as an example to learn about the functionalities of moveHMM, but please consult another source for more technical details (e.g., @michelot2016, @langrock2012, @zucchini2016).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{haggis}
+    \caption{Wild haggis (\emph{Haggis scoticus})}
+    \label{fig:haggis}
+\end{figure}
+
+# Data preparation
+
+We download the data set from the supplementary material of @michelot2016, and save it as a data frame. This data set is already in the format expected by moveHMM, with columns:
+
+- `ID`: an identifier for the track/individual;
+
+- `x`: Easting or longitude coordinate;
+
+- `y`: Northing or latitude coordinate.
+
+These three variables are required, and should have these names. The other two columns, `slope` and `temp`, are covariates that will be included in the analysis later.
+
+```{r get-data}
+URL <- paste0("https://besjournals.onlinelibrary.wiley.com/",
+              "action/downloadSupplement?doi=10.1111%2F2041-",
+              "210X.13066&file=mee313066-sup-0001-rawhaggises.csv")
+raw <- read.csv(url(URL))[1:800,]
+
+head(raw)
+```
+
+The standard HMMs used in movement ecology, and implemented in this package, model step lengths and turning angles. The first step of the analysis is therefore to derive those variables from the observed locations. This can be done using the function `prepData`; here, we specify `type = "UTM"` to indicate that the locations are already projected (rather than longitude-latitude locations).
+
+```{r prep-data}
+data <- prepData(raw, type = "UTM")
+
+head(data)
+```
+
+The output data frame has two new columns: `step` (step lengths), and `angle` (turning angle).
+
+# Model fitting
+
+In moveHMM, the models are fitted using the function `fitHMM`. It implements maximum likelihood estimation, using the numerical optimiser `nlm`. The likelihood function captures how plausible the data are, given a set of parameters, and `nlm` explores the space of parameter values to find the one that maximise the likelihood. For this reason, it is necessary to choose initial parameter values, from where `nlm` can start its exploration, and these are specified using the `stepPar0` and `anglePar0` arguments in `fitHMM`. The choice of starting values can affect the performance of the optimiser, and in some cases its ability to find the maximum likelihood estimates. Some guidance on how to choose those values is provided in another vignette, called "A short guide to choosing initial parameter values for the estimation in moveHMM". In summary, one approach is to look at the empirical distributions of step lengths and turning angles, to make an educated guess about what parameter values are plausible.
+
+In the following, we consider a 2-state HMM where, in each state, a gamma distribution models step length, and a von Mises distribution models turning angle. In moveHMM, the gamma distribution is specified in terms of a mean and standard deviation, and we pick some initial values based on the histogram of observed step lengths. The von Mises distribution has a mean and a concentration parameter, and reasonable starting values can be chosen based on a histogram of observed turning angles. Please refer to the dedicated vignette for more guidance about selecting initial parameters.
+
+```{r init-par}
+hist(data$step, xlab = "step length")
+hist(data$angle, breaks = seq(-pi, pi, length = 15), xlab = "turning angle")
+
+stepPar0 <- c(1, 5, 1, 5)
+anglePar0 <- c(pi, 0, 0.3, 5)
+```
+
+We can fit the model using `fitHMM`, with arguments `nbStates` (number of states), `stepPar0` (initial step length parameters), and `anglePar0` (initial turning angle parameters). By default, the function uses the gamma and von Mises distributions, so we don't need to specify them here, but the arguments `stepDist` and `angleDist` could be included to use different distributions.
+
+```{r fit-mod1}
+mod1 <- fitHMM(data = data, nbStates = 2, 
+               stepPar0 = stepPar0, anglePar0 = anglePar0)
+
+mod1
+```
+
+The object returned by `fitHMM` is a list that contains, among other things, estimates of all model parameters. Those are automatically shown in a convenient layout when the model object is printed, but they can also be accessed as `mod1$mle`.
+
+Note that the parameter estimates are pooled across individuals; i.e., a common model is fitted to all tracks in the data set. This is based on the assumption that all animals follow similar movement patterns, and parameters can then be viewed as an average across individuals. In cases where this assumption doesn't hold, one option is to include individual-specific covariates on the transition probabilities, to capture some of the inter-individual heterogeneity. (See section on covariates below.)
+
+# Model visualisation
+
+To understand and interpret a fitted model, it is often helpful to visualise it. The `plot` function can be called on the model object to generate a few plots, including:
+
+- histograms of the step lengths, overlaid with estimated distributions in each state. This is helpful to check whether the fitted distributions match the data well, and to interpret each state (e.g., does state 1 capture long or short step lengths? how variable are step lengths in state 2?).
+
+- histograms of the turning angles, overlaid with estimated distributions in each state.
+
+- plots of the movement tracks, coloured by estimated state. This provides useful information about where an when animals followed each movement type, what movement patterns were captured in each state, etc.
+
+```{r plot-mod1}
+plot(mod1, ask = FALSE, animals = 1)
+```
+
+The first state captures short step lengths (mostly between 0 and 2 km) and undirected movement (flat distribution of turning angles), whereas the second state captures long step lengths (between 0 and 15 km) and directed movement (peak of turning angles at zero). In practice, these two states might therefore be used as proxies for two different behavioural states.
+
+# State process inference
+
+As shows in the plots above, it is possible to estimate a state for each observation, which is often of great applied interest. The most common way to do this is to use the Viterbi algorithm. The function `viterbi` returns a sequence of states (i.e., vector of numbers between 1 and `nbStates`), and these can for example be used to generate plots of the tracks, or of the step lengths, coloured by the most likely state sequence.
+
+```{r viterbi}
+# Add most likely state sequence to data
+data$state <- factor(viterbi(mod1))
+
+# Plot tracks coloured by state
+ggplot(data, aes(x, y, col = state, group = ID)) + 
+    geom_path() +
+    coord_equal()
+# Plot step lengths coloured by state
+ggplot(data, aes(x = 1:nrow(data), y = step, col = state, group = ID)) + 
+    geom_point(size = 0.3)
+```
+
+An alternative to the Viterbi algorithm is to compute state probabilities, i.e., the probability of being in each state for each observation in the data. State probabilities provide more detailed information about the uncertainty on the state allocation, and they can be computed with the function `stateProbs`. The output is a matrix with one column for each state and one row for each observation.
+
+```{r state-probs}
+sp <- stateProbs(m = mod1)
+head(sp)
+
+# Add prob of state 1 to data set
+data$sp1 <- sp[,1]
+ggplot(data, aes(x, y, col = sp1, group = ID)) +
+    geom_path() +
+    coord_equal() +
+    labs(col = "Pr(S = 1)")
+```
+
+# Covariates
+
+HMMs have been extended to allow for covariate effects on the transition probabilities. This approach is often interesting to answer ecological questions of the form "does [some covariate] have an effect on the animal's behaviour?".
+
+We model the haggises' transition probabilities as functions of two covariates: temperature, and slope. We expect a non-linear effect of slope, so we include a quadratic term for that covariate. The model formula can be specified using the usual R syntax, and passed through the argument `formula` in `fitHMM`. The other arguments are unchanged.
+
+```{r fit-mod2}
+mod2 <- fitHMM(data = data, nbStates = 2, 
+               stepPar0 = stepPar0, anglePar0 = anglePar0, 
+               formula = ~ temp + slope + I(slope^2))
+```
+
+Plotting the model now also returns plots of the transition probabilities over a grid of values of each covariate (with 95\% pointwise confidence intervals if `plotCI = TRUE`). In this example, it looks like there is no clear effect of temperature, but a clear effect of slope. The probability of remaining in state 2 (or of switching from state 1 to state 2) is highest when the slope is between 10 and 30 degrees, suggesting that wild haggises move faster in that range of slopes. (See @michelot2016 for more details about the interpretation, but it has to do with their morphology.)
+
+```{r plot-mod2}
+plot(mod2, ask = FALSE, plotTracks = FALSE, plotCI = TRUE)
+```
+
+Another useful output to interpret covariate effects is the stationary state probabilities. These capture the probability of being in each state over the long term, and they can be derived for a grid of covariate values to assess how animals' activity budget depends on a covariate. The probabilities can be computed with `stationary`, and plotted with `plotStationary`. The stationary state probabilities make it even clearer that haggises tend to spend time in state 2 when the slope is between 10 and 30, but are likely to be in state 1 for small or large slope values.
+
+```{r plot-stat}
+plotStationary(mod2, plotCI = TRUE)
+```
+
+Models can be compared using the `AIC` function, for example to decide whether or not to keep a covariate. Here, the model with covariate is strongly preferred by AIC. 
+
+```{r aic}
+AIC(mod1, mod2)
+```
+
+# Custom plots
+
+The function `getPlotData` creates data frames in a format that is convenient for creating custom plots of the model, including state-dependent distributions (`type = "dist"`), transition probabilities (`type = "tpm"`), and stationary state probabilities (`type = "stat"`). The option `format` specifies whether the data frame should be wide (typically for base R plots) or long (typically for ggplot). With this, we can recreate the plot of transition probabilities shown above, in ggplot.
+
+```{r plot-tpm}
+# Plot of transition probs as function of slope
+plotData1 <- getPlotData(m = mod2, type = "tpm", format = "long")
+ggplot(plotData1$slope, aes(slope, mle)) + 
+    facet_wrap("prob") +
+    geom_line() +
+    geom_ribbon(aes(ymin = lci, ymax = uci), alpha = 0.3) +
+    labs(y = "transition probability")
+```
+
+Similarly, we can create a plot of stationary state probabilities as functions of slope.
+
+```{r plot-stat}
+# Plot of stationary state probs as function of slope
+plotData2 <- getPlotData(m = mod2, type = "stat", format = "long")
+ggplot(plotData2$slope, aes(slope,  mle, col = factor(state))) + 
+    geom_line() +
+    geom_ribbon(aes(ymin = lci, ymax = uci, col = NULL,
+                    fill = factor(state)), alpha = 0.3) +
+    labs(fill = "state", col = "state", y = "stationary state probabilities")
+```
+
+# Advanced features 
+
+## predict functions
+
+## knownStates
+
+## fit = FALSE
+
+# References
