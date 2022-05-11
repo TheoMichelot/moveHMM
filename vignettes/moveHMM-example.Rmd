@@ -11,7 +11,7 @@ output:
     number_sections: yes
 bibliography: refs.bib
 vignette: >
-  %\VignetteIndexEntry{smoothSDE vignette}
+  %\VignetteIndexEntry{Wild haggis example analysis}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
