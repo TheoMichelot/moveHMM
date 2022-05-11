@@ -5,10 +5,6 @@ date: "`r Sys.Date()`"
 output:
   pdf_document:
     number_sections: yes
-  bookdown::pdf_document2:
-    toc: false
-  html_document:
-    number_sections: yes
 bibliography: refs.bib
 vignette: >
   %\VignetteIndexEntry{Wild haggis example analysis}
