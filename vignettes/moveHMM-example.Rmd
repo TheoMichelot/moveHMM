@@ -45,6 +45,7 @@ This vignette briefly describes the workflow of a typical analysis in moveHMM, i
     \label{fig:haggis}
 \end{figure}
 
+\newpage
 # Data preparation
 
 We download the data set from the supplementary material of @michelot2016, and save it as a data frame. This data set is already in the format expected by moveHMM, with columns:
@@ -82,7 +83,7 @@ In moveHMM, the models are fitted using the function `fitHMM`. It implements max
 
 In the following, we consider a 2-state HMM where, in each state, a gamma distribution models step length, and a von Mises distribution models turning angle. In moveHMM, the gamma distribution is specified in terms of a mean and standard deviation, and we pick some initial values based on the histogram of observed step lengths. The von Mises distribution has a mean and a concentration parameter, and reasonable starting values can be chosen based on a histogram of observed turning angles. Please refer to the dedicated vignette for more guidance about selecting initial parameters.
 
-```{r init-par}
+```{r init-par, fig.width = 6, fig.height = 4, out.width="49%", fig.align = "center", fig.show="hold"}
 hist(data$step, xlab = "step length")
 hist(data$angle, breaks = seq(-pi, pi, length = 15), xlab = "turning angle")
 
@@ -113,7 +114,7 @@ To understand and interpret a fitted model, it is often helpful to visualise it.
 
 - plots of the movement tracks, coloured by estimated state. This provides useful information about where an when animals followed each movement type, what movement patterns were captured in each state, etc.
 
-```{r plot-mod1}
+```{r plot-mod1, fig.width = 5, fig.height = 4, out.width="49%", fig.align = "center", fig.show="hold"}
 plot(mod1, ask = FALSE, animals = 1)
 ```
 
@@ -123,7 +124,7 @@ The first state captures short step lengths (mostly between 0 and 2 km) and undi
 
 As shows in the plots above, it is possible to estimate a state for each observation, which is often of great applied interest. The most common way to do this is to use the Viterbi algorithm. The function `viterbi` returns a sequence of states (i.e., vector of numbers between 1 and `nbStates`), and these can for example be used to generate plots of the tracks, or of the step lengths, coloured by the most likely state sequence.
 
-```{r viterbi}
+```{r viterbi, fig.width = 6, fig.height = 4, out.width="49%", fig.align = "center", fig.show="hold"}
 # Add most likely state sequence to data
 data$state <- factor(viterbi(mod1))
 
@@ -138,7 +139,7 @@ ggplot(data, aes(x = 1:nrow(data), y = step, col = state, group = ID)) +
 
 An alternative to the Viterbi algorithm is to compute state probabilities, i.e., the probability of being in each state for each observation in the data. State probabilities provide more detailed information about the uncertainty on the state allocation, and they can be computed with the function `stateProbs`. The output is a matrix with one column for each state and one row for each observation.
 
-```{r state-probs}
+```{r state-probs, fig.width = 6, fig.height = 4, out.width="60%", fig.align = "center"}
 sp <- stateProbs(m = mod1)
 head(sp)
 
@@ -164,13 +165,13 @@ mod2 <- fitHMM(data = data, nbStates = 2,
 
 Plotting the model now also returns plots of the transition probabilities over a grid of values of each covariate (with 95\% pointwise confidence intervals if `plotCI = TRUE`). In this example, it looks like there is no clear effect of temperature, but a clear effect of slope. The probability of remaining in state 2 (or of switching from state 1 to state 2) is highest when the slope is between 10 and 30 degrees, suggesting that wild haggises move faster in that range of slopes. (See @michelot2016 for more details about the interpretation, but it has to do with their morphology.)
 
-```{r plot-mod2}
+```{r plot-mod2, fig.width = 6, fig.height = 4, out.width="49%", fig.align = "center", fig.show="hold"}
 plot(mod2, ask = FALSE, plotTracks = FALSE, plotCI = TRUE)
 ```
 
 Another useful output to interpret covariate effects is the stationary state probabilities. These capture the probability of being in each state over the long term, and they can be derived for a grid of covariate values to assess how animals' activity budget depends on a covariate. The probabilities can be computed with `stationary`, and plotted with `plotStationary`. The stationary state probabilities make it even clearer that haggises tend to spend time in state 2 when the slope is between 10 and 30, but are likely to be in state 1 for small or large slope values.
 
-```{r plot-stat}
+```{r plot-stat, fig.width = 6, fig.height = 4, out.width="49%", fig.align = "center", fig.show="hold"}
 plotStationary(mod2, plotCI = TRUE)
 ```
 
@@ -180,11 +181,23 @@ Models can be compared using the `AIC` function, for example to decide whether o
 AIC(mod1, mod2)
 ```
 
+# Model checking
+
+A chosen HMM formulation rests on many assumptions, including the number of states, the types of distributions used for step length and turning angle, and the dependence structure of the data-generating process. Visual inspection of the model outputs (e.g., fitted distributions) is a first step to check whether it seems to capture features in the data well. Pseudo-residuals are another tool to assess goodness-of-fit in HMMs. Similarly to residuals in linear models, they should be independent and follow a standard normal distribution if all model assumptions were satisfied. Deviations from these patterns suggest lack of fit.
+
+Pseudo-residuals can be computed with `pseudoRes`, which returns a vector for step lengths and one for turning angles. The function `plotPR` creates three plots of the pseudo-residuals for each data variable: a time series plot, a quantile-quantile (QQ) plot against the standard normal distribution, and an autocorrelation function (ACF) plot.
+
+```{r plot-pr, fig.width = 5, fig.height = 5, out.width="60%", fig.align = "center", fig.show="hold"}
+plotPR(mod2)
+```
+
+In the QQ plot, deviations from the diagonal line suggest that the estimated distributions do not capture the empirical distribution of the corresponding variable. Here, the points are aligned on the diagonal, indicating that the fit is good. The ACF plots can be used to detect residual autocorrelation (bars that stretch beyond the confidence band around zero). In this case, the ACF is virtually zero, suggesting that the dependence assumptions of the model are satisfied.
+
 # Custom plots
 
 The function `getPlotData` creates data frames in a format that is convenient for creating custom plots of the model, including state-dependent distributions (`type = "dist"`), transition probabilities (`type = "tpm"`), and stationary state probabilities (`type = "stat"`). The option `format` specifies whether the data frame should be wide (typically for base R plots) or long (typically for ggplot). With this, we can recreate the plot of transition probabilities shown above, in ggplot.
 
-```{r plot-tpm}
+```{r plot-tpm, fig.width = 6, fig.height = 4, out.width="60%", fig.align = "center"}
 # Plot of transition probs as function of slope
 plotData1 <- getPlotData(m = mod2, type = "tpm", format = "long")
 ggplot(plotData1$slope, aes(slope, mle)) + 
@@ -196,7 +209,7 @@ ggplot(plotData1$slope, aes(slope, mle)) +
 
 Similarly, we can create a plot of stationary state probabilities as functions of slope.
 
-```{r plot-stat}
+```{r plot-stat-2, fig.width = 6, fig.height = 4, out.width="60%", fig.align = "center"}
 # Plot of stationary state probs as function of slope
 plotData2 <- getPlotData(m = mod2, type = "stat", format = "long")
 ggplot(plotData2$slope, aes(slope,  mle, col = factor(state))) + 
@@ -206,12 +219,38 @@ ggplot(plotData2$slope, aes(slope,  mle, col = factor(state))) +
     labs(fill = "state", col = "state", y = "stationary state probabilities")
 ```
 
-# Advanced features 
+# Other features 
 
-## predict functions
+## `predict` functions
 
-## knownStates
+The functions `predictTPM` and `predictStationary` compute the transition probabilities (or stationary state probabilities) for a data frame of covariate values passed as input, possibly with confidence intervals. For example, let's say we want to predict the transition probability matrix for temp = 0 and slope = 17.
 
-## fit = FALSE
+```{r pred-tpm}
+new_data <- data.frame(temp = 0, slope = 17)
+new_data
+
+tpm <- predictTPM(m = mod2, newData = new_data, returnCI = TRUE)
+tpm
+```
+
+The element `mle` ("maximum likelihood estimate") is the estimate, and `lci` and `uci` are the bounds of the confidence interval.
+
+## `knownStates`
+
+The argument `knownStates` of `fitHMM` can be used to fix states that are known a priori. This can be useful in cases where some observations have been classified into behaviours a priori, and the problem of interest is to classify other points into those states. The models are then semi-supervised, because we are giving some information to the model about what the states should be (rather than letting them be completely data-driven).
+
+In practice, `knownStates` should be a vector of same length as the data, where each element is either NA (if the state is not known at that time step), or a number between 1 and `nbStates` (when the state is known).
+
+## `fit = FALSE`
+
+It is sometimes useful to create a model without fitting it. For example, we may fit a model on one data set, and then wish to use that model to estimate the state sequence of another data set. This is possible using the option `fit = FALSE` in `fitHMM`. Specifically, we can follow these steps:
+
+1. Fit a model to the first data set in the conventional way (as described previously).
+
+2. Create a model for the second data set using `fitHMM` with `fit = FALSE`, passing the estimated parameters of the previous model as starting values.
+
+3. Use `viterbi` (or `stateProbs`) on the second model.
+
+This procedure might be helpful for data exploration, or in cases where the full data set is very large and it is only possible to fit a model to a subset.
 
 # References
