@@ -8,20 +8,15 @@ Get started with the vignette: [Guide to using moveHMM](https://CRAN.R-project.o
 ## Installation instructions
 
 ### Stable release
-The package is available on [CRAN](https://CRAN.R-project.org/package=moveHMM). To install it from CRAN, you can use the following commands:
+The package is available on [CRAN](https://CRAN.R-project.org/package=moveHMM). To install it from CRAN, you can use the following command:
 ``` R
-# install dependencies
-install.packages(c("Rcpp","RcppArmadillo","sp","CircStats"))
-# install moveHMM
 install.packages("moveHMM")
 ```
 
 ### Install from Github
 To install the latest (**unstable**) version of the package from Github:
 ``` R
-install.packages(c("Rcpp","RcppArmadillo","sp","CircStats","devtools"))
-library(devtools)
-install_github("TheoMichelot/moveHMM", build_vignettes=TRUE)
+devtools::install_github("TheoMichelot/moveHMM", build_vignettes = TRUE)
 ```
 
 ## References
