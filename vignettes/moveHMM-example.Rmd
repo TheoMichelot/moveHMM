@@ -44,7 +44,7 @@ This vignette briefly describes the workflow of a typical analysis in moveHMM, i
 \newpage
 # Data preparation
 
-We download the data set from the supplementary material of @michelot2016, and save it as a data frame. This data set is already in the format expected by moveHMM, with columns:
+The data set is included in moveHMM by default, which includes the first three tracks from the study of @michelot2016. This data set is already in the format expected by moveHMM, with columns:
 
 - `ID`: an identifier for the track/individual;
 
@@ -54,19 +54,14 @@ We download the data set from the supplementary material of @michelot2016, and s
 
 These three variables are required, and should have these names. The other two columns, `slope` and `temp`, are covariates that will be included in the analysis later.
 
-```{r get-data}
-URL <- paste0("https://besjournals.onlinelibrary.wiley.com/",
-              "action/downloadSupplement?doi=10.1111%2F2041-",
-              "210X.13066&file=mee313066-sup-0001-rawhaggises.csv")
-raw <- read.csv(url(URL))[1:800,]
-
-head(raw)
+```{r show-data}
+head(haggis_data)
 ```
 
 The standard HMMs used in movement ecology, and implemented in this package, model step lengths and turning angles. The first step of the analysis is therefore to derive those variables from the observed locations. This can be done using the function `prepData`; here, we specify `type = "UTM"` to indicate that the locations are already projected (rather than longitude-latitude locations).
 
 ```{r prep-data}
-data <- prepData(raw, type = "UTM")
+data <- prepData(haggis_data, type = "UTM")
 
 head(data)
 ```
