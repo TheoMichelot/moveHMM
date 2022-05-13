@@ -409,7 +409,7 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
     return(moveHMM(mh))
 }
 
-# Roxygen documentation for the data file "data/elk_data.RData"
+# Roxygen documentation for the data files in ./data/
 
 #' Elk data set from Morales et al. (2004, Ecology)
 #'
@@ -423,5 +423,22 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
 #'
 #' @name elk_data
 #' @usage elk_data
+#' @docType data
+NULL
+
+#' Wild haggis data set from Michelot et al. (2016, Methods Eco Evol)
+#'
+#' Data frame of the first three tracks from Michelot et al. (2016),
+#'  with columns:
+#' \itemize{
+#' \item \code{ID} Track identifier
+#' \item \code{x} Easting coordinate of locations
+#' \item \code{y} Northing coordinate of locations
+#' \item \code{slope} Terrain slope (in degrees)
+#' \item \code{temp} Air temperature (in degrees Celsius)
+#' }
+#'
+#' @name haggis_data
+#' @usage haggis_data
 #' @docType data
 NULL
