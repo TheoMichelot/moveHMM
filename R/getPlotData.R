@@ -38,7 +38,7 @@ getPlotData <- function(m, type, format = "wide", alpha = 0.95) {
         w <- 1
         if(nbStates > 1) {
             states <- viterbi(m)
-            w <- sapply(1:3, function(s) length(which(states == s))/length(states))
+            w <- sapply(1:nbStates, function(s) length(which(states == s))/length(states))
         }
 
         ##################
