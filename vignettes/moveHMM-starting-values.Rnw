@@ -323,25 +323,14 @@ In this document, we provide suggestions to select starting parameter values. We
 
 \section{Data preparation}
 
-We consider the elephant data set described by \cite{wall2014}, and available from the Movebank data repository. We download it from the repository, and put it in the right format for moveHMM.
+We consider the haggis data set described by \cite{michelot2016}, and automatically loaded with moveHMM.
 
 <<readdat, cache = TRUE, results = 'hide', message = FALSE>>=
 # Load package
 library(moveHMM)
 
-# Read data from URL
-URL <- paste0("https://www.datarepository.movebank.org/bitstream/handle/",
-              "10255/move.373/Elliptical%20Time-Density%20Model%20%28Wall%",
-              "20et%20al.%202014%29%20African%20Elephant%20Dataset%20%",
-              "28Source-Save%20the%20Elephants%29.csv")
-rawdata <- read.csv(url(URL))
-
-# Select and rename relevant columns (only keep 1000 rows for speed)
-eleph_data <- rawdata[1:1000, c(11, 4, 5)]
-colnames(eleph_data) <- c("ID", "x", "y")
-
 # Derive step lengths and turning angles
-hmmdata <- prepData(eleph_data)
+hmmdata <- prepData(haggis_data, type = "UTM")
 
 # Display first rows of data set
 head(hmmdata)
@@ -355,17 +344,17 @@ The general idea, also applicable for the turning angle distribution, is to sele
 
 <<stephist2, out.width='.6\\linewidth', fig.width=6, fig.height=5, fig.align="center">>=
 # Plot histogram of step lengths
-hist(hmmdata$step)
+hist(hmmdata$step, xlab = "step length", main = "")
 @
 
-In this data set, the observed step lengths range between 0 and about 2.5km. From this, we know for example that the mean parameter of the step length distribution is smaller than 2.5km in both states, and that we should not use starting values larger than 2.5km. We need to choose two initial mean parameters, one for each state. In most analyses based on 2-state hidden Markov models, one of the states captures periods of little movement activity (e.g.\ resting or foraging) and the other state captures periods with higher movement activity (e.g.\ travelling). We can therefore select one starting value near the lower end of the range of observed step lengths (for state 1, say), and the other starting value such that the corresponding state can capture the steps which we would intuitively associate with more active behaviour (for state 2). Based on the histogram, we may choose an initial mean equal to say 0.1 km for state 1, to capture the short step lengths of the data set. In state 2, we may take a starting value equal to 0.7 km, to capture the longer step lengths.
+In this data set, the observed step lengths range between 0 and about 15km. From this, we know for example that the mean parameter of the step length distribution is smaller than 15km in both states, and that we should not use starting values larger than 15km. We need to choose two initial mean parameters, one for each state. In most analyses based on 2-state hidden Markov models, one of the states captures periods of little movement activity (e.g.\ resting or foraging) and the other state captures periods with higher movement activity (e.g.\ travelling). We can therefore select one starting value near the lower end of the range of observed step lengths (for state 1, say), and the other starting value such that the corresponding state can capture the steps which we would intuitively associate with more active behaviour (for state 2). Based on the histogram, we may choose an initial mean equal to say 1 km for state 1, to capture the short step lengths of the data set. In state 2, we may take a starting value equal to 5 or 10 km, to capture the longer step lengths.
 
 When the gamma distribution is used to model step lengths, the standard deviation is usually of the same order of magnitude as the mean of the distribution. For example, if the mean is 1, we would typically expect the standard deviation to be around 1, rather than around 0.01 or around 100. In our example, we also expect the standard deviation to be smaller in state 1 (short step lengths) than in state 2 (long step lengths). Here, we simply choose the same starting values for the mean and the standard parameter in each state. (If in doubt, it is usually better to choose larger rather than smaller standard deviations, such that the corresponding distributions capture a wide range of possible steps. Otherwise, the risk of the optimiser ending up in the wrong part of the parameter space is higher.)
 
 <<steppar>>=
 # Starting values for the step length parameters
-stepMean0 <- c(0.1, 0.7) # initial means (one for each state)
-stepSD0 <- c(0.1, 0.7) # initial standard deviations (one for each state)
+stepMean0 <- c(1, 5) # initial means (one for each state)
+stepSD0 <- c(1, 5) # initial standard deviations (one for each state)
 stepPar0 <- c(stepMean0, stepSD0)
 @
 
@@ -385,10 +374,10 @@ The von Mises distribution has two parameters, the mean turning angle, and the c
 
 <<anglehist2, out.width='.6\\linewidth', fig.width=6, fig.height=5, fig.align="center">>=
 # Plot histogram of turning angles
-hist(hmmdata$angle, breaks = seq(-pi, pi, length = 15))
+hist(hmmdata$angle, breaks = seq(-pi, pi, length = 15), xlab = "angle", main = "")
 @
 
-The mean turning angle is usually close to 0, which corresponds to the case where there is persistence in the direction of movement. Indeed, in the histogram above, we see that the distribution of observed turning angles is centred on 0. There may sometimes be a peak of turning angles around $\pi$ (or $-\pi$). This happens for low-resolution data, when the animal's movement is undirected and clustered. At a low resolution, the animal may appear to change direction at each time step, which results in a cluster of turning angles around $-\pi/\pi$. In most applications, we would not expect any other value than 0 or $\pi$ for the mean turning angle. Here, we set the initial turning angle mean to 0 in both states.
+The mean turning angle is usually close to 0, which corresponds to the case where there is persistence in the direction of movement. Indeed, in the histogram above, we see that the distribution of observed turning angles has a peak close to 0. There is also a peak of turning angles around $\pi$ (or $-\pi$). This typically happens for low-resolution data, when the animal's movement is undirected and clustered. At a low resolution, the animal may appear to change direction at each time step, which results in a cluster of turning angles around $-\pi/\pi$. In most applications, we would not expect any other value than 0 or $\pi$ for the mean turning angle. Here, we set the initial turning angle mean to $\pi$ in state 1, as we expect that slow movement will also be associated with more changes in direction, and 0 in state 2, because fast movement tends to be directional.
 
 The concentration of the von Mises distribution measures how concentrated the turning angles are around the mean value. A large concentration parameter indicates a peaked distribution centred on the mean, i.e.\ strong persistence in direction if the mean is zero. On the other hand, a concentration parameter close to 0 corresponds to a uniform distribution of turning angles over $(-\pi, \pi]$, i.e.\ undirected movement. It is difficult to give general guidelines about what is a `large' or a `small' value for the concentration parameter, because that may depend on the study species and the time resolution of the data. It is therefore good to try different values, to get a better feel for the shape of the von Mises distribution. The plot below shows the von Mises probability density function, for different values of the concentration parameter $\kappa$.
 
@@ -423,8 +412,8 @@ We need to select one initial concentration parameter value for each state of th
 
 <<anglepar>>=
 # Starting values for the turning angle parameters
-angleMean0 <- c(0, 0) # initial means (one for each state)
-angleCon0 <- c(0.5, 3) # initial concentrations (one for each state)
+angleMean0 <- c(pi, 0) # initial means (one for each state)
+angleCon0 <- c(1, 10) # initial concentrations (one for each state)
 anglePar0 <- c(angleMean0, angleCon0)
 @
 
@@ -454,21 +443,21 @@ allm <- list()
 for(i in 1:niter) {
     # Step length mean
     stepMean0 <- runif(2,
-                       min = c(0.05, 0.3),
-                       max = c(0.3, 1))
+                       min = c(0.5, 3),
+                       max = c(2, 8))
 
     # Step length standard deviation
     stepSD0 <- runif(2,
-                     min = c(0.05, 0.3),
-                     max = c(0.3, 1))
+                     min = c(0.5, 3),
+                     max = c(2, 8))
 
     # Turning angle mean
     angleMean0 <- c(0, 0)
 
     # Turning angle concentration
     angleCon0 <- runif(2,
-                       min = c(0.1, 1),
-                       max = c(1, 5))
+                       min = c(0.5, 5),
+                       max = c(2, 15))
 
     # Fit model
     stepPar0 <- c(stepMean0, stepSD0)
@@ -486,9 +475,7 @@ allnllk <- unlist(lapply(allm, function(m) m$mod$minimum))
 allnllk
 @
 
-We see that, in most experiments, the optimiser converged to the same maximum likelihood value (1350.845). This is usually a sign of numerical stability: regardless of the starting values, the optimiser managed to find the maximum likelihood estimates. However, in two of the experiments, the optimisation failed, and those two fitted models have a smaller likelihood, i.e.\ a larger negative log-likelihood, here 1477.145. (In this example, this local maximum of the likelihood in fact corresponds to a single-state hidden Markov model: the starting values in those instances were such that the optimiser \texttt{nlm} ended up in a region of the parameter space where one state was completely irrelevant and never visited, with the other state explaining \textit{all} the observations.)
-
-To present the results of the analysis, we keep the best-fitting model, i.e.\ the model with largest likelihood.
+We see that, in all runs, the optimiser converged to the same maximum likelihood value. This is usually a sign of numerical stability: regardless of the starting values, the optimiser managed to find the maximum likelihood estimates. However, it can happen that, in some of the experiments, the optimisation fails, and this would lead to a smaller likelihood, i.e.\ a larger negative log-likelihood. To present the results of the analysis, we keep the best-fitting model, i.e.\ the model with largest likelihood.
 
 <<mbest>>=
 # Index of best fitting model (smallest negative log-likelihood)
@@ -521,21 +508,21 @@ niter <- 25
 allPar0 <- lapply(as.list(1:niter), function(x) {
     # Step length mean
     stepMean0 <- runif(2,
-                       min = c(0.05, 0.3),
-                       max = c(0.3, 1))
+                       min = c(0.5, 3),
+                       max = c(2, 8))
 
     # Step length standard deviation
     stepSD0 <- runif(2,
-                     min = c(0.05, 0.3),
-                     max = c(0.3, 1))
+                     min = c(0.5, 3),
+                     max = c(2, 8))
 
     # Turning angle mean
     angleMean0 <- c(0, 0)
 
     # Turning angle concentration
     angleCon0 <- runif(2,
-                       min = c(0.1, 1),
-                       max = c(1, 5))
+                       min = c(0.5, 5),
+                       max = c(2, 15))
 
     # Return vectors of starting values
     stepPar0 <- c(stepMean0, stepSD0)
