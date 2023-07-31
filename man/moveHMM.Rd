@@ -7,16 +7,18 @@
 moveHMM(m)
 }
 \arguments{
-\item{m}{A list of attributes of the fitted model: \code{mle} (the maximum likelihood estimates of
-the parameters of the model), \code{data} (the movement data), \code{mod} (the object
-returned by the numerical optimizer \code{nlm}), \code{conditions} (a few conditions used to fit
-the model: \code{stepDist}, \code{angleDist}, \code{zeroInflation}, \code{estAngleMean},
-\code{stationary}, and \code{formula}), \code{rawCovs} (optional -- only if there are covariates
+\item{m}{A list of attributes of the fitted model: \code{mle} (maximum
+likelihood estimates of model parameters), \code{data} (movement data),
+\code{mod} (output of numerical optimizer \code{nlm}), \code{conditions}
+(few conditions used to fit the model: \code{stepDist}, \code{angleDist},
+\code{zeroInflation}, \code{estAngleMean}, \code{stationary}, and
+\code{formula}), \code{rawCovs} (optional -- only if there are covariates
 in the data).}
 }
 \value{
 An object \code{moveHMM}.
 }
 \description{
-Constructor of \code{moveHMM} objects
+This constructor is not intended to be used, except inside the function
+\code{\link{fitHMM}}. Refer to the documentation for that function.
 }

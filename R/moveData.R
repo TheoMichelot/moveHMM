@@ -1,11 +1,14 @@
 
 #' Constructor of \code{moveData} objects
 #'
-#' @param data A dataframe containing: \code{ID} (the ID(s) of the observed animal(s)), \code{step}
-#' (the step lengths), \code{angle} (the turning angles, if any), \code{x} (either easting or longitude),
-#' \code{y} (either norting or latitude), and covariates, if any.
+#' This constructor is not intended to be used, except inside the function
+#' \code{\link{prepData}}. Refer to the documentation for that function.
 #'
-#' @return An object \code{moveData}.
+#' @param data A data frame with columns: \code{ID} (track ID(s)), \code{step}
+#' (step length), \code{angle} (turning angle, if any), \code{x} (Easting or
+#' longitude), \code{y} (Norting or latitude), and covariates (if any).
+#'
+#' @return An object of class \code{moveData}.
 
 moveData <- function(data)
 {
