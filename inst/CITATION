@@ -1,16 +1,11 @@
-citHeader("To cite moveHMM in a publication use:")
-
-citEntry(
-	entry="Article",
-	title="moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models",
-	author=personList(as.person("Theo Michelot"), as.person("Roland Langrock"), as.person("Toby A. Patterson")),
-	journal="Methods in Ecology and Evolution",
-	year=2016,
-	doi="10.1111/2041-210X.12578",
-	volume="7",
-	number="11",
-	pages="1308-1315",
-	textVersion="Michelot, T., Langrock, R., Patterson, T.A. (2016). moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models. Methods in Ecology and Evolution, 7 (11), pp. 1308-1315."
+bibentry(
+  bibtype = "Article",
+  textVersion = "Michelot, T., Langrock, L., Patterson, T.A. (2016). moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models. Methods Ecol Evol, 7: 1308-1315.",
+  header = "To cite moveHMM in publications, please use",
+  author = c("Théo Michelot", "Roland Langrock", "Toby A. Patterson"),
+  title = "moveHMM: an R package for the statistical modelling of animal movement data using hidden Markov models",
+  journal = "Methods in Ecology and Evolution",
+  year = "2016",
+  doi = "10.1111/2041-210X.12578",
+  url = "https://doi.org/10.1111/2041-210X.12578"
 )
-
-citFooter("Additions and modifications to moveHMM are frequent, to help with reproducibility of output please cite its version number. Find it with 'help(package=moveHMM)'.")
