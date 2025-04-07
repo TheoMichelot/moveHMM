@@ -23,7 +23,7 @@ plotSat(
 \item{data}{Data frame of the data, with necessary fields 'x' (longitude values) and
 'y' (latitude values).}
 
-\item{zoom}{The zoom level, as defined for \code{\link{get_map}}. Integer value between
+\item{zoom}{The zoom level, as defined for \code{get_map}. Integer value between
 3 (continent) and 21 (building).}
 
 \item{location}{Location of the center of the map to be plotted.}
@@ -36,9 +36,9 @@ otherwise (default).}
 
 \item{col}{Palette of colours to use for the dots and segments. If not specified, uses default palette.}
 
-\item{alpha}{Transparency argument for \code{\link{geom_point}}.}
+\item{alpha}{Transparency argument for \code{geom_point}.}
 
-\item{size}{Size argument for \code{\link{geom_point}}.}
+\item{size}{Size argument for \code{geom_point}.}
 
 \item{states}{A sequence of integers, corresponding to the decoded states for these data
 (such that the observations are colored by states).}

@@ -8,7 +8,7 @@
 #'
 #' @param data Data frame of the data, with necessary fields 'x' (longitude values) and
 #' 'y' (latitude values).
-#' @param zoom The zoom level, as defined for \code{\link{get_map}}. Integer value between
+#' @param zoom The zoom level, as defined for \code{get_map}. Integer value between
 #' 3 (continent) and 21 (building).
 #' @param location Location of the center of the map to be plotted.
 #' @param segments \code{TRUE} if segments should be plotted between the observations (default),
@@ -16,8 +16,8 @@
 #' @param compact \code{FALSE} if tracks should be plotted separately, \code{TRUE}
 #' otherwise (default).
 #' @param col Palette of colours to use for the dots and segments. If not specified, uses default palette.
-#' @param alpha Transparency argument for \code{\link{geom_point}}.
-#' @param size Size argument for \code{\link{geom_point}}.
+#' @param alpha Transparency argument for \code{geom_point}.
+#' @param size Size argument for \code{geom_point}.
 #' @param states A sequence of integers, corresponding to the decoded states for these data
 #' (such that the observations are colored by states).
 #' @param animals Vector of indices or IDs of animals/tracks to be plotted.
