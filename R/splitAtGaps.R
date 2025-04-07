@@ -54,7 +54,7 @@ splitAtGaps <- function(data, maxGap = 60, shortestTrack = 0, units = "mins") {
                  units = units)
     })
     ID_keep <- names(trackLengths)[which(trackLengths >= shortestTrack)]
-    data <- subset(data, ID %in% ID_keep)
+    data <- data[which(data$ID %in% ID_keep),]
 
     return(data)
 }

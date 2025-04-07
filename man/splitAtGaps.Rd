@@ -12,10 +12,10 @@ splitAtGaps(data, maxGap = 60, shortestTrack = 0, units = "mins")
 \item{maxGap}{Longest allowed gap, in minutes by default (but see argument
 "units"). Track will be split at longer gaps.}
 
-\item{shortestTrack}{Shortest track to keep after splitting, in minutes. 
+\item{shortestTrack}{Shortest track to keep after splitting, in minutes.
 Shorter tracks will be removed from the output data set.}
 
-\item{units}{Character string, e.g., "mins" (default), "secs", "hours", 
+\item{units}{Character string, e.g., "mins" (default), "secs", "hours",
 "days". Time units used for the maxGap and shortestTrack arguments.}
 }
 \value{
@@ -25,6 +25,6 @@ ID_old column
 }
 \description{
 Defines a new ID variable, which changes where there is a long gap in
-the data. This is sometimes useful for preprocessing data prior to using 
+the data. This is sometimes useful for preprocessing data prior to using
 \code{prepData}.
 }
