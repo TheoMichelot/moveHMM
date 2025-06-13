@@ -45,10 +45,7 @@ viterbi <- function(m, newdata = NULL)
         stop("No states to decode (nbStates=1)")
 
     # identify covariates
-    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                         names(data)!="step" & names(data)!="angle")
-    nbCovs <- length(covsCol)-1 # substract intercept column
-    covs <- data[,covsCol]
+    covs <- model.matrix(m$conditions$formula, data)
 
     probs <- allProbs(data,nbStates,stepDist,angleDist,stepPar,anglePar,zeroInflation,knownStates)
     trMat <- trMatrix_rcpp(nbStates,beta,as.matrix(covs))
