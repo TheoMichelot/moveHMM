@@ -26,7 +26,6 @@
 <<init, echo=FALSE, message=FALSE>>=
 library(MASS)
 library(boot)
-library(CircStats)
 library(sp)
 library(Rcpp)
 library(moveHMM)
