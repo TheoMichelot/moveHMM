@@ -4,13 +4,10 @@
 \alias{summary.moveData}
 \title{Summary \code{moveData}}
 \usage{
-\method{summary}{moveData}(object, details = TRUE, ...)
+\method{summary}{moveData}(object, ...)
 }
 \arguments{
 \item{object}{A \code{moveData} object.}
-
-\item{details}{\code{TRUE} if quantiles of the covariate values should be printed (default),
-\code{FALSE} otherwise.}
 
 \item{...}{Currently unused. For compatibility with generic method.}
 }
@@ -18,9 +15,7 @@
 Summary \code{moveData}
 }
 \examples{
-# m is a moveData object (as returned by prepData), automatically loaded with the package
-data <- example$data
-
-summary(data)
+# Use example data set as output by prepData
+summary(example$data)
 
 }
