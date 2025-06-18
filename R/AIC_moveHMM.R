@@ -19,51 +19,34 @@
 #'
 #' @export
 
-AIC.moveHMM <- function(object,...,k=2)
+AIC.moveHMM <- function(object, ..., k = 2)
 {
-    models <- list(...)
+    models <- list(object, ...)
 
-    if(length(models)>0) { # if several models are provided
-        modNames <- all.vars(match.call()) # store the names of the models given as arguments
+    # compute AICs of models
+    AIC <- rep(NA, length(models))
+    for(i in 1:length(models)) {
+        m <- models[[i]]
+        nbPar <- length(m$mle$stepPar) +
+            length(m$mle$anglePar) +
+            length(m$mle$beta)
 
-        # include "object" in "models"
-        modcopy <- list()
-        modcopy[[1]] <- object
-        for(i in 1:length(models))
-            modcopy[[i+1]] <- models[[i]]
-        models <- modcopy
-
-        # compute AICs of models
-        AIC <- rep(NA,length(models))
-
-        for(i in 1:length(models)) {
-            m <- models[[i]]
-            
-            # do not count delta if stationary
-            if(m$conditions$stationary)
-                nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)
-            else
-                nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)+length(m$mle$delta)-1
-            
-            maxLogLike <- -m$mod$minimum
-            AIC[i] <- -2*maxLogLike+k*nbPar
+        # count delta if stationary
+        if(!(m$conditions$stationary)) {
+            nbPar <- nbPar + length(m$mle$delta) - 1
         }
 
-        ord <- order(AIC) # order models by increasing AIC
-        return(data.frame(Model=modNames[ord],AIC=AIC[ord]))
-    }
-    else { # if only one model is provided
-        m <- object
-        
-        # do not count delta if stationary
-        if(m$conditions$stationary)
-            nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)
-        else
-            nbPar <- length(m$mle$stepPar)+length(m$mle$anglePar)+length(m$mle$beta)+length(m$mle$delta)-1
-        
         maxLogLike <- -m$mod$minimum
-        AIC <- -2*maxLogLike+k*nbPar
+        AIC[i] <- -2 * maxLogLike + k * nbPar
+    }
 
-        return(AIC)
+    if(length(models) > 1) {
+        # store the names of the models given as arguments
+        modNames <- all.vars(match.call())
+        ord <- order(AIC) # order models by increasing AIC
+        return(data.frame(Model = modNames[ord], AIC = AIC[ord]))
+    }
+    else {
+        return(AIC[1])
     }
 }
