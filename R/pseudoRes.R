@@ -111,9 +111,7 @@ pseudoRes <- function(m)
     }
 
     # define covariates
-    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                         names(data)!="step" & names(data)!="angle")
-    covs <- data[,covsCol]
+    covs <- model.matrix(m$conditions$formula, data = data)
 
     if(nbStates>1)
         trMat <- trMatrix_rcpp(nbStates,m$mle$beta,as.matrix(covs))

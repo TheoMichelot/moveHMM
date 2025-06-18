@@ -110,7 +110,7 @@ for(s in 1:nstate) {
 
     # Estimated von Mises density for state s
     points(anglegrid,
-           dvm(anglegrid, mu = angleMean[s], kappa = angleCon[s]),
+           moveHMM:::dvm(anglegrid, mu = angleMean[s], kappa = angleCon[s]),
            col = mycols[s], type = "l")
 }
 @

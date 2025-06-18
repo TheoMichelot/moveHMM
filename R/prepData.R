@@ -120,7 +120,7 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"), LLang
     }
 
     # identify covariate columns
-    covsCol <- which(names(trackData)!="ID" & names(trackData)!=coordNames[1] & names(trackData)!=coordNames[2])
+    covsCol <- which(!(names(trackData) %in% c("ID", coordNames)))
     if(length(covsCol)>0) {
         covs <- data.frame(trackData[,covsCol]) # to prevent error if nbCovs==1
         colnames(covs) <- names(trackData)[covsCol]

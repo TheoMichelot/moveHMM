@@ -14,6 +14,7 @@
 #'
 #' @importFrom MASS ginv
 #' @importFrom MASS mvrnorm
+#' @importFrom stats quantile
 
 angleCI <- function(m,alpha,nbSims=10^6)
 {

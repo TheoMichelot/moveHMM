@@ -3,7 +3,7 @@ context("CI")
 
 test_that("Output has the right format", {
     m <- example$m
-    expect_warning(c <- CI(m))
+    c <- CI(m)
 
     expect_equal(length(c), 3)
     expect_equal(dim(c$stepPar$lower), dim(m$mle$stepPar))

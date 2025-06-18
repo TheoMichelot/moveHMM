@@ -10,6 +10,7 @@ nLogLike(
   bounds,
   parSize,
   data,
+  covs,
   stepDist = c("gamma", "weibull", "lnorm", "exp"),
   angleDist = c("vm", "wrpcauchy", "none"),
   angleMean = NULL,
@@ -30,6 +31,8 @@ contains the lower and upper bound for the correponding parameter.}
 number of parameters of the turning angle distribution.}
 
 \item{data}{An object \code{moveData}.}
+
+\item{covs}{Model matrix for transition probabilities}
 
 \item{stepDist}{Name of the distribution of the step lengths (as a character string).
 Supported distributions are: gamma, weibull, lnorm, exp. Default: gamma.}
@@ -62,22 +65,24 @@ Negative log-likelihood function
 \examples{
 \dontrun{
 # data is a moveData object (as returned by prepData), automatically loaded with the package
-data <- example$data
 simPar <- example$simPar
 par0 <- example$par0
 
 estAngleMean <- is.null(simPar$angleMean)
-bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
-                 estAngleMean,simPar$zeroInflation)$bounds
-parSize <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
-                  estAngleMean,simPar$zeroInflation)$parSize
+bounds <- moveHMM:::parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
+                           estAngleMean,simPar$zeroInflation)$bounds
+parSize <- moveHMM:::parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
+                            estAngleMean,simPar$zeroInflation)$parSize
 
 par <- c(par0$stepPar0,par0$anglePar0)
-wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,FALSE)
+wpar <- moveHMM:::n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,FALSE)
 
-l <- nLogLike(wpar=wpar,nbStates=simPar$nbStates,bounds=bounds,parSize=parSize,data=data,
-             stepDist=simPar$stepDist,angleDist=simPar$angleDist,angleMean=simPar$angleMean,
-             zeroInflation=simPar$zeroInflation)
+covs <- model.matrix(example$m$conditions$formula, example$data)
+
+l <- nLogLike(wpar=wpar,nbStates=simPar$nbStates,bounds=bounds,parSize=parSize,
+              data=data,covs=covs, stepDist=simPar$stepDist,
+              angleDist=simPar$angleDist,
+              zeroInflation=simPar$zeroInflation)
 }
 
 }

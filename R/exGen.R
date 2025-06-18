@@ -19,22 +19,26 @@ exGen <- function()
     anglePar <- c(angleMean,kappa)
     stepDist <- "gamma"
     angleDist <- "vm"
+    beta <- matrix(c(-2, -2,
+                     0.5, -0.5,
+                     -0.5, 0.5),
+                   ncol = 2, byrow = TRUE)
     zeroInflation <- FALSE
-    obsPerAnimal <- c(50,100)
+    obsPerAnimal <- c(100, 50)
 
-    simPar <- list(nbAnimals=nbAnimals,nbStates=nbStates,angleMean=angleMean,stepDist=stepDist,
+    simPar <- list(nbAnimals=nbAnimals,nbStates=nbStates,stepDist=stepDist,
                    angleDist=angleDist,zeroInflation=zeroInflation)
 
     data <- simData(nbAnimals=nbAnimals,nbStates=nbStates,stepDist=stepDist,angleDist=angleDist,
-                    stepPar=stepPar,anglePar=anglePar,nbCovs=nbCovs,zeroInflation=zeroInflation,
-                    obsPerAnimal=obsPerAnimal)
+                    stepPar=stepPar,anglePar=anglePar,beta=beta,nbCovs=nbCovs,zeroInflation=zeroInflation,
+                    obsPerAnimal=obsPerAnimal, states = TRUE)
 
     # estimate model
     mu0 <- c(20,70)
     sigma0 <- c(10,30)
     kappa0 <- c(1,1)
     stepPar0 <- c(mu0,sigma0)
-    anglePar0 <- kappa0
+    anglePar0 <- c(pi, 0, kappa0)
     formula <- ~cov1+cos(cov2)
     nbCovs <- length(attr(terms(formula), "term.labels"))
 
@@ -46,8 +50,7 @@ exGen <- function()
                  delta0=delta0)
 
     m <- fitHMM(data=data,nbStates=nbStates,stepPar0=stepPar0,anglePar0=anglePar0,beta0=beta0,
-                delta0=delta0,formula=formula,stepDist=stepDist,angleDist=angleDist,
-                angleMean=angleMean)
+                delta0=delta0,formula=formula,stepDist=stepDist,angleDist=angleDist)
 
     example <- list(data=data,m=m,simPar=simPar,par0=par0)
     save(example,file="data/example.RData")

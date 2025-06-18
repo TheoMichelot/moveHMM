@@ -81,6 +81,7 @@
 #' }
 #'
 #' @examples
+#' set.seed(872)
 #' ### 1. simulate data
 #' # define all the arguments of simData
 #' nbAnimals <- 2
@@ -157,13 +158,6 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
 
     # design matrix
     covs <- model.matrix(formula,data)
-
-    covsCol <- which(!names(data)%in%c("ID","x","y","step","angle"))
-    if(length(covsCol)>0)
-        data <- cbind(data[-covsCol],covs)
-    else
-        data <- cbind(data,covs)
-
     nbCovs <- ncol(covs)-1 # substract intercept column
 
     # determine whether zero-inflation should be included
@@ -326,12 +320,26 @@ fitHMM <- function(data,nbStates,stepPar0,anglePar0=NULL,beta0=NULL,delta0=NULL,
         # call to optimizer nlm
         systime <- system.time(
             withCallingHandlers(
-                mod <- nlm(nLogLike,wpar,nbStates,bounds,parSize,data,stepDist,
-                           angleDist,angleMean,zeroInflation,stationary,knownStates,
-                           print.level=verbose,gradtol=gradtol,
-                           stepmax=stepmax,steptol=steptol,
-                           iterlim=iterlim,hessian=TRUE),
-                warning=h)) # filter warnings using function h
+                mod <- nlm(f = nLogLike,
+                           p = wpar,
+                           nbStates = nbStates,
+                           bounds = bounds,
+                           parSize = parSize,
+                           data = data,
+                           covs = covs,
+                           stepDist = stepDist,
+                           angleDist = angleDist,
+                           angleMean = angleMean,
+                           zeroInflation = zeroInflation,
+                           stationary = stationary,
+                           knownStates = knownStates,
+                           print.level = verbose,
+                           gradtol = gradtol,
+                           stepmax = stepmax,
+                           steptol = steptol,
+                           iterlim = iterlim,
+                           hessian = TRUE),
+                warning = h)) # filter warnings using function h
 
         # convert the parameters back to their natural scale
         mle <- w2n(mod$estimate,bounds,parSize,nbStates,nbCovs,estAngleMean,stationary)

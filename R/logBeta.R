@@ -23,9 +23,7 @@ logBeta <- function(m)
     nbObs <- nrow(data)
     lbeta <- matrix(NA,nbObs,nbStates)
 
-    covsCol <- which(names(data)!="ID" & names(data)!="x" & names(data)!="y" &
-                         names(data)!="step" & names(data)!="angle")
-    covs <- data[,covsCol]
+    covs <- model.matrix(m$conditions$formula, m$data)
 
     probs <- allProbs(data,nbStates,m$conditions$stepDist,m$conditions$angleDist,m$mle$stepPar,
                       m$mle$anglePar,m$conditions$zeroInflation,m$knownStates)

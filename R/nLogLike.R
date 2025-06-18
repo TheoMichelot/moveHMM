@@ -8,6 +8,7 @@
 #' @param parSize Vector of two values: number of parameters of the step length distribution,
 #' number of parameters of the turning angle distribution.
 #' @param data An object \code{moveData}.
+#' @param covs Model matrix for transition probabilities
 #' @param stepDist Name of the distribution of the step lengths (as a character string).
 #' Supported distributions are: gamma, weibull, lnorm, exp. Default: gamma.
 #' @param angleDist Name of the distribution of the turning angles (as a character string).
@@ -30,27 +31,29 @@
 #' @examples
 #' \dontrun{
 #' # data is a moveData object (as returned by prepData), automatically loaded with the package
-#' data <- example$data
 #' simPar <- example$simPar
 #' par0 <- example$par0
 #'
 #' estAngleMean <- is.null(simPar$angleMean)
-#' bounds <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
-#'                  estAngleMean,simPar$zeroInflation)$bounds
-#' parSize <- parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
-#'                   estAngleMean,simPar$zeroInflation)$parSize
+#' bounds <- moveHMM:::parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
+#'                            estAngleMean,simPar$zeroInflation)$bounds
+#' parSize <- moveHMM:::parDef(simPar$stepDist,simPar$angleDist,simPar$nbStates,
+#'                             estAngleMean,simPar$zeroInflation)$parSize
 #'
 #' par <- c(par0$stepPar0,par0$anglePar0)
-#' wpar <- n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,FALSE)
+#' wpar <- moveHMM:::n2w(par,bounds,par0$beta0,par0$delta0,simPar$nbStates,FALSE)
 #'
-#' l <- nLogLike(wpar=wpar,nbStates=simPar$nbStates,bounds=bounds,parSize=parSize,data=data,
-#'              stepDist=simPar$stepDist,angleDist=simPar$angleDist,angleMean=simPar$angleMean,
-#'              zeroInflation=simPar$zeroInflation)
+#' covs <- model.matrix(example$m$conditions$formula, example$data)
+#'
+#' l <- nLogLike(wpar=wpar,nbStates=simPar$nbStates,bounds=bounds,parSize=parSize,
+#'               data=data,covs=covs, stepDist=simPar$stepDist,
+#'               angleDist=simPar$angleDist,
+#'               zeroInflation=simPar$zeroInflation)
 #' }
 #'
 #' @export
 
-nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibull","lnorm","exp"),
+nLogLike <- function(wpar,nbStates,bounds,parSize,data,covs,stepDist=c("gamma","weibull","lnorm","exp"),
                      angleDist=c("vm","wrpcauchy","none"),angleMean=NULL,zeroInflation=FALSE,
                      stationary=FALSE,knownStates=NULL)
 {
@@ -60,14 +63,7 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
     if(nbStates<1)
         stop("nbStates must be at least 1.")
 
-    covsCol <- which(!names(data)%in%c("ID","x","y","step","angle"))
-    nbCovs <- length(covsCol)-1 # substract intercept column
-
-    if(length(which(names(data)=="(Intercept)"))==0) { # no intercept column, if not called from fitHMM
-        data <- cbind(data[,-covsCol],Intercept=rep(1,nrow(data)),data[,covsCol])
-        covsCol <- which(!names(data)%in%c("ID","x","y","step","angle"))
-        nbCovs <- length(covsCol)-1 # substract intercept column
-    }
+    nbCovs <- ncol(covs) - 1 # substract intercept column
 
     if(!stationary & (length(wpar)!=sum(parSize)*nbStates+nbStates*(nbStates-1)*(nbCovs+1)+nbStates-1))
         stop("Wrong number of parameters in wpar.")
@@ -88,7 +84,6 @@ nLogLike <- function(wpar,nbStates,bounds,parSize,data,stepDist=c("gamma","weibu
         par$anglePar <- rbind(angleMean,par$anglePar)
 
     nbObs <- length(data$step)
-    covs <- data[,covsCol]
 
     nbAnimals <- length(unique(data$ID))
 

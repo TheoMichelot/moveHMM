@@ -37,9 +37,7 @@ CI <- function(m,alpha=0.95,nbSims=10^6)
     nbStates <- ncol(m$mle$stepPar)
 
     # identify covariates
-    covsCol <- which(names(m$data)!="ID" & names(m$data)!="x" & names(m$data)!="y" &
-                         names(m$data)!="step" & names(m$data)!="angle")
-    nbCovs <- length(covsCol)-1 # substract intercept column
+    nbCovs <- ncol(model.matrix(m$conditions$formula, m$data)) - 1 # substract intercept column
 
     # inverse of Hessian
     Sigma <- ginv(m$mod$hessian)

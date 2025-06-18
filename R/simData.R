@@ -116,12 +116,9 @@ simData <- function(nbAnimals=1,nbStates=2,stepDist=c("gamma","weibull","lnorm",
         beta <- model$mle$beta
 
         if(is.null(covs)) {
-            covsCol <- which(names(model$data)!="ID" & names(model$data)!="x" &
-                                 names(model$data)!="y" & names(model$data)!="step" &
-                                 names(model$data)!="angle")
-            covs <- model$data[,covsCol]
+            covs <- model.matrix(model$conditions$formula, model$data)
 
-            if(length(covsCol)>1) {
+            if(ncol(covs)>1) {
                 # remove intercept column, which is not expected in 'covs'
                 names <- colnames(covs)
                 covs <- data.frame(covs[,-1]) # data.frame structure is lost when only one column

@@ -119,6 +119,7 @@ the global optimum of the likelihood function if the initial parameters are poor
 }
 }
 \examples{
+set.seed(872)
 ### 1. simulate data
 # define all the arguments of simData
 nbAnimals <- 2
