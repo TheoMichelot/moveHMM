@@ -3,10 +3,11 @@
 #'
 #' @param trackData A dataframe of the tracking data, including at least coordinates
 #' (either longitude/latitude values or cartesian coordinates), and optionnaly a field \code{ID}
-#' (identifiers for the observed individuals). Additionnal fields are considered as covariates.
+#' (identifiers for the observed individuals). Additional fields are considered as covariates.
 #' Note that, if the names of the coordinates are not "x" and "y", the \code{coordNames} argument
 #' should specified. Tracking data should be structured so that the rows for each track (or each animal)
-#' are grouped together, and ordered by date, in the data frame.
+#' are grouped together, and ordered by date, in the data frame. Each track/ID should have at
+#' least three observations, as required to compute a turning angle.
 #' @param type \code{'LL'} if longitude/latitude provided (default), \code{'UTM'} if easting/northing.
 #' @param coordNames Names of the columns of coordinates in the data frame. Default: \code{c("x","y")}.
 #' @param LLangle Logical. If TRUE, the turning angle is calculated with \code{geosphere::bearing}
@@ -54,12 +55,12 @@ prepData <- function(trackData, type=c('LL','UTM'), coordNames=c("x","y"), LLang
                        step=numeric(),
                        angle=numeric())
 
-    # remove tracks with less than two observations
+    # remove tracks with less than three observations
     for(zoo in unique(ID)) {
-        if(length(which(ID==zoo))<2) {
+        if(length(which(ID==zoo))<3) {
             trackData <- trackData[-which(ID==zoo),]
             ID <- ID[-which(ID==zoo)]
-            warning(paste("Track",zoo,"only contains one observation,",
+            warning(paste("Track",zoo,"has fewer than 3 observations",
                           "and will be removed from the data."))
         }
     }
