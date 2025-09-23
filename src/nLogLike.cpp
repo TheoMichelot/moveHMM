@@ -140,7 +140,7 @@ double nLogLike_rcpp(int nbStates, arma::mat beta, arma::mat covs, DataFrame dat
         if(zeroInflation) {
             // remove the NAs from step (impossible to subset a vector with NAs)
             for(int i=0;i<nbObs;i++) {
-                if(!arma::is_finite(step(i))) {
+                if(!std::isfinite(step(i))) {
                     step(i) = -1;
                     stepProb(i) = 1;
                 }

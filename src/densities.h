@@ -26,7 +26,7 @@ arma::colvec dgamma_rcpp(NumericVector x, double mu, double sigma)
     double scale = pow(sigma,2)/mu;
 
     for(int i=0;i<x.size();i++) {
-        if(!arma::is_finite(x(i)))
+        if(!std::isfinite(x(i)))
             res(i) = 1; // if missing observation
         else
             res(i) = R::dgamma(x(i),shape,scale,0);
@@ -50,7 +50,7 @@ arma::colvec dweibull_rcpp(NumericVector x, double shape, double scale)
     arma::colvec res(x.size());
 
     for(int i=0;i<x.size();i++) {
-        if(!arma::is_finite(x(i)))
+        if(!std::isfinite(x(i)))
             res(i) = 1; // if missing observation
         else
             res(i) = R::dweibull(x(i),shape,scale,0);
@@ -74,7 +74,7 @@ arma::colvec dlnorm_rcpp(NumericVector x, double meanlog, double sdlog)
     arma::colvec res(x.size());
 
     for(int i=0;i<x.size();i++) {
-        if(!arma::is_finite(x(i)))
+        if(!std::isfinite(x(i)))
             res(i) = 1; // if missing observation
         else
             res(i) = R::dlnorm(x(i),meanlog,sdlog,0);
@@ -98,7 +98,7 @@ arma::colvec dexp_rcpp(NumericVector x, double rate, double foo=0)
     arma::colvec res(x.size());
 
     for(int i=0;i<x.size();i++) {
-        if(!arma::is_finite(x(i)))
+        if(!std::isfinite(x(i)))
             res(i) = 1; // if missing observation
         else
             res(i) = R::dexp(x(i),1/rate,0); // R::dexp expects scale=1/rate
@@ -129,7 +129,7 @@ arma::colvec dvm_rcpp(NumericVector x, double mu, double kappa)
     // See the documentation for besselI in R for details.
 
     for(int i=0;i<x.size();i++) {
-        if(!arma::is_finite(x(i)))
+        if(!std::isfinite(x(i)))
             res(i) = 1; // if missing observation
         else
             res(i) = 1/(2 * M_PI * b) * exp(kappa * cos(x(i) - mu) - kappa);
@@ -155,7 +155,7 @@ arma::colvec dwrpcauchy_rcpp(NumericVector x, double mu, double rho)
     double den;
 
     for(int i=0;i<x.size();i++) {
-        if(!arma::is_finite(x(i)))
+        if(!std::isfinite(x(i)))
             res(i) = 1; // if missing observation
         else {
             den = (2*M_PI)*(1+rho*rho-2*rho*cos(x(i)-mu));
